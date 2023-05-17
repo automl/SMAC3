@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Multi-Layer Perceptron Using Multiple Epochs &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>Multi-Layer Perceptron Using Multiple Epochs &#8212; SMAC3 Documentation 2.0.1 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,11 +96,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0
+        v2.0.1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
@@ -129,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -938,10 +939,27 @@
      smac.scenario
     </a>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../../api/smac.callback.html">
      smac.callback
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/>
+    <label for="toctree-checkbox-25">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.callback.callback.html">
+       smac.callback.callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.callback.metadata_callback.html">
+       smac.callback.metadata_callback
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -1004,7 +1022,7 @@
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code</p>
+to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="multi-layer-perceptron-using-multiple-epochs">
 <span id="sphx-glr-examples-2-multi-fidelity-1-mlp-epochs-py"></span><h1>Multi-Layer Perceptron Using Multiple Epochs<a class="headerlink" href="#multi-layer-perceptron-using-multiple-epochs" title="Permalink to this heading">¶</a></h1>
@@ -1022,158 +1040,77 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 <p>This example uses the <code class="docutils literal notranslate"><span class="pre">MultiFidelityFacade</span></code> facade, which is the closest implementation to
 <a class="reference external" href="https://github.com/automl/HpBandSter">BOHB</a>.</p>
 </div>
-<img src="../../_images/sphx_glr_1_mlp_epochs_001.png" srcset="../../_images/sphx_glr_1_mlp_epochs_001.png" alt="Trajectory" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_facade.py:184] Workers are reduced to 8.
-[INFO][proxy.py:71] To route to workers diagnostics web server please install jupyter-server-proxy: python -m pip install jupyter-server-proxy
-[INFO][scheduler.py:1617] State start
-[INFO][scheduler.py:3863]   Scheduler at:     tcp://127.0.0.1:44355
-[INFO][scheduler.py:3870]   dashboard at:  http://127.0.0.1:8787/status
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:44301&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:36733&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:44837&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:41347&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:36959&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:40367&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:32837&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:41355&#39;
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:39025&#39;, name: 6, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:39025
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:35822
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:34061&#39;, name: 0, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:34061
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:35760
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:46265&#39;, name: 1, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:46265
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:35784
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:34267&#39;, name: 4, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:34267
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:35808
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:38593&#39;, name: 3, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:38593
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:35812
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:43699&#39;, name: 2, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:43699
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:35774
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:44113&#39;, name: 7, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:44113
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:35796
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:36349&#39;, name: 5, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:36349
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:35800
-[INFO][scheduler.py:5235] Receive client connection: Client-baf92a86-d866-11ed-8803-2fbbf3152a95
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:35830
-[INFO][abstract_initial_design.py:134] Using 5 initial design configurations and 0 additional configurations.
-[INFO][successive_halving.py:163] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
-[INFO][successive_halving.py:307] Number of configs in stage:
-[INFO][successive_halving.py:309] --- Bracket 0: [9, 3, 1]
-[INFO][successive_halving.py:311] Budgets in stage:
-[INFO][successive_halving.py:313] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 50 trials.
-[INFO][smbo.py:298] Finished 50 trials.
-[INFO][abstract_intensifier.py:513] Added config 8ea495 as new incumbent because there are no incumbents yet.
-[INFO][smbo.py:306] Configuration budget is exhausted:
-[INFO][smbo.py:307] --- Remaining wallclock time: -0.1298666000366211
-[INFO][smbo.py:308] --- Remaining cpu time: inf
-[INFO][smbo.py:309] --- Remaining trials: 414
-[INFO][abstract_intensifier.py:588] Added config 035a84 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
+<img src="../../_images/sphx_glr_1_mlp_epochs_001.png" srcset="../../_images/sphx_glr_1_mlp_epochs_001.png" alt="Trajectory" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_facade.py:198] Workers are reduced to 8.
+[INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
+[INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
+[INFO][successive_halving.py:323] Number of configs in stage:
+[INFO][successive_halving.py:325] --- Bracket 0: [9, 3, 1]
+[INFO][successive_halving.py:327] Budgets in stage:
+[INFO][successive_halving.py:329] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][abstract_intensifier.py:515] Added config 8ea495 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:590] Added config 8641ee and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- activation: &#39;tanh&#39; -&gt; &#39;relu&#39;
-[INFO][configspace.py:175] --- batch_size: 214 -&gt; 259
+[INFO][configspace.py:175] --- batch_size: 214 -&gt; 154
+[INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -&gt; 0.0079952329369518
+[INFO][configspace.py:175] --- n_neurons: 66 -&gt; 56
+[INFO][smbo.py:327] Configuration budget is exhausted:
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.22522974014282227
+[INFO][smbo.py:329] --- Remaining cpu time: inf
+[INFO][smbo.py:330] --- Remaining trials: 372
+[INFO][abstract_intensifier.py:590] Added config 035a84 and rejected config 8641ee as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- batch_size: 154 -&gt; 259
 [INFO][configspace.py:175] --- learning_rate: None -&gt; &#39;constant&#39;
-[INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -&gt; 0.0075638421362735015
-[INFO][configspace.py:175] --- n_neurons: 66 -&gt; 183
+[INFO][configspace.py:175] --- learning_rate_init: 0.0079952329369518 -&gt; 0.0075638421362735015
+[INFO][configspace.py:175] --- n_neurons: 56 -&gt; 183
 [INFO][configspace.py:175] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
 Default cost (SuccessiveHalving): 0.36672856700711853
 Incumbent cost (SuccessiveHalving): 0.021148251315382338
-[INFO][abstract_initial_design.py:69] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
-[INFO][abstract_facade.py:184] Workers are reduced to 8.
-/opt/hostedtoolcache/Python/3.10.10/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
+[INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
+[INFO][abstract_facade.py:198] Workers are reduced to 8.
+/opt/hostedtoolcache/Python/3.10.11/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
 Perhaps you already have a cluster running?
-Hosting the HTTP server on port 39063 instead
+Hosting the HTTP server on port 33327 instead
   warnings.warn(
-[INFO][scheduler.py:1617] State start
-[INFO][scheduler.py:3863]   Scheduler at:     tcp://127.0.0.1:40865
-[INFO][scheduler.py:3870]   dashboard at:  http://127.0.0.1:39063/status
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:34309&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:44599&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:44215&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:43757&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:43047&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:33379&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:33197&#39;
-[INFO][nanny.py:367]         Start Nanny at: &#39;tcp://127.0.0.1:36229&#39;
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:34797&#39;, name: 2, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:34797
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:53724
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:37899&#39;, name: 3, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:37899
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:53750
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:45841&#39;, name: 7, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:45841
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:53764
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:37239&#39;, name: 1, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:37239
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:53788
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:32989&#39;, name: 0, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:32989
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:53734
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:37893&#39;, name: 5, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:37893
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:53774
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:36231&#39;, name: 4, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:36231
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:53792
-[INFO][scheduler.py:4220] Register worker &lt;WorkerState &#39;tcp://127.0.0.1:41119&#39;, name: 6, status: init, memory: 0, processing: 0&gt;
-[INFO][scheduler.py:5477] Starting worker compute stream, tcp://127.0.0.1:41119
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:53802
-[INFO][scheduler.py:5235] Receive client connection: Client-ec49681c-d866-11ed-8803-2fbbf3152a95
-[INFO][core.py:877] Starting established connection to tcp://127.0.0.1:45286
-[INFO][abstract_initial_design.py:134] Using 5 initial design configurations and 0 additional configurations.
-[INFO][successive_halving.py:163] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
-[INFO][successive_halving.py:307] Number of configs in stage:
-[INFO][successive_halving.py:309] --- Bracket 0: [9, 3, 1]
-[INFO][successive_halving.py:309] --- Bracket 1: [3, 1]
-[INFO][successive_halving.py:309] --- Bracket 2: [1]
-[INFO][successive_halving.py:311] Budgets in stage:
-[INFO][successive_halving.py:313] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
-[INFO][successive_halving.py:313] --- Bracket 1: [8.333333333333332, 25.0]
-[INFO][successive_halving.py:313] --- Bracket 2: [25.0]
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][smbo.py:298] Finished 0 trials.
-[INFO][abstract_intensifier.py:513] Added config 06bb76 as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:588] Added config ebb6be and rejected config 06bb76 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- activation: &#39;relu&#39; -&gt; &#39;tanh&#39;
-[INFO][configspace.py:175] --- batch_size: None -&gt; 35
-[INFO][configspace.py:175] --- learning_rate_init: None -&gt; 0.001547917475869209
-[INFO][configspace.py:175] --- n_layer: 2 -&gt; 4
-[INFO][configspace.py:175] --- n_neurons: 48 -&gt; 32
-[INFO][configspace.py:175] --- solver: &#39;lbfgs&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:588] Added config 8ea495 and rejected config ebb6be as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 35 -&gt; 214
-[INFO][configspace.py:175] --- learning_rate_init: 0.001547917475869209 -&gt; 0.005599223654063347
-[INFO][configspace.py:175] --- n_neurons: 32 -&gt; 66
-[INFO][abstract_intensifier.py:588] Added config 704d44 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
-[INFO][configspace.py:175] --- batch_size: 214 -&gt; 31
-[INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -&gt; 0.0038549874043245355
-[INFO][configspace.py:175] --- n_layer: 4 -&gt; 1
-[INFO][configspace.py:175] --- n_neurons: 66 -&gt; 87
-[INFO][smbo.py:306] Configuration budget is exhausted:
-[INFO][smbo.py:307] --- Remaining wallclock time: -0.32810401916503906
-[INFO][smbo.py:308] --- Remaining cpu time: inf
-[INFO][smbo.py:309] --- Remaining trials: 433
+[INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
+[INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
+[INFO][successive_halving.py:323] Number of configs in stage:
+[INFO][successive_halving.py:325] --- Bracket 0: [9, 3, 1]
+[INFO][successive_halving.py:325] --- Bracket 1: [5, 1]
+[INFO][successive_halving.py:325] --- Bracket 2: [3]
+[INFO][successive_halving.py:327] Budgets in stage:
+[INFO][successive_halving.py:329] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
+[INFO][successive_halving.py:329] --- Bracket 1: [8.333333333333332, 25.0]
+[INFO][successive_halving.py:329] --- Bracket 2: [25.0]
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][smbo.py:319] Finished 0 trials.
+[INFO][abstract_intensifier.py:515] Added config d97a56 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:590] Added config 05da1d and rejected config d97a56 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- batch_size: 213 -&gt; 67
+[INFO][configspace.py:175] --- learning_rate_init: 0.001079153361094099 -&gt; 0.0010967107184102778
+[INFO][configspace.py:175] --- n_neurons: 61 -&gt; 57
+[INFO][configspace.py:175] --- solver: &#39;sgd&#39; -&gt; &#39;adam&#39;
+[INFO][abstract_intensifier.py:590] Added config 704d44 and rejected config 05da1d as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- batch_size: 67 -&gt; 31
+[INFO][configspace.py:175] --- learning_rate_init: 0.0010967107184102778 -&gt; 0.0038549874043245355
+[INFO][configspace.py:175] --- n_neurons: 57 -&gt; 87
+[INFO][smbo.py:327] Configuration budget is exhausted:
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.13094472885131836
+[INFO][smbo.py:329] --- Remaining cpu time: inf
+[INFO][smbo.py:330] --- Remaining trials: 437
 Default cost (Hyperband): 0.36672856700711853
 Incumbent cost (Hyperband): 0.0178087279480037
 </pre></div>
@@ -1346,8 +1283,11 @@ Incumbent cost (Hyperband): 0.0178087279480037
     <span class="n">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  49.485 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 3 minutes  19.144 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" width="150px" /></a>
+</div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>
 </div>
@@ -1401,7 +1341,7 @@ Incumbent cost (Hyperband): 0.0178087279480037
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-6.1.3. Template is modified version of <a
+6.2.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

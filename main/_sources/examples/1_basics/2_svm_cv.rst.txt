@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_examples_1_basics_2_svm_cv.py>`
-        to download the full example code
+        to download the full example code or to run this example in your browser via Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -35,17 +35,17 @@ types as well as conditional hyperparameters.
 
  .. code-block:: none
 
-    [INFO][abstract_initial_design.py:134] Using 5 initial design configurations and 0 additional configurations.
-    [INFO][abstract_intensifier.py:513] Added config eb23b4 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:588] Added config 60c7ff and rejected config eb23b4 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
+    [INFO][abstract_intensifier.py:515] Added config eb23b4 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:590] Added config 60c7ff and rejected config eb23b4 as incumbent because it is not better than the incumbents on 2 instances:
     [INFO][configspace.py:175] --- C: 0.03992740880515713 -> 1.2760639488343621
     [INFO][configspace.py:175] --- kernel: 'rbf' -> 'linear'
     [INFO][configspace.py:175] --- shrinking: True -> False
-    [INFO][smbo.py:298] Finished 50 trials.
-    [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: inf
-    [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 0
+    [INFO][smbo.py:319] Finished 50 trials.
+    [INFO][smbo.py:327] Configuration budget is exhausted:
+    [INFO][smbo.py:328] --- Remaining wallclock time: inf
+    [INFO][smbo.py:329] --- Remaining cpu time: inf
+    [INFO][smbo.py:330] --- Remaining trials: 0
     Default cost: 0.03333333333333344
     Incumbent cost: 0.013333333333333308
 
@@ -151,7 +151,7 @@ types as well as conditional hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.223 seconds)
+   **Total running time of the script:** ( 0 minutes  1.247 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:
@@ -160,6 +160,13 @@ types as well as conditional hyperparameters.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+
+    .. container:: binder-badge
+
+      .. image:: images/binder_badge_logo.svg
+        :target: https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/2_svm_cv.ipynb
+        :alt: Launch binder
+        :width: 150 px
 
 
 

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Parallelism &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>Parallelism &#8212; SMAC3 Documentation 2.0.1 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,11 +96,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0
+        v2.0.1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
@@ -129,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -938,10 +939,27 @@
      smac.scenario
     </a>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../api/smac.callback.html">
      smac.callback
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/>
+    <label for="toctree-checkbox-25">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.callback.callback.html">
+       smac.callback.callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../api/smac.callback.metadata_callback.html">
+       smac.callback.metadata_callback
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -979,9 +997,19 @@
               
               <div class="toc-item">
                 
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
 
 <nav id="bd-toc-nav">
-    
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#running-on-a-cluster">
+   Running on a Cluster
+  </a>
+ </li>
+</ul>
+
 </nav>
               </div>
               
@@ -1003,7 +1031,7 @@
                 
   <section id="parallelism">
 <h1>Parallelism<a class="headerlink" href="#parallelism" title="Permalink to this heading">¶</a></h1>
-<p>SMAC supports multiple workers natively. Just specify <code class="docutils literal notranslate"><span class="pre">n_workers</span></code> in the scenario and you are ready to go.</p>
+<p>SMAC supports multiple workers natively via Dask. Just specify <code class="docutils literal notranslate"><span class="pre">n_workers</span></code> in the scenario and you are ready to go.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Please keep in mind that additional workers are only used to evaluate trials. The main thread still orchestrates the
@@ -1018,6 +1046,25 @@ overhead of communcation. Consider using only one worker in this case.</p>
 <p class="admonition-title">Warning</p>
 <p>When using multiple workers, SMAC is not reproducible anymore.</p>
 </div>
+<section id="running-on-a-cluster">
+<h2>Running on a Cluster<a class="headerlink" href="#running-on-a-cluster" title="Permalink to this heading">¶</a></h2>
+<p>You can also pass a custom dask client, e.g. to run on a slurm cluster.
+See our <span class="xref std std-ref">parallelism example</span>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>On some clusters you cannot spawn new jobs when running a SLURMCluster inside a
+job instead of on the login node. No obvious errors might be raised but it can hang silently.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Sometimes you need to modify your launch command which can be done with
+<code class="docutils literal notranslate"><span class="pre">SLURMCluster.job_class.submit_command</span></code>.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cluster</span><span class="o">.</span><span class="n">job_cls</span><span class="o">.</span><span class="n">submit_command</span> <span class="o">=</span> <span class="n">submit_command</span>
+<span class="n">cluster</span><span class="o">.</span><span class="n">job_cls</span><span class="o">.</span><span class="n">cancel_command</span> <span class="o">=</span> <span class="n">cancel_command</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -1064,7 +1111,7 @@ overhead of communcation. Consider using only one worker in this case.</p>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-6.1.3. Template is modified version of <a
+6.2.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

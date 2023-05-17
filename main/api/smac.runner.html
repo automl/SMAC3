@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.runner &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.runner &#8212; SMAC3 Documentation 2.0.1 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,11 +96,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0
+        v2.0.1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
@@ -129,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -938,10 +939,27 @@
      smac.scenario
     </a>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="smac.callback.html">
      smac.callback
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/>
+    <label for="toctree-checkbox-25">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.callback.callback.html">
+       smac.callback.callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="smac.callback.metadata_callback.html">
+       smac.callback.metadata_callback
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -1356,13 +1374,21 @@ handled by the target function internally.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.AbstractRunner.run_wrapper">
-<span class="sig-name descname"><span class="pre">run_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_runner.html#AbstractRunner.run_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.AbstractRunner.run_wrapper" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dask_data_to_scatter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/abstract_runner.html#AbstractRunner.run_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.AbstractRunner.run_wrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper around run() to execute and check the execution of a given config.
 This function encapsulates common
 handling/processing, so that run() implementation is simplified.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>trial_info</strong> (<em>RunInfo</em>) – Object that contains enough information to execute a configuration run in isolation.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trial_info</strong> (<em>RunInfo</em>) – Object that contains enough information to execute a configuration run in isolation.</p></li>
+<li><p><strong>dask_data_to_scatter</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – When a user scatters data from their local process to the distributed network,
+this data is distributed in a round-robin fashion grouping by number of cores.
+Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+every time we would like to execute a target function with a big dataset.
+For example, when your target function has a big dataset shared across all the target function,
+this argument is very useful.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrialInfo" title="smac.runhistory.dataclasses.TrialInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialInfo</span></code></a>, <a class="reference internal" href="smac.runhistory.dataclasses.html#smac.runhistory.dataclasses.TrialValue" title="smac.runhistory.dataclasses.TrialValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrialValue</span></code></a>]</p>
@@ -1512,7 +1538,7 @@ the <cite>self._results_queue</cite> list is emptied and all trial values produc
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.DaskParallelRunner.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.DaskParallelRunner.run" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dask_data_to_scatter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.DaskParallelRunner.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the target function with a configuration on a single instance-budget-seed
 combination (aka trial).</p>
 <dl class="field-list simple">
@@ -1542,7 +1568,7 @@ handled by the target function internally.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.DaskParallelRunner.submit_trial">
-<span class="sig-name descname"><span class="pre">submit_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.submit_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.DaskParallelRunner.submit_trial" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">submit_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dask_data_to_scatter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.submit_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.DaskParallelRunner.submit_trial" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function submits a configuration embedded in a <code class="docutils literal notranslate"><span class="pre">trial_info</span></code> object, and uses one of
 the workers to produce a result locally to each worker.</p>
 <p>The execution of a configuration follows this procedure:</p>
@@ -1555,7 +1581,15 @@ code that any <cite>run</cite> method will otherwise have to implement.</p></li>
 <p>All results will be only available locally to each worker, so the main node needs to collect them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>trial_info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialInfo" title="smac.runhistory.TrialInfo"><em>TrialInfo</em></a>) – An object containing the configuration launched.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trial_info</strong> (<a class="reference internal" href="smac.runhistory.html#smac.runhistory.TrialInfo" title="smac.runhistory.TrialInfo"><em>TrialInfo</em></a>) – An object containing the configuration launched.</p></li>
+<li><p><strong>dask_data_to_scatter</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – When a user scatters data from their local process to the distributed network,
+this data is distributed in a round-robin fashion grouping by number of cores.
+Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+every time we would like to execute a target function with a big dataset.
+For example, when your target function has a big dataset shared across all the target function,
+this argument is very useful.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
@@ -1629,7 +1663,7 @@ setting, the float value is replaced by a list of floats.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.TargetFunctionRunner.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_function_runner.html#TargetFunctionRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.TargetFunctionRunner.run" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dask_data_to_scatter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/target_function_runner.html#TargetFunctionRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.TargetFunctionRunner.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls the target function with pynisher if algorithm wall time limit or memory limit is
 set. Otherwise, the function is called directly.</p>
 <dl class="field-list simple">
@@ -1640,6 +1674,13 @@ set. Otherwise, the function is called directly.</p>
 <li><p><strong>budget</strong> (<em>float</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – A positive, real-valued number representing an arbitrary limit to the target function
 handled by the target function internally.</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>dask_data_to_scatter</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – This kwargs must be empty when we do not use dask! ()
+When a user scatters data from their local process to the distributed network,
+this data is distributed in a round-robin fashion grouping by number of cores.
+Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+every time we would like to execute a target function with a big dataset.
+For example, when your target function has a big dataset shared across all the target function,
+this argument is very useful.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1731,7 +1772,7 @@ handled by the target function internally.</p></li>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-6.1.3. Template is modified version of <a
+6.2.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

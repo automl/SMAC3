@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_examples_3_multi_objective_2_parego.py>`
-        to download the full example code
+        to download the full example code or to run this example in your browser via Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -43,25 +43,25 @@ mean accuracy and run-time of each configuration.
  .. code-block:: none
 
     [WARNING][target_function_runner.py:71] The argument budget is not set by SMAC: Consider removing it from the target function.
-    [INFO][abstract_initial_design.py:134] Using 5 initial design configurations and 0 additional configurations.
-    [INFO][abstract_intensifier.py:513] Added config 97ef22 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:596] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-    [INFO][abstract_intensifier.py:596] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:596] Config 7e74c1 is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:596] Config b17aaf is a new incumbent. Total number of incumbents: 5.
-    [INFO][smbo.py:306] Configuration budget is exhausted:
-    [INFO][smbo.py:307] --- Remaining wallclock time: -0.05789589881896973
-    [INFO][smbo.py:308] --- Remaining cpu time: inf
-    [INFO][smbo.py:309] --- Remaining trials: 182
+    [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
+    [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
+    [INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:598] Config 8a05b6 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:598] Config 942770 is a new incumbent. Total number of incumbents: 5.
+    [INFO][smbo.py:327] Configuration budget is exhausted:
+    [INFO][smbo.py:328] --- Remaining wallclock time: -1.3537342548370361
+    [INFO][smbo.py:329] --- Remaining cpu time: inf
+    [INFO][smbo.py:330] --- Remaining trials: 180
     Validated costs from default config: 
-    --- [0.60155834 0.36323869]
+    --- [0.60155834 0.23206437]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.37297177]
-    --- [0.04813757 0.98243177]
-    --- [0.03561281 1.17328227]
-    --- [0.0450797  0.94221997]
-    --- [0.03088982 1.27895021]
+    --- [0.88924791 0.29007626]
+    --- [0.04813757 0.83875191]
+    --- [0.03561281 1.17392743]
+    --- [0.02977406 3.08517671]
+    --- [0.07874574 0.7888118 ]
 
 
 
@@ -242,7 +242,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  40.468 seconds)
+   **Total running time of the script:** ( 0 minutes  44.443 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
@@ -251,6 +251,13 @@ mean accuracy and run-time of each configuration.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+
+    .. container:: binder-badge
+
+      .. image:: images/binder_badge_logo.svg
+        :target: https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb
+        :alt: Launch binder
+        :width: 150 px
 
 
 

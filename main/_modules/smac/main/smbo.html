@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.main.smbo &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>smac.main.smbo &#8212; SMAC3 Documentation 2.0.1 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -93,11 +93,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0
+        v2.0.1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
@@ -126,7 +127,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -935,10 +936,27 @@
      smac.scenario
     </a>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../../../api/smac.callback.html">
      smac.callback
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/>
+    <label for="toctree-checkbox-25">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.callback.callback.html">
+       smac.callback.callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.callback.metadata_callback.html">
+       smac.callback.metadata_callback
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -995,17 +1013,19 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
 
 <span class="kn">from</span> <span class="nn">smac.acquisition.function.abstract_acquisition_function</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">smac.callback</span> <span class="kn">import</span> <span class="n">Callback</span>
+<span class="kn">from</span> <span class="nn">smac.callback.callback</span> <span class="kn">import</span> <span class="n">Callback</span>
 <span class="kn">from</span> <span class="nn">smac.intensifier.abstract_intensifier</span> <span class="kn">import</span> <span class="n">AbstractIntensifier</span>
 <span class="kn">from</span> <span class="nn">smac.model.abstract_model</span> <span class="kn">import</span> <span class="n">AbstractModel</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory</span> <span class="kn">import</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.runner</span> <span class="kn">import</span> <span class="n">FirstRunCrashedException</span>
 <span class="kn">from</span> <span class="nn">smac.runner.abstract_runner</span> <span class="kn">import</span> <span class="n">AbstractRunner</span>
+<span class="kn">from</span> <span class="nn">smac.runner.dask_runner</span> <span class="kn">import</span> <span class="n">DaskParallelRunner</span>
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.utils.data_structures</span> <span class="kn">import</span> <span class="n">recursively_compare_dicts</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
@@ -1231,8 +1251,18 @@
             <span class="k">assert</span> <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_maximizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_maximizer</span><span class="o">.</span><span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span></div>
 
-<div class="viewcode-block" id="SMBO.optimize"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<div class="viewcode-block" id="SMBO.optimize"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data_to_scatter</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs the Bayesian optimization loop.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_to_scatter: dict[str, Any] | None</span>
+<span class="sd">            When a user scatters data from their local process to the distributed network,</span>
+<span class="sd">            this data is distributed in a round-robin fashion grouping by number of cores.</span>
+<span class="sd">            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data</span>
+<span class="sd">            every time we would like to execute a target function with a big dataset.</span>
+<span class="sd">            For example, when your target function has a big dataset shared across all the target function,</span>
+<span class="sd">            this argument is very useful.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1256,6 +1286,15 @@
         <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
             <span class="n">callback</span><span class="o">.</span><span class="n">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
+        <span class="n">dask_data_to_scatter</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="p">,</span> <span class="n">DaskParallelRunner</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data_to_scatter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dask_data_to_scatter</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data_to_scatter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data_to_scatter</span><span class="p">,</span> <span class="n">broadcast</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">data_to_scatter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;data_to_scatter is valid only for DaskParallelRunner, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;but </span><span class="si">{</span><span class="n">dask_data_to_scatter</span><span class="si">}</span><span class="s2"> was provided for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
         <span class="c1"># Main BO loop</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
@@ -1267,7 +1306,7 @@
 
                 <span class="c1"># We submit the trial to the runner</span>
                 <span class="c1"># In multi-worker mode, SMAC waits till a new worker is available here</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">submit_trial</span><span class="p">(</span><span class="n">trial_info</span><span class="o">=</span><span class="n">trial_info</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">submit_trial</span><span class="p">(</span><span class="n">trial_info</span><span class="o">=</span><span class="n">trial_info</span><span class="p">,</span> <span class="o">**</span><span class="n">dask_data_to_scatter</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1427,9 +1466,19 @@
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cost threshold was reached. Abort is requested.&quot;</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="nf">_register_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callback</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Registers a callback to be called before, in between, and after the Bayesian optimization loop.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span> <span class="o">+=</span> <span class="p">[</span><span class="n">callback</span><span class="p">]</span>
+<div class="viewcode-block" id="SMBO.register_callback"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.register_callback">[docs]</a>    <span class="k">def</span> <span class="nf">register_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callback</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Registers a callback to be called before, in between, and after the Bayesian optimization loop.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        callback : Callback</span>
+<span class="sd">            The callback to be registered.</span>
+<span class="sd">        index : int</span>
+<span class="sd">            The index at which the callback should be registered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_initialize_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects whether the optimization is restored from a previous state.&quot;&quot;&quot;</span>
@@ -1499,28 +1548,27 @@
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">ndarray</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates a configuration on other seeds than the ones used in the optimization process and on the highest</span>
-<span class="sd">        budget (if budget type is real-valued).</span>
+<span class="sd">        budget (if budget type is real-valued). Does not exceed the maximum number of config calls or seeds as defined</span>
+<span class="sd">        in the scenario.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        config : Configuration</span>
 <span class="sd">            Configuration to validate</span>
-<span class="sd">        instances : list[str] | None, defaults to None</span>
-<span class="sd">            Which instances to validate. If None, all instances specified in the scenario are used.</span>
 <span class="sd">            In case that the budget type is real-valued budget, this argument is ignored.</span>
 <span class="sd">        seed : int | None, defaults to None</span>
 <span class="sd">            If None, the seed from the scenario is used.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        cost : float | list[float]</span>
+<span class="sd">        cost : float | ndarray[float]</span>
 <span class="sd">            The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is</span>
 <span class="sd">            averaged.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">seed</span>
 
         <span class="n">costs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">get_trials_of_interest</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">):</span>
@@ -1585,7 +1633,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-6.1.3. Template is modified version of <a
+6.2.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>User Priors over the Optimum &#8212; SMAC3 Documentation 2.0.0 documentation</title>
+    <title>User Priors over the Optimum &#8212; SMAC3 Documentation 2.0.1 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -96,11 +96,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.0
+        v2.0.1
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
@@ -129,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -938,10 +939,27 @@
      smac.scenario
     </a>
    </li>
-   <li class="toctree-l2">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="../../api/smac.callback.html">
      smac.callback
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/>
+    <label for="toctree-checkbox-25">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.callback.callback.html">
+       smac.callback.callback
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.callback.metadata_callback.html">
+       smac.callback.metadata_callback
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -1004,7 +1022,7 @@
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-examples-1-basics-6-priors-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code</p>
+to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="user-priors-over-the-optimum">
 <span id="sphx-glr-examples-1-basics-6-priors-py"></span><h1>User Priors over the Optimum<a class="headerlink" href="#user-priors-over-the-optimum" title="Permalink to this heading">¶</a></h1>
@@ -1015,30 +1033,30 @@ use of the Normal and Beta Hyperparameters, as well as the “weights” propert
 <code class="docutils literal notranslate"><span class="pre">CategoricalHyperparameter</span></code>. This can be integrated into the optimiztion for any SMAC facade,
 but we stick with the hyperparameter optimization facade here. To incorporate user priors into the
 optimization, you have to change the acquisition function to <code class="docutils literal notranslate"><span class="pre">PriorAcquisitionFunction</span></code>.</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:134] Using 10 initial design configurations and 1 additional configurations.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 1 additional configurations.
 [WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
-[INFO][abstract_intensifier.py:513] Added config fec0cb as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:588] Added config 34b1eb and rejected config fec0cb as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:515] Added config fec0cb as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:590] Added config 34b1eb and rejected config fec0cb as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- activation: &#39;logistic&#39; -&gt; &#39;relu&#39;
 [INFO][configspace.py:175] --- batch_size: 324 -&gt; 128
 [INFO][configspace.py:175] --- learning_rate_init: 1.1134996369914405 -&gt; 0.0010000000000000002
 [INFO][configspace.py:175] --- n_layer: 2 -&gt; 3
 [INFO][configspace.py:175] --- n_neurons: 157 -&gt; 108
 [INFO][configspace.py:175] --- optimizer: &#39;sgd&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:588] Added config 34ee2a and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 34ee2a and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- batch_size: 128 -&gt; 83
 [INFO][configspace.py:175] --- n_layer: 3 -&gt; 4
-[INFO][abstract_intensifier.py:588] Added config 066046 and rejected config 34ee2a as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 066046 and rejected config 34ee2a as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- batch_size: 83 -&gt; 71
 [INFO][configspace.py:175] --- n_layer: 4 -&gt; 3
-[INFO][abstract_intensifier.py:588] Added config 7424fb and rejected config 066046 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 7424fb and rejected config 066046 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][configspace.py:175] --- batch_size: 71 -&gt; 27
 [INFO][configspace.py:175] --- n_layer: 3 -&gt; 4
 [INFO][configspace.py:175] --- n_neurons: 108 -&gt; 105
-[INFO][smbo.py:306] Configuration budget is exhausted:
-[INFO][smbo.py:307] --- Remaining wallclock time: inf
-[INFO][smbo.py:308] --- Remaining cpu time: inf
-[INFO][smbo.py:309] --- Remaining trials: 0
+[INFO][smbo.py:327] Configuration budget is exhausted:
+[INFO][smbo.py:328] --- Remaining wallclock time: inf
+[INFO][smbo.py:329] --- Remaining cpu time: inf
+[INFO][smbo.py:330] --- Remaining trials: 0
 Default cost: 0.038952336737852145
 Default cost: 0.026719281956050667
 </pre></div>
@@ -1207,8 +1225,11 @@ Default cost: 0.026719281956050667
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  30.624 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  29.466 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-6-priors-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/6_priors.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
+</div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4ebef42c9f91d235a47f01427ed027a4/6_priors.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">6_priors.py</span></code></a></p>
 </div>
@@ -1262,7 +1283,7 @@ Default cost: 0.026719281956050667
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-6.1.3. Template is modified version of <a
+6.2.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

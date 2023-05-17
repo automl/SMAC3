@@ -14,14 +14,6 @@
    
    
    
-   Classes
-   ^^^^^^^
-
-   .. autosummary::
-   
-      Callback
-   
-   
 
    
    
@@ -34,4 +26,16 @@
 
 
 
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   smac.callback.callback
+   smac.callback.metadata_callback
 
