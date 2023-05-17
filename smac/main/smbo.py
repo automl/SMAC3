@@ -8,17 +8,19 @@ from pathlib import Path
 
 import numpy as np
 from ConfigSpace import Configuration
+from numpy import ndarray
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runhistory.runhistory import RunHistory
 from smac.runner import FirstRunCrashedException
 from smac.runner.abstract_runner import AbstractRunner
+from smac.runner.dask_runner import DaskParallelRunner
 from smac.scenario import Scenario
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
@@ -244,8 +246,18 @@ class SMBO:
             assert config_selector._acquisition_maximizer is not None
             config_selector._acquisition_maximizer.acquisition_function = acquisition_function
 
-    def optimize(self) -> Configuration | list[Configuration]:
+    def optimize(self, *, data_to_scatter: dict[str, Any] | None = None) -> Configuration | list[Configuration]:
         """Runs the Bayesian optimization loop.
+
+        Parameters
+        ----------
+        data_to_scatter: dict[str, Any] | None
+            When a user scatters data from their local process to the distributed network,
+            this data is distributed in a round-robin fashion grouping by number of cores.
+            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+            every time we would like to execute a target function with a big dataset.
+            For example, when your target function has a big dataset shared across all the target function,
+            this argument is very useful.
 
         Returns
         -------
@@ -269,6 +281,15 @@ class SMBO:
         for callback in self._callbacks:
             callback.on_start(self)
 
+        dask_data_to_scatter = {}
+        if isinstance(self._runner, DaskParallelRunner) and data_to_scatter is not None:
+            dask_data_to_scatter = dict(data_to_scatter=self._runner._client.scatter(data_to_scatter, broadcast=True))
+        elif data_to_scatter is not None:
+            raise ValueError(
+                "data_to_scatter is valid only for DaskParallelRunner, "
+                f"but {dask_data_to_scatter} was provided for {self._runner.__class__.__name__}"
+            )
+
         # Main BO loop
         while True:
             for callback in self._callbacks:
@@ -280,7 +301,7 @@ class SMBO:
 
                 # We submit the trial to the runner
                 # In multi-worker mode, SMAC waits till a new worker is available here
-                self._runner.submit_trial(trial_info=trial_info)
+                self._runner.submit_trial(trial_info=trial_info, **dask_data_to_scatter)
             except StopIteration:
                 self._stop = True
 
@@ -440,9 +461,19 @@ class SMBO:
                     logger.info("Cost threshold was reached. Abort is requested.")
                     self._stop = True
 
-    def _register_callback(self, callback: Callback) -> None:
-        """Registers a callback to be called before, in between, and after the Bayesian optimization loop."""
-        self._callbacks += [callback]
+    def register_callback(self, callback: Callback, index: int = -1) -> None:
+        """
+        Registers a callback to be called before, in between, and after the Bayesian optimization loop.
+
+
+        Parameters
+        ----------
+        callback : Callback
+            The callback to be registered.
+        index : int
+            The index at which the callback should be registered.
+        """
+        self._callbacks.insert(index, callback)
 
     def _initialize_state(self) -> None:
         """Detects whether the optimization is restored from a previous state."""
@@ -512,28 +543,27 @@ class SMBO:
         config: Configuration,
         *,
         seed: int | None = None,
-    ) -> float | list[float]:
+    ) -> float | ndarray[float]:
         """Validates a configuration on other seeds than the ones used in the optimization process and on the highest
-        budget (if budget type is real-valued).
+        budget (if budget type is real-valued). Does not exceed the maximum number of config calls or seeds as defined
+        in the scenario.
 
         Parameters
         ----------
         config : Configuration
             Configuration to validate
-        instances : list[str] | None, defaults to None
-            Which instances to validate. If None, all instances specified in the scenario are used.
             In case that the budget type is real-valued budget, this argument is ignored.
         seed : int | None, defaults to None
             If None, the seed from the scenario is used.
 
         Returns
         -------
-        cost : float | list[float]
+        cost : float | ndarray[float]
             The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
             averaged.
         """
         if seed is None:
-            seed = 0
+            seed = self._scenario.seed
 
         costs = []
         for trial in self._intensifier.get_trials_of_interest(config, validate=True, seed=seed):

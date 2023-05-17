@@ -9,7 +9,7 @@ date-released: "2016-08-17"
 url: "https://automl.github.io/SMAC3/master/index.html"
 repository-code: "https://github.com/automl/SMAC3"
 
-version: "1.0.1"
+version: "2.0.1"
 
 type: "software"
 keywords:
@@ -25,17 +25,11 @@ license: "BSD-3-Clause"
 authors:
   - family-names: "Lindauer"
     given-names: "Marius"
-    affiliation: "Leibniz Universität Hannover"
+    affiliation: "Leibniz University Hannover, Germany"
 
-  - family-names: "Eggensperger"
-    given-names: "Katharina" 
-    orcid: "https://orcid.org/0000-0002-0309-401X"
-    affiliation: "University of Freiburg, Germany"
-
-  - family-names: "Feurer"
-    given-names: "Matthias"
-    orcid: "https://orcid.org/0000-0001-9611-8588"
-    affiliation: "University of Freiburg, Germany"
+  - family-names: "Benjamins"
+    given-names: "Carolin"
+    affiliation: "Leibniz University Hannover, Germany"
 
   - family-names: "Biedenkapp"
     given-names: "André"
@@ -44,18 +38,11 @@ authors:
 
   - family-names: "Deng"
     given-names: "Difan"
-    affiliation: "Leibniz Universität Hannover"
+    affiliation: "Leibniz University Hannover, Germany"
 
-  - family-names: "Benjamins"
-    given-names: "Carolin"
-    affiliation: "Leibniz Universität Hannover"
-
-  - family-names: "Sass"
-    given-names: "René"
-    affiliation: "Leibniz Universität Hannover"
-
-  - family-names: "Hutter"
-    given-names: "Frank"
+  - family-names: "Eggensperger"
+    given-names: "Katharina" 
+    orcid: "https://orcid.org/0000-0002-0309-401X"
     affiliation: "University of Freiburg, Germany"
 
   - family-names: "Falkner"
@@ -63,46 +50,83 @@ authors:
     orcid: "https://orcid.org/0000-0002-6303-9418"
     affiliation: "Bosch Center for Artificial Intelligence, Rennigen, Germany"
 
+  - family-names: "Feurer"
+    given-names: "Matthias"
+    orcid: "https://orcid.org/0000-0001-9611-8588"
+    affiliation: "University of Freiburg, Germany"
+
+  - family-names: "Graf"
+    given-names: "Helena"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Ruhkopf"
+    given-names: "Tim"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Sass"
+    given-names: "René"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Segel"
+    given-names: "Sarah"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Tornede"
+    given-names: "Alexander"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Hutter"
+    given-names: "Frank"
+    affiliation: "University of Freiburg, Germany"
+
 preferred-citation:
   type: "article"
   title: "SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization"
-  month: "9"
-  year: "2021"
-  url: "https://arxiv.org/abs/2109.09831"
+  journal: "Journal of Machine Learning Research"
+  year: "2022"
+  volume: "23"
+  number: "54"
+  start: "1"
+  end: "9"
+  url: "https://www.jmlr.org/papers/volume23/21-0888/21-0888.pdf"
 
   authors:
     - family-names: "Lindauer"
       given-names: "Marius"
-      affiliation: "Leibniz Universität Hannover"
+      affiliation: "Leibniz University Hannover"
 
     - family-names: "Eggensperger"
       given-names: "Katharina" 
       orcid: "https://orcid.org/0000-0002-0309-401X"
-      affiliation: "University of Freiburg, Germany"
+      affiliation: "University of Freiburg"
 
     - family-names: "Feurer"
       given-names: "Matthias"
       orcid: "https://orcid.org/0000-0001-9611-8588"
-      affiliation: "University of Freiburg, Germany"
+      affiliation: "University of Freiburg"
 
     - family-names: "Biedenkapp"
       given-names: "André "
       orcid: "https://orcid.org/0000-0002-8703-8559"
-      affiliation: "University of Freiburg, Germany"
+      affiliation: "University of Freiburg"
 
     - family-names: "Deng"
       given-names: "Difan"
-      affiliation: "Leibniz Universität Hannover"
+      affiliation: "Leibniz University Hannover"
 
     - family-names: "Benjamins"
       given-names: "Carolin"
-      affiliation: "Leibniz Universität Hannover"
+      affiliation: "Leibniz University Hannover"
+
+    - family-names: "Ruhkopf"
+      given-names: "Tim"
+      affiliation: "Leibniz University Hannover"
 
     - family-names: "Sass"
       given-names: "René"
-      affiliation: "Leibniz Universität Hannover"
+      affiliation: "Leibniz University Hannover"
 
     - family-names: "Hutter"
       given-names: "Frank"
-      affiliation: "University of Freiburg, Germany"
+      affiliation: "University of Freiburg"
 ...

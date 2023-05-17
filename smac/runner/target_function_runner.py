@@ -72,7 +72,12 @@ class TargetFunctionRunner(AbstractSerialRunner):
 
         # Pynisher limitations
         if (memory := self._scenario.trial_memory_limit) is not None:
+            unit = None
+            if isinstance(memory, (tuple, list)):
+                memory, unit = memory
             memory = int(math.ceil(memory))
+            if unit is not None:
+                memory = (memory, unit)
 
         if (time := self._scenario.trial_walltime_limit) is not None:
             time = int(math.ceil(time))
@@ -93,6 +98,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         instance: str | None = None,
         budget: float | None = None,
         seed: int | None = None,
+        **dask_data_to_scatter: dict[str, Any],
     ) -> tuple[StatusType, float | list[float], float, dict]:
         """Calls the target function with pynisher if algorithm wall time limit or memory limit is
         set. Otherwise, the function is called directly.
@@ -107,6 +113,14 @@ class TargetFunctionRunner(AbstractSerialRunner):
             A positive, real-valued number representing an arbitrary limit to the target function
             handled by the target function internally.
         seed : int, defaults to None
+        dask_data_to_scatter: dict[str, Any]
+            This kwargs must be empty when we do not use dask! ()
+            When a user scatters data from their local process to the distributed network,
+            this data is distributed in a round-robin fashion grouping by number of cores.
+            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+            every time we would like to execute a target function with a big dataset.
+            For example, when your target function has a big dataset shared across all the target function,
+            this argument is very useful.
 
         Returns
         -------
@@ -121,6 +135,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         """
         # The kwargs are passed to the target function.
         kwargs: dict[str, Any] = {}
+        kwargs.update(dask_data_to_scatter)
 
         if "seed" in self._required_arguments:
             kwargs["seed"] = seed

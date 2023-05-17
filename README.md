@@ -57,10 +57,10 @@ Install SMAC via PyPI:
 pip install smac
 ```
 
-Or alternatively, clone the environment:
+If you want to contribute to SMAC, use the following steps instead:
 ```
 git clone https://github.com/automl/SMAC3.git && cd SMAC3
-pip install -e .[dev]
+make install-dev
 ```
 
 
