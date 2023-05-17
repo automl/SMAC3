@@ -47,33 +47,25 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
     [INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:598] Config aee647 is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:598] Config 3d6082 is a new incumbent. Total number of incumbents: 5.
-    [INFO][abstract_intensifier.py:598] Config e63c52 is a new incumbent. Total number of incumbents: 6.
-    [INFO][abstract_intensifier.py:590] Added config 58e5a3 and rejected config f88a6b as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][configspace.py:175] --- batch_size: 77 -> 209
-    [INFO][configspace.py:175] --- learning_rate_init: 0.000534923804864797 -> 0.001244415480039115
-    [INFO][configspace.py:175] --- n_neurons: 146 -> 231
-    [INFO][abstract_intensifier.py:598] Config 8d6e8c is a new incumbent. Total number of incumbents: 7.
-    [INFO][abstract_intensifier.py:598] Config 616366 is a new incumbent. Total number of incumbents: 8.
-    [INFO][abstract_intensifier.py:598] Config f03205 is a new incumbent. Total number of incumbents: 9.
+    [INFO][abstract_intensifier.py:598] Config 13afd6 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:598] Config c3023b is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:590] Added config 514749 and rejected config 13afd6 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- batch_size: 77 -> 194
+    [INFO][configspace.py:175] --- learning_rate_init: 0.000966991684687385 -> 0.001244415480039115
+    [INFO][configspace.py:175] --- n_neurons: 172 -> 252
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.6975622177124023
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.30957961082458496
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 173
+    [INFO][smbo.py:330] --- Remaining trials: 179
     Validated costs from default config: 
-    --- [0.60155834 0.2153914 ]
+    --- [0.60155834 0.22424471]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.25456238]
-    --- [0.03561281 1.04682553]
-    --- [0.03367069 1.1980207 ]
-    --- [0.02309656 1.62082374]
-    --- [0.02504488 1.32131147]
-    --- [0.03756732 0.67635632]
-    --- [0.05064299 0.56599855]
-    --- [0.04312519 0.60518599]
-    --- [0.10907923 0.51134431]
+    --- [0.88924791 0.27638531]
+    --- [0.04813757 0.76056075]
+    --- [0.03561281 0.87839353]
+    --- [0.02866141 1.32791805]
+    --- [0.02198468 1.78876913]
 
 
 
@@ -254,7 +246,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  46.969 seconds)
+   **Total running time of the script:** ( 0 minutes  41.036 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:

@@ -238,7 +238,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  29.466 seconds)
+   **Total running time of the script:** ( 0 minutes  27.679 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_6_priors.py:
