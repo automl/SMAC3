@@ -12,5 +12,3 @@ updates:
       - "eddiebergman"
     reviewers:
       - "eddiebergman"
-    commit-message:
-      include: "chore: "
