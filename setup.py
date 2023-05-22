@@ -76,9 +76,6 @@ setuptools.setup(
     extras_require=extras_require,
     test_suite="pytest",
     platforms=["Linux"],
-    entry_points={
-        "console_scripts": ["smac = smac.smac_cli:cmd_line_call"],
-    },
     classifiers=[
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
