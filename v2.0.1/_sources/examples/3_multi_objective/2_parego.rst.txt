@@ -47,21 +47,29 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
     [INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:598] Config 01cb2f is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:598] Config 96518e is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:590] Added config f8d7bc and rejected config d77b40 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- activation: 'logistic' -> 'tanh'
+    [INFO][configspace.py:175] --- batch_size: 175 -> 161
+    [INFO][configspace.py:175] --- learning_rate_init: 0.004156370184967407 -> 0.003249281707595372
+    [INFO][configspace.py:175] --- n_layer: 2 -> 1
+    [INFO][configspace.py:175] --- n_neurons: 90 -> 209
+    [INFO][abstract_intensifier.py:598] Config 873b18 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:590] Added config c1845b and rejected config 873b18 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- batch_size: 165 -> 200
+    [INFO][configspace.py:175] --- learning_rate_init: 0.00017367524733671546 -> 0.0008408919803102038
+    [INFO][configspace.py:175] --- n_neurons: 162 -> 125
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -2.045799970626831
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.5273544788360596
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 182
+    [INFO][smbo.py:330] --- Remaining trials: 173
     Validated costs from default config: 
-    --- [0.60155834 0.25169373]
+    --- [0.60155834 0.33379102]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.32273936]
-    --- [0.04813757 0.78302634]
-    --- [0.03561281 0.96546268]
-    --- [0.03534045 1.25752056]
-    --- [0.03033581 1.98614478]
+    --- [0.88924791 0.32803142]
+    --- [0.04813757 0.89333475]
+    --- [0.02532498 0.89361668]
+    --- [0.07762999 0.61451149]
 
 
 
@@ -242,7 +250,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  43.379 seconds)
+   **Total running time of the script:** ( 0 minutes  36.834 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
