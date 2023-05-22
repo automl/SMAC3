@@ -14,7 +14,7 @@ References
 
 .. [Know06] J. Knowles; 
     ParEGO: A Hybrid Algorithm with on-Line Landscape Approximation for Expensive Multiobjective Optimization Problems; 
-    https://www.cs.bham.ac.uk/~jdk/parego/ParEGO-TR3.pdf
+    https://www.semanticscholar.org/paper/ParEGO%3A-a-hybrid-algorithm-with-on-line-landscape-Knowles/73b5b196b35fb23e1f908d73b787c2c2942fadb5
 
 
 .. [SKKS10] N. Srinivas, S. M. Kakade, A. Krause, M. Seeger; 
