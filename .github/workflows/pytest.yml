@@ -39,7 +39,7 @@ jobs:
   # General unit tests
   source-test:
     name: ${{ matrix.python-version }}-${{ matrix.os }}
-    if: !${{ github.event.pull_request.draft }}
+    if: !github.event.pull_request.draft
 
     runs-on: ${{ matrix.os }}
     defaults:
