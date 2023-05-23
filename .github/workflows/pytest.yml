@@ -39,6 +39,7 @@ jobs:
   # General unit tests
   source-test:
     name: ${{ matrix.python-version }}-${{ matrix.os }}
+    if: !${{ github.event.pull_request.draft }}
 
     runs-on: ${{ matrix.os }}
     defaults:
@@ -74,7 +75,6 @@ jobs:
         echo "::set-output name=BEFORE::$(git status --porcelain -b)"
 
     - name: Tests
-      if: ${{ github.event.pull_request.draft }}
       run: |
           echo "Running all tests..."
           pytest ${{ env.pytest-args }} ${{ env.test-dir }}
@@ -95,6 +95,7 @@ jobs:
 # Testing with conda
   conda-tests:
     name: conda-${{ matrix.python-version }}-${{ matrix.os }}
+    if: !${{ github.event.pull_request.draft }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -125,7 +126,6 @@ jobs:
         python -m pip install -e ".${{ env.extra-requires }}"
 
     - name: Tests
-      if: ${{ github.event.pull_request.draft }}
       run: |
         echo "Running all tests..."
         pytest ${{ env.pytest-args }} ${{ env.test-dir }}
@@ -170,7 +170,6 @@ jobs:
         python -m pip install ${{ env.sdist_name }}${{ env.extra-requires }}
 
     - name: Tests
-      if: ${{ github.event.pull_request.draft }}
       run: |
         echo "Running all tests..."
         pytest ${{ env.pytest-args }} ${{ env.test-dir }}
