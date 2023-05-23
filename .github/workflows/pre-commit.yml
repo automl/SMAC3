@@ -18,7 +18,7 @@ on:
 
 jobs:
   run-all-files:
-    if : true
+    if : ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
 
     steps:
