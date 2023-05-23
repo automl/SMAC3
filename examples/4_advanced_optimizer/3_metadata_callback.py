@@ -19,6 +19,7 @@ There is an example for obtaining the information via GitPython below:
 """
 
 import sys
+
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 
 from smac import HyperparameterOptimizationFacade as HPOFacade
@@ -65,7 +66,7 @@ if __name__ == "__main__":
                 branch="Name of Active Branch",
                 commit="Commit Hash",
                 command=" ".join(sys.argv),
-                additional_information="Some Additional Information"
+                additional_information="Some Additional Information",
             )
         ],
         logging_level=999999,
