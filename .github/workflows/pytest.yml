@@ -74,16 +74,12 @@ jobs:
         echo "::set-output name=BEFORE::$(git status --porcelain -b)"
 
     - name: Tests
+      if: ${{ github.event.pull_request.draft }}
       run: |
-        if [[ ${{ github.event.pull_request.draft }} == true ]]; then
-          echo "Running tests for draft pull request... (currently None)"
-          # Add your command to run specific tests for draft pull requests
-        else
           echo "Running all tests..."
           pytest ${{ env.pytest-args }} ${{ env.test-dir }}
           # Post-hoc clean-up
           make clean
-        fi
 
     - name: Check for files left behind by test
       run: |
@@ -129,14 +125,11 @@ jobs:
         python -m pip install -e ".${{ env.extra-requires }}"
 
     - name: Tests
+      if: ${{ github.event.pull_request.draft }}
       run: |
-          if [[ "${{ github.event.pull_request.draft }}" == "true" ]]; then
-            echo "Running tests for draft pull request..."
-            # Add your command to run specific tests for draft pull requests
-          else
-            echo "Running all tests..."
-            pytest ${{ env.pytest-args }} ${{ env.test-dir }}
-          fi
+        echo "Running all tests..."
+        pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+ 
 
 
   # Testing a dist install
@@ -177,11 +170,8 @@ jobs:
         python -m pip install ${{ env.sdist_name }}${{ env.extra-requires }}
 
     - name: Tests
+      if: ${{ github.event.pull_request.draft }}
       run: |
-          if [[ "${{ github.event.pull_request.draft }}" == "true" ]]; then
-            echo "Running tests for draft pull request..."
-            # Add your command to run specific tests for draft pull requests
-          else
-            echo "Running all tests..."
-            pytest ${{ env.pytest-args }} ${{ env.test-dir }}
-          fi
+        echo "Running all tests..."
+        pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+       
