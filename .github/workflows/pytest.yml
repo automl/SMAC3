@@ -39,7 +39,7 @@ jobs:
   # General unit tests
   source-test:
     name: ${{ matrix.python-version }}-${{ matrix.os }}
-    if: true
+    if: 'true'
 
     runs-on: ${{ matrix.os }}
     defaults:
