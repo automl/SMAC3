@@ -23,6 +23,7 @@ env:
 
 jobs:
   build-and-deploy:
+    if: !${{ github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout

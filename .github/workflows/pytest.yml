@@ -129,7 +129,7 @@ jobs:
       run: |
         echo "Running all tests..."
         pytest ${{ env.pytest-args }} ${{ env.test-dir }}
- 
+
 
 
   # Testing a dist install
@@ -173,4 +173,3 @@ jobs:
       run: |
         echo "Running all tests..."
         pytest ${{ env.pytest-args }} ${{ env.test-dir }}
-       
