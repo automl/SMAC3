@@ -14,6 +14,11 @@ on:
 
   # Trigger on a open/push to a PR targeting one of these branches
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
     branches:
       - main
       - development

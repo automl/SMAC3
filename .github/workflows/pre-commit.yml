@@ -12,6 +12,11 @@ on:
 
   # When a push occurs on a PR that targets these branches
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
     branches:
       - main
       - development
