@@ -1055,27 +1055,27 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][smbo.py:319] Finished 0 trials.
 [INFO][smbo.py:319] Finished 0 trials.
 [INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 50 trials.
 [INFO][abstract_intensifier.py:515] Added config 8ea495 as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:590] Added config 704d44 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
-[INFO][configspace.py:175] --- batch_size: 214 -&gt; 31
-[INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -&gt; 0.0038549874043245355
-[INFO][configspace.py:175] --- n_layer: 4 -&gt; 1
-[INFO][configspace.py:175] --- n_neurons: 66 -&gt; 87
 [INFO][smbo.py:319] Finished 100 trials.
 [INFO][smbo.py:319] Finished 100 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.09807491302490234
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.3840937614440918
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 393
+[INFO][smbo.py:330] --- Remaining trials: 372
+[INFO][abstract_intensifier.py:590] Added config eac397 and rejected config 8ea495 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][configspace.py:175] --- batch_size: 214 -&gt; 243
+[INFO][configspace.py:175] --- learning_rate: None -&gt; &#39;adaptive&#39;
+[INFO][configspace.py:175] --- learning_rate_init: 0.005599223654063347 -&gt; 0.019318481257105263
+[INFO][configspace.py:175] --- n_layer: 4 -&gt; 2
+[INFO][configspace.py:175] --- n_neurons: 66 -&gt; 183
+[INFO][configspace.py:175] --- solver: &#39;adam&#39; -&gt; &#39;sgd&#39;
 Default cost (SuccessiveHalving): 0.36672856700711853
-Incumbent cost (SuccessiveHalving): 0.0178087279480037
+Incumbent cost (SuccessiveHalving): 0.020595790776849254
 [INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
 [INFO][abstract_facade.py:198] Workers are reduced to 8.
 /opt/hostedtoolcache/Python/3.10.11/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
 Perhaps you already have a cluster running?
-Hosting the HTTP server on port 33967 instead
+Hosting the HTTP server on port 34261 instead
   warnings.warn(
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -1110,9 +1110,9 @@ Hosting the HTTP server on port 33967 instead
 [INFO][smbo.py:319] Finished 50 trials.
 [INFO][smbo.py:319] Finished 50 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -1.8553111553192139
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.1160273551940918
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 416
+[INFO][smbo.py:330] --- Remaining trials: 420
 Default cost (Hyperband): 0.36672856700711853
 Incumbent cost (Hyperband): 0.0178087279480037
 </pre></div>
@@ -1285,7 +1285,7 @@ Incumbent cost (Hyperband): 0.0178087279480037
     <span class="n">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  30.553 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  29.912 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" width="150px" /></a>
