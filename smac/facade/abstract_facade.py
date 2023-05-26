@@ -310,6 +310,9 @@ class AbstractFacade:
             Best found configuration.
         """
         incumbents = None
+        if isinstance(data_to_scatter, dict) and len(data_to_scatter) == 0:
+            raise ValueError("data_to_scatter must be None or dict with some elements, but got an empty dict.")
+
         try:
             incumbents = self._optimizer.optimize(data_to_scatter=data_to_scatter)
         finally:
