@@ -12,7 +12,7 @@ import numpy as np
 from ConfigSpace import Configuration
 
 import smac
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.constants import MAXINT
 from smac.main.config_selector import ConfigSelector
 from smac.runhistory import TrialInfo
@@ -272,13 +272,12 @@ class AbstractIntensifier:
 
             i = 0
             while True:
-                # We have two conditions to stop the loop:
-                # A) We found enough configs
-                # B) We used enough seeds
-                A = self._max_config_calls is not None and len(instance_seed_keys) >= self._max_config_calls
-                B = self._n_seeds is not None and i >= self._n_seeds
+                found_enough_configs = (
+                    self._max_config_calls is not None and len(instance_seed_keys) >= self._max_config_calls
+                )
+                used_enough_seeds = self._n_seeds is not None and i >= self._n_seeds
 
-                if A or B:
+                if found_enough_configs or used_enough_seeds:
                     break
 
                 if validate:
@@ -420,7 +419,10 @@ class AbstractIntensifier:
             if len(incumbent_isb_keys) <= 1:
                 return []
 
-            incumbent_isb_keys = list(set.difference(*map(set, incumbent_isb_keys)))  # type: ignore
+            # Compute the actual differences
+            intersection_isb_keys = set.intersection(*map(set, incumbent_isb_keys))  # type: ignore
+            union_isb_keys = set.union(*map(set, incumbent_isb_keys))  # type: ignore
+            incumbent_isb_keys = list(union_isb_keys - intersection_isb_keys)  # type: ignore
 
             if len(incumbent_isb_keys) == 0:
                 return []

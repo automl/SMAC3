@@ -221,6 +221,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
             config_id = self._n_id
 
+        # Set the id attribute of the config object, so that users can access it
+        config.config_id = config_id
+
         if status != StatusType.RUNNING:
             if self._n_objectives == -1:
                 self._n_objectives = n_objectives
@@ -592,6 +595,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def get_config_id(self, config: Configuration) -> int:
         """Returns the configuration id from a configuration."""
         return self._config_ids[config]
+
+    def has_config(self, config: Configuration) -> bool:
+        """Check if the config is stored in the runhistory"""
+        return config in self._config_ids
 
     def get_configs(self, sort_by: str | None = None) -> list[Configuration]:
         """Return all configurations in this RunHistory object.

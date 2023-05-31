@@ -2,7 +2,7 @@ name: Stale-Reminder
 
 on:
   schedule:
-    - cron: '42 14 * * 3'
+    - cron: '00 13 * * 1'
   workflow_dispatch:
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
           token: ${{ github.token }}
           query: >-
             is:open
-            -label:dependency,documentation,feature,enhancement,bug,test,example
+            -label:dependency,documentation,feature,enhancement,bug,test,example,discussion,duplicate,question
             updated:<${{ env.CUTOFF_DATE }}
             sort:updated-asc
     - name: Collect labelled issues that have not had interaction in a long time (but will not become stale)
@@ -34,7 +34,7 @@ jobs:
           token: ${{ github.token }}
           query: >-
             is:open
-            label:dependency,documentation,feature,enhancement,bug,test,example
+            label:dependency,documentation,feature,enhancement,bug,test,example,discussion,duplicate,question
             updated:<${{ env.CUTOFF_DATE }}
             sort:updated-asc
     - name: Combine issues into mail content

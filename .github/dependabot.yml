@@ -5,5 +5,10 @@ updates:
   # https://docs.github.com/en/enterprise-server@3.4/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "development"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    assignees:
+      - "eddiebergman"
+    reviewers:
+      - "eddiebergman"
