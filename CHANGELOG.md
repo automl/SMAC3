@@ -1,3 +1,8 @@
+# 2.0.2
+
+## Bugfixes
+- Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).
+
 # 2.0.1
 
 ## Improvements
