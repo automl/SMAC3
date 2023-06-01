@@ -92,8 +92,10 @@ class AbstractFacade:
         Callbacks, which are incorporated into the optimization loop.
     overwrite: bool, defaults to False
         When True, overwrites the run results if a previous run is found that is
-        inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked
-        for the exact behaviour (overwrite completely, save old run, or use old results).
+        consistent in the meta data with the current setup. When False and a previous run is found that is
+        consistent in the meta data, the run is continued. When False and a previous run is found that is
+        not consistent in the meta data, the the user is asked for the exact behaviour (overwrite completely
+        or rename old run first).
     dask_client: Client | None, defaults to None
         User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not
         be closed automatically and will have to be closed manually if provided explicitly. If none is provided
