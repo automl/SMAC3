@@ -455,6 +455,18 @@ class AbstractFacade:
         # Make sure the same acquisition function is used
         assert self._acquisition_function == self._acquisition_maximizer._acquisition_function
 
+        if isinstance(self._runner, DaskParallelRunner) and (
+            self.scenario.trial_walltime_limit is not None or self.scenario.trial_memory_limit is not None
+        ):
+            # This is probably due to pickling dask jobs
+            raise ValueError(
+                "Parallelization via Dask cannot be used in combination with limiting "
+                "the resources "
+                "of the target function via `scenario.trial_walltime_limit` or "
+                "`scenario.trial_memory_limit`. Set those to `None` if you want "
+                "parallelization. "
+            )
+
     def _get_signature_arguments(self) -> list[str]:
         """Returns signature arguments, which are required by the intensifier."""
         arguments = []
