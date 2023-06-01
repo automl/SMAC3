@@ -4,6 +4,9 @@
 - Add experimental instruction for installing SMAC in windows via a WSL.
 - More detailed documentation regarding continuing runs.
 
+## Bugfixes
+- Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).
+
 # 2.0.1
 
 ## Improvements
