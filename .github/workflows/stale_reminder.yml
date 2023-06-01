@@ -22,6 +22,7 @@ jobs:
         path: "recent_issues.md"
         token: ${{ github.token }}
         query: >-
+          is:issue
           is:open
           updated:>=${{ env.RECENT_ISSUE_CUTOFF_DATE }}
           sort:updated-asc
@@ -33,6 +34,7 @@ jobs:
           path: "potentially_stale_issues.md"
           token: ${{ github.token }}
           query: >-
+            is:issue
             is:open
             -label:dependency,documentation,feature,enhancement,bug,test,example,discussion,duplicate,question
             updated:<${{ env.CUTOFF_DATE }}
@@ -45,6 +47,7 @@ jobs:
           path: "old_issues.md"
           token: ${{ github.token }}
           query: >-
+            is:issue
             is:open
             label:dependency,documentation,feature,enhancement,bug,test,example,discussion,duplicate,question
             updated:<${{ env.CUTOFF_DATE }}
@@ -52,7 +55,7 @@ jobs:
     - name: Combine issues into mail content
       id: combine
       run: |
-        echo "Issues that have had interaction in the last 7 days <br />" >> mail.html
+        echo "## Issues that have had interaction in the last 7 days <br />" >> mail.html
         echo "$(<recent_issues.md) <br />" >> mail.html
         echo "## Issues that may become stale in <= 14 days <br />" >> mail.html
         echo "$(<potentially_stale_issues.md) <br />" >> mail.html
