@@ -26,7 +26,7 @@ Windows resources are mounted under /mnt in the WSL:
     bash Anaconda 2-4.2.0-linux-x86_ 64.sh
 
     
-Enter this command to create environment variable:
+Enter this command to create the environment variable:
 
 .. code:: bash
 
