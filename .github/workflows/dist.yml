@@ -1,7 +1,7 @@
 name: dist
 
 on:
-  # Manual trigger option in github
+  # Manual trigger option in GitHub
   workflow_dispatch:
 
   # Trigger on push to these branches
@@ -10,7 +10,7 @@ on:
       - main
       - development
 
-  # Trigger on a open/push to a PR targeting one of these branches
+  # Trigger on open/push to a PR targeting one of these branches
   pull_request:
     types:
       - opened

@@ -1,9 +1,9 @@
 name: docs
 
 on:
-  # Manual trigger option in github
-  # This won't push to github pages where docs are hosted due
-  # to the gaurded if statement in those steps
+  # Manual trigger option in GitHub
+  # This won't push to GitHub pages where docs are hosted due
+  # to the guarded if statement in those steps
   workflow_dispatch:
 
   # Trigger on push to these branches
@@ -12,7 +12,7 @@ on:
       - main
       - development
 
-  # Trigger on a open/push to a PR targeting one of these branches
+  # Trigger on open/push to a PR targeting one of these branches
   pull_request:
     types:
       - opened

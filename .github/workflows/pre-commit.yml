@@ -1,7 +1,7 @@
 name: pre-commit
 
 on:
-  # Manually triggerable in github
+  # Manually triggerable in GitHub
   workflow_dispatch:
 
   # When a push occurs on either of these branches
