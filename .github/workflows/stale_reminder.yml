@@ -9,10 +9,22 @@ jobs:
   stale-reminder:
     runs-on: ubuntu-latest
     steps:
-    - name: Get cutoff date for soon-to-be-stale issues
+    - name: Get cutoff dates
       id: date
       run: |
         echo "CUTOFF_DATE=$(date -d '-46 days' '+%Y-%m-%d')" >> $GITHUB_ENV
+        echo "RECENT_ISSUE_CUTOFF_DATE=$(date -d '-7 days' '+%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Get list of issues that have had interactions in the last week
+      id: recent
+      uses: lee-dohm/select-matching-issues@v1
+      with:
+        format: list
+        path: "recent_issues.md"
+        token: ${{ github.token }}
+        query: >-
+          is:open
+          updated:>=${{ env.RECENT_ISSUE_CUTOFF_DATE }}
+          sort:updated-asc
     - name: Collect issues that may become stale
       id: stale
       uses: lee-dohm/select-matching-issues@v1
