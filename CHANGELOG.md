@@ -1,3 +1,8 @@
+# 2.0.2
+
+## Improvements
+- Add experimental instruction for installing SMAC in windows via a WSL
+
 # 2.0.1
 
 ## Improvements

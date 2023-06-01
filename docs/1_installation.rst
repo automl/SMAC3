@@ -68,3 +68,11 @@ You must have `conda >= 4.9` installed. To update conda or check your current co
     
 
 Read `SMAC feedstock <https://github.com/conda-forge/smac-feedstock>`_ for more details.
+
+Windows via WSL (Experimental)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+SMAC can be installed under windows in a WSL (Windows-Subsystem für Linux). 
+You can find an instruction on how to do this here: :ref:`Experimental<Experimental>`
+However, this is very experimental. 
+In case you would like to suggest any changes, please let us know. 
