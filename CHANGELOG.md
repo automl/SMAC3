@@ -1,3 +1,8 @@
+# 2.0.2
+
+## Improvements
+- Add an error when we get an empty dict data_to_scatter so that we can avoid an internal error caused in Dask precautiously
+
 # 2.0.1
 
 ## Improvements
