@@ -1563,8 +1563,7 @@
 
         <span class="c1"># If we have more selected configs, we remove the ones with the smallest crowding distance</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_configs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">n_configs</span><span class="p">:</span>
-            <span class="n">all_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">from_keys</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">selected_configs</span><span class="p">]</span>
-            <span class="n">selected_configs</span> <span class="o">=</span> <span class="n">sort_by_crowding_distance</span><span class="p">(</span><span class="n">rh</span><span class="p">,</span> <span class="n">selected_configs</span><span class="p">,</span> <span class="n">all_keys</span><span class="p">)[:</span><span class="n">n_configs</span><span class="p">]</span>
+            <span class="n">selected_configs</span> <span class="o">=</span> <span class="n">sort_by_crowding_distance</span><span class="p">(</span><span class="n">rh</span><span class="p">,</span> <span class="n">configs</span><span class="p">,</span> <span class="n">all_keys</span><span class="p">)[:</span><span class="n">n_configs</span><span class="p">]</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found more configs than required. Removed configs with smallest crowding distance.&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">selected_configs</span>
