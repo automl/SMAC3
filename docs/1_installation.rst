@@ -75,4 +75,4 @@ Windows via WSL (Experimental)
 SMAC can be installed under windows in a WSL (Windows-Subsystem für Linux). 
 You can find an instruction on how to do this here: :ref:`Experimental<Experimental>`
 However, this is experimental and might not work in each case. 
-In case you would like to suggest any changes, please let us know. 
+If you would like to suggest any changes, please let us know. 
