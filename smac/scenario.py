@@ -57,6 +57,11 @@ class Scenario:
     n_trials : int, defaults to 100
         The maximum number of trials (combination of configuration, seed, budget, and instance, depending on the task)
         to run.
+    use_default_config: bool, defaults to False.
+        If True, the configspace's default configuration is evaluated in the initial design.
+        For historic benchmark reasons, this is False by default.
+        Notice, that this will result in n_configs + 1 for the initial design. Respecting n_trials,
+        this will result in one fewer evaluated configuration in the optimization.
     instances : list[str] | None, defaults to None
         Names of the instances to use. If None, no instances are used.
         Instances could be dataset names, seeds, subsets, etc.
@@ -93,6 +98,7 @@ class Scenario:
     trial_walltime_limit: float | None = None
     trial_memory_limit: int | None = None
     n_trials: int = 100
+    use_default_config: bool = False
 
     # Algorithm Configuration
     instances: list[str] | None = None
@@ -112,6 +118,16 @@ class Scenario:
         if self.seed == -1:
             seed = random.randint(0, 999999)
             object.__setattr__(self, "seed", seed)
+
+        # Transform instances to string if they are not
+        if self.instances is not None:
+            instances = [str(instance) for instance in self.instances]
+            object.__setattr__(self, "instances", instances)
+
+        # Transform instance features to string if they are not
+        if self.instance_features is not None:
+            instance_features = {str(instance): features for instance, features in self.instance_features.items()}
+            object.__setattr__(self, "instance_features", instance_features)
 
         # Change directory wrt name and seed
         self._change_output_directory()

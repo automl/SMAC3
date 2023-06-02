@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Any
 
-import numpy as np
-
 from smac.intensifier.successive_halving import SuccessiveHalving
 
 
@@ -22,36 +20,22 @@ class Hyperband(SuccessiveHalving):
 
         min_budget = self._min_budget
         max_budget = self._max_budget
+        assert min_budget is not None and max_budget is not None
         eta = self._eta
 
         # The only difference we have to do is change max_iterations, n_configs_in_stage, budgets_in_stage
-        s_max = int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))
+        self._s_max = self._get_max_iterations(eta, max_budget, min_budget)  # type: ignore[operator]
+        self._max_iterations: dict[int, int] = {}
+        self._n_configs_in_stage: dict[int, list] = {}
+        self._budgets_in_stage: dict[int, list] = {}
 
-        max_iterations: dict[int, int] = {}
-        n_configs_in_stage: dict[int, list] = {}
-        budgets_in_stage: dict[int, list] = {}
+        for i in range(self._s_max + 1):
+            max_iter = self._s_max - i
 
-        for i in range(s_max + 1):
-            max_iter = s_max - i
-            n_initial_challengers = int(eta**max_iter)
-
-            # How many configs in each stage
-            linspace = -np.linspace(0, max_iter, max_iter + 1)
-            n_configs_ = n_initial_challengers * np.power(eta, linspace)
-            n_configs = np.array(np.round(n_configs_), dtype=int).tolist()
-
-            # How many budgets in each stage
-            linspace = -np.linspace(max_iter, 0, max_iter + 1)
-            budgets = (max_budget * np.power(eta, linspace)).tolist()
-
-            max_iterations[i] = max_iter + 1
-            n_configs_in_stage[i] = n_configs
-            budgets_in_stage[i] = budgets
-
-        self._s_max = s_max
-        self._max_iterations = max_iterations
-        self._n_configs_in_stage = n_configs_in_stage
-        self._budgets_in_stage = budgets_in_stage
+            self._budgets_in_stage[i], self._n_configs_in_stage[i] = self._compute_configs_and_budgets_for_stages(
+                eta, max_budget, max_iter, self._s_max
+            )
+            self._max_iterations[i] = max_iter + 1
 
     def get_state(self) -> dict[str, Any]:  # noqa: D102
         state = super().get_state()

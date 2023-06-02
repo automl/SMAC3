@@ -6,7 +6,7 @@ from src.wrappers.wrapper import Wrapper
 
 
 class Version20(Wrapper):
-    supported_versions: list[str] = ["2.0.0b1"]
+    supported_versions: list[str] = ["2.0.1"]
 
     def __init__(self, task: Task, seed: int) -> None:
         super().__init__(task, seed)
@@ -21,6 +21,7 @@ class Version20(Wrapper):
             HyperparameterOptimizationFacade,
             MultiFidelityFacade,
             Scenario,
+            AlgorithmConfigurationFacade
         )
 
         # Get instances
@@ -58,6 +59,9 @@ class Version20(Wrapper):
             facade_object = MultiFidelityFacade
             intensifier_kwargs["n_seeds"] = self.task.n_seeds
             intensifier_kwargs["incumbent_selection"] = self.task.incumbent_selection
+        elif self.task.optimization_type == "ac":
+            facade_object = AlgorithmConfigurationFacade
+            intensifier_kwargs["max_config_calls"] = self.task.max_config_calls
         else:
             raise RuntimeError("Unknown optimization type.")
 

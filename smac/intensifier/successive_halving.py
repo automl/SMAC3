@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Iterator
 
+import math
 from collections import defaultdict
 
 import numpy as np
@@ -166,17 +167,8 @@ class SuccessiveHalving(AbstractIntensifier):
         )
 
         # Pre-computing Successive Halving variables
-        max_iter = int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))
-        n_initial_challengers = int(eta**max_iter)
-
-        # How many configs in each stage
-        linspace = -np.linspace(0, max_iter, max_iter + 1)
-        n_configs_ = n_initial_challengers * np.power(eta, linspace)
-        n_configs = np.array(np.round(n_configs_), dtype=int).tolist()
-
-        # How many budgets in each stage
-        linspace = -np.linspace(max_iter, 0, max_iter + 1)
-        budgets = (max_budget * np.power(eta, linspace)).tolist()
+        max_iter = self._get_max_iterations(eta, max_budget, min_budget)
+        budgets, n_configs = self._compute_configs_and_budgets_for_stages(eta, max_budget, max_iter)
 
         # Global variables
         self._min_budget = min_budget
@@ -186,6 +178,30 @@ class SuccessiveHalving(AbstractIntensifier):
         self._max_iterations: dict[int, int] = {0: max_iter + 1}
         self._n_configs_in_stage: dict[int, list] = {0: n_configs}
         self._budgets_in_stage: dict[int, list] = {0: budgets}
+
+    @staticmethod
+    def _get_max_iterations(eta: int, max_budget: float | int, min_budget: float | int) -> int:
+        return int(np.floor(np.log(max_budget / min_budget) / np.log(eta)))
+
+    @staticmethod
+    def _compute_configs_and_budgets_for_stages(
+        eta: int, max_budget: float | int, max_iter: int, s_max: int | None = None
+    ) -> tuple[list[int], list[int]]:
+        if s_max is None:
+            s_max = max_iter
+
+        n_initial_challengers = math.ceil((eta**max_iter) * (s_max + 1) / (max_iter + 1))
+
+        # How many configs in each stage
+        lin_space = -np.linspace(0, max_iter, max_iter + 1)
+        n_configs_ = np.floor(n_initial_challengers * np.power(eta, lin_space))
+        n_configs = np.array(np.round(n_configs_), dtype=int).tolist()
+
+        # How many budgets in each stage
+        lin_space = -np.linspace(max_iter, 0, max_iter + 1)
+        budgets = (max_budget * np.power(eta, lin_space)).tolist()
+
+        return budgets, n_configs
 
     def get_state(self) -> dict[str, Any]:  # noqa: D102
         # Replace config by dict
@@ -542,7 +558,8 @@ class SuccessiveHalving(AbstractIntensifier):
 
         # If we have more selected configs, we remove the ones with the smallest crowding distance
         if len(selected_configs) > n_configs:
-            selected_configs = sort_by_crowding_distance(rh, configs, all_keys)[:n_configs]
+            all_keys = [from_keys for _ in selected_configs]
+            selected_configs = sort_by_crowding_distance(rh, selected_configs, all_keys)[:n_configs]
             logger.debug("Found more configs than required. Removed configs with smallest crowding distance.")
 
         return selected_configs

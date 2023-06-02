@@ -19,7 +19,7 @@ logger = get_logger(__name__)
 
 
 class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
-    """Implements SMAC's default acquisition function optimization.
+    """Implement SMAC's default acquisition function optimization.
 
     This optimizer performs local search from the previous best points according, to the acquisition
     function, uses the acquisition function to sort randomly sampled configurations.

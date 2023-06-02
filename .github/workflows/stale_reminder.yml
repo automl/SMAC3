@@ -2,17 +2,30 @@ name: Stale-Reminder
 
 on:
   schedule:
-    - cron: '42 14 * * 3'
+    - cron: '00 13 * * 1'
   workflow_dispatch:
 
 jobs:
   stale-reminder:
     runs-on: ubuntu-latest
     steps:
-    - name: Get cutoff date for soon-to-be-stale issues
+    - name: Get cutoff dates
       id: date
       run: |
         echo "CUTOFF_DATE=$(date -d '-46 days' '+%Y-%m-%d')" >> $GITHUB_ENV
+        echo "RECENT_ISSUE_CUTOFF_DATE=$(date -d '-7 days' '+%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Get list of issues that have had interactions in the last week
+      id: recent
+      uses: lee-dohm/select-matching-issues@v1
+      with:
+        format: list
+        path: "recent_issues.md"
+        token: ${{ github.token }}
+        query: >-
+          is:issue
+          is:open
+          updated:>=${{ env.RECENT_ISSUE_CUTOFF_DATE }}
+          sort:updated-asc
     - name: Collect issues that may become stale
       id: stale
       uses: lee-dohm/select-matching-issues@v1
@@ -21,8 +34,9 @@ jobs:
           path: "potentially_stale_issues.md"
           token: ${{ github.token }}
           query: >-
+            is:issue
             is:open
-            -label:dependency,documentation,feature,enhancement,bug,test,example
+            -label:dependency,documentation,feature,enhancement,bug,test,example,discussion,duplicate,question
             updated:<${{ env.CUTOFF_DATE }}
             sort:updated-asc
     - name: Collect labelled issues that have not had interaction in a long time (but will not become stale)
@@ -33,14 +47,16 @@ jobs:
           path: "old_issues.md"
           token: ${{ github.token }}
           query: >-
+            is:issue
             is:open
-            label:dependency,documentation,feature,enhancement,bug,test,example
+            label:dependency,documentation,feature,enhancement,bug,test,example,discussion,duplicate,question
             updated:<${{ env.CUTOFF_DATE }}
             sort:updated-asc
     - name: Combine issues into mail content
       id: combine
       run: |
-        echo $date
+        echo "## Issues that have had interaction in the last 7 days <br />" >> mail.html
+        echo "$(<recent_issues.md) <br />" >> mail.html
         echo "## Issues that may become stale in <= 14 days <br />" >> mail.html
         echo "$(<potentially_stale_issues.md) <br />" >> mail.html
         echo "## Issues that have not had interaction in the last 46 days but will not go stale due to their labels<br />" >> mail.html

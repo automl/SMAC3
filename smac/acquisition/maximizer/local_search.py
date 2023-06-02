@@ -219,7 +219,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             # From here: make argsort result to be random between equal values
             # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
             random = self._rng.rand(len(costs))
-            indices = np.lexsort((random.flatten(), costs.flatten())) # Last column is primary sort key!
+            indices = np.lexsort((random.flatten(), costs.flatten()))  # Last column is primary sort key!
 
             # Cannot use zip here because the indices array cannot index the
             # rand_configs list, because the second is a pure python list

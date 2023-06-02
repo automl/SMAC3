@@ -57,10 +57,10 @@ Install SMAC via PyPI:
 pip install smac
 ```
 
-Or alternatively, clone the environment:
+If you want to contribute to SMAC, use the following steps instead:
 ```
 git clone https://github.com/automl/SMAC3.git && cd SMAC3
-pip install -e .[dev]
+make install-dev
 ```
 
 
@@ -96,6 +96,10 @@ incumbent = smac.optimize()
 
 More examples can be found in the [documentation](https://automl.github.io/SMAC3/main/examples/).
 
+## Visualization via DeepCAVE
+
+With DeepCAVE ([Repo](https://github.com/automl/DeepCAVE), [Paper](https://arxiv.org/abs/2206.03493)) you can visualize your SMAC runs. It is a visualization and analysis tool for AutoML (especially for the sub-problem
+hyperparameter optimization) runs.
 
 ## License
 

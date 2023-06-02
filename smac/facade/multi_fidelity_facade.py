@@ -41,7 +41,13 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             How to select the incumbent when using budgets. Can be set to:
             * "any_budget": Incumbent is the best on any budget, i.e., the best performance regardless of budget.
             * "highest_observed_budget": Incumbent is the best in the highest budget run so far.
-            * "highest_budget": Incumbent is selected only based on the highest budget.
+            refer to `runhistory.get_trials` for more details. Crucially, if true, then a
+            for a given config-instance-seed, only the highest (so far executed) budget is used for
+            comparison against the incumbent. Notice, that if the highest observed budget is smaller
+            than the highest budget of the incumbent, the configuration will be queued again to
+            be intensified again.
+            * "highest_budget": Incumbent is selected only based on the absolute highest budget
+            available only.
         max_incumbents : int, defaults to 10
             How many incumbents to keep track of in the case of multi-objective.
         """

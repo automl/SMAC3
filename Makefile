@@ -1,8 +1,11 @@
 # These have been configured to only really run short tasks. Longer form tasks
 # are usually completed in github actions.
 
+SHELL := /bin/bash
+
 NAME := SMAC3
 PACKAGE_NAME := smac
+VERSION := 2.0.1
 
 DIR := "${CURDIR}"
 SOURCE_DIR := ${PACKAGE_NAME}
@@ -133,18 +136,21 @@ clean-data:
 # Will echo the commands to actually publish to be run to publish to actual PyPi
 # This is done to prevent accidental publishing but provide the same conveniences
 publish: clean build
-	read -p "Did you update the version number? Did you add the old version to docs/conf.py?"
+	read -p "Did you update the version number in Makefile, smac/__init__.py, benchmark/src/wrappers/v20.py, CITATION.cff? \
+	Did you add the old version to docs/conf.py? Did you add changes to CHANGELOG.md?"
 	
 	$(PIP) install twine
 	$(PYTHON) -m twine upload --repository testpypi ${DIST}/*
 	@echo
 	@echo "Test with the following:"
-	@echo "* Create a new virtual environment to install the uplaoded distribution into"
+	@echo "* Create a new virtual environment to install the uploaded distribution into"
 	@echo "* Run the following:"
-	@echo "--- pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ ${NAME}"
+	@echo "--- pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ ${PACKAGE_NAME}==${VERSION}"
 	@echo
 	@echo "* Run this to make sure it can import correctly, plus whatever else you'd like to test:"
 	@echo "--- python -c 'import ${PACKAGE_NAME}'"
 	@echo
 	@echo "Once you have decided it works, publish to actual pypi with"
 	@echo "--- python -m twine upload dist/*"
+	@echo "After publishing via pypi, please also add a new release on Github and edit the version in the SMAC link \
+	on the SMAC Github page."

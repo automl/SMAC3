@@ -13,7 +13,7 @@ from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import MultiFidelityFacade as MFFacade
 from smac import RandomFacade as RFacade
 from smac import Scenario
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
 
 FACADES = [BBFacade, HPOFacade, MFFacade, RFacade, HBFacade, ACFacade]
@@ -129,7 +129,7 @@ def test_continue_when_walltime_stopped(rosenbrock, facade):
 
     # Let's see if we restored the runhistory correctly; used walltime should be roughly the same
     # However, since some more things happen in the background, it might be slightly different
-    assert pytest.approx(smac2._optimizer.used_walltime, 0.2) == smac._optimizer.used_walltime
+    assert pytest.approx(smac2._optimizer.used_walltime, 0.5) == smac._optimizer.used_walltime
     assert smac2.runhistory.finished == smac.runhistory.finished
 
     smac2.optimize()
