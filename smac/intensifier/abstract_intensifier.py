@@ -664,6 +664,17 @@ class AbstractIntensifier:
         with open(filename, "w") as fp:
             json.dump(data, fp, indent=2)
 
+    def get_data(self):
+        data = {
+            "incumbent_ids": [self.runhistory.get_config_id(config) for config in self._incumbents],
+            "rejected_config_ids": self._rejected_config_ids,
+            "incumbents_changed": self._incumbents_changed,
+            "trajectory": [dataclasses.asdict(item) for item in self._trajectory],
+            "state": self.get_state(),
+        }
+        return data
+
+
     def load(self, filename: str | Path) -> None:
         """Loads the latest state of the intensifier including the incumbents and trajectory."""
         if isinstance(filename, str):
