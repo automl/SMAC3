@@ -1035,22 +1035,24 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-[INFO][abstract_intensifier.py:590] Added config d77b40 and rejected config f88a6b as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][configspace.py:175] --- activation: &#39;tanh&#39; -&gt; &#39;logistic&#39;
-[INFO][configspace.py:175] --- batch_size: 77 -&gt; 175
-[INFO][configspace.py:175] --- learning_rate_init: 0.000534923804864797 -&gt; 0.004156370184967407
-[INFO][configspace.py:175] --- n_layer: 1 -&gt; 2
-[INFO][configspace.py:175] --- n_neurons: 146 -&gt; 90
+[INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:598] Config c33391 is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:590] Added config 16d523 and rejected config 97ef22 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][configspace.py:175] --- activation: &#39;logistic&#39; -&gt; &#39;tanh&#39;
+[INFO][configspace.py:175] --- n_layer: 4 -&gt; 1
+[INFO][configspace.py:175] --- n_neurons: 11 -&gt; 33
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -1.7476754188537598
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.1009070873260498
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 189
+[INFO][smbo.py:330] --- Remaining trials: 167
 Validated costs from default config:
---- [0.60155834 0.58128858]
+--- [0.60155834 0.23207247]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.6146524 ]
---- [0.03561281 2.12714672]
+--- [0.04813757 0.75503588]
+--- [0.03561281 0.93238521]
+--- [0.06065924 0.555264  ]
+--- [0.145236   0.20592165]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1224,7 +1226,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  38.663 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  35.650 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo2.svg" width="150px" /></a>

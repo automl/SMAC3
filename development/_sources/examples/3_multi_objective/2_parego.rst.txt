@@ -46,22 +46,24 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-    [INFO][abstract_intensifier.py:590] Added config d77b40 and rejected config f88a6b as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][configspace.py:175] --- activation: 'tanh' -> 'logistic'
-    [INFO][configspace.py:175] --- batch_size: 77 -> 175
-    [INFO][configspace.py:175] --- learning_rate_init: 0.000534923804864797 -> 0.004156370184967407
-    [INFO][configspace.py:175] --- n_layer: 1 -> 2
-    [INFO][configspace.py:175] --- n_neurons: 146 -> 90
+    [INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:598] Config c33391 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:590] Added config 16d523 and rejected config 97ef22 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][configspace.py:175] --- activation: 'logistic' -> 'tanh'
+    [INFO][configspace.py:175] --- n_layer: 4 -> 1
+    [INFO][configspace.py:175] --- n_neurons: 11 -> 33
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -1.7476754188537598
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.1009070873260498
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 189
+    [INFO][smbo.py:330] --- Remaining trials: 167
     Validated costs from default config: 
-    --- [0.60155834 0.58128858]
+    --- [0.60155834 0.23207247]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.6146524 ]
-    --- [0.03561281 2.12714672]
+    --- [0.04813757 0.75503588]
+    --- [0.03561281 0.93238521]
+    --- [0.06065924 0.555264  ]
+    --- [0.145236   0.20592165]
 
 
 
@@ -242,7 +244,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  38.663 seconds)
+   **Total running time of the script:** ( 0 minutes  35.650 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
