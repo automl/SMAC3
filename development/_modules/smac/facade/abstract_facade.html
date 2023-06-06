@@ -1315,6 +1315,9 @@
 <span class="sd">            Best found configuration.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">incumbents</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_to_scatter</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_to_scatter</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;data_to_scatter must be None or dict with some elements, but got an empty dict.&quot;</span><span class="p">)</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">incumbents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">data_to_scatter</span><span class="o">=</span><span class="n">data_to_scatter</span><span class="p">)</span>
         <span class="k">finally</span><span class="p">:</span>
