@@ -21,7 +21,7 @@ SMAC supports multiple workers natively via Dask. Just specify ``n_workers`` in 
     When using multiple workers, SMAC is not reproducible anymore.
 
 
-..warning::
+.. warning ::
 
     You cannot use resource limitation (pynisher, via the `scenario` arguments `trail_walltime_limit` and `trial_memory_limit`).
     This is because pynisher works by running your function inside of a subprocess.
