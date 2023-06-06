@@ -49,7 +49,7 @@ class UpperBoundRegretCallback(Callback):
         evaluated_configs = evaluated_configs[:int(np.ceil(len(evaluated_configs) * self.top_p))]
 
         # Prepare acquisition functions
-        model = smbo.intensifier._config_selector._model
+        model = smbo.intensifier.config_selector._model
         # BUG: num data is calculated wrongly
         # calculate UBR right from the start, filter to sbo if necessary
         if (type(model) == GaussianProcess and model._is_trained) or (type(model) == RandomForest and model._rf is not None): 
