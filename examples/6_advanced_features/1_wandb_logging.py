@@ -19,6 +19,9 @@ from smac import Callback
 import smac
 from wandb import Table
 
+from smac.runhistory import TrialInfo, TrialValue
+from dataclasses import asdict
+
 
 class WandBCallback(Callback):
     def __init__(
@@ -50,6 +53,15 @@ class WandBCallback(Callback):
             **kwargs
         )
         super().__init__()
+
+    def on_tell_end(self, smbo: smac.main.smbo.SMBO, info: TrialInfo, value: TrialValue) -> bool | None:
+        info_dict = asdict(info)
+        info_dict["config"] = info_dict["config"].get_dictionary()
+        value_dict = asdict(value)
+        log_dict = info_dict | value_dict
+        log_dict["step"] = smbo.runhistory.finished
+        self.run.log(data=log_dict)
+        return super().on_tell_end(smbo, info, value)
     
 
     def on_end(self, smbo: smac.main.smbo.SMBO) -> None:
@@ -81,7 +93,7 @@ def train(config: Configuration, seed: int = 0) -> float:
 configspace = ConfigurationSpace({"C": (0.100, 1000.0)})
 
 # Scenario object specifying the optimization environment
-scenario = Scenario(configspace, deterministic=True, n_trials=100)
+scenario = Scenario(configspace, deterministic=True, n_trials=100, seed=3)
 
 wandb_callback = WandBCallback(
     project="smac-dev",
