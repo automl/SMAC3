@@ -3,6 +3,9 @@
 ## Bugfixes
 - Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).
 
+## Features
+- Log to WandB (#1037)
+
 # 2.0.1
 
 ## Improvements
