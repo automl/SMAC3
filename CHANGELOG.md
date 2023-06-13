@@ -1,8 +1,16 @@
 # 2.0.2
 
+
 ## Features
 - Add Upper Confidence Bound as an acquisition function
 - Add Stopping Criterion Callback
+
+## Improvements
+- Add an error when we get an empty dict data_to_scatter so that we can avoid an internal error caused in Dask precautiously
+
+## Bugfixes
+- Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).
+
 
 # 2.0.1
 
