@@ -17,14 +17,14 @@ it has been observed that the SMAC installation results in a segmentation fault 
 
 **2) Get Anaconda**
 
-Download an Anaconda Linux version to drive D under Windows, e.g. D:\\Anaconda-latest-Linux-x86_64.sh
+Download an Anaconda Linux version to drive D under Windows, e.g. D:\\Anaconda3-2023.03-1-Linux-x86_64
     
 In the WSL, Windows resources are mounted under /mnt:
 
 .. code:: bash
 
     cd /mnt/d
-    bash Anaconda-latest-Linux-x86_64.sh
+    bash Anaconda3-2023.03-1-Linux-x86_64
 
 Enter this command to create the environment variable:
 
