@@ -37,9 +37,6 @@ def sigmoid(x):
 
 import wandb
 
-global counter
-counter = 0
-
 
 
 class UpperBoundRegretCallback(Callback):
@@ -61,9 +58,6 @@ class UpperBoundRegretCallback(Callback):
 
     def on_tell_end(self, smbo: SMBO, info: TrialInfo, value: TrialValue) -> bool | None:
         # Check encoding
-        global counter
-        print("UBR", counter)
-        counter += 1
         if type(smbo.intensifier.config_selector._runhistory_encoder) is not RunHistoryEncoder:
             msg = "Currently no response value transformations are supported, only "\
                   "RunHistoryEncoder possible."
@@ -114,7 +108,7 @@ class UpperBoundRegretCallback(Callback):
                 "min_lcb": min_lcb,
             }
 
-            logger.info(f"Upper Bound Regret: n={smbo.runhistory.finished}, " + ", ".join([f"{k}={v:.4f}" for k, v in info.items() if k != "n_evaluated"]))
+            logger.debug(f"Upper Bound Regret: n={smbo.runhistory.finished}, " + ", ".join([f"{k}={v:.4f}" for k, v in info.items() if k != "n_evaluated"]))
 
             self.history.append(info)
 
@@ -232,21 +226,18 @@ class SAWEI(Callback):
         self.history: list[dict[str, Any]] = []
 
         self.wandb_run = None
-        # self.run = wandb.init(
-        #     project="sawei",
-        #     job_type="dev",
-        #     entity="benjamc",
-        #     group="dev",
-        #     dir="./tmp/sawei",
-        # )
+        self.wandb_run = wandb.init(
+            project="sawei",
+            job_type="dev",
+            entity="benjamc",
+            group="dev",
+            dir="./tmp/sawei",
+        )
 
     def __str__(self) -> str:
         return "Self-Adjusting Weighted Expected Improvement (SAWEI)"
 
     def on_tell_end(self, solver: smac.main.smbo.SMBO, info: TrialInfo, value: TrialValue) -> bool | None:
-        global counter
-        print("SAWEI", counter)
-        counter += 1
         model = solver.intensifier.config_selector._model
         if model_fitted(model):
             state = {
@@ -258,8 +249,6 @@ class SAWEI(Callback):
                 "wei_pi_mod_term": query_callback(solver=solver, callback_type="WEITracker", key="pi_mod_term"),
                 "ubr": query_callback(solver=solver, callback_type="UpperBoundRegretCallback", key="ubr"),
             }
-            print(state["ubr"])
-
             self.history.append(state)
             # Check if it is time to switch
             switch = False
@@ -270,10 +259,9 @@ class SAWEI(Callback):
             else:
                 key_pi = "wei_pi_mod_term"
 
-            # first observation is -np.inf bc we cannot calculate UBR yet,
-            # and we need at least 2 UBRs to compute the gradient
-            if len(UBR) > 2:  
-                switch = detect_switch(UBR=UBR[1:], window_size=self.window_size, atol_rel=self.atol_rel)[-1]
+            # We need at least 2 UBRs to compute the gradient
+            if len(UBR) >= 2: 
+                switch = detect_switch(UBR=UBR, window_size=self.window_size, atol_rel=self.atol_rel)[-1]
 
             self._pi_term_sum += state[key_pi]
             self._ei_term_sum += state["wei_ei_term"]
@@ -313,8 +301,6 @@ class SAWEI(Callback):
                 if switch:
                     self._pi_term_sum: float = 0.
                     self._ei_term_sum: float = 0.
-
-            # return self.alpha
 
             if type(solver.intensifier._config_selector._acquisition_function) == WEI:
                 self.modify_solver(solver=solver, alpha=self.alpha)
