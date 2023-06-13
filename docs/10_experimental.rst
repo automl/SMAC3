@@ -17,16 +17,15 @@ it has been observed that the SMAC installation results in a segmentation fault 
 
 **2) Get Anaconda**
 
-Download an Anaconda Linux version to drive D under Windows, e.g. \\Anaconda\\Anaconda2-4.2.0-linux-x86_64.sh
+Download an Anaconda Linux version to drive D under Windows, e.g. D:\\Anaconda-latest-Linux-x86_64.sh
     
 In the WSL, Windows resources are mounted under /mnt:
 
 .. code:: bash
 
     cd /mnt/d
-    bash Anaconda2-4.2.0-linux-x86_64.sh
+    bash Anaconda-latest-Linux-x86_64.sh
 
-    
 Enter this command to create the environment variable:
 
 .. code:: bash
@@ -41,7 +40,7 @@ Change to your home folder and install the general software there:
 
 .. code:: bash
 
-    cd /home/USERNAME
+    cd /home/${USER}
     sudo apt-get install software-properties-common
     sudo apt-get update
     sudo apt-get install build-essential swig
