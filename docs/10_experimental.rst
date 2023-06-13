@@ -8,7 +8,7 @@ Experimental
 Installation in Windows via WSL
 ------------------------------
 
-SMAC can be installed in a WSL (Windows Subsystem for Linux) under windows.
+SMAC can be installed in a WSL (Windows Subsystem for Linux) under Windows.
 
 **1) Install WSL under Windows**
 
