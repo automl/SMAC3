@@ -8,11 +8,11 @@ Experimental
 Installation in Windows via WSL
 ------------------------------
 
-SMAC can be installed in a WSL (Windows-Subsystem für Linux) under windows.
+SMAC can be installed in a WSL (Windows Subsystem for Linux) under windows.
 
 **1) Install WSL under Windows**
 
-Install WSL under windows. This SMAC installation workflow was tested with Ubuntu 18.04. For Ubuntu 20.04, 
+Install WSL under Windows. This SMAC installation workflow was tested with Ubuntu 18.04. For Ubuntu 20.04, 
 it has been observed that the SMAC installation results in a segmentation fault (core dumped).
 
 **2) Get Anaconda**
