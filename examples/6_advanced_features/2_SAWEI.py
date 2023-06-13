@@ -70,7 +70,7 @@ if __name__ == "__main__":
     model = QuadraticFunction()
 
     # Scenario object specifying the optimization "environment"
-    scenario = Scenario(model.configspace, deterministic=True, n_trials=100)
+    scenario = Scenario(model.configspace, deterministic=True, n_trials=100, seed=np.random.randint(low=0,high=10000))
 
     sawei_kwargs = get_sawei_kwargs()
 
