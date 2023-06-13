@@ -93,7 +93,6 @@ class StoppingCallback(Callback):
         update_beta: bool = True,
         upper_bound_estimation_rate: float = 0.5,
         wait_iterations: int = 20,
-        n_points_lcb: int = 1000,
         statistical_error_threshold: Union[float, None] = None,
         statistical_error_field_name: str = "statistical_error",
         do_not_trigger: bool = False,
@@ -104,7 +103,6 @@ class StoppingCallback(Callback):
         super().__init__()
         self._upper_bound_estimation_rate = upper_bound_estimation_rate
         self._wait_iterations = wait_iterations
-        self._n_points_lcb = n_points_lcb
         self._statistical_error_threshold = statistical_error_threshold
         self._statistical_error_field_name = statistical_error_field_name
         self._do_not_trigger = do_not_trigger
@@ -186,7 +184,7 @@ class StoppingCallback(Callback):
             # get pessimistic estimate of incumbent performance
             configs = configs[: max(round(self._upper_bound_estimation_rate * num_data), 1)]
             min_lcb, min_ucb = self.compute_min_lcb_ucb(
-                self._ucb, self._lcb, self._n_points_lcb, configs, smbo.scenario.configspace, runhistory_encoder
+                self._ucb, self._lcb, configs, smbo.scenario.configspace, runhistory_encoder, smbo.scenario.seed
             )
 
             # compute regret
@@ -280,10 +278,10 @@ class StoppingCallback(Callback):
     def compute_min_lcb_ucb(
         ucb: UCB,
         lcb: LCB,
-        n_points_lcb: int,
         configs: list[Configuration],
         configspace: ConfigurationSpace,
         runhistory_encoder: Optional[AbstractRunHistoryEncoder] = None,
+        seed: int = 42,
     ) -> tuple[float, float]:
         """
         Computes the minimum lcb and ucb of the given configs.
@@ -294,14 +292,14 @@ class StoppingCallback(Callback):
             The ucb acquisition function.
         lcb : LCB
             The lcb acquisition function.
-        n_points_lcb : int
-            The number of points that should be sampled for the lcb.
         configs : list[Configuration]
             The configs for computing the ucb.
         configspace : ConfigurationSpace
             The configspace, needed for optimizing lcb.
         runhistory_encoder : Optional[AbstractRunHistoryEncoder]
             The runhistory encoder, needs to be given if the costs in the runhistory are encoded.
+        seed : int
+            The seed for the random search.
         """
         min_ucb = ucb(configs)
         min_ucb *= -1
@@ -309,9 +307,11 @@ class StoppingCallback(Callback):
             min_ucb = runhistory_encoder.transform_response_values_inverse(min_ucb)
         min_ucb = min(min_ucb)[0]
         # get optimistic estimate of the best possible performance (min lcb of all configs)
-        maximizer = LocalAndSortedRandomSearch(configspace=configspace, acquisition_function=lcb, challengers=1)
+        maximizer = LocalAndSortedRandomSearch(
+            configspace=configspace, acquisition_function=lcb, challengers=1, seed=seed
+        )
         # SMBO is maximizing the negative lcb, thus, we need to invert the lcb
-        challenger_list = maximizer.maximize(previous_configs=[], n_points=n_points_lcb)
+        challenger_list = maximizer.maximize(previous_configs=[], n_points=1)
 
         min_lcb = lcb(challenger_list)
         min_lcb *= -1

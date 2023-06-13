@@ -21,7 +21,6 @@ class MultiFidelityStoppingCallback:
         update_beta: bool = True,
         upper_bound_estimation_rate: float = 0.5,
         min_evaluations: int = 20,
-        n_points_lcb: int = 1000,
         statistical_error_threshold: Optional[float] = None,
         statistical_error_field_name: Optional[str] = "statistical_error",
         statistical_error_estimation_only_incumbent: bool = True,
@@ -32,7 +31,6 @@ class MultiFidelityStoppingCallback:
         super().__init__()
         self._upper_bound_estimation_rate = upper_bound_estimation_rate
         self._min_evaluations = min_evaluations
-        self._n_points_lcb = n_points_lcb
         self._statistical_error_threshold = statistical_error_threshold
         self._statistical_error_field_name = statistical_error_field_name
         self._statistical_error_estimation_only_incumbent = statistical_error_estimation_only_incumbent
@@ -141,11 +139,7 @@ class MultiFidelityStoppingCallback:
         )
 
         min_lcb, min_ucb = StoppingCallback.compute_min_lcb_ucb(
-            ucb=self._ucb,
-            lcb=self._lcb,
-            n_points_lcb=1000,
-            configs=configs_ucb,
-            configspace=scenario.configspace,
+            ucb=self._ucb, lcb=self._lcb, configs=configs_ucb, configspace=scenario.configspace, seed=scenario.seed
         )
         regret = min_ucb - min_lcb
         stop = statistical_error >= regret or np.abs(statistical_error - regret) < self._epsilon
