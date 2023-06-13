@@ -72,7 +72,7 @@ Read `SMAC feedstock <https://github.com/conda-forge/smac-feedstock>`_ for more 
 Windows via WSL (Experimental)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SMAC can be installed under windows in a WSL (Windows-Subsystem für Linux). 
+SMAC can be installed under Windows in a WSL (Windows Subsystem for Linux). 
 You can find an instruction on how to do this here: :ref:`Experimental<Experimental>`
 However, this is experimental and might not work in each case. 
 If you would like to suggest any changes, please let us know. 
