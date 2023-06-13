@@ -31,7 +31,7 @@ Enter this command to create the environment variable:
 
 .. code:: bash
 
-    export PATH="$PATH:/home/USERNAME/anaconda3/bin
+    export PATH="$PATH:/home/${USER}/anaconda3/bin
 
 Input 'python' to check if the installation was successful.
 
