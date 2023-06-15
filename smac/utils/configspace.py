@@ -169,12 +169,16 @@ def print_config_changes(
     if incumbent is None or challenger is None:
         return
 
-    params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
-    for param in params:
-        if param[1] != param[2]:
-            logger.info("--- %s: %r -> %r" % param)
-        else:
-            logger.debug("--- %s Remains unchanged: %r", param[0], param[1])
+    all_keys = set(incumbent.keys().union(challenger.keys()))
+
+    params = sorted(
+        [(param, incumbent.get(param), challenger.get(param)) for param in all_keys]
+    )
+    for (key, inc_val, challenger_val) in params:
+        msg = f"--- {key}: {inc_val} -> {challenger_val}"
+        if inc_val == challenger_val:
+            msg += " (unchanged)"
+        logger.debug(msg)
 
 
 # def check_subspace_points(
