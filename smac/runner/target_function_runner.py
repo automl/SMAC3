@@ -96,8 +96,10 @@ class TargetFunctionRunner(AbstractSerialRunner):
         f = self._target_function
         if isinstance(f, partial):
             f = f.func
-
-        meta.update({"code": str(f.__code__.co_code)})
+            meta.update({"code": str(f.__code__.co_code)})
+            meta.update({"code-partial-args": repr(f)})
+        else:
+            meta.update({"code": str(self._target_function.__code__.co_code)})
 
         return meta
 
