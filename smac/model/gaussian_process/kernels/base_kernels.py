@@ -254,7 +254,7 @@ class AbstractKernel:
             if not isinstance(operate_on, np.ndarray):
                 raise TypeError(f"The argument `operate_on` needs to be of type np.ndarray but is {type(operate_on)}")
 
-            if np.issubdtype(operate_on.dtype, np.integer):
+            if not np.issubdtype(operate_on.dtype, np.integer):
                 raise ValueError(f"The dtype of `operate_on` needs to be np.integer, but is {operate_on.dtype}")
 
             self.operate_on = operate_on
