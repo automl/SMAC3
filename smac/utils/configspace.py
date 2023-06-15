@@ -171,10 +171,8 @@ def print_config_changes(
 
     all_keys = set(incumbent.keys().union(challenger.keys()))
 
-    params = sorted(
-        [(param, incumbent.get(param), challenger.get(param)) for param in all_keys]
-    )
-    for (key, inc_val, challenger_val) in params:
+    params = sorted([(param, incumbent.get(param), challenger.get(param)) for param in all_keys])
+    for key, inc_val, challenger_val in params:
         msg = f"--- {key}: {inc_val} -> {challenger_val}"
         if inc_val == challenger_val:
             msg += " (unchanged)"
