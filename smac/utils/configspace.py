@@ -169,7 +169,9 @@ def print_config_changes(
     if incumbent is None or challenger is None:
         return
 
-    all_keys = set(incumbent.keys().union(challenger.keys()))
+    inc_keys = set(incumbent.keys())
+    challenger_keys = set(challenger.keys())
+    all_keys = inc_keys.union(challenger_keys)
 
     params = sorted([(param, incumbent.get(param), challenger.get(param)) for param in all_keys])
     for key, inc_val, challenger_val in params:
