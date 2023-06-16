@@ -170,15 +170,18 @@ def print_config_changes(
         return
 
     inc_keys = set(incumbent.keys())
-    challenger_keys = set(challenger.keys())
-    all_keys = inc_keys.union(challenger_keys)
+    all_keys = inc_keys.union(challenger.keys())
 
-    params = sorted([(param, incumbent.get(param), challenger.get(param)) for param in all_keys])
-    for key, inc_val, challenger_val in params:
-        msg = f"--- {key}: {inc_val} -> {challenger_val}"
-        if inc_val == challenger_val:
-            msg += " (unchanged)"
-        logger.debug(msg)
+    lines = []
+    for k in sorted(all_keys):
+        inc_k = incumbent.get(k)
+        cha_k = challenger.get(k)
+        lines.append(
+            f"--- {k}: {inc_k} -> {cha_k}" + " (unchanged)" if inc_k == cha_k else ""
+        )
+
+    msg = "\n".join(lines)
+    logger.debug(msg)
 
 
 # def check_subspace_points(
