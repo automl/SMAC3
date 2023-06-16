@@ -176,9 +176,7 @@ def print_config_changes(
     for k in sorted(all_keys):
         inc_k = incumbent.get(k)
         cha_k = challenger.get(k)
-        lines.append(
-            f"--- {k}: {inc_k} -> {cha_k}" + " (unchanged)" if inc_k == cha_k else ""
-        )
+        lines.append(f"--- {k}: {inc_k} -> {cha_k}" + " (unchanged)" if inc_k == cha_k else "")
 
     msg = "\n".join(lines)
     logger.debug(msg)
