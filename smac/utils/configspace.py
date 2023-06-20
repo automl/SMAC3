@@ -169,7 +169,7 @@ def print_config_changes(
     if incumbent is None or challenger is None:
         return
 
-    params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
+    params = sorted([(param, incumbent.get(param), challenger.get(param)) for param in challenger.keys()])
     for param in params:
         if param[1] != param[2]:
             logger.info("--- %s: %r -> %r" % param)
