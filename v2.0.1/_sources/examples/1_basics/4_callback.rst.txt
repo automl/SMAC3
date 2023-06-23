@@ -37,6 +37,8 @@ Furthermore, we print some stages of the optimization process.
     Let's start!
 
     Evaluated 10 trials so far.
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/4_callback.py:57: DeprecationWarning: `Configuration` act's like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
+      print(f"Current incumbent: {incumbent.get_dictionary()}")
     Current incumbent: {'x0': -0.9968221839517355, 'x1': 4.30847043171525}
     Current incumbent value: 1102.7877872130716
 
@@ -144,7 +146,7 @@ Furthermore, we print some stages of the optimization process.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.143 seconds)
+   **Total running time of the script:** ( 0 minutes  0.189 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_4_callback.py:

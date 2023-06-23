@@ -6,18 +6,18 @@
 
 Computation times
 =================
-**00:37.095** total execution time for **examples_1_basics** files:
+**00:44.805** total execution time for **examples_1_basics** files:
 
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_6_priors.py` (``6_priors.py``)                         | 00:29.256 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_6_priors.py` (``6_priors.py``)                         | 00:35.306 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_3_ask_and_tell.py` (``3_ask_and_tell.py``)             | 00:03.067 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_3_ask_and_tell.py` (``3_ask_and_tell.py``)             | 00:03.878 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_1_quadratic_function.py` (``1_quadratic_function.py``) | 00:02.606 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_1_quadratic_function.py` (``1_quadratic_function.py``) | 00:03.210 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_2_svm_cv.py` (``2_svm_cv.py``)                         | 00:01.169 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_2_svm_cv.py` (``2_svm_cv.py``)                         | 00:01.129 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_5_continue.py` (``5_continue.py``)                     | 00:00.854 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_5_continue.py` (``5_continue.py``)                     | 00:01.093 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_1_basics_4_callback.py` (``4_callback.py``)                     | 00:00.143 | 0.0 MB |
+| :ref:`sphx_glr_examples_1_basics_4_callback.py` (``4_callback.py``)                     | 00:00.189 | 0.0 MB |
 +-----------------------------------------------------------------------------------------+-----------+--------+

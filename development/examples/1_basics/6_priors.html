@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -1035,24 +1034,11 @@ but we stick with the hyperparameter optimization facade here. To incorporate us
 optimization, you have to change the acquisition function to <code class="docutils literal notranslate"><span class="pre">PriorAcquisitionFunction</span></code>.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 1 additional configurations.
 [WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
-[INFO][abstract_intensifier.py:515] Added config fec0cb as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:590] Added config 34b1eb and rejected config fec0cb as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- activation: &#39;logistic&#39; -&gt; &#39;relu&#39;
-[INFO][configspace.py:175] --- batch_size: 324 -&gt; 128
-[INFO][configspace.py:175] --- learning_rate_init: 1.1134996369914405 -&gt; 0.0010000000000000002
-[INFO][configspace.py:175] --- n_layer: 2 -&gt; 3
-[INFO][configspace.py:175] --- n_neurons: 157 -&gt; 108
-[INFO][configspace.py:175] --- optimizer: &#39;sgd&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:590] Added config 34ee2a and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 128 -&gt; 83
-[INFO][configspace.py:175] --- n_layer: 3 -&gt; 4
-[INFO][abstract_intensifier.py:590] Added config 066046 and rejected config 34ee2a as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 83 -&gt; 71
-[INFO][configspace.py:175] --- n_layer: 4 -&gt; 3
-[INFO][abstract_intensifier.py:590] Added config 7424fb and rejected config 066046 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 71 -&gt; 27
-[INFO][configspace.py:175] --- n_layer: 3 -&gt; 4
-[INFO][configspace.py:175] --- n_neurons: 108 -&gt; 105
+[INFO][abstract_intensifier.py:515] Added config 7ec7fe as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:590] Added config 6acb23 and rejected config 7ec7fe as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 95309e and rejected config 6acb23 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 87ba17 and rejected config 95309e as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config a3d1bd and rejected config 87ba17 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:327] Configuration budget is exhausted:
 [INFO][smbo.py:328] --- Remaining wallclock time: inf
 [INFO][smbo.py:329] --- Remaining cpu time: inf
@@ -1225,7 +1211,7 @@ Default cost: 0.026719281956050667
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  29.256 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  35.306 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-6-priors-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/6_priors.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
@@ -1283,7 +1269,7 @@ Default cost: 0.026719281956050667
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-6.2.1. Template is modified version of <a
+7.0.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

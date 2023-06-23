@@ -53,32 +53,19 @@ the target function now is required to have an instance argument.
     [INFO][successive_halving.py:329] --- Bracket 1: [5.0, 15.0, 45.0]
     [INFO][successive_halving.py:329] --- Bracket 2: [15.0, 45.0]
     [INFO][successive_halving.py:329] --- Bracket 3: [45.0]
-    [INFO][abstract_intensifier.py:515] Added config 588a4c as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:590] Added config d431b1 and rejected config 588a4c as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- alpha: 0.5488135039273248 -> 0.6027633760716439
-    [INFO][configspace.py:175] --- eta0: 0.0006273927602293597 -> 0.03077201812975574
-    [INFO][configspace.py:175] --- l1_ratio: 0.317983179393976 -> 0.06414749634878436
-    [INFO][abstract_intensifier.py:590] Added config d7ee7e and rejected config d431b1 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- alpha: 0.6027633760716439 -> 0.02021839744032572
-    [INFO][configspace.py:175] --- eta0: 0.03077201812975574 -> 0.018430691395340162
-    [INFO][configspace.py:175] --- l1_ratio: 0.06414749634878436 -> 0.5865129348100832
-    [INFO][configspace.py:175] --- learning_rate: 'adaptive' -> 'invscaling'
+    [INFO][abstract_intensifier.py:515] Added config e5c425 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:590] Added config 884840 and rejected config e5c425 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config 812224 and rejected config 884840 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:319] Finished 50 trials.
-    [INFO][abstract_intensifier.py:590] Added config d431b1 and rejected config d7ee7e as incumbent because it is not better than the incumbents on 15 instances:
-    [INFO][configspace.py:175] --- alpha: 0.02021839744032572 -> 0.6027633760716439
-    [INFO][configspace.py:175] --- eta0: 0.018430691395340162 -> 0.03077201812975574
-    [INFO][configspace.py:175] --- l1_ratio: 0.5865129348100832 -> 0.06414749634878436
-    [INFO][configspace.py:175] --- learning_rate: 'invscaling' -> 'adaptive'
+    [INFO][abstract_intensifier.py:590] Added config 884840 and rejected config 812224 as incumbent because it is not better than the incumbents on 15 instances:
     [INFO][smbo.py:319] Finished 100 trials.
     [INFO][smbo.py:319] Finished 150 trials.
     [INFO][smbo.py:319] Finished 200 trials.
     [INFO][smbo.py:319] Finished 250 trials.
-    [INFO][smbo.py:319] Finished 300 trials.
-    [INFO][smbo.py:319] Finished 350 trials.
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.013823747634887695
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.037660837173461914
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 4637
+    [INFO][smbo.py:330] --- Remaining trials: 4738
     Default cost: 0.15489347419148672
     Incumbent cost: 0.006249006102246613
 
@@ -220,7 +207,7 @@ the target function now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  38.376 seconds)
+   **Total running time of the script:** ( 0 minutes  41.625 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -1033,33 +1032,305 @@ a Pareto front. The red cross indicates the best configuration selected by SMAC.
 mean accuracy and run-time of each configuration.</p>
 <img src="../../_images/sphx_glr_2_parego_001.png" srcset="../../_images/sphx_glr_2_parego_001.png" alt="Pareto-Front" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][target_function_runner.py:71] The argument budget is not set by SMAC: Consider removing it from the target function.
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
-[INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-[INFO][abstract_intensifier.py:598] Config 8e1252 is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:598] Config d77b40 is a new incumbent. Total number of incumbents: 4.
-[INFO][abstract_intensifier.py:598] Config 0ad17f is a new incumbent. Total number of incumbents: 5.
-[INFO][abstract_intensifier.py:598] Config 1f76d6 is a new incumbent. Total number of incumbents: 6.
-[INFO][abstract_intensifier.py:590] Added config 56d5c4 and rejected config 8e1252 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][configspace.py:175] --- activation: &#39;relu&#39; -&gt; &#39;tanh&#39;
-[INFO][configspace.py:175] --- batch_size: 157 -&gt; 238
-[INFO][configspace.py:175] --- learning_rate_init: 0.08903539757637764 -&gt; 0.0010553018449770313
-[INFO][configspace.py:175] --- n_layer: 5 -&gt; 1
-[INFO][configspace.py:175] --- n_neurons: 43 -&gt; 159
-[INFO][configspace.py:175] --- solver: &#39;sgd&#39; -&gt; &#39;adam&#39;
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[INFO][abstract_intensifier.py:515] Added config 3623cc as new incumbent because there are no incumbents yet.
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[INFO][abstract_intensifier.py:590] Added config 0c9159 and rejected config 3623cc as incumbent because it is not better than the incumbents on 2 instances:
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[INFO][abstract_intensifier.py:598] Config 6904ad is a new incumbent. Total number of incumbents: 2.
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
+[WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to [inf, inf].
+[WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 173, in run
+    rval = self(config_copy, target_function, kwargs)
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 246, in __call__
+    return algorithm(config, **algorithm_kwargs)
+  File &quot;/home/runner/work/SMAC3/SMAC3/examples/3_multi_objective/2_parego.py&quot;, line 69, in train
+    lr = config[&quot;learning_rate&quot;] if config[&quot;learning_rate&quot;] else &quot;constant&quot;
+  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 191, in __getitem__
+    raise KeyError(key)
+KeyError: &#39;learning_rate&#39;
+
+
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.4669148921966553
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.8089497089385986
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 175
+[INFO][smbo.py:330] --- Remaining trials: 167
 Validated costs from default config:
---- [0.60155834 0.24015152]
+--- [inf inf]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.25435257]
---- [0.04813757 0.73612154]
---- [0.03561281 0.93308949]
---- [0.03088595 1.16742027]
---- [0.03394692 0.89731288]
---- [0.06511916 0.5671252 ]
+--- [0.80494274 1.15608346]
+--- [0.193119  1.5747838]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1233,7 +1504,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  40.259 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  36.503 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo2.svg" width="150px" /></a>
@@ -1291,7 +1562,7 @@ Validated costs from the Pareto front (incumbents):
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-6.2.1. Template is modified version of <a
+7.0.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>
