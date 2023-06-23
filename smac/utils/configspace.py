@@ -174,8 +174,8 @@ def print_config_changes(
 
     lines = []
     for k in sorted(all_keys):
-        inc_k = incumbent.get(k)
-        cha_k = challenger.get(k)
+        inc_k = incumbent.get(k, "-inactive-")
+        cha_k = challenger.get(k, "-inactive-")
         lines.append(f"--- {k}: {inc_k} -> {cha_k}" + " (unchanged)" if inc_k == cha_k else "")
 
     msg = "\n".join(lines)
