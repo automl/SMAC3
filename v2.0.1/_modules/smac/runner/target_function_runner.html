@@ -1011,6 +1011,7 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
@@ -1092,7 +1093,17 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="n">meta</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">meta</span>
-        <span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_function</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_code</span><span class="p">)})</span>
+
+        <span class="c1"># Partial&#39;s don&#39;t have a __code__ attribute but are a convenient</span>
+        <span class="c1"># way a user might want to pass a function to SMAC, specifying</span>
+        <span class="c1"># keyword arguments.</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target_function</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">func</span>
+            <span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_code</span><span class="p">)})</span>
+            <span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;code-partial-args&quot;</span><span class="p">:</span> <span class="nb">repr</span><span class="p">(</span><span class="n">f</span><span class="p">)})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_function</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_code</span><span class="p">)})</span>
 
         <span class="k">return</span> <span class="n">meta</span>
 
