@@ -1270,14 +1270,14 @@
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="c1"># If we use a float value as a budget, we want to train the model only on the highest budget</span>
-        <span class="n">available_budgets</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">run_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="p">:</span>
-            <span class="n">budget</span> <span class="o">=</span> <span class="n">run_key</span><span class="o">.</span><span class="n">budget</span>
-            <span class="k">if</span> <span class="n">budget</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_budgets</span><span class="p">:</span>
-                <span class="n">available_budgets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run_key</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+        <span class="n">unique_budgets</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">run_key</span><span class="o">.</span><span class="n">budget</span> <span class="k">for</span> <span class="n">run_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="k">if</span> <span class="n">run_key</span><span class="o">.</span><span class="n">budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
 
-        <span class="c1"># Sort available budgets from highest to lowest budget</span>
-        <span class="n">available_budgets</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">available_budgets</span><span class="p">)),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">available_budgets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_budgets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Sort available budgets from highest to lowest budget</span>
+            <span class="n">available_budgets</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unique_budgets</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">available_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
 
         <span class="c1"># Get #points per budget and if there are enough samples, then build a model</span>
         <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">available_budgets</span><span class="p">:</span>
