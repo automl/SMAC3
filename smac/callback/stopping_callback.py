@@ -121,7 +121,8 @@ class StoppingCallback(Callback):
         if smbo.runhistory.submitted < self._wait_iterations:
             return True
 
-        max_budget: float = smbo.intensifier._max_budget  # type: ignore[attr-defined]
+        if self._highest_fidelity_only:
+            max_budget: float = smbo.intensifier._max_budget  # type: ignore[attr-defined]
 
         # in the case of the highest fidelity only, check if the received config is on the highest fidelity and
         # if the model is trained on the highest fidelity
