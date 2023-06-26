@@ -461,18 +461,22 @@ class SMBO:
                     logger.info("Cost threshold was reached. Abort is requested.")
                     self._stop = True
 
-    def register_callback(self, callback: Callback, index: int = -1) -> None:
+    def register_callback(self, callback: Callback, index: int | None = None) -> None:
         """
         Registers a callback to be called before, in between, and after the Bayesian optimization loop.
 
+        Callback is appended to the list by default.
 
         Parameters
         ----------
         callback : Callback
             The callback to be registered.
-        index : int
-            The index at which the callback should be registered.
+        index : int, optional
+            The index at which the callback should be registered. The default is None.
+            If it is None, append the callback to the list.
         """
+        if index is None:
+            index = len(self._callbacks)
         self._callbacks.insert(index, callback)
 
     def _initialize_state(self) -> None:
