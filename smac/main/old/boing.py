@@ -99,7 +99,7 @@
 
 #         self.max_configs_local_fracs = max_configs_local_fracs
 #         self.min_configs_local = (
-#             min_configs_local if min_configs_local is not None else 5 * len(self.configspace.get_hyperparameters())
+#             min_configs_local if min_configs_local is not None else 5 * len(self.configspace)
 #         )
 
 #         types, bounds = get_types(self.configspace, instance_features=None)
@@ -117,7 +117,7 @@
 #         self.optimal_value = np.inf
 #         self.optimal_config = None
 
-#         self.ss_threshold = 0.1 ** len(self.configspace.get_hyperparameters())
+#         self.ss_threshold = 0.1 ** len(self.configspace)
 #         if self.do_switching:
 #             # If we want to switch between BOinG and TurBO
 #             self.run_TuRBO = False
@@ -375,7 +375,7 @@
 #                 return chain([cfg_challenger_global_first], challengers_global)
 
 #             activate_dims = []
-#             hps = self.configspace.get_hyperparameters()
+#             hps = list(self.configspace.values())
 #             for idx_hp in np.where(challanger_activate_hps > 0)[0]:
 #                 if isinstance(hps[idx_hp], NumericalHyperparameter):
 #                     activate_dims.append(idx_hp)
@@ -393,7 +393,7 @@
 #             n_min_configs_inner = self.min_configs_local // len(hps) * len(activate_dims)
 #         else:
 #             n_min_configs_inner = self.min_configs_local
-#             activate_dims = np.arange(len(self.configspace.get_hyperparameters()))
+#             activate_dims = np.arange(len(self.configspace))
 
 #         bounds_ss_cont, bounds_ss_cat, ss_data_indices = subspace_extraction(
 #             X=X,

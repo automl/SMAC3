@@ -22,12 +22,16 @@ class AbstractRandomForest(AbstractModel):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
+        # NOTE (eddiebergman): Would be better to use the hyperparaemters name.
+        #   More robust to identifing if the space were to change. Could be detected
+        #   and dealt with accordingly. No way to now this by iteration order.
         self._conditional: dict[int, bool] = dict()
         self._impute_values: dict[int, float] = dict()
 
     def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
         X = X.copy()
-        for idx, hp in enumerate(self._configspace.get_hyperparameters()):
+
+        for idx, hp in enumerate(self._configspace.values()):
             if idx not in self._conditional:
                 parents = self._configspace.get_parents_of(hp.name)
                 if len(parents) == 0:

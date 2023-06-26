@@ -111,11 +111,11 @@ class BlackBoxFacade(AbstractFacade):
         cont_dims = np.where(np.array(types) == 0)[0]
         cat_dims = np.where(np.array(types) != 0)[0]
 
-        if (len(cont_dims) + len(cat_dims)) != len(scenario.configspace.get_hyperparameters()):
+        if (len(cont_dims) + len(cat_dims)) != len(scenario.configspace):
             raise ValueError(
                 "The inferred number of continuous and categorical hyperparameters "
                 "must equal the total number of hyperparameters. Got "
-                f"{(len(cont_dims) + len(cat_dims))} != {len(scenario.configspace.get_hyperparameters())}."
+                f"{(len(cont_dims) + len(cat_dims))} != {len(scenario.configspace)}."
             )
 
         # Constant Kernel

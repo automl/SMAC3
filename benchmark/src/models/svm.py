@@ -43,7 +43,7 @@ class SVMModel(Model):
         """Creates a SVM based on a configuration and evaluates it on the
         iris-dataset using cross-validation."""
         assert self.dataset is not None
-        config_dict = config.get_dictionary()
+        config_dict = dict(config)
         if "gamma" in config:
             config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
             config_dict.pop("gamma_value", None)

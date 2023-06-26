@@ -54,7 +54,7 @@ class CustomCallback(Callback):
 
             incumbent = smbo.intensifier.get_incumbent()
             assert incumbent is not None
-            print(f"Current incumbent: {incumbent.get_dictionary()}")
+            print(f"Current incumbent: {dict(incumbent)}")
             print(f"Current incumbent value: {smbo.runhistory.get_cost(incumbent)}")
             print("")
 

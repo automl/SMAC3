@@ -100,7 +100,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     @model.setter
     def model(self, model: AbstractModel) -> None:
         self._model = model
-        self._hyperparameters = model._configspace.get_hyperparameters_dict()
+        self._hyperparameters = dict(model._configspace)
 
         if isinstance(model, AbstractRandomForest):
             if not self._discretize:

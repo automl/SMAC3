@@ -92,7 +92,7 @@
 #             activate_dims=activate_dims,
 #             incumbent_array=incumbent_array,
 #         )
-#         hps = config_space.get_hyperparameters()
+#         hps = list(config_space.values())
 #         for hp in hps:
 #             if not isinstance(hp, NumericalHyperparameter):
 #                 raise ValueError("Current TurBO Optimizer only supports Numerical Hyperparameters")
