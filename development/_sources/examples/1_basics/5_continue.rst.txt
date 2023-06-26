@@ -42,7 +42,7 @@ function is continued. We use a custom callback, to artificially stop the first 
     [INFO][smbo.py:224] A callback returned False. Abort is requested.
     [INFO][smbo.py:332] Shutting down because the stop flag was set.
     [INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 0 additional configurations.
-    [INFO][smbo.py:493] Continuing from previous run.
+    [INFO][smbo.py:497] Continuing from previous run.
     [INFO][abstract_intensifier.py:287] Added existing seed 209652396 from runhistory to the intensifier.
     [INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
     [INFO][abstract_intensifier.py:590] Added config 59460a and rejected config f72805 as incumbent because it is not better than the incumbents on 1 instances:
@@ -162,7 +162,7 @@ function is continued. We use a custom callback, to artificially stop the first 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.093 seconds)
+   **Total running time of the script:** ( 0 minutes  0.930 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_continue.py:

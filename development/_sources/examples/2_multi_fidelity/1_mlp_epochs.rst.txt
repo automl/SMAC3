@@ -178,8 +178,6 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/numpy/lib/function_base.py:4655: RuntimeWarning: invalid value encountered in subtract
       diff_b_a = subtract(b, a)
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
@@ -667,7 +665,6 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     [INFO][abstract_intensifier.py:590] Added config d0ff1f and rejected config c55ea1 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:319] Finished 50 trials.
-    [INFO][smbo.py:319] Finished 50 trials.
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
@@ -1110,244 +1107,25 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    [INFO][abstract_intensifier.py:590] Added config bdd186 and rejected config d0ff1f as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:319] Finished 100 trials.
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    [INFO][smbo.py:319] Finished 100 trials.
+    [INFO][smbo.py:319] Finished 100 trials.
+    [INFO][smbo.py:319] Finished 100 trials.
+    [INFO][smbo.py:319] Finished 100 trials.
+    [INFO][smbo.py:319] Finished 100 trials.
+    [INFO][abstract_intensifier.py:590] Added config bdd186 and rejected config d0ff1f as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][abstract_intensifier.py:590] Added config 32f4e7 and rejected config bdd186 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.6883664131164551
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.3603806495666504
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 332
+    [INFO][smbo.py:330] --- Remaining trials: 305
     Default cost (SuccessiveHalving): inf
     Incumbent cost (SuccessiveHalving): 0.021706901887960428
     [INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
     [INFO][abstract_facade.py:198] Workers are reduced to 8.
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
     Perhaps you already have a cluster running?
-    Hosting the HTTP server on port 33133 instead
+    Hosting the HTTP server on port 41181 instead
       warnings.warn(
     [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
     [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -1479,11 +1257,13 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     [INFO][abstract_intensifier.py:515] Added config ceb3eb as new incumbent because there are no incumbents yet.
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/numpy/lib/function_base.py:4655: RuntimeWarning: invalid value encountered in subtract
       diff_b_a = subtract(b, a)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
@@ -2180,33 +1960,145 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     [INFO][abstract_intensifier.py:590] Added config bdd186 and rejected config d0ff1f as incumbent because it is not better than the incumbents on 1 instances:
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    [INFO][smbo.py:319] Finished 100 trials.
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -1.601273775100708
+    [INFO][smbo.py:328] --- Remaining wallclock time: -2.6557750701904297
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 393
+    [INFO][smbo.py:330] --- Remaining trials: 381
+    [INFO][abstract_intensifier.py:590] Added config 32f4e7 and rejected config bdd186 as incumbent because it is not better than the incumbents on 1 instances:
     Default cost (Hyperband): inf
-    Incumbent cost (Hyperband): 0.024484679665738085
+    Incumbent cost (Hyperband): 0.021706901887960428
 
 
 
@@ -2385,7 +2277,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  27.496 seconds)
+   **Total running time of the script:** ( 2 minutes  39.314 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:

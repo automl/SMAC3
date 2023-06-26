@@ -1350,13 +1350,15 @@ this argument is very useful.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.main.smbo.SMBO.register_callback">
-<span class="sig-name descname"><span class="pre">register_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.register_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.smbo.SMBO.register_callback" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">register_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/main/smbo.html#SMBO.register_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.main.smbo.SMBO.register_callback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registers a callback to be called before, in between, and after the Bayesian optimization loop.</p>
+<p>Callback is appended to the list by default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>callback</strong> (<a class="reference internal" href="smac.callback.html#smac.callback.Callback" title="smac.callback.Callback"><em>Callback</em></a>) – The callback to be registered.</p></li>
-<li><p><strong>index</strong> (<em>int</em>) – The index at which the callback should be registered.</p></li>
+<li><p><strong>index</strong> (<em>int</em><em>, </em><em>optional</em>) – The index at which the callback should be registered. The default is None.
+If it is None, append the callback to the list.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
