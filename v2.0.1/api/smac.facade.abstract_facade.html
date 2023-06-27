@@ -1260,8 +1260,10 @@ If False is passed, SMAC will not do any customization of the logging setup and 
 to the user.</p></li>
 <li><p><strong>callbacks</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.callback.html#smac.callback.Callback" title="smac.callback.Callback"><em>Callback</em></a><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>]</em>) – Callbacks, which are incorporated into the optimization loop.</p></li>
 <li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – When True, overwrites the run results if a previous run is found that is
-inconsistent in the meta data with the current setup. If <code class="docutils literal notranslate"><span class="pre">overwrite</span></code> is set to False, the user is asked
-for the exact behaviour (overwrite completely, save old run, or use old results).</p></li>
+consistent in the meta data with the current setup. When False and a previous run is found that is
+consistent in the meta data, the run is continued. When False and a previous run is found that is
+not consistent in the meta data, the the user is asked for the exact behaviour (overwrite completely
+or rename old run first).</p></li>
 <li><p><strong>dask_client</strong> (<em>Client</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not
 be closed automatically and will have to be closed manually if provided explicitly. If none is provided
 (default), a local one will be created for you and closed upon completion.</p></li>

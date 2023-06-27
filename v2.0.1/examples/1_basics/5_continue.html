@@ -1025,8 +1025,14 @@ to download the full example code or to run this example in your browser via Bin
 </div>
 <section class="sphx-glr-example-title" id="continue-an-optimization">
 <span id="sphx-glr-examples-1-basics-5-continue-py"></span><h1>Continue an Optimization<a class="headerlink" href="#continue-an-optimization" title="Permalink to this heading">¶</a></h1>
-<p>SMAC can also be continued. In this example, an optimization of a simple quadratic
-function is continued. We use a custom callback, to artificially stop the first optimization.</p>
+<p>SMAC can also be continued from a previous run. To do so, it reads in old files (derived from scenario’s name,
+output_directory and seed) and sets the corresponding components. In this example, an optimization of a simple quadratic
+function is continued.</p>
+<p>First, after creating a scenario with 50 trials, we run SMAC with overwrite=True. This will
+overwrite any previous runs (in case the example was called before). We use a custom callback to artificially stop
+this first optimization after 10 trials.</p>
+<p>Second, we again run the SMAC optimization using the same scenario, but this time with overwrite=False. As
+there already is a previous run with the same meta data, this run will be continued until the 50 trials are reached.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
 [INFO][abstract_intensifier.py:515] Added config f09c3b as new incumbent because there are no incumbents yet.
@@ -1148,7 +1154,7 @@ Incumbent cost of continued run: 1.0393385263038637e-07
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost of continued run: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.271 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.364 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-5-continue-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/5_continue.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>

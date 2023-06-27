@@ -1020,13 +1020,24 @@
                 
   <section id="continue">
 <h1>Continue<a class="headerlink" href="#continue" title="Permalink to this heading">¶</a></h1>
-<p>SMAC automatically restores states where it left off if a run was interrupted or finished. To do so, it reads in old
-files (derived from scenario’s name, output_directory and seed) and sets the components.</p>
+<p>SMAC can automatically restore states where it left off if a run was interrupted or prematurely finished. To do so,
+it reads in old files (derived from scenario’s name, output_directory and seed) and obtains the scenario information
+of the previous run from those to continue the run.</p>
+<p>The behavior can be controlled by setting the parameter <code class="docutils literal notranslate"><span class="pre">overwrite</span></code> in the facade to True or False, respectively:</p>
+<ul class="simple">
+<li><p>If set to True, SMAC overwrites the run results if a previous run is found that is consistent in the meta data with the current setup.</p></li>
+<li><p>If set to False and a previous run is found that</p>
+<ul>
+<li><p>is consistent in the meta data, the run is continued.</p></li>
+<li><p>is not consistent in the meta data, the user is asked for the exact behaviour (overwrite completely or rename old run first).</p></li>
+</ul>
+</li>
+</ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>If you changed any code and specified a name, SMAC will ask you whether you still want to resume or
-delete the old run completely. If you did not specify a name, SMAC generates a new name and the old run is
-not affected.</p>
+<p>If you changed any code affecting the run’s meta data and specified a name, SMAC will ask you whether you still
+want to overwrite the old run or rename the old run first. If you did not specify a name, SMAC generates a new name
+and the old run is not affected.</p>
 </div>
 <p>Please have a look at our <a class="reference internal" href="../examples/1_basics/5_continue.html#continue-an-optimization"><span class="std std-ref">continue example</span></a>.</p>
 </section>

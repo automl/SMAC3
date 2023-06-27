@@ -152,14 +152,14 @@ mean accuracy and run-time of each configuration.
 
     [INFO][abstract_intensifier.py:590] Added config 6904ad and rejected config 0c9159 as incumbent because it is not better than the incumbents on 2 instances:
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.6242520809173584
+    [INFO][smbo.py:328] --- Remaining wallclock time: -3.929424524307251
     [INFO][smbo.py:329] --- Remaining cpu time: inf
     [INFO][smbo.py:330] --- Remaining trials: 185
     Validated costs from default config: 
     --- [inf inf]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.193119   2.27621925]
+    --- [0.193119   2.78539681]
 
 
 
@@ -340,7 +340,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  35.486 seconds)
+   **Total running time of the script:** ( 0 minutes  39.831 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:

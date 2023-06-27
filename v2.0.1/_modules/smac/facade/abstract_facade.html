@@ -1096,8 +1096,10 @@
 <span class="sd">        Callbacks, which are incorporated into the optimization loop.</span>
 <span class="sd">    overwrite: bool, defaults to False</span>
 <span class="sd">        When True, overwrites the run results if a previous run is found that is</span>
-<span class="sd">        inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked</span>
-<span class="sd">        for the exact behaviour (overwrite completely, save old run, or use old results).</span>
+<span class="sd">        consistent in the meta data with the current setup. When False and a previous run is found that is</span>
+<span class="sd">        consistent in the meta data, the run is continued. When False and a previous run is found that is</span>
+<span class="sd">        not consistent in the meta data, the the user is asked for the exact behaviour (overwrite completely</span>
+<span class="sd">        or rename old run first).</span>
 <span class="sd">    dask_client: Client | None, defaults to None</span>
 <span class="sd">        User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not</span>
 <span class="sd">        be closed automatically and will have to be closed manually if provided explicitly. If none is provided</span>
