@@ -2,6 +2,8 @@
 
 ## Improvements
 - Add an error when we get an empty dict data_to_scatter so that we can avoid an internal error caused in Dask precautiously
+- Add experimental instruction for installing SMAC in Windows via a WSL.
+- More detailed documentation regarding continuing runs.
 
 ## Bugfixes
 - Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).

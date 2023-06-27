@@ -505,7 +505,7 @@ class SMBO:
                         logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
                         self.reset()
                 else:
-                    # Here, we run into differen scenarios
+                    # Here, we run into different scenarios
                     diff = recursively_compare_dicts(
                         Scenario.make_serializable(self._scenario),
                         Scenario.make_serializable(old_scenario),
