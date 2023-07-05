@@ -399,8 +399,10 @@ class AbstractIntensifier:
             # We want to calculate the smallest set of trials that is used by all incumbents
             # Reason: We can not fairly compare otherwise
             incumbent_isb_keys = [self.get_instance_seed_budget_keys(incumbent, compare) for incumbent in incumbents]
+            # TODO In the multi-objective setting, the incumbents here are the points in the Pareto-Front. However, here
+            #  all the incumbents from different fidelity levels are recorded and mixed. Therefore, instances might be
+            #  empty if some incumbents have not been evaluated in the highest fidelity yet. We need to fix this
             instances = list(set.intersection(*map(set, incumbent_isb_keys)))  # type: ignore
-
             return instances  # type: ignore
 
         return []
