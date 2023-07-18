@@ -187,9 +187,8 @@ class WEITracker(Callback):
         model = config_selector._model
         if issubclass(type(config_selector._acquisition_function), WEI) and model_fitted(
             model
-        ):  # FIXME: Flag _is_trained only exists for GP so far:
+        ):
             X = config.get_array()
-            # TODO: pipe X through
             acq_values = config_selector._acquisition_function([config])
             alpha = config_selector._acquisition_function._alpha
             pi_term = config_selector._acquisition_function.pi_term[0][0]
@@ -220,13 +219,11 @@ class WEITracker(Callback):
         return super().on_end(smbo)
 
 
-def detect_switch(UBR: np.array, window_size: int = 10, atol_rel: float = 0.1) -> np.array[bool]:
+def detect_adjust(UBR: np.array, window_size: int = 10, atol_rel: float = 0.1) -> np.array[bool]:
     """Signal the time to adjust the algorithm.
 
     First, smooth the UBR signal and then calculate the gradients.
     If the gradient is close to 0, signal time to adjust.
-
-    # TODO rename switch -> adjust.
 
     Parameters
     ----------
@@ -248,16 +245,16 @@ def detect_switch(UBR: np.array, window_size: int = 10, atol_rel: float = 0.1) -
     miqm_gradient = np.gradient(miqm)
 
     # max_grad = np.maximum.accumulate(miqm_gradient)
-    # switch = np.array([np.isclose(miqm_gradient[i], 0, atol=atol_rel*max_grad[i]) for i in range(len(miqm_gradient))])
-    # switch[0] = 0  # misleading signal bc of iqm
+    # adjust = np.array([np.isclose(miqm_gradient[i], 0, atol=atol_rel*max_grad[i]) for i in range(len(miqm_gradient))])
+    # adjust[0] = 0  # misleading signal bc of iqm
 
     G_abs = np.abs(miqm_gradient)
     max_grad = [np.nanmax(G_abs[: i + 1]) for i in range(len(G_abs))]
-    switch = np.array([np.isclose(miqm_gradient[i], 0, atol=atol_rel * max_grad[i]) for i in range(len(miqm_gradient))])
-    # switch = np.isclose(miqm_gradient, 0, atol=1e-5)
-    switch[:window_size] = 0  # misleading signal bc of iqm
+    adjust = np.array([np.isclose(miqm_gradient[i], 0, atol=atol_rel * max_grad[i]) for i in range(len(miqm_gradient))])
+    # adjust = np.isclose(miqm_gradient, 0, atol=1e-5)
+    adjust[:window_size] = 0  # misleading signal bc of iqm
 
-    return switch
+    return adjust
 
 
 # Moving IQM
@@ -404,7 +401,7 @@ class SAWEI(Callback):
             The relative absolute tolerance, by default 0.1.
             atol_rel is used to check whether the gradient of the smoothed UBR is
             approximately zero. The bigger atol_rel, the more often we should
-            switch. The absolute tolerance is determined by the current maximum
+            adjust. The absolute tolerance is determined by the current maximum
             gradient times this parameter.
         track_attitude : str, optional
             How far the search attitude is tracked, by default "last".
@@ -413,10 +410,8 @@ class SAWEI(Callback):
                 worked best in the experiments.
             - until_inc_change: The WEI terms are tracked from the last time the incumbent
                 changed.
-            - until_last_switch: The WEI terms are tracked from the last time SAWEI
+            - until_last_adjust: The WEI terms are tracked from the last time SAWEI
                 self-adjusted alpha, the exploration-exploitation trade-off.
-                #TODO Rename "until_last_switch" to "until_last_adjust" because we do not
-                    switch anything but adjust a parameter
         use_pure_PI : bool, optional
             By default True. This influences which term is used to measure the exploitation
             tendency. True means we use classic PI. False means using the exploitation-term
@@ -475,8 +470,8 @@ class SAWEI(Callback):
                 "ubr": query_callback(solver=solver, callback_type="UpperBoundRegretCallback", key="ubr"),
             }
             self.history.append(state)
-            # Check if it is time to switch
-            switch = False
+            # Check if it is time to adjust
+            adjust = False
             UBR = [s["ubr"] for s in self.history]
 
             if self.use_pure_PI:
@@ -486,19 +481,19 @@ class SAWEI(Callback):
 
             # We need at least 2 UBRs to compute the gradient
             if len(UBR) >= 2:
-                switch = detect_switch(UBR=UBR, window_size=self.window_size, atol_rel=self.atol_rel)[-1]
+                adjust = detect_adjust(UBR=UBR, window_size=self.window_size, atol_rel=self.atol_rel)[-1]
 
             self._pi_term_sum += state[key_pi]
             self._ei_term_sum += state["wei_ei_term"]
 
-            if switch:
+            if adjust:
                 if self.track_attitude == "last":
                     # Calculate attitude: Exploring or exploiting?
                     # Exploring = when ei term is bigger
                     # Exploiting = when pi term is bigger
                     exploring = state[key_pi] <= state["wei_ei_term"]
                     distance = state["wei_ei_term"] - state[key_pi]
-                elif self.track_attitude in ["until_inc_change", "until_last_switch"]:
+                elif self.track_attitude in ["until_inc_change", "until_last_adjust"]:
                     exploring = self._pi_term_sum <= self._ei_term_sum
                     distance = self._ei_term_sum - self._pi_term_sum
                 else:
@@ -522,8 +517,8 @@ class SAWEI(Callback):
                     self.last_inc_count = state["n_incumbent_changes"]
                     self._pi_term_sum: float = 0.0
                     self._ei_term_sum: float = 0.0
-            elif self.track_attitude == "until_last_switch":
-                if switch:
+            elif self.track_attitude == "until_last_adjust":
+                if adjust:
                     self._pi_term_sum: float = 0.0
                     self._ei_term_sum: float = 0.0
 
@@ -531,7 +526,7 @@ class SAWEI(Callback):
                 self.modify_solver(solver=solver, alpha=self.alpha)
 
             info = {
-                "switch": int(switch),
+                "adjust": int(adjust),
             }
             state.update(info)
 
@@ -606,7 +601,7 @@ def get_sawei_kwargs(
         The relative absolute tolerance, by default 0.1.
         atol_rel is used to check whether the gradient of the smoothed UBR is
         approximately zero. The bigger atol_rel, the more often we should
-        switch. The absolute tolerance is determined by the current maximum
+        adjust. The absolute tolerance is determined by the current maximum
         gradient times this parameter.
     sawei_track_attitude : str, optional
         How far the search attitude is tracked, by default "last".
@@ -615,7 +610,7 @@ def get_sawei_kwargs(
             worked best in the experiments.
         - until_inc_change: The WEI terms are tracked from the last time the incumbent
             changed.
-        - until_last_switch: The WEI terms are tracked from the last time SAWEI
+        - until_last_adjust: The WEI terms are tracked from the last time SAWEI
             self-adjusted alpha, the exploration-exploitation trade-off.
     sawei_use_pure_PI : bool, optional
         By default True. This influences which term is used to measure the exploitation
