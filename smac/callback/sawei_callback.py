@@ -14,13 +14,12 @@ import smac
 from smac import Callback
 from smac.acquisition.function import LCB, UCB, WEI
 from smac.acquisition.maximizer import LocalAndSortedRandomSearch
-from smac.callback import Callback
 from smac.callback.utils import query_callback
 from smac.main.smbo import SMBO
 from smac.model import AbstractModel
 from smac.model.gaussian_process import GaussianProcess
 from smac.model.random_forest import RandomForest
-from smac.runhistory import TrialInfo, TrialKey, TrialValue
+from smac.runhistory import TrialInfo, TrialValue
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.utils.logging import get_logger
 
@@ -182,9 +181,11 @@ class WEITracker(Callback):
         self, config_selector: smac.main.config_selector.ConfigSelector, config: Configuration
     ) -> None:
         model = config_selector._model
-        if issubclass(type(config_selector._acquisition_function), WEI) and model_fitted(model):
-            X = config.get_array()
-            acq_values = config_selector._acquisition_function([config])
+        if issubclass(type(config_selector._acquisition_function), WEI) and model_fitted(
+            model
+        ):
+            X = config.get_array()  # noqa: F841
+            acq_values = config_selector._acquisition_function([config])  # noqa: F841
             alpha = config_selector._acquisition_function._alpha
             pi_term = config_selector._acquisition_function.pi_term[0][0]
             ei_term = config_selector._acquisition_function.ei_term[0][0]
@@ -338,7 +339,7 @@ class SAWEI(Callback):
         two terms are weighted by alpha. One term is more exploratory, the other more
         exploitative.
         alpha = 0.5 recovers the standard EI [Mockus et al., 1978]
-        alpha = 1 has similar behavior as $latex PI(x) = \Phi( z(x))$ [Kushner, 1974]
+        alpha = 1 has similar behavior as $PI(x) = \\Phi( z(x))$ [Kushner, 1974]
         alpha = 0 emphasizes a stronger exploration
 
 
@@ -540,11 +541,11 @@ class SAWEI(Callback):
             #     raise ValueError(f"Action (xi) is '{action}' but only is allowed in range '{self.action_bounds}'.")
 
             kwargs = {
-                "eta": solver.runhistory.get_cost(solver.intensifier.get_incumbent()),
+                "eta": solver.runhistory.get_cost(solver.intensifier.get_incumbents(sort_by="cost")[0]),
                 "alpha": alpha,
                 "num_data": solver.runhistory.finished,
             }
-            solver.intensifier.config_selector._acquisition_function._update(**kwargs)
+            solver.intensifier.config_selector._acquisition_function._update(**kwargs)  # type: ignore[union-attr]
 
     def on_end(self, smbo: smac.main.smbo.SMBO) -> None:
         if self.wandb_run:
@@ -575,7 +576,6 @@ def get_sawei_kwargs(
 
     ⚠ So far, only normal value encoders are supported,
     no log transforms.
-
 
     Parameters
     ----------
