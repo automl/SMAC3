@@ -1,31 +1,28 @@
 from __future__ import annotations
 
 from typing import Any
+
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
+from ConfigSpace import Configuration
 from numpy.lib.stride_tricks import sliding_window_view
 from scipy.stats import trim_mean
-import smac
-from smac.acquisition.function import LCB, UCB
-from smac.acquisition.maximizer import (
-    LocalAndSortedRandomSearch,
-)
-from smac.callback import Callback
-from smac.main.smbo import SMBO
-from smac.model.random_forest import RandomForest
-from smac.model.gaussian_process import GaussianProcess
-from smac.runhistory import TrialInfo, TrialKey, TrialValue
-from ConfigSpace import Configuration
-from smac.model import AbstractModel
-from smac.acquisition.function import WEI
+
 import smac
 from smac import Callback
-import numpy as np
-from smac.acquisition.function import WEI
+from smac.acquisition.function import LCB, UCB, WEI
+from smac.acquisition.maximizer import LocalAndSortedRandomSearch
+from smac.callback import Callback
 from smac.callback.utils import query_callback
-from pathlib import Path
-from smac.utils.logging import get_logger
+from smac.main.smbo import SMBO
+from smac.model import AbstractModel
+from smac.model.gaussian_process import GaussianProcess
+from smac.model.random_forest import RandomForest
+from smac.runhistory import TrialInfo, TrialKey, TrialValue
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
+from smac.utils.logging import get_logger
 
 logger = get_logger(__name__)
 
@@ -185,9 +182,7 @@ class WEITracker(Callback):
         self, config_selector: smac.main.config_selector.ConfigSelector, config: Configuration
     ) -> None:
         model = config_selector._model
-        if issubclass(type(config_selector._acquisition_function), WEI) and model_fitted(
-            model
-        ):
+        if issubclass(type(config_selector._acquisition_function), WEI) and model_fitted(model):
             X = config.get_array()
             acq_values = config_selector._acquisition_function([config])
             alpha = config_selector._acquisition_function._alpha
@@ -579,7 +574,7 @@ def get_sawei_kwargs(
     in the paper.
 
     ⚠ So far, only normal value encoders are supported,
-    no log transforms.  
+    no log transforms.
 
 
     Parameters
