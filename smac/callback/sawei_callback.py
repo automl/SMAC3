@@ -628,9 +628,7 @@ def get_sawei_kwargs(
         The kwargs arguments to use SAWEI in SMAC. Should
         be added to the facade.
     """
-    # TODO fix warnings
     # TODO create tests
-    # TODO set logging dir of ubr and weitracker
     ubr = UpperBoundRegretCallback(top_p=ubr_top_p)
     weitracker = WEITracker()
     sawei = SAWEI(
