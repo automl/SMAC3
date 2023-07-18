@@ -8,7 +8,6 @@ from scipy.stats import trim_mean
 import smac
 from smac.acquisition.function import LCB, UCB
 from smac.acquisition.maximizer import (
-    AbstractAcquisitionMaximizer,
     LocalAndSortedRandomSearch,
 )
 from smac.callback import Callback
@@ -21,7 +20,6 @@ from smac.model import AbstractModel
 from smac.acquisition.function import WEI
 import smac
 from smac import Callback
-from smac.acquisition.function import EI
 import numpy as np
 from smac.acquisition.function import WEI
 from smac.callback.utils import query_callback
@@ -32,11 +30,20 @@ from smac.runhistory.encoder.encoder import RunHistoryEncoder
 logger = get_logger(__name__)
 
 
-def sigmoid(x):
-  return 1 / (1 + np.exp(-x))
+def sigmoid(x: np.ScalarType | np.ndarray) -> np.ScalarType | np.ndarray:
+    """Sigmoid Function.
 
-import wandb
+    Parameters
+    ----------
+    x : np.ScalarType | np.ndarray
+        Input.
 
+    Returns
+    -------
+    np.ScalarType | np.ndarray
+        Sigmoid(x)
+    """
+    return 1 / (1 + np.exp(-x))
 
 
 class UpperBoundRegretCallback(Callback):
@@ -46,9 +53,31 @@ class UpperBoundRegretCallback(Callback):
             ucb: UCB | None = None, 
             lcb: LCB | None = None
         ) -> None:
+        """Calculate the Upper Bound Regret (UBR) [Makarova et al., 2022]
+
+        The UBR is defined by the estimated worst-case function value of incumbent
+        minus the estimated lowest function value across search space.
+        Originally used as a stopping criterion if the difference falls under
+        a certain thresold. Here we check whether the optimization process
+        converges.
+
+        [Makarova et al., 2022] Makarova, A., Shen, H., Perrone, V., Klein, A., Faddoul, J., Krause,
+                A., Seeger, M., and Archambeau, C. (2022).
+                Automatic termination for hyperparameter optimization. AutoML Conference 2022
+
+        Parameters
+        ----------
+        top_p : float, optional
+            Top p portion of the evaluated configs to be considered by UBR, by default 0.5.
+        ucb : UCB | None, optional
+            Upper Confidence Bound, by default None.
+        lcb : LCB | None, optional
+            Lower Configdence Bound, by default None.
+        """
         super().__init__()
 
         # Use only top p portion of the evaluated configs to fit the model (Sec. 4)
+        # TODO: Are the top p configs actually used to fit the surrogate model?
         # DISCUSS: What does top p configs mean for AC?
         self.top_p: float = top_p  
         self.ubr: float | None = None
@@ -73,6 +102,10 @@ class UpperBoundRegretCallback(Callback):
         model = smbo.intensifier.config_selector._model
         # BUG: num data is calculated wrongly
         # calculate UBR right from the start, filter to sbo if necessary
+
+        # We can only calculate the UBR if the model is fitted.
+        # TODO: Fit the model ourselves if it is not fitted yet. Pro: We can calculate the UBR
+        # during initial design. Con: SMAC might become slower.
         if model_fitted(model): 
             kwargs = {"model": model, "num_data": rh.finished}
             self._UCB.update(**kwargs)
@@ -125,6 +158,23 @@ class UpperBoundRegretCallback(Callback):
 
 
 class WEITracker(Callback):
+    """Track the terms of Weighted Expected Improvement.
+
+    Maintains the history of WEI.
+    When the optimization is done, write to disk: 
+    `scenario.output_directory / "wei_history.csv"`
+
+    Attributes
+    ----------
+    history : list[dict[str, Any]]
+        The WEI history with elements:
+            - "n_evaluated": The number of function evaluations.
+            - "alpha": The current weight of WEI.
+            - "pi_term": The exploitation term of WEI (modulated PI).
+            - "ei_term": The exploration term of WEI.
+            - "pi_pure_term": PI.
+            - "pi_mod_term": modulated PI as the term in WEI.
+    """
     def __init__(self) -> None:
         self.history: list[dict[str, Any]] = []
         super().__init__()
@@ -163,6 +213,29 @@ class WEITracker(Callback):
 
 
 def detect_switch(UBR: np.array, window_size: int = 10, atol_rel: float = 0.1) -> np.array[bool]:
+    """Signal the time to adjust the algorithm.
+
+    First, smooth the UBR signal and then calculate the gradients.
+    If the gradient is close to 0, signal time to adjust.
+
+    # TODO rename switch -> adjust.
+
+    Parameters
+    ----------
+    UBR : np.array
+        UBR history.
+    window_size : int, optional
+        Window size to smooth the UBR with, by default 10
+    atol_rel : float, optional
+        Relative absolute tolerance, by default 0.1.
+        Is used to determine whether the smoothed UBR gradient is close to 0.
+        Is the proportion of the current maximum of the gradient.
+
+    Returns
+    -------
+    np.array[bool]
+        Adjust yes or no per UBR point.
+    """
     miqm = apply_moving_iqm(U=UBR, window_size=window_size)
     miqm_gradient = np.gradient(miqm)
 
@@ -180,17 +253,60 @@ def detect_switch(UBR: np.array, window_size: int = 10, atol_rel: float = 0.1) -
 
 # Moving IQM
 def apply_moving_iqm(U: np.array, window_size: int = 5) -> np.array:
+    """Moving IQM for UBR
+
+    Smoothes the noisy UBR signal.
+
+    Parameters
+    ----------
+    U : np.array
+        UBR history.
+    window_size : int, optional
+        The window size for smoothing, by default 5.
+
+    Returns
+    -------
+    np.array
+        Smoothed UBR.
+    """
 
     def moving_iqm(X: np.array) -> float:
+        """Apply the IQM to one slice (X) of the UBR.
+
+        Parameters
+        ----------
+        X : np.array
+            One slice of the UBR.
+
+        Returns
+        -------
+        float
+            IQM of this slice.
+        """
         return trim_mean(X, 0.25)
 
+    # Pad UBR so we can apply the sliding window
     U_padded = np.concatenate((np.array([U[0]] * (window_size - 1)), U))
+    # Create slices to apply our smoothing method
     slices = sliding_window_view(U_padded, window_size)
+    # Apply smoothing
     miqm = np.array([moving_iqm(s) for s in slices])
     return miqm
 
 
 def model_fitted(model: AbstractModel) -> bool:
+    """Check whether the surrogate model is fitted
+
+    Parameters
+    ----------
+    model : AbstractModel
+        Surrogate model.
+
+    Returns
+    -------
+    bool
+        Model fitted or not.
+    """
     return (type(model) == GaussianProcess and model._is_trained) or (type(model) == RandomForest and model._rf is not None)
 
 
@@ -202,12 +318,106 @@ class SAWEI(Callback):
         window_size: int = 7,
         atol_rel: float = 0.1,
         track_attitude: str = "last",
-        use_pure_PI: bool = False,
+        use_pure_PI: bool = True,
         auto_alpha: bool = False,
+        use_wandb: bool = False,
     ) -> None:
-        # alpha = 1: PI = Exploiting
-        # alpha = 0.5: EI = Exploring/Balance
-        # alpha = 0: Exploring
+        """SAWEI (Self-Adjusting Weighted Expected Improvement)
+
+        For our method we need three parts: 
+        (i) The adjustable acquisition function Weighted Expected Improvement (WEI) [Sobester et al., 2005], 
+        (ii) when to adjust and (iii) how to adjust.
+
+        
+        ## Weighted Expected Improvement (WEI)
+
+        WEI [Sobester et al., 2005] is Expected Improvement (EI) [Mockus et al., 1978] but its
+        two terms are weighted by alpha. One term is more exploratory, the other more 
+        exploitative.
+        alpha = 0.5 recovers the standard EI [Mockus et al., 1978]
+        alpha = 1 has similar behavior as $latex PI(x) = \Phi( z(x))$ [Kushner, 1974]
+        alpha = 0 emphasizes a stronger exploration
+
+        
+        ## When to Adjust?
+
+        We adjust alpha whenever the Upper Bound Regret (UBR) [Makarova et al., 2022] converges.
+        The UBR estimates the true regret and is used as a stopping criterion for BO-based HPO.
+        The gap is defined by the estimation of the worst-case function value of the best-observed
+        point minus the estimated lowest function value across the whole search space.
+        This means the smaller the gap becomes, the closer we are at the asymptotic function value 
+        under the current optimization settings. When the gap falls under a certain threshold, 
+        Makarova et al. (2022) terminate the optimization. Because this threshold most likely 
+        depends on the problem at hand we use the convergence of UBR as our signal to adjust.
+
+        ## How to Adjust?
+
+        The remaining question is how to adjust. The convergence of the UBR is an indicator that
+        we reach the limit of possible improvement with the current search attitude.
+        Therefore we adjust alpha opposite to the current search attitude by adding
+        or subtracting delta.
+
+        ## References
+
+        [Kushner, 1974] Kushner, H. (1964). A new method of locating the maximum point of an
+                        arbitrary multipeak curve in the presence of noise.
+                        Journal of Fluids Engineering, pages 97–106.
+
+        [Makarova et al., 2022] Makarova, A., Shen, H., Perrone, V., Klein, A., Faddoul, J., Krause,
+                        A., Seeger, M., and Archambeau, C. (2022).
+                        Automatic termination for hyperparameter optimization. AutoML Conference 2022
+
+        [Mockus et al., 1978] Mockus, J., Tiesis, V., and Zilinskas, A. (1978). 
+                        The application of Bayesian methods for seeking the extremum. 
+                        Towards Global Optimization, 2(117-129).
+
+        [Sobester et al., 2005] Sobester, A., Leary, S., and Keane, A. (2005).
+                        On the design of optimization strategies based on global response 
+                        surface approximation models. J. Glob. Optim., 33(1):31–59.
+
+        Parameters
+        ----------
+        alpha : float, optional
+            The initial weight of weighted expected improvement, by default 0.5.
+            This equals EI.
+        delta : float | str, optional
+            The additive magnitude of change, by default 0.1.
+            This is added or subtracted to the curent alpha.
+            The sign will be determined by the algorithm and is opposite to the 
+            current search attitude.
+            Delta can also be "auto" which equals to auto_alpha=True. Experimental.
+        window_size : int, optional
+            Window size to smooth the UBR signal, by default 7.
+            We smooth the UBR because we observed it to be very noisy from step to step.
+        atol_rel : float, optional
+            The relative absolute tolerance, by default 0.1.
+            atol_rel is used to check whether the gradient of the smoothed UBR is 
+            approximately zero. The bigger atol_rel, the more often we should
+            switch. The absolute tolerance is determined by the current maximum 
+            gradient times this parameter.
+        track_attitude : str, optional
+            How far the search attitude is tracked, by default "last".
+            Following options are available:
+            - last: Only compare the WEI terms from the last optimization step. This
+                worked best in the experiments.
+            - until_inc_change: The WEI terms are tracked from the last time the incumbent
+                changed.
+            - until_last_switch: The WEI terms are tracked from the last time SAWEI
+                self-adjusted alpha, the exploration-exploitation trade-off.
+                #TODO Rename "until_last_switch" to "until_last_adjust" because we do not 
+                    switch anything but adjust a parameter
+        use_pure_PI : bool, optional
+            By default True. This influences which term is used to measure the exploitation
+            tendency. True means we use classic PI. False means using the exploitation-term 
+            from WEI, which is a modulated version of PI. Empirically, using pure PI
+            works better. 
+        auto_alpha : bool, optional
+            By default False. Experimental feature. If set to true, directly determine
+            alpha based on the distance between the exploration and exploitation summands.
+            Empirically did not work that well.
+        use_wandb : bool, optional
+            By default False. If true, log state to wandb.
+        """
         self.alpha = alpha
         self.delta = delta
         self.window_size = window_size
@@ -215,6 +425,7 @@ class SAWEI(Callback):
         self.track_attitude = track_attitude
         self.use_pure_PI = use_pure_PI
         self.auto_alpha = auto_alpha
+        self.use_wandb = use_wandb
 
         if self.delta == "auto":
             self.auto_alpha = True
@@ -226,13 +437,15 @@ class SAWEI(Callback):
         self.history: list[dict[str, Any]] = []
 
         self.wandb_run = None
-        self.wandb_run = wandb.init(
-            project="sawei",
-            job_type="dev",
-            entity="benjamc",
-            group="dev",
-            dir="./tmp/sawei",
-        )
+        if self.use_wandb:
+            import wandb
+            self.wandb_run = wandb.init(
+                project="sawei",
+                job_type="dev",
+                entity="benjamc",
+                group="dev",
+                dir="./tmp/sawei",
+            )
 
     def __str__(self) -> str:
         return "Self-Adjusting Weighted Expected Improvement (SAWEI)"
@@ -344,10 +557,67 @@ def get_sawei_kwargs(
     sawei_window_size: int = 7,
     sawei_atol_rel: float = 0.1,
     sawei_track_attitude: str = "last",
-    sawei_use_pure_PI: bool = False,
+    sawei_use_pure_PI: bool = True,
     sawei_auto_alpha: bool = False,
-):
-    # TODO docstring
+) -> dict[str, Any]:
+    """SAWEI: Get the kwargs for SMAC.
+
+    The kwargs define the method SAWEI and just need
+    to be added to the facade initialization. You can
+    check out the example
+    `examples/6_advanced_features/2_SAWEI.py` how to
+    use it.
+
+    The defaults are the best configuration as used
+    in the paper.
+
+
+    Parameters
+    ----------
+    ubr_top_p : float, optional
+        Top p portion of the evaluated configs to be considered by UBR, by default 0.5
+    sawei_alpha : float, optional
+        The initial weight of weighted expected improvement, by default 0.5.
+        This equals EI.
+    sawei_delta : float | str, optional
+        The additive magnitude of change, by default 0.1.
+        This is added or subtracted to the curent alpha.
+        The sign will be determined by the algorithm and is opposite to the 
+        current search attitude.
+    sawei_window_size : int, optional
+         Window size to smooth the UBR signal, by default 7.
+        We smooth the UBR because we observed it to be very noisy from step to step.
+    sawei_atol_rel : float, optional
+        The relative absolute tolerance, by default 0.1.
+        atol_rel is used to check whether the gradient of the smoothed UBR is 
+        approximately zero. The bigger atol_rel, the more often we should
+        switch. The absolute tolerance is determined by the current maximum 
+        gradient times this parameter.
+    sawei_track_attitude : str, optional
+        How far the search attitude is tracked, by default "last".
+        Following options are available:
+        - last: Only compare the WEI terms from the last optimization step. This
+            worked best in the experiments.
+        - until_inc_change: The WEI terms are tracked from the last time the incumbent
+            changed.
+        - until_last_switch: The WEI terms are tracked from the last time SAWEI
+            self-adjusted alpha, the exploration-exploitation trade-off.
+    sawei_use_pure_PI : bool, optional
+        By default True. This influences which term is used to measure the exploitation
+        tendency. True means we use classic PI. False means using the exploitation-term 
+        from WEI, which is a modulated version of PI. Empirically, using pure PI
+        works better. 
+    sawei_auto_alpha : bool, optional
+        By default False. Experimental feature. If set to true, directly determine
+        alpha based on the distance between the exploration and exploitation summands.
+        Empirically did not work that well.
+
+    Returns
+    -------
+    dict[str, Any]
+        The kwargs arguments to use SAWEI in SMAC. Should
+        be added to the facade.
+    """
     # TODO fix warnings
     # TODO create tests
     # TODO set logging dir of ubr and weitracker
