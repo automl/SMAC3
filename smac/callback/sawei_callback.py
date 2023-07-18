@@ -26,17 +26,16 @@ from smac.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-def sigmoid(x: np.ScalarType | np.ndarray) -> np.ScalarType | np.ndarray:
+def sigmoid(x: float) -> float:
     """Sigmoid Function.
 
     Parameters
-    ----------
-    x : np.ScalarType | np.ndarray
+    ----float
         Input.
 
     Returns
     -------
-    np.ScalarType | np.ndarray
+    float
         Sigmoid(x)
     """
     return 1 / (1 + np.exp(-x))
@@ -102,8 +101,8 @@ class UpperBoundRegretCallback(Callback):
         # during initial design. Con: SMAC might become slower.
         if model_fitted(model):
             kwargs = {"model": model, "num_data": rh.finished}
-            self._UCB.update(**kwargs)
-            self._LCB.update(**kwargs)
+            self._UCB.update(**kwargs)  # type: ignore[arg-type]
+            self._LCB.update(**kwargs)  # type: ignore[arg-type]
 
             # Minimize UCB (max -UCB) for all evaluated configs
             acq_values = self._UCB(evaluated_configs)
@@ -115,11 +114,13 @@ class UpperBoundRegretCallback(Callback):
                 seed=smbo.scenario.seed,
                 acquisition_function=self._LCB,
             )
-            challengers = acq_maximizer._maximize(
-                previous_configs=[],
-                n_points=1,
+            challengers = np.array(
+                acq_maximizer._maximize(
+                    previous_configs=[],
+                    n_points=1,
+                ),
+                dtype=object,
             )
-            challengers = np.array(challengers, dtype=object)
             acq_values = challengers[:, 0]
             min_lcb = -float(np.squeeze(np.amax(acq_values)))
 
@@ -128,7 +129,7 @@ class UpperBoundRegretCallback(Callback):
 
             self.ubr = min_ucb - min_lcb
 
-            info = {
+            hist = {
                 "n_evaluated": smbo.runhistory.finished,
                 "ubr": self.ubr,
                 "min_ucb": min_ucb,
@@ -137,10 +138,10 @@ class UpperBoundRegretCallback(Callback):
 
             logger.debug(
                 f"Upper Bound Regret: n={smbo.runhistory.finished}, "
-                + ", ".join([f"{k}={v:.4f}" for k, v in info.items() if k != "n_evaluated"])
+                + ", ".join([f"{k}={v:.4f}" for k, v in hist.items() if k != "n_evaluated"])
             )
 
-            self.history.append(info)
+            self.history.append(hist)
 
         return super().on_tell_end(smbo, info, value)
 
@@ -181,22 +182,20 @@ class WEITracker(Callback):
         self, config_selector: smac.main.config_selector.ConfigSelector, config: Configuration
     ) -> None:
         model = config_selector._model
-        if issubclass(type(config_selector._acquisition_function), WEI) and model_fitted(
-            model
-        ):
-            X = config.get_array()  # noqa: F841
-            acq_values = config_selector._acquisition_function([config])  # noqa: F841
-            alpha = config_selector._acquisition_function._alpha
-            pi_term = config_selector._acquisition_function.pi_term[0][0]
-            ei_term = config_selector._acquisition_function.ei_term[0][0]
+        if issubclass(type(config_selector._acquisition_function), WEI) and model_fitted(model):
+            # X = config.get_array()  # noqa: F841
+            # acq_values = config_selector._acquisition_function([config])  # noqa: F841 # type: ignore[misc,union-attr]
+            alpha = config_selector._acquisition_function._alpha  # type: ignore[union-attr]
+            pi_term = config_selector._acquisition_function.pi_term[0][0]  # type: ignore[union-attr]
+            ei_term = config_selector._acquisition_function.ei_term[0][0]  # type: ignore[union-attr]
 
             info = {
-                "n_evaluated": config_selector._runhistory.finished,
+                "n_evaluated": config_selector._runhistory.finished,  # type: ignore[union-attr]
                 "alpha": alpha,
                 "pi_term": pi_term,
                 "ei_term": ei_term,
-                "pi_pure_term": config_selector._acquisition_function.pi_pure_term[0][0],
-                "pi_mod_term": config_selector._acquisition_function.pi_mod_term[0][0],
+                "pi_pure_term": config_selector._acquisition_function.pi_pure_term[0][0],  # type: ignore[union-attr]
+                "pi_mod_term": config_selector._acquisition_function.pi_mod_term[0][0],  # type: ignore[union-attr]
             }
             self.history.append(info)
             logger.debug(
@@ -215,7 +214,7 @@ class WEITracker(Callback):
         return super().on_end(smbo)
 
 
-def detect_adjust(UBR: np.array, window_size: int = 10, atol_rel: float = 0.1) -> np.array[bool]:
+def detect_adjust(UBR: list | np.ndarray, window_size: int = 10, atol_rel: float = 0.1) -> np.ndarray:
     """Signal the time to adjust the algorithm.
 
     First, smooth the UBR signal and then calculate the gradients.
@@ -223,7 +222,7 @@ def detect_adjust(UBR: np.array, window_size: int = 10, atol_rel: float = 0.1) -
 
     Parameters
     ----------
-    UBR : np.array
+    UBR : np.ndarray | list
         UBR history.
     window_size : int, optional
         Window size to smooth the UBR with, by default 10
@@ -234,7 +233,7 @@ def detect_adjust(UBR: np.array, window_size: int = 10, atol_rel: float = 0.1) -
 
     Returns
     -------
-    np.array[bool]
+    np.ndarray[bool]
         Adjust yes or no per UBR point.
     """
     miqm = apply_moving_iqm(U=UBR, window_size=window_size)
@@ -254,30 +253,30 @@ def detect_adjust(UBR: np.array, window_size: int = 10, atol_rel: float = 0.1) -
 
 
 # Moving IQM
-def apply_moving_iqm(U: np.array, window_size: int = 5) -> np.array:
+def apply_moving_iqm(U: np.ndarray | list, window_size: int = 5) -> np.ndarray:
     """Moving IQM for UBR
 
     Smoothes the noisy UBR signal.
 
     Parameters
     ----------
-    U : np.array
+    U : np.ndarray | list
         UBR history.
     window_size : int, optional
         The window size for smoothing, by default 5.
 
     Returns
     -------
-    np.array
+    np.ndarray
         Smoothed UBR.
     """
 
-    def moving_iqm(X: np.array) -> float:
+    def moving_iqm(X: np.ndarray) -> float:
         """Apply the IQM to one slice (X) of the UBR.
 
         Parameters
         ----------
-        X : np.array
+        X : np.ndarray
             One slice of the UBR.
 
         Returns
@@ -296,7 +295,7 @@ def apply_moving_iqm(U: np.array, window_size: int = 5) -> np.array:
     return miqm
 
 
-def model_fitted(model: AbstractModel) -> bool:
+def model_fitted(model: AbstractModel | None) -> bool:
     """Check whether the surrogate model is fitted
 
     Parameters
@@ -309,9 +308,12 @@ def model_fitted(model: AbstractModel) -> bool:
     bool
         Model fitted or not.
     """
-    return (type(model) == GaussianProcess and model._is_trained) or (
-        type(model) == RandomForest and model._rf is not None
-    )
+    fitted = False
+    if model is not None:
+        fitted = (type(model) == GaussianProcess and model._is_trained) or (
+            type(model) == RandomForest and model._rf is not None
+        )
+    return fitted
 
 
 class SAWEI(Callback):
@@ -459,7 +461,7 @@ class SAWEI(Callback):
             state = {
                 "n_evaluated": solver.runhistory.finished,
                 "alpha": query_callback(solver=solver, callback_type="WEITracker", key="alpha"),
-                "n_incumbent_changes": solver._intensifier._incumbents_changed,
+                "n_incumbent_changes": int(solver._intensifier._incumbents_changed),
                 "wei_ei_term": query_callback(solver=solver, callback_type="WEITracker", key="ei_term"),
                 "wei_pi_pure_term": query_callback(solver=solver, callback_type="WEITracker", key="pi_pure_term"),
                 "wei_pi_mod_term": query_callback(solver=solver, callback_type="WEITracker", key="pi_mod_term"),
@@ -502,7 +504,7 @@ class SAWEI(Callback):
                     # - exploring (exploring==True): increase alpha, change to exploiting
                     # - exploiting (exploring==False): decrease alpha, change to exploring
                     sign = 1 if exploring else -1
-                    alpha = self.alpha + sign * self.delta
+                    alpha = self.alpha + sign * self.delta  # type: ignore[operator]
 
                 # Bound alpha
                 lb, ub = self.bounds
@@ -510,21 +512,21 @@ class SAWEI(Callback):
 
             if self.track_attitude == "until_inc_change":
                 if state["n_incumbent_changes"] > self.last_inc_count:
-                    self.last_inc_count = state["n_incumbent_changes"]
-                    self._pi_term_sum: float = 0.0
-                    self._ei_term_sum: float = 0.0
+                    self.last_inc_count = state["n_incumbent_changes"]  # type: ignore[assignment]
+                    self._pi_term_sum = 0.0
+                    self._ei_term_sum = 0.0
             elif self.track_attitude == "until_last_adjust":
                 if adjust:
-                    self._pi_term_sum: float = 0.0
-                    self._ei_term_sum: float = 0.0
+                    self._pi_term_sum = 0.0
+                    self._ei_term_sum = 0.0
 
-            if type(solver.intensifier._config_selector._acquisition_function) == WEI:
-                self.modify_solver(solver=solver, alpha=self.alpha)
+            if type(solver.intensifier._config_selector._acquisition_function) == WEI:  # type: ignore[union-attr]
+                solver = self.modify_solver(solver=solver, alpha=self.alpha)
 
-            info = {
+            state_info = {
                 "adjust": int(adjust),
             }
-            state.update(info)
+            state.update(state_info)
 
             if self.wandb_run:
                 self.wandb_run.log(data=state)
@@ -546,6 +548,7 @@ class SAWEI(Callback):
                 "num_data": solver.runhistory.finished,
             }
             solver.intensifier.config_selector._acquisition_function._update(**kwargs)  # type: ignore[union-attr]
+        return solver
 
     def on_end(self, smbo: smac.main.smbo.SMBO) -> None:
         if self.wandb_run:
