@@ -184,12 +184,11 @@ class EIPI(WEI):
         )
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        match self._alpha:
-            case 0.5:  # EI
-                self._use_pure_PI = False
-            case 1.:  # PI
-                self._use_pure_PI = True
-            case _:
+        if self._alpha == 0.5:  # EI
+            self._use_pure_PI = False
+        elif self._alpha == 1.:  # PI
+            self._use_pure_PI = True
+        else:
                 raise ValueError("Only values of alpha=0.5 -> EI and alpha=1 -> PI are valid.")
         return super()._compute(X=X)
 
