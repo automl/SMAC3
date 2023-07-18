@@ -68,12 +68,17 @@ class UpperBoundRegretCallback(Callback):
             Upper Confidence Bound, by default None.
         lcb : LCB | None, optional
             Lower Configdence Bound, by default None.
+
+        Raises
+        ------
+        NotImplementedError
+            When any other than the normal RunHistoryEncoder is selected, i.e.
+            if log transforms are used.
         """
         super().__init__()
 
         # Use only top p portion of the evaluated configs to fit the model (Sec. 4)
         # TODO: Are the top p configs actually used to fit the surrogate model?
-        # DISCUSS: What does top p configs mean for AC?
         self.top_p: float = top_p
         self.ubr: float | None = None
         self.history: list[dict[str, Any]] = []
@@ -84,7 +89,7 @@ class UpperBoundRegretCallback(Callback):
         # Check encoding
         if type(smbo.intensifier.config_selector._runhistory_encoder) is not RunHistoryEncoder:
             msg = "Currently no response value transformations are supported, only " "RunHistoryEncoder possible."
-            # raise NotImplementedError(msg)
+            raise NotImplementedError(msg)
 
         # Line 16: r_t = min UCB(config) (from all evaluated configs) - min LCB(config) (from config space)
         # Get all evaluated configs
@@ -94,7 +99,6 @@ class UpperBoundRegretCallback(Callback):
 
         # Prepare acquisition functions
         model = smbo.intensifier.config_selector._model
-        # BUG: num data is calculated wrongly
         # calculate UBR right from the start, filter to sbo if necessary
 
         # We can only calculate the UBR if the model is fitted.
@@ -578,6 +582,9 @@ def get_sawei_kwargs(
 
     The defaults are the best configuration as used
     in the paper.
+
+    ⚠ So far, only normal value encoders are supported,
+    no log transforms.  
 
 
     Parameters
