@@ -18,6 +18,11 @@ from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import RunHistory, Scenario
 from smac.runhistory import TrialInfo, TrialValue
 
+import smac
+import numpy as np
+from smac.callback.sawei_callback import get_sawei_kwargs
+
+
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
@@ -56,14 +61,6 @@ def plot(runhistory: RunHistory, incumbent: Configuration) -> None:
     plt.scatter(incumbent["x"], incumbent["x"] * incumbent["x"], c="red", zorder=10000, marker="x")
 
     plt.show()
-
-
-import smac
-import numpy as np
-from smac.callback.sawei_callback import get_sawei_kwargs
-
-
-
 
 
 if __name__ == "__main__":
