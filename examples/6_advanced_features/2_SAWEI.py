@@ -1,22 +1,20 @@
 """
-Quadratic Function
-^^^^^^^^^^^^^^^^^^
+Self-Adjusting Weighted Expected Improvement (SAWEI)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-An example of applying SMAC to optimize a quadratic function.
+An example of applying SMAC to optimize a quadratic function using SAWEI [Benjamins et al, 2023].
 
-We use the black-box facade because it is designed for black-box function optimization.
-The black-box facade uses a :term:`Gaussian Process<GP>` as its surrogate model.
-The facade works best on a numerical hyperparameter configuration space and should not
-be applied to problems with large evaluation budgets (up to 1000 evaluations).
+[Benjamins et al., 2023] C. Benjamins, E. Raponi, A. Jankovic, C. Doerr and M. Lindauer. 
+                Self-Adjusting Weighted Expected Improvement for Bayesian Optimization.
+                AutoML Conference 2023.
 """
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 from matplotlib import pyplot as plt
 
-from smac import HyperparameterOptimizationFacade as HPOFacade
+from smac import BlackBoxFacade
 from smac import RunHistory, Scenario
-from smac.runhistory import TrialInfo, TrialValue
 
 import smac
 import numpy as np
@@ -69,14 +67,16 @@ if __name__ == "__main__":
     # Scenario object specifying the optimization "environment"
     scenario = Scenario(model.configspace, deterministic=True, n_trials=100, seed=np.random.randint(low=0,high=10000))
 
+    # Get the kwargs necessary to use SAWEI
+    # SAWEI is implemented as a chain of callbacks
     sawei_kwargs = get_sawei_kwargs()
 
     # Now we use SMAC to find the best hyperparameters
-    smac = HPOFacade(
+    smac = BlackBoxFacade(
         scenario,
         model.train,  # We pass the target function here
         overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
-        **sawei_kwargs
+        **sawei_kwargs  # Add SAWEI
     )
 
     incumbent = smac.optimize()
