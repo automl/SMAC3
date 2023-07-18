@@ -47,12 +47,7 @@ def sigmoid(x: np.ScalarType | np.ndarray) -> np.ScalarType | np.ndarray:
 
 
 class UpperBoundRegretCallback(Callback):
-    def __init__(
-            self, 
-            top_p: float = 0.5, 
-            ucb: UCB | None = None, 
-            lcb: LCB | None = None
-        ) -> None:
+    def __init__(self, top_p: float = 0.5, ucb: UCB | None = None, lcb: LCB | None = None) -> None:
         """Calculate the Upper Bound Regret (UBR) [Makarova et al., 2022]
 
         The UBR is defined by the estimated worst-case function value of incumbent
@@ -79,7 +74,7 @@ class UpperBoundRegretCallback(Callback):
         # Use only top p portion of the evaluated configs to fit the model (Sec. 4)
         # TODO: Are the top p configs actually used to fit the surrogate model?
         # DISCUSS: What does top p configs mean for AC?
-        self.top_p: float = top_p  
+        self.top_p: float = top_p
         self.ubr: float | None = None
         self.history: list[dict[str, Any]] = []
         self._UCB: UCB = ucb or UCB()
@@ -88,15 +83,14 @@ class UpperBoundRegretCallback(Callback):
     def on_tell_end(self, smbo: SMBO, info: TrialInfo, value: TrialValue) -> bool | None:
         # Check encoding
         if type(smbo.intensifier.config_selector._runhistory_encoder) is not RunHistoryEncoder:
-            msg = "Currently no response value transformations are supported, only "\
-                  "RunHistoryEncoder possible."
+            msg = "Currently no response value transformations are supported, only " "RunHistoryEncoder possible."
             # raise NotImplementedError(msg)
-                
+
         # Line 16: r_t = min UCB(config) (from all evaluated configs) - min LCB(config) (from config space)
         # Get all evaluated configs
         rh = smbo.runhistory
         evaluated_configs = rh.get_configs(sort_by="cost")
-        evaluated_configs = evaluated_configs[:int(np.ceil(len(evaluated_configs) * self.top_p))]
+        evaluated_configs = evaluated_configs[: int(np.ceil(len(evaluated_configs) * self.top_p))]
 
         # Prepare acquisition functions
         model = smbo.intensifier.config_selector._model
@@ -106,14 +100,14 @@ class UpperBoundRegretCallback(Callback):
         # We can only calculate the UBR if the model is fitted.
         # TODO: Fit the model ourselves if it is not fitted yet. Pro: We can calculate the UBR
         # during initial design. Con: SMAC might become slower.
-        if model_fitted(model): 
+        if model_fitted(model):
             kwargs = {"model": model, "num_data": rh.finished}
             self._UCB.update(**kwargs)
             self._LCB.update(**kwargs)
 
             # Minimize UCB (max -UCB) for all evaluated configs
             acq_values = self._UCB(evaluated_configs)
-            min_ucb =  -float(np.squeeze(np.amax(acq_values)))
+            min_ucb = -float(np.squeeze(np.amax(acq_values)))
 
             # Minimize LCB (max -LCB) on config space
             acq_maximizer = LocalAndSortedRandomSearch(
@@ -141,12 +135,15 @@ class UpperBoundRegretCallback(Callback):
                 "min_lcb": min_lcb,
             }
 
-            logger.debug(f"Upper Bound Regret: n={smbo.runhistory.finished}, " + ", ".join([f"{k}={v:.4f}" for k, v in info.items() if k != "n_evaluated"]))
+            logger.debug(
+                f"Upper Bound Regret: n={smbo.runhistory.finished}, "
+                + ", ".join([f"{k}={v:.4f}" for k, v in info.items() if k != "n_evaluated"])
+            )
 
             self.history.append(info)
 
         return super().on_tell_end(smbo, info, value)
-    
+
     def on_end(self, smbo: smac.main.smbo.SMBO) -> None:
         # Write history
         path = smbo._scenario.output_directory
@@ -161,7 +158,7 @@ class WEITracker(Callback):
     """Track the terms of Weighted Expected Improvement.
 
     Maintains the history of WEI.
-    When the optimization is done, write to disk: 
+    When the optimization is done, write to disk:
     `scenario.output_directory / "wei_history.csv"`
 
     Attributes
@@ -175,13 +172,18 @@ class WEITracker(Callback):
             - "pi_pure_term": PI.
             - "pi_mod_term": modulated PI as the term in WEI.
     """
+
     def __init__(self) -> None:
         self.history: list[dict[str, Any]] = []
         super().__init__()
 
-    def on_next_configurations_end(self, config_selector: smac.main.config_selector.ConfigSelector, config: Configuration) -> None:
+    def on_next_configurations_end(
+        self, config_selector: smac.main.config_selector.ConfigSelector, config: Configuration
+    ) -> None:
         model = config_selector._model
-        if issubclass(type(config_selector._acquisition_function), WEI) and model_fitted(model):  # FIXME: Flag _is_trained only exists for GP so far:
+        if issubclass(type(config_selector._acquisition_function), WEI) and model_fitted(
+            model
+        ):  # FIXME: Flag _is_trained only exists for GP so far:
             X = config.get_array()
             # TODO: pipe X through
             acq_values = config_selector._acquisition_function([config])
@@ -198,7 +200,10 @@ class WEITracker(Callback):
                 "pi_mod_term": config_selector._acquisition_function.pi_mod_term[0][0],
             }
             self.history.append(info)
-            logger.debug(f"WEI: n={info['n_evaluated']}, " + ", ".join([f"{k}={v:.4f}" for k, v in info.items() if k != "n_evaluated"]))
+            logger.debug(
+                f"WEI: n={info['n_evaluated']}, "
+                + ", ".join([f"{k}={v:.4f}" for k, v in info.items() if k != "n_evaluated"])
+            )
         return super().on_next_configurations_end(config_selector, config)
 
     def on_end(self, smbo: smac.main.smbo.SMBO) -> None:
@@ -209,7 +214,6 @@ class WEITracker(Callback):
             fn = Path(path) / "wei_history.csv"
             df.to_csv(fn, header=True, index=False)
         return super().on_end(smbo)
-
 
 
 def detect_switch(UBR: np.array, window_size: int = 10, atol_rel: float = 0.1) -> np.array[bool]:
@@ -244,12 +248,13 @@ def detect_switch(UBR: np.array, window_size: int = 10, atol_rel: float = 0.1) -
     # switch[0] = 0  # misleading signal bc of iqm
 
     G_abs = np.abs(miqm_gradient)
-    max_grad = [np.nanmax(G_abs[:i+1]) for i in range(len(G_abs))]
-    switch = np.array([np.isclose(miqm_gradient[i], 0, atol=atol_rel*max_grad[i]) for i in range(len(miqm_gradient))])
+    max_grad = [np.nanmax(G_abs[: i + 1]) for i in range(len(G_abs))]
+    switch = np.array([np.isclose(miqm_gradient[i], 0, atol=atol_rel * max_grad[i]) for i in range(len(miqm_gradient))])
     # switch = np.isclose(miqm_gradient, 0, atol=1e-5)
     switch[:window_size] = 0  # misleading signal bc of iqm
-    
+
     return switch
+
 
 # Moving IQM
 def apply_moving_iqm(U: np.array, window_size: int = 5) -> np.array:
@@ -307,13 +312,15 @@ def model_fitted(model: AbstractModel) -> bool:
     bool
         Model fitted or not.
     """
-    return (type(model) == GaussianProcess and model._is_trained) or (type(model) == RandomForest and model._rf is not None)
+    return (type(model) == GaussianProcess and model._is_trained) or (
+        type(model) == RandomForest and model._rf is not None
+    )
 
 
 class SAWEI(Callback):
     def __init__(
-        self, 
-        alpha: float = 0.5, 
+        self,
+        alpha: float = 0.5,
         delta: float | str = 0.1,
         window_size: int = 7,
         atol_rel: float = 0.1,
@@ -324,30 +331,30 @@ class SAWEI(Callback):
     ) -> None:
         """SAWEI (Self-Adjusting Weighted Expected Improvement)
 
-        For our method we need three parts: 
-        (i) The adjustable acquisition function Weighted Expected Improvement (WEI) [Sobester et al., 2005], 
+        For our method we need three parts:
+        (i) The adjustable acquisition function Weighted Expected Improvement (WEI) [Sobester et al., 2005],
         (ii) when to adjust and (iii) how to adjust.
 
-        
+
         ## Weighted Expected Improvement (WEI)
 
         WEI [Sobester et al., 2005] is Expected Improvement (EI) [Mockus et al., 1978] but its
-        two terms are weighted by alpha. One term is more exploratory, the other more 
+        two terms are weighted by alpha. One term is more exploratory, the other more
         exploitative.
         alpha = 0.5 recovers the standard EI [Mockus et al., 1978]
         alpha = 1 has similar behavior as $latex PI(x) = \Phi( z(x))$ [Kushner, 1974]
         alpha = 0 emphasizes a stronger exploration
 
-        
+
         ## When to Adjust?
 
         We adjust alpha whenever the Upper Bound Regret (UBR) [Makarova et al., 2022] converges.
         The UBR estimates the true regret and is used as a stopping criterion for BO-based HPO.
         The gap is defined by the estimation of the worst-case function value of the best-observed
         point minus the estimated lowest function value across the whole search space.
-        This means the smaller the gap becomes, the closer we are at the asymptotic function value 
-        under the current optimization settings. When the gap falls under a certain threshold, 
-        Makarova et al. (2022) terminate the optimization. Because this threshold most likely 
+        This means the smaller the gap becomes, the closer we are at the asymptotic function value
+        under the current optimization settings. When the gap falls under a certain threshold,
+        Makarova et al. (2022) terminate the optimization. Because this threshold most likely
         depends on the problem at hand we use the convergence of UBR as our signal to adjust.
 
         ## How to Adjust?
@@ -367,12 +374,12 @@ class SAWEI(Callback):
                         A., Seeger, M., and Archambeau, C. (2022).
                         Automatic termination for hyperparameter optimization. AutoML Conference 2022
 
-        [Mockus et al., 1978] Mockus, J., Tiesis, V., and Zilinskas, A. (1978). 
-                        The application of Bayesian methods for seeking the extremum. 
+        [Mockus et al., 1978] Mockus, J., Tiesis, V., and Zilinskas, A. (1978).
+                        The application of Bayesian methods for seeking the extremum.
                         Towards Global Optimization, 2(117-129).
 
         [Sobester et al., 2005] Sobester, A., Leary, S., and Keane, A. (2005).
-                        On the design of optimization strategies based on global response 
+                        On the design of optimization strategies based on global response
                         surface approximation models. J. Glob. Optim., 33(1):31–59.
 
         Parameters
@@ -383,7 +390,7 @@ class SAWEI(Callback):
         delta : float | str, optional
             The additive magnitude of change, by default 0.1.
             This is added or subtracted to the curent alpha.
-            The sign will be determined by the algorithm and is opposite to the 
+            The sign will be determined by the algorithm and is opposite to the
             current search attitude.
             Delta can also be "auto" which equals to auto_alpha=True. Experimental.
         window_size : int, optional
@@ -391,9 +398,9 @@ class SAWEI(Callback):
             We smooth the UBR because we observed it to be very noisy from step to step.
         atol_rel : float, optional
             The relative absolute tolerance, by default 0.1.
-            atol_rel is used to check whether the gradient of the smoothed UBR is 
+            atol_rel is used to check whether the gradient of the smoothed UBR is
             approximately zero. The bigger atol_rel, the more often we should
-            switch. The absolute tolerance is determined by the current maximum 
+            switch. The absolute tolerance is determined by the current maximum
             gradient times this parameter.
         track_attitude : str, optional
             How far the search attitude is tracked, by default "last".
@@ -404,13 +411,13 @@ class SAWEI(Callback):
                 changed.
             - until_last_switch: The WEI terms are tracked from the last time SAWEI
                 self-adjusted alpha, the exploration-exploitation trade-off.
-                #TODO Rename "until_last_switch" to "until_last_adjust" because we do not 
+                #TODO Rename "until_last_switch" to "until_last_adjust" because we do not
                     switch anything but adjust a parameter
         use_pure_PI : bool, optional
             By default True. This influences which term is used to measure the exploitation
-            tendency. True means we use classic PI. False means using the exploitation-term 
+            tendency. True means we use classic PI. False means using the exploitation-term
             from WEI, which is a modulated version of PI. Empirically, using pure PI
-            works better. 
+            works better.
         auto_alpha : bool, optional
             By default False. Experimental feature. If set to true, directly determine
             alpha based on the distance between the exploration and exploitation summands.
@@ -431,14 +438,15 @@ class SAWEI(Callback):
             self.auto_alpha = True
 
         self.last_inc_count: int = 0
-        self._pi_term_sum: float = 0.
-        self._ei_term_sum: float = 0.
-        self.bounds = (0., 1.)
+        self._pi_term_sum: float = 0.0
+        self._ei_term_sum: float = 0.0
+        self.bounds = (0.0, 1.0)
         self.history: list[dict[str, Any]] = []
 
         self.wandb_run = None
         if self.use_wandb:
             import wandb
+
             self.wandb_run = wandb.init(
                 project="sawei",
                 job_type="dev",
@@ -473,7 +481,7 @@ class SAWEI(Callback):
                 key_pi = "wei_pi_mod_term"
 
             # We need at least 2 UBRs to compute the gradient
-            if len(UBR) >= 2: 
+            if len(UBR) >= 2:
                 switch = detect_switch(UBR=UBR, window_size=self.window_size, atol_rel=self.atol_rel)[-1]
 
             self._pi_term_sum += state[key_pi]
@@ -487,7 +495,7 @@ class SAWEI(Callback):
                     exploring = state[key_pi] <= state["wei_ei_term"]
                     distance = state["wei_ei_term"] - state[key_pi]
                 elif self.track_attitude in ["until_inc_change", "until_last_switch"]:
-                    exploring =  self._pi_term_sum <= self._ei_term_sum
+                    exploring = self._pi_term_sum <= self._ei_term_sum
                     distance = self._ei_term_sum - self._pi_term_sum
                 else:
                     raise ValueError(f"Unknown track_attitude {self.track_attitude}.")
@@ -508,12 +516,12 @@ class SAWEI(Callback):
             if self.track_attitude == "until_inc_change":
                 if state["n_incumbent_changes"] > self.last_inc_count:
                     self.last_inc_count = state["n_incumbent_changes"]
-                    self._pi_term_sum: float = 0.
-                    self._ei_term_sum: float = 0.
+                    self._pi_term_sum: float = 0.0
+                    self._ei_term_sum: float = 0.0
             elif self.track_attitude == "until_last_switch":
                 if switch:
-                    self._pi_term_sum: float = 0.
-                    self._ei_term_sum: float = 0.
+                    self._pi_term_sum: float = 0.0
+                    self._ei_term_sum: float = 0.0
 
             if type(solver.intensifier._config_selector._acquisition_function) == WEI:
                 self.modify_solver(solver=solver, alpha=self.alpha)
@@ -527,7 +535,7 @@ class SAWEI(Callback):
                 self.wandb_run.log(data=state)
 
         return super().on_tell_end(solver, info, value)
-    
+
     def modify_solver(self, solver: smac.main.smbo.SMBO, alpha: int | float | None) -> smac.main.smbo.SMBO:
         if alpha is not None:
             # if self.discrete_actions is not None:
@@ -538,7 +546,7 @@ class SAWEI(Callback):
             #     raise ValueError(f"Action (xi) is '{action}' but only is allowed in range '{self.action_bounds}'.")
 
             kwargs = {
-                "eta": solver.runhistory.get_cost(solver.intensifier.get_incumbent()), 
+                "eta": solver.runhistory.get_cost(solver.intensifier.get_incumbent()),
                 "alpha": alpha,
                 "num_data": solver.runhistory.finished,
             }
@@ -552,7 +560,7 @@ class SAWEI(Callback):
 
 def get_sawei_kwargs(
     ubr_top_p: float = 0.5,
-    sawei_alpha: float = 0.5, 
+    sawei_alpha: float = 0.5,
     sawei_delta: float | str = 0.1,
     sawei_window_size: int = 7,
     sawei_atol_rel: float = 0.1,
@@ -582,16 +590,16 @@ def get_sawei_kwargs(
     sawei_delta : float | str, optional
         The additive magnitude of change, by default 0.1.
         This is added or subtracted to the curent alpha.
-        The sign will be determined by the algorithm and is opposite to the 
+        The sign will be determined by the algorithm and is opposite to the
         current search attitude.
     sawei_window_size : int, optional
          Window size to smooth the UBR signal, by default 7.
         We smooth the UBR because we observed it to be very noisy from step to step.
     sawei_atol_rel : float, optional
         The relative absolute tolerance, by default 0.1.
-        atol_rel is used to check whether the gradient of the smoothed UBR is 
+        atol_rel is used to check whether the gradient of the smoothed UBR is
         approximately zero. The bigger atol_rel, the more often we should
-        switch. The absolute tolerance is determined by the current maximum 
+        switch. The absolute tolerance is determined by the current maximum
         gradient times this parameter.
     sawei_track_attitude : str, optional
         How far the search attitude is tracked, by default "last".
@@ -604,9 +612,9 @@ def get_sawei_kwargs(
             self-adjusted alpha, the exploration-exploitation trade-off.
     sawei_use_pure_PI : bool, optional
         By default True. This influences which term is used to measure the exploitation
-        tendency. True means we use classic PI. False means using the exploitation-term 
+        tendency. True means we use classic PI. False means using the exploitation-term
         from WEI, which is a modulated version of PI. Empirically, using pure PI
-        works better. 
+        works better.
     sawei_auto_alpha : bool, optional
         By default False. Experimental feature. If set to true, directly determine
         alpha based on the distance between the exploration and exploitation summands.
@@ -636,9 +644,6 @@ def get_sawei_kwargs(
     callbacks = [ubr, weitracker, sawei]
     acquisition_function = WEI()
 
-    kwargs = {
-        "callbacks": callbacks,
-        "acquisition_function": acquisition_function
-    }
+    kwargs = {"callbacks": callbacks, "acquisition_function": acquisition_function}
 
     return kwargs

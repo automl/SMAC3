@@ -138,7 +138,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
         if self._update_beta and not self._beta_scaling_srinivas:
             beta_t = 2 * np.log((X.shape[1] * self._num_data**2) / self._beta)
         elif self._update_beta and self._beta_scaling_srinivas:
-            beta_t = (2 * np.log((X.shape[1] * self._num_data**2 * np.pi ** 2) / (6 * self._beta))) / 5
+            beta_t = (2 * np.log((X.shape[1] * self._num_data**2 * np.pi**2) / (6 * self._beta))) / 5
         else:
             beta_t = self._beta
 

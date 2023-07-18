@@ -3,7 +3,6 @@ import numpy as np
 
 
 def query_callback(solver: smac.main.smbo.SMBO, callback_type: str, key: str) -> float:
-    from rich import print as printr
     obs = None
     for callback in solver._callbacks:
         if type(callback).__name__ == callback_type:
