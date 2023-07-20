@@ -66,9 +66,9 @@ class MLP:
         return cs
 
     def train(self, config: Configuration, seed: int = 0, budget: int = 10) -> dict[str, float]:
-        lr = config["learning_rate"] if config["learning_rate"] else "constant"
-        lr_init = config["learning_rate_init"] if config["learning_rate_init"] else 0.001
-        batch_size = config["batch_size"] if config["batch_size"] else 200
+        lr = config.get("learning_rate", "constant")
+        lr_init = config.get("learning_rate_init", 0.001)
+        batch_size = config.get("batch_size", 200)
 
         start_time = time.time()
 
