@@ -84,18 +84,18 @@ class MLP:
         # For deactivated parameters (by virtue of the conditions),
         # the configuration stores None-values.
         # This is not accepted by the MLP, so we replace them with placeholder values.
-        lr = config["learning_rate"] if config["learning_rate"] else "constant"
-        lr_init = config["learning_rate_init"] if config["learning_rate_init"] else 0.001
-        batch_size = config["batch_size"] if config["batch_size"] else 200
+        lr = config.get("learning_rate") if config.get("learning_rate") else "constant"
+        lr_init = config.get("learning_rate_init") if config.get("learning_rate_init") else 0.001
+        batch_size = config.get("batch_size") if config.get("batch_size") else 200
 
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore")
 
             classifier = MLPClassifier(
-                hidden_layer_sizes=[config["n_neurons"]] * config["n_layer"],
-                solver=config["solver"],
+                hidden_layer_sizes=[config.get("n_neurons")] * config.get("n_layer"),
+                solver=config.get("solver"),
                 batch_size=batch_size,
-                activation=config["activation"],
+                activation=config.get("activation"),
                 learning_rate=lr,
                 learning_rate_init=lr_init,
                 max_iter=int(np.ceil(budget)),

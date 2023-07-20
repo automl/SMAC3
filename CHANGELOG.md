@@ -8,6 +8,7 @@
 ## Bugfixes
 - Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).
 - Fix callback order (#1040).
+- Handle configspace as dictionary in mlp example.
 
 # 2.0.1
 
