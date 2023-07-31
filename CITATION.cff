@@ -9,7 +9,7 @@ date-released: "2016-08-17"
 url: "https://automl.github.io/SMAC3/master/index.html"
 repository-code: "https://github.com/automl/SMAC3"
 
-version: "2.0.1"
+version: "2.0.2"
 
 type: "software"
 keywords:
