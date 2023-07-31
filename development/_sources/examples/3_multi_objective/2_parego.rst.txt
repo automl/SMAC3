@@ -46,17 +46,23 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:515] Added config 3623cc as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:598] Config 540db2 is a new incumbent. Total number of incumbents: 2.
-    [INFO][abstract_intensifier.py:598] Config 0c9159 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:598] Config 3b5efd is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:598] Config 20a917 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:590] Added config ff5e22 and rejected config 3623cc as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:598] Config e5a66a is a new incumbent. Total number of incumbents: 5.
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.28934359550476074
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.003428936004638672
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 188
+    [INFO][smbo.py:330] --- Remaining trials: 175
     Validated costs from default config: 
-    --- [0.60155834 0.44748735]
+    --- [0.60155834 0.30459821]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.48907304]
-    --- [0.03561281 1.7390976 ]
+    --- [0.04813757 0.95074058]
+    --- [0.03561281 1.18144476]
+    --- [0.38257119 0.59237599]
+    --- [0.60406453 0.33409846]
+    --- [0.06427963 0.92649043]
 
 
 
@@ -237,7 +243,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  35.879 seconds)
+   **Total running time of the script:** ( 0 minutes  38.825 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
