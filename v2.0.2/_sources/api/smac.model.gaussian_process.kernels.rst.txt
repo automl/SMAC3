@@ -1,0 +1,44 @@
+smac.model.gaussian\_process.kernels
+====================================
+
+.. automodule:: smac.model.gaussian_process.kernels
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   smac.model.gaussian_process.kernels.base_kernels
+   smac.model.gaussian_process.kernels.hamming_kernel
+   smac.model.gaussian_process.kernels.matern_kernel
+   smac.model.gaussian_process.kernels.rbf_kernel
+   smac.model.gaussian_process.kernels.white_kernel
+

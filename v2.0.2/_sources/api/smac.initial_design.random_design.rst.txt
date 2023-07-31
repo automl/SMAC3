@@ -1,0 +1,37 @@
+smac.initial\_design.random\_design
+===================================
+
+.. automodule:: smac.initial_design.random_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      RandomInitialDesign
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

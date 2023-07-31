@@ -1,0 +1,60 @@
+
+
+.. _sphx_glr_examples_3_multi_objective:
+
+Multi-Objective
+---------------
+
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="A simple example on how to use multi-objective optimization is shown. The 2D Schaffer function ...">
+
+.. only:: html
+
+  .. image:: /examples/3_multi_objective/images/thumb/sphx_glr_1_schaffer_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2D Schaffer Function with Objective Weights</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of how to use multi-objective optimization with ParEGO. Both accuracy and run-time a...">
+
+.. only:: html
+
+  .. image:: /examples/3_multi_objective/images/thumb/sphx_glr_2_parego_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_3_multi_objective_2_parego.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">ParEGO</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/3_multi_objective/1_schaffer
+   /examples/3_multi_objective/2_parego
+

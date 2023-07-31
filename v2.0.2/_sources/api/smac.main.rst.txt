@@ -1,0 +1,41 @@
+﻿smac.main
+=========
+
+.. automodule:: smac.main
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   smac.main.config_selector
+   smac.main.smbo
+
