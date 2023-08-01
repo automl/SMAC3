@@ -76,6 +76,7 @@ class ConfigSelector:
         self._considered_budgets: list[float | int | None] = []
         self._retrained_model: int = 0
         self._model_trained_on_samples_amount: int = 0
+        self._model_trained_on_budget: float | int | None = None
 
         # How often to retry receiving a new configuration
         # (counter increases if the received config was already returned before)
@@ -139,7 +140,7 @@ class ConfigSelector:
         Note
         ----
         When SMAC continues a run, processed configurations from the runhistory are ignored. For example, if the
-        intitial design configurations already have been processed, they are ignored here. After the run is
+        initial design configurations already have been processed, they are ignored here. After the run is
         continued, however, the surrogate model is trained based on the runhistory in all cases.
 
         Returns
@@ -336,7 +337,7 @@ class ConfigSelector:
         Returns
         -------
         float
-        np.ndarry
+        np.ndarray
         Configuration
         """
         if self._predict_x_best:

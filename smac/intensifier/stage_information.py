@@ -50,7 +50,10 @@ class Stage:
     def add_config(self, config: Configuration) -> None:
         """Adds a config to the stage."""
         if len(self.configs) >= self.amount_configs_to_yield:
-            raise ValueError("Cannot add more configs to stage than specified in amount_configs_to_yield.")
+            raise ValueError(
+                f"Cannot add more configs to stage than specified in amount_configs_to_yield. Attempted "
+                f"to add config to stage: {self}."
+            )
         self.configs.append(config)
         self.trials[config] = []
 
@@ -72,6 +75,7 @@ class Stage:
 
     def __str__(self) -> str:
         return (
+            f"Stage (repetition={self.repetition}, bracket={self.bracket}, stage={self.stage}, budget={self.budget},"
             f"Stage progress: {self.amount_configs_yielded} / {self.amount_configs_to_yield}, "
             f"isb_keys={len(self.isb_keys)}, configs={len(self.configs)}, trials={len(self.trials)})"
         )

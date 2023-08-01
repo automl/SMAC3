@@ -258,7 +258,7 @@ class SMBO:
         incumbent : Configuration
             The best found configuration.
         """
-        # We return the incumbent if we already finished the a process (we don't want to allow to call
+        # We return the incumbent if we already finished the process (we don't want to allow to call
         # optimize more than once).
         if self._finished:
             logger.info("Optimization process was already finished. Returning incumbent...")

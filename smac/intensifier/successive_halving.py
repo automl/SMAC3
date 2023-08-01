@@ -758,10 +758,12 @@ class SuccessiveHalving(AbstractIntensifier):
 
         # no early stopping if no config evaluated or all already yielded (except in cases where skipping is beneficial
         # even when all configs already have been yielded)
-        skip_last_config = (
-            self._only_go_to_next_fidelity_after_early_stopping or self._remove_stopped_fidelities_mode is not None
+        cant_skip_last_config = (
+            self._only_go_to_next_fidelity_after_early_stopping
+            or self._remove_stopped_fidelities_mode is not None
+            or self._shrink_search_space_on_stop is not None
         )
-        if stage_info.amount_configs_yielded == 0 or (stage_info.all_configs_yielded and (not skip_last_config)):
+        if stage_info.amount_configs_yielded == 0 or (stage_info.all_configs_yielded and (not cant_skip_last_config)):
             return False
 
         stop = self._early_stopping.should_stage_stop(self.runhistory, self._scenario, stage_info)

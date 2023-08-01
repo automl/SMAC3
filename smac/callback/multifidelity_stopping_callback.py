@@ -22,7 +22,7 @@ class MultiFidelityStoppingCallback:
         upper_bound_estimation_rate: float = 0.5,
         min_evaluations: int = 20,
         statistical_error_threshold: Optional[float] = None,
-        statistical_error_field_name: Optional[str] = "statistical_error",
+        statistical_error_field_name: Optional[str] = None,
         statistical_error_estimation_only_incumbent: bool = True,
         statistical_error_config_estimation_percentage: Optional[float] = None,
         epsilon: float = 1e-4,
