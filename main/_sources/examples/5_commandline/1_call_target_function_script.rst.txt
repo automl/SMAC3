@@ -57,13 +57,10 @@ This simple example shows how to call a script with the following content:
     [INFO][abstract_initial_design.py:95] Reducing the number of initial configurations from 8 to 7 (max_ratio == 0.25).
     [INFO][abstract_initial_design.py:147] Using 7 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
-    [INFO][abstract_intensifier.py:515] Added config 33ba44 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:590] Added config 249a5c and rejected config 33ba44 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x0: 267 -> 144
-    [INFO][abstract_intensifier.py:590] Added config 17babd and rejected config 249a5c as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x0: 144 -> 98
-    [INFO][abstract_intensifier.py:590] Added config 6bd331 and rejected config 17babd as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x0: 98 -> 0
+    [INFO][abstract_intensifier.py:515] Added config 568877 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:590] Added config 88bb69 and rejected config 568877 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config 7870ec and rejected config 88bb69 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config 5beafa and rejected config 7870ec as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:327] Configuration budget is exhausted:
     [INFO][smbo.py:328] --- Remaining wallclock time: inf
     [INFO][smbo.py:329] --- Remaining cpu time: inf
@@ -115,7 +112,7 @@ This simple example shows how to call a script with the following content:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.170 seconds)
+   **Total running time of the script:** ( 0 minutes  7.982 seconds)
 
 
 .. _sphx_glr_download_examples_5_commandline_1_call_target_function_script.py:

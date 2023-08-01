@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -6,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>User Priors over the Optimum &#8212; SMAC3 Documentation 2.0.1 documentation</title>
+    <title>User Priors over the Optimum &#8212; SMAC3 Documentation 2.0.2 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -23,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Multi-Fidelity and Multi-Instances" href="../2_multi_fidelity/index.html" />
@@ -96,11 +95,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.1
+        v2.0.2
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -1035,25 +1035,11 @@ but we stick with the hyperparameter optimization facade here. To incorporate us
 optimization, you have to change the acquisition function to <code class="docutils literal notranslate"><span class="pre">PriorAcquisitionFunction</span></code>.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 1 additional configurations.
 [WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
-[INFO][abstract_intensifier.py:515] Added config fec0cb as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:590] Added config 34b1eb and rejected config fec0cb as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- activation: &#39;logistic&#39; -&gt; &#39;relu&#39;
-[INFO][configspace.py:175] --- batch_size: 324 -&gt; 128
-[INFO][configspace.py:175] --- learning_rate_init: 1.1134996369914405 -&gt; 0.0010000000000000002
-[INFO][configspace.py:175] --- n_layer: 2 -&gt; 3
-[INFO][configspace.py:175] --- n_neurons: 157 -&gt; 108
-[INFO][configspace.py:175] --- optimizer: &#39;sgd&#39; -&gt; &#39;adam&#39;
-[INFO][abstract_intensifier.py:590] Added config 9d6edf and rejected config 34b1eb as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 128 -&gt; 48
-[INFO][configspace.py:175] --- learning_rate_init: 0.0010000000000000002 -&gt; 0.0008561309336666343
-[INFO][configspace.py:175] --- n_layer: 3 -&gt; 4
-[INFO][configspace.py:175] --- n_neurons: 108 -&gt; 107
-[INFO][abstract_intensifier.py:590] Added config f444e1 and rejected config 9d6edf as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 48 -&gt; 78
-[INFO][configspace.py:175] --- learning_rate_init: 0.0008561309336666343 -&gt; 0.006128780165374783
-[INFO][configspace.py:175] --- n_layer: 4 -&gt; 3
-[INFO][abstract_intensifier.py:590] Added config c0b873 and rejected config f444e1 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- batch_size: 78 -&gt; 77
+[INFO][abstract_intensifier.py:515] Added config 7ec7fe as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:590] Added config 6acb23 and rejected config 7ec7fe as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 37a8e7 and rejected config 6acb23 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 5b96ec and rejected config 37a8e7 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 35cf09 and rejected config 5b96ec as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:327] Configuration budget is exhausted:
 [INFO][smbo.py:328] --- Remaining wallclock time: inf
 [INFO][smbo.py:329] --- Remaining cpu time: inf
@@ -1226,7 +1212,7 @@ Default cost: 0.02727174249458364
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  35.954 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  41.063 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-6-priors-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/6_priors.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
@@ -1284,7 +1270,7 @@ Default cost: 0.02727174249458364
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-6.2.1. Template is modified version of <a
+7.1.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

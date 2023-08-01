@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -6,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Continue an Optimization &#8212; SMAC3 Documentation 2.0.1 documentation</title>
+    <title>Continue an Optimization &#8212; SMAC3 Documentation 2.0.2 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -23,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="User Priors over the Optimum" href="6_priors.html" />
@@ -96,11 +95,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.1
+        v2.0.2
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -1026,39 +1026,34 @@ to download the full example code or to run this example in your browser via Bin
 </div>
 <section class="sphx-glr-example-title" id="continue-an-optimization">
 <span id="sphx-glr-examples-1-basics-5-continue-py"></span><h1>Continue an Optimization<a class="headerlink" href="#continue-an-optimization" title="Permalink to this heading">¶</a></h1>
-<p>SMAC can also be continued. In this example, an optimization of a simple quadratic
-function is continued. We use a custom callback, to artificially stop the first optimization.</p>
+<p>SMAC can also be continued from a previous run. To do so, it reads in old files (derived from scenario’s name,
+output_directory and seed) and sets the corresponding components. In this example, an optimization of a simple quadratic
+function is continued.</p>
+<p>First, after creating a scenario with 50 trials, we run SMAC with overwrite=True. This will
+overwrite any previous runs (in case the example was called before). We use a custom callback to artificially stop
+this first optimization after 10 trials.</p>
+<p>Second, we again run the SMAC optimization using the same scenario, but this time with overwrite=False. As
+there already is a previous run with the same meta data, this run will be continued until the 50 trials are reached.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
-[INFO][abstract_intensifier.py:515] Added config 3ce33d as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:590] Added config c53710 and rejected config 3ce33d as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x: -2.331214789301157 -&gt; 2.1608731895685196
-[INFO][abstract_intensifier.py:590] Added config 50b580 and rejected config c53710 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x: 2.1608731895685196 -&gt; 0.4316552169620991
-[INFO][abstract_intensifier.py:590] Added config d16e41 and rejected config 50b580 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x: 0.4316552169620991 -&gt; -0.3100988641381264
+[INFO][abstract_intensifier.py:515] Added config f09c3b as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:590] Added config bec0fc and rejected config f09c3b as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config a34626 and rejected config bec0fc as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config f72805 and rejected config a34626 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:224] A callback returned False. Abort is requested.
 [INFO][smbo.py:332] Shutting down because the stop flag was set.
 [INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 0 additional configurations.
-[INFO][smbo.py:493] Continuing from previous run.
+[INFO][smbo.py:497] Continuing from previous run.
 [INFO][abstract_intensifier.py:287] Added existing seed 209652396 from runhistory to the intensifier.
 [INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
-[INFO][abstract_intensifier.py:590] Added config 4dcc97 and rejected config d16e41 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x: -0.3100988641381264 -&gt; -0.22015188896172422
-[INFO][abstract_intensifier.py:590] Added config 4d21be and rejected config 4dcc97 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x: -0.22015188896172422 -&gt; -0.1481212818284119
-[INFO][abstract_intensifier.py:590] Added config 348898 and rejected config 4d21be as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x: -0.1481212818284119 -&gt; -0.13225703373856135
-[INFO][abstract_intensifier.py:590] Added config c56201 and rejected config 348898 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x: -0.13225703373856135 -&gt; -0.008886632260822758
-[INFO][abstract_intensifier.py:590] Added config b6eee0 and rejected config c56201 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x: -0.008886632260822758 -&gt; 0.00353744136744627
-[INFO][abstract_intensifier.py:590] Added config 06e28a and rejected config b6eee0 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x: 0.00353744136744627 -&gt; 0.0029625967410442655
-[INFO][abstract_intensifier.py:590] Added config 4026d1 and rejected config 06e28a as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x: 0.0029625967410442655 -&gt; 0.0009114180407276962
-[INFO][abstract_intensifier.py:590] Added config 025ea5 and rejected config 4026d1 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x: 0.0009114180407276962 -&gt; -0.00032238773647641494
+[INFO][abstract_intensifier.py:590] Added config 59460a and rejected config f72805 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config f74db6 and rejected config 59460a as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 22beb0 and rejected config f74db6 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config b07de4 and rejected config 22beb0 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 2ec12b and rejected config b07de4 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 7ea8bb and rejected config 2ec12b as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config c4859b and rejected config 7ea8bb as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config e501ff and rejected config c4859b as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 50 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
 [INFO][smbo.py:328] --- Remaining wallclock time: inf
@@ -1160,7 +1155,7 @@ Incumbent cost of continued run: 1.0393385263038637e-07
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost of continued run: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.226 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.457 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-5-continue-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/5_continue.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
@@ -1218,7 +1213,7 @@ Incumbent cost of continued run: 1.0393385263038637e-07
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-6.2.1. Template is modified version of <a
+7.1.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

@@ -1035,23 +1035,17 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:515] Added config 3623cc as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:598] Config 540db2 is a new incumbent. Total number of incumbents: 2.
-[INFO][abstract_intensifier.py:598] Config 3b5efd is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:598] Config 20a917 is a new incumbent. Total number of incumbents: 4.
-[INFO][abstract_intensifier.py:590] Added config ff5e22 and rejected config 3623cc as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:598] Config e5a66a is a new incumbent. Total number of incumbents: 5.
+[INFO][abstract_intensifier.py:590] Added config 3b5efd and rejected config 540db2 as incumbent because it is not better than the incumbents on 2 instances:
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.003428936004638672
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.040487051010131836
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 175
+[INFO][smbo.py:330] --- Remaining trials: 190
 Validated costs from default config:
---- [0.60155834 0.30459821]
+--- [0.60155834 0.55115533]
 
 Validated costs from the Pareto front (incumbents):
---- [0.04813757 0.95074058]
---- [0.03561281 1.18144476]
---- [0.38257119 0.59237599]
---- [0.60406453 0.33409846]
---- [0.06427963 0.92649043]
+--- [0.88924791 0.60556865]
+--- [0.03561281 2.07108426]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1225,7 +1219,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  38.825 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  36.809 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo2.svg" width="150px" /></a>

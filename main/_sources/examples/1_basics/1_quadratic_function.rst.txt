@@ -44,34 +44,21 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
     [INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
-    [INFO][abstract_intensifier.py:515] Added config 3ce33d as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:590] Added config c53710 and rejected config 3ce33d as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: -2.331214789301157 -> 2.1608731895685196
-    [INFO][abstract_intensifier.py:590] Added config 50b580 and rejected config c53710 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: 2.1608731895685196 -> 0.4316552169620991
-    [INFO][abstract_intensifier.py:590] Added config d16e41 and rejected config 50b580 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: 0.4316552169620991 -> -0.3100988641381264
-    [INFO][abstract_intensifier.py:590] Added config 4dcc97 and rejected config d16e41 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: -0.3100988641381264 -> -0.22015188896172422
-    [INFO][abstract_intensifier.py:590] Added config 4d21be and rejected config 4dcc97 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: -0.22015188896172422 -> -0.1481212818284119
-    [INFO][abstract_intensifier.py:590] Added config 348898 and rejected config 4d21be as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: -0.1481212818284119 -> -0.13225703373856135
-    [INFO][abstract_intensifier.py:590] Added config c56201 and rejected config 348898 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: -0.13225703373856135 -> -0.008886632260822758
-    [INFO][abstract_intensifier.py:590] Added config b6eee0 and rejected config c56201 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: -0.008886632260822758 -> 0.00353744136744627
-    [INFO][abstract_intensifier.py:590] Added config 06e28a and rejected config b6eee0 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: 0.00353744136744627 -> 0.0029625967410442655
-    [INFO][abstract_intensifier.py:590] Added config 4026d1 and rejected config 06e28a as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: 0.0029625967410442655 -> 0.0009114180407276962
-    [INFO][abstract_intensifier.py:590] Added config 025ea5 and rejected config 4026d1 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: 0.0009114180407276962 -> -0.00032238773647641494
+    [INFO][abstract_intensifier.py:515] Added config f09c3b as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:590] Added config bec0fc and rejected config f09c3b as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config a34626 and rejected config bec0fc as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config f72805 and rejected config a34626 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config 59460a and rejected config f72805 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config f74db6 and rejected config 59460a as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config 22beb0 and rejected config f74db6 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config b07de4 and rejected config 22beb0 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config 2ec12b and rejected config b07de4 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config 7ea8bb and rejected config 2ec12b as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config c4859b and rejected config 7ea8bb as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config e501ff and rejected config c4859b as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:319] Finished 50 trials.
-    [INFO][abstract_intensifier.py:590] Added config 342683 and rejected config 025ea5 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: -0.00032238773647641494 -> -0.0002551446012351022
-    [INFO][abstract_intensifier.py:590] Added config 860384 and rejected config 342683 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][configspace.py:175] --- x: -0.0002551446012351022 -> 6.682757473086554e-05
+    [INFO][abstract_intensifier.py:590] Added config 0ca9f7 and rejected config e501ff as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config 223998 and rejected config 0ca9f7 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:319] Finished 100 trials.
     [INFO][smbo.py:327] Configuration budget is exhausted:
     [INFO][smbo.py:328] --- Remaining wallclock time: inf
@@ -167,7 +154,7 @@ be applied to problems with large evaluation budgets (up to 1000 evaluations).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.826 seconds)
+   **Total running time of the script:** ( 0 minutes  4.539 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_1_quadratic_function.py:

@@ -42,21 +42,21 @@ mean accuracy and run-time of each configuration.
 
  .. code-block:: none
 
-    [WARNING][target_function_runner.py:71] The argument budget is not set by SMAC: Consider removing it from the target function.
+    [WARNING][target_function_runner.py:72] The argument budget is not set by SMAC: Consider removing it from the target function.
     [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
-    [INFO][abstract_intensifier.py:515] Added config 97ef22 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:598] Config f88a6b is a new incumbent. Total number of incumbents: 2.
-    [INFO][abstract_intensifier.py:598] Config 8e1252 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:515] Added config 3623cc as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:598] Config 540db2 is a new incumbent. Total number of incumbents: 2.
+    [INFO][abstract_intensifier.py:590] Added config 3b5efd and rejected config 540db2 as incumbent because it is not better than the incumbents on 2 instances:
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -2.2097489833831787
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.040487051010131836
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 188
+    [INFO][smbo.py:330] --- Remaining trials: 190
     Validated costs from default config: 
-    --- [0.60155834 0.46486402]
+    --- [0.60155834 0.55115533]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.47642219]
-    --- [0.03561281 1.73530149]
+    --- [0.88924791 0.60556865]
+    --- [0.03561281 2.07108426]
 
 
 
@@ -124,9 +124,9 @@ mean accuracy and run-time of each configuration.
             return cs
 
         def train(self, config: Configuration, seed: int = 0, budget: int = 10) -> dict[str, float]:
-            lr = config["learning_rate"] if config["learning_rate"] else "constant"
-            lr_init = config["learning_rate_init"] if config["learning_rate_init"] else 0.001
-            batch_size = config["batch_size"] if config["batch_size"] else 200
+            lr = config.get("learning_rate", "constant")
+            lr_init = config.get("learning_rate_init", 0.001)
+            batch_size = config.get("batch_size", 200)
 
             start_time = time.time()
 
@@ -237,7 +237,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  37.835 seconds)
+   **Total running time of the script:** ( 0 minutes  36.809 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:

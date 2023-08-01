@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -6,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Ask-and-Tell &#8212; SMAC3 Documentation 2.0.1 documentation</title>
+    <title>Ask-and-Tell &#8212; SMAC3 Documentation 2.0.2 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -23,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Custom Callback" href="4_callback.html" />
@@ -96,11 +95,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.1
+        v2.0.2
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.0.2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.0.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -1028,29 +1028,15 @@ to download the full example code or to run this example in your browser via Bin
 <span id="sphx-glr-examples-1-basics-3-ask-and-tell-py"></span><h1>Ask-and-Tell<a class="headerlink" href="#ask-and-tell" title="Permalink to this heading">¶</a></h1>
 <p>This examples show how to use the Ask-and-Tell interface.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 20 initial design configurations and 0 additional configurations.
-[INFO][abstract_intensifier.py:515] Added config 98ccec as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:590] Added config 94dccd and rejected config 98ccec as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: -0.9968221839517355 -&gt; 0.03135360777378082
-[INFO][configspace.py:175] --- x1: 4.30847043171525 -&gt; -0.21179260686039925
-[INFO][abstract_intensifier.py:590] Added config 94b2fe and rejected config 94dccd as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: 0.03135360777378082 -&gt; 1.8422549832482282
-[INFO][configspace.py:175] --- x1: -0.21179260686039925 -&gt; 3.526509233029728
-[INFO][abstract_intensifier.py:590] Added config a4c09f and rejected config 94b2fe as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: 1.8422549832482282 -&gt; 1.980770819590341
-[INFO][configspace.py:175] --- x1: 3.526509233029728 -&gt; 4.03432249924802
+[INFO][abstract_intensifier.py:515] Added config 38310a as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:590] Added config a840bc and rejected config 38310a as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config e8ddec and rejected config a840bc as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config e74ba7 and rejected config e8ddec as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:590] Added config 3cde7a and rejected config a4c09f as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: 1.980770819590341 -&gt; 2.05576260053446
-[INFO][configspace.py:175] --- x1: 4.03432249924802 -&gt; 4.189734587316279
-[INFO][abstract_intensifier.py:590] Added config e7c1a8 and rejected config 3cde7a as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: 2.05576260053446 -&gt; 2.056514790777225
-[INFO][configspace.py:175] --- x1: 4.189734587316279 -&gt; 4.2444281430933675
-[INFO][abstract_intensifier.py:590] Added config 7ab1b1 and rejected config e7c1a8 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: 2.056514790777225 -&gt; 2.057439307959182
-[INFO][configspace.py:175] --- x1: 4.2444281430933675 -&gt; 4.219978780196948
-[INFO][abstract_intensifier.py:590] Added config 75934b and rejected config 7ab1b1 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][configspace.py:175] --- x0: 2.057439307959182 -&gt; 2.0561106976838825
-[INFO][configspace.py:175] --- x1: 4.219978780196948 -&gt; 4.233093984919787
+[INFO][abstract_intensifier.py:590] Added config 1eebbc and rejected config e74ba7 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config f01c34 and rejected config 1eebbc as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 1df946 and rejected config f01c34 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 535c5d and rejected config 1df946 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 100 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
 [INFO][smbo.py:328] --- Remaining wallclock time: inf
@@ -1139,7 +1125,7 @@ Incumbent cost: 1.1183978687059386
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.228 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.879 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-3-ask-and-tell-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/3_ask_and_tell.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
@@ -1197,7 +1183,7 @@ Incumbent cost: 1.1183978687059386
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-6.2.1. Template is modified version of <a
+7.1.1. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

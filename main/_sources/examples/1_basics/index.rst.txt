@@ -81,7 +81,7 @@ Basics
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="SMAC can also be continued. In this example, an optimization of a simple quadratic function is ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="SMAC can also be continued from a previous run. To do so, it reads in old files (derived from s...">
 
 .. only:: html
 
