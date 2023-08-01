@@ -266,14 +266,14 @@ class ConfigSelector:
         assert self._runhistory_encoder is not None
 
         # If we use a float value as a budget, we want to train the model only on the highest budget
-        available_budgets = []
-        for run_key in self._runhistory:
-            budget = run_key.budget
-            if budget not in available_budgets:
-                available_budgets.append(run_key.budget)
+        unique_budgets: set[float] = {run_key.budget for run_key in self._runhistory if run_key.budget is not None}
 
-        # Sort available budgets from highest to lowest budget
-        available_budgets = sorted(list(set(available_budgets)), reverse=True)  # type: ignore
+        available_budgets: list[float] | list[None]
+        if len(unique_budgets) > 0:
+            # Sort available budgets from highest to lowest budget
+            available_budgets = sorted(unique_budgets, reverse=True)
+        else:
+            available_budgets = [None]
 
         # Get #points per budget and if there are enough samples, then build a model
         for b in available_budgets:

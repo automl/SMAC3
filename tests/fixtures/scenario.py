@@ -51,7 +51,7 @@ def make_scenario() -> Callable:
             instance_features=instance_features,
             min_budget=min_budget,
             max_budget=max_budget,
-            use_default_config=use_default_config
+            use_default_config=use_default_config,
         )
 
     return _make

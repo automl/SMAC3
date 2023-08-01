@@ -122,6 +122,7 @@ def test_select_configurations(make_scenario, configspace_small):
     with pytest.raises(NotImplementedError):
         dc.select_configurations()
 
+
 def test_include_default_config(make_scenario, configspace_small):
     scenario = make_scenario(configspace_small, use_default_config=True)
 
@@ -133,4 +134,3 @@ def test_include_default_config(make_scenario, configspace_small):
     # if use_default_config is True, then the default config should be included in the additional_configs
     default_config = scenario.configspace.get_default_configuration()
     assert default_config in dc._additional_configs
-

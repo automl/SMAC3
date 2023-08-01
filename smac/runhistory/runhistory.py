@@ -435,7 +435,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         cost = self._min_cost_per_config.get(config_id, np.nan)  # type: ignore
 
         if self._n_objectives > 1:
-            assert type(cost) == list
+            assert isinstance(cost, list)
             assert self.multi_objective_algorithm is not None
 
             costs = normalize_costs(cost, self._objective_bounds)
@@ -443,7 +443,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             # Note: We have to mean here because we already got the min cost
             return self.multi_objective_algorithm(costs)
 
-        assert type(cost) == float
+        assert isinstance(cost, float)
         return float(cost)
 
     def average_cost(
@@ -847,7 +847,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         for entry in data["data"]:
             # Set n_objectives first
             if self._n_objectives == -1:
-                if isinstance(entry[4], float) or isinstance(entry[4], int):
+                if isinstance(entry[4], (float, int)):
                     self._n_objectives = 1
                 else:
                     self._n_objectives = len(entry[4])
