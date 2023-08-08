@@ -54,8 +54,7 @@ class SVM:
             The seed used for this call.
         """
         instance = int(instance)
-        config_dict = config.get_dictionary()
-        classifier = svm.SVC(**config_dict, random_state=seed)
+        classifier = svm.SVC(**config, random_state=seed)
         splitter = StratifiedKFold(n_splits=N_FOLDS, shuffle=True, random_state=seed)
         for k, (train_idx, test_idx) in enumerate(splitter.split(X=X, y=y)):
             if k != instance:
@@ -79,6 +78,7 @@ if __name__ == "__main__":
         classifier.configspace,
         n_trials=50,  # We want to run max 50 trials (combination of config and seed)
         instances=[f"{i}" for i in range(N_FOLDS)],  # Specify all instances by their name (as a string)
+        instance_features={f"{i}": [i] for i in range(N_FOLDS)}, # breaks SMAC
         deterministic=True  # To simplify the problem we make SMAC believe that we have a deterministic
                             # optimization problem.
         
@@ -99,7 +99,7 @@ if __name__ == "__main__":
         # this example. Technically, it is not necessary to create the intensifier as a user, but it is
         # necessary to do so because we change the argument max_config_calls (the number of instance-seed pairs
         # per configuration to try) to the number of cross-validation folds, while the default would be 3.
-        intensifier = Intensifier(scenario=scenario, max_config_calls=N_FOLDS, seed=0)
+        intensifier=Intensifier(scenario=scenario, max_config_calls=N_FOLDS, seed=0)
     )
 
     incumbent = smac.optimize()
