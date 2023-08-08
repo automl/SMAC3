@@ -1,6 +1,6 @@
 """
 Parallelization-on-Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 An example of applying SMAC to optimize Branin using parallelization via Dask client on a 
 SLURM cluster. If you do not want to use a cluster but your local machine, set dask_client
