@@ -178,7 +178,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         probability : float, defaults to 0.2
             Probability that a configuration will be drawn at random.
         """
-        return ProbabilityRandomDesign(probability=probability)
+        return ProbabilityRandomDesign(probability=probability, seed=scenario.seed)
 
     @staticmethod
     def get_multi_objective_algorithm(  # type: ignore
