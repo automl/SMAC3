@@ -572,7 +572,15 @@ class AbstractIntensifier:
         if len(previous_incumbents) == len(new_incumbents):
             if previous_incumbents == new_incumbents:
                 # No changes in the incumbents
-                self._remove_rejected_config(config_id)
+                # need this clause to make sure set difference isn't empty
+                if config_id in new_incumbent_ids:
+                    # TODO: can this case even happen? Intuitively a config should not be among incumbents and rejected
+                    # config IDs at the same time when starting incumbent update. (add/remove rejected config methods
+                    # are only called within update_incumbents.)
+                    self._remove_rejected_config(config_id)
+                else:
+                    # config worse than incumbents and thus rejected
+                    self._add_rejected_config(config_id)
                 return
             else:
                 # In this case, we have to determine which config replaced which incumbent and reject it
