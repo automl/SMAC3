@@ -91,7 +91,7 @@ class ConfigSelector:
         acquisition_maximizer: AbstractAcquisitionMaximizer,
         acquisition_function: AbstractAcquisitionFunction,
         random_design: AbstractRandomDesign,
-        callbacks: list[Callback] = [],
+        callbacks: list[Callback] = None,
     ) -> None:
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
@@ -99,7 +99,7 @@ class ConfigSelector:
         self._acquisition_maximizer = acquisition_maximizer
         self._acquisition_function = acquisition_function
         self._random_design = random_design
-        self._callbacks = callbacks
+        self._callbacks = callbacks if callbacks is not None else []
 
         self._initial_design_configs = initial_design.select_configurations()
         if len(self._initial_design_configs) == 0:

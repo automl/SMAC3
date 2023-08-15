@@ -92,7 +92,7 @@ class RandomFacade(AbstractFacade):
     def get_initial_design(
         scenario: Scenario,
         *,
-        additional_configs: list[Configuration] = [],
+        additional_configs: list[Configuration] = None,
     ) -> DefaultInitialDesign:
         """Returns an initial design, which returns the default configuration.
 
@@ -101,6 +101,8 @@ class RandomFacade(AbstractFacade):
         additional_configs: list[Configuration], defaults to []
             Adds additional configurations to the initial design.
         """
+        if additional_configs is None:
+            additional_configs = []
         return DefaultInitialDesign(
             scenario=scenario,
             additional_configs=additional_configs,
