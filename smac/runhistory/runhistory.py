@@ -178,7 +178,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         budget: float | None = None,
         starttime: float = 0.0,
         endtime: float = 0.0,
-        additional_info: dict[str, Any] = {},
+        additional_info: dict[str, Any] = None,
         force_update: bool = False,
     ) -> None:
         """Adds a new trial to the RunHistory.
@@ -205,6 +205,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             raise TypeError("Configuration must not be None.")
         elif not isinstance(config, Configuration):
             raise TypeError("Configuration is not of type Configuration, but %s." % type(config))
+        if additional_info is None:
+            additional_info = {}
 
         # Squeeze is important to reduce arrays with one element
         # to scalars.
