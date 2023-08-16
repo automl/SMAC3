@@ -108,6 +108,7 @@ def test_incumbent_selection_multi_objective(make_scenario, configspace_small, m
     intensifier.update_incumbents(config2)
     assert intensifier.get_incumbents() == [config]
 
+
 def test_config_rejection_single_objective(configspace_small, make_scenario):
     """ Tests whether configs are rejected properly if they are worse than the incumbent. """
     scenario = make_scenario(configspace_small, use_instances=False)
