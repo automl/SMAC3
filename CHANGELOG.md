@@ -5,6 +5,9 @@
 - Add OrdinalHyperparameter for random forest imputer (#1065).
 - Configurations that fail to become incumbents will be added to the rejected lists (#1069).
 
+## Minor
+- When a custom dask client is provided, emit the warning that the `n_workers` parameter is ignored only if it deviates from its default value, `1` ([#1071](https://github.com/automl/SMAC3/pull/1071)).
+
 # 2.0.2
 
 ## Improvements
