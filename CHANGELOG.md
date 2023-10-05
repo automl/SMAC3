@@ -1,3 +1,8 @@
+# 2.0.3
+
+## Bugfixes
+- Add OrdinalHyperparameter for random forest imputer.
+
 # 2.0.2
 
 ## Improvements
