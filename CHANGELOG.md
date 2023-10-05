@@ -1,3 +1,9 @@
+# 2.0.3
+
+## Bugfixes
+
+- Propagate the Scenario random seed to `get_random_design` (#1066)
+
 # 2.0.2
 
 ## Improvements
