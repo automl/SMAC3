@@ -1,3 +1,8 @@
+# 2.0.3
+
+## Bugfixes
+- Configurations that fail to become incumbents will be added to the rejected lists
+
 # 2.0.2
 
 ## Improvements
