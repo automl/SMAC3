@@ -91,7 +91,7 @@ class DaskParallelRunner(AbstractRunner):
             )
 
             if self._scenario.output_directory is not None:
-                self._scheduler_file = self._scenario.output_directory / ".dask_scheduler_file"
+                self._scheduler_file = Path(self._scenario.output_directory, ".dask_scheduler_file")
                 self._client.write_scheduler_file(scheduler_file=str(self._scheduler_file))
         else:
             # We just use their set up
