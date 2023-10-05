@@ -1,3 +1,9 @@
+# 2.0.3
+
+## Bugfixes
+
+- Don't use mutable default argument (#1067).
+
 # 2.0.2
 
 ## Improvements
