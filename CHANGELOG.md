@@ -1,3 +1,8 @@
+# 2.0.3
+
+## Bugfixes
+- Add OrdinalHyperparameter for random forest imputer (#1065).
+
 # 2.0.2
 
 ## Improvements
@@ -8,6 +13,8 @@
 ## Bugfixes
 - Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).
 - Fix callback order (#1040).
+- Handle configspace as dictionary in mlp and parego example.
+- Adapt sgd loss to newest scikit-learn version.
 
 # 2.0.1
 
