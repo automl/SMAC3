@@ -2,6 +2,8 @@
 
 ## Bugfixes
 
+- Add OrdinalHyperparameter for random forest imputer (#1065).
+- Fix path for dask scheduler file (#1055).
 - Propagate the Scenario random seed to `get_random_design` (#1066)
 
 # 2.0.2
