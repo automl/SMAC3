@@ -1,7 +1,9 @@
 # 2.0.3
 
 ## Bugfixes
-- Configurations that fail to become incumbents will be added to the rejected lists
+- Add OrdinalHyperparameter for random forest imputer (#1065).
+- Configurations that fail to become incumbents will be added to the rejected lists (#1069).
+
 
 # 2.0.2
 
