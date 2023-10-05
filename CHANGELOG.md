@@ -2,6 +2,8 @@
 
 ## Bugfixes
 
+- Add OrdinalHyperparameter for random forest imputer (#1065).
+- Fix path for dask scheduler file (#1055).
 - Don't use mutable default argument (#1067).
 
 # 2.0.2
