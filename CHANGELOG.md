@@ -1,7 +1,7 @@
 # 2.0.3
 
 ## Bugfixes
-- Add OrdinalHyperparameter for random forest imputer.
+- Add OrdinalHyperparameter for random forest imputer (#1065).
 
 # 2.0.2
 
