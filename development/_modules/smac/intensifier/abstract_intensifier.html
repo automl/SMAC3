@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,18 +21,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1039,7 +1039,9 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="AbstractIntensifier"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier">[docs]</a><span class="k">class</span> <span class="nc">AbstractIntensifier</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractIntensifier">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier">[docs]</a>
+<span class="k">class</span> <span class="nc">AbstractIntensifier</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-threading.</span>
 <span class="sd">    The abstract intensifier keeps track of the incumbent, which is updated everytime the runhistory changes.</span>
 
@@ -1084,7 +1086,9 @@
         <span class="c1"># Reset everything</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AbstractIntensifier.reset"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractIntensifier.reset">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the internal variables of the intensifier.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tf_seeds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tf_instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1097,6 +1101,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrajectoryItem</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
+
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -1136,7 +1141,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the used wallclock time.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_used_walltime_func</span> <span class="o">=</span> <span class="n">func</span>
 
-<div class="viewcode-block" id="AbstractIntensifier.__post_init__"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.__post_init__">[docs]</a>    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractIntensifier.__post_init__">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.__post_init__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fills ``self._tf_seeds`` and ``self._tf_instances``. Moreover, the incumbents are updated.&quot;&quot;&quot;</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
 
@@ -1188,6 +1195,7 @@
         <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_configs</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_incumbents</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">config_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Based on the configuration selector, an iterator is returned that generates configurations.&quot;&quot;&quot;</span>
@@ -1229,7 +1237,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;How often the incumbents have changed.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents_changed</span>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_instance_seed_keys_of_interest"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_instance_seed_keys_of_interest">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_keys_of_interest</span><span class="p">(</span>
+<div class="viewcode-block" id="AbstractIntensifier.get_instance_seed_keys_of_interest">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_instance_seed_keys_of_interest">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_instance_seed_keys_of_interest</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1335,7 +1345,10 @@
 
         <span class="k">return</span> <span class="n">instance_seed_keys</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_trials_of_interest"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_trials_of_interest">[docs]</a>    <span class="k">def</span> <span class="nf">get_trials_of_interest</span><span class="p">(</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_trials_of_interest">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_trials_of_interest">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_trials_of_interest</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
@@ -1353,7 +1366,10 @@
 
         <span class="k">return</span> <span class="n">trials</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_incumbent"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbent">[docs]</a>    <span class="k">def</span> <span class="nf">get_incumbent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_incumbent">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbent">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_incumbent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the current incumbent in a single-objective setting.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">count_objectives</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot get a single incumbent for multi-objective optimization.&quot;</span><span class="p">)</span>
@@ -1364,7 +1380,10 @@
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incumbents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_incumbents"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbents">[docs]</a>    <span class="k">def</span> <span class="nf">get_incumbents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sort_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_incumbents">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbents">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_incumbents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sort_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the incumbents (points on the pareto front) of the runhistory as copy. In case of a single-objective</span>
 <span class="sd">        optimization, only one incumbent (if is) is returned.</span>
 
@@ -1387,7 +1406,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown sort_by value: </span><span class="si">{</span><span class="n">sort_by</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_instance_seed_budget_keys"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_instance_seed_budget_keys">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_budget_keys</span><span class="p">(</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_instance_seed_budget_keys">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_instance_seed_budget_keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_instance_seed_budget_keys</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">compare</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the instance-seed-budget keys for a given configuration. This method is *used for</span>
@@ -1396,7 +1418,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">highest_observed_budget_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_incumbent_instance_seed_budget_keys"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbent_instance_seed_budget_keys">[docs]</a>    <span class="k">def</span> <span class="nf">get_incumbent_instance_seed_budget_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_incumbent_instance_seed_budget_keys">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbent_instance_seed_budget_keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_incumbent_instance_seed_budget_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find the lowest intersection of instance-seed-budget keys for all incumbents.&quot;&quot;&quot;</span>
         <span class="n">incumbents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span>
 
@@ -1410,7 +1435,10 @@
 
         <span class="k">return</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_incumbent_instance_seed_budget_key_differences"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbent_instance_seed_budget_key_differences">[docs]</a>    <span class="k">def</span> <span class="nf">get_incumbent_instance_seed_budget_key_differences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_incumbent_instance_seed_budget_key_differences">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_incumbent_instance_seed_budget_key_differences">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_incumbent_instance_seed_budget_key_differences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compare</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;There are situations in which incumbents are evaluated on more trials than others. This method returns the</span>
 <span class="sd">        instances that are not part of the lowest intersection of instances for all incumbents.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1435,7 +1463,10 @@
 
         <span class="k">return</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_rejected_configs"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_rejected_configs">[docs]</a>    <span class="k">def</span> <span class="nf">get_rejected_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_rejected_configs">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_rejected_configs">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_rejected_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns rejected configurations when racing against the incumbent failed.&quot;&quot;&quot;</span>
         <span class="n">configs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">rejected_config_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span><span class="p">:</span>
@@ -1443,7 +1474,10 @@
 
         <span class="k">return</span> <span class="n">configs</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_callback"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_callback">[docs]</a>    <span class="k">def</span> <span class="nf">get_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callback</span><span class="p">:</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_callback">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callback</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The intensifier makes use of a callback to efficiently update the incumbent based on the runhistory</span>
 <span class="sd">        (every time new information is available). Moreover, incorporating the callback here allows developers</span>
 <span class="sd">        more options in the future.</span>
@@ -1458,7 +1492,10 @@
 
         <span class="k">return</span> <span class="n">RunHistoryCallback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.update_incumbents"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.update_incumbents">[docs]</a>    <span class="k">def</span> <span class="nf">update_incumbents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.update_incumbents">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.update_incumbents">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_incumbents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the incumbents. This method is called everytime a trial is added to the runhistory. Since only</span>
 <span class="sd">        the affected config and the current incumbents are used, this method is very efficient. Furthermore, a</span>
 <span class="sd">        configuration is only considered incumbent if it has a better performance on all incumbent instances.</span>
@@ -1632,7 +1669,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_trajectory</span><span class="p">(</span><span class="n">new_incumbents</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.__iter__"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.__iter__">[docs]</a>    <span class="nd">@abstractmethod</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.__iter__">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.__iter__">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Main loop of the intensifier. This method always returns a TrialInfo object, although the intensifier</span>
 <span class="sd">        algorithm may need to wait for the result of the trial. Please refer to a specific</span>
@@ -1640,15 +1680,24 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.get_state"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.get_state">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.get_state">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The current state of the intensifier. Used to restore the state of the intensifier when continuing a run.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{}</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.set_state"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.set_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.set_state">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.set_state">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the state of the intensifier. Used to restore the state of the intensifier when continuing a run.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.save"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.save">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.save">[docs]</a>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the current state of the intensifier. In addition to the state (retrieved by ``get_state``), this</span>
 <span class="sd">        method also saves the incumbents and trajectory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1669,7 +1718,10 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractIntensifier.load"><a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="AbstractIntensifier.load">
+<a class="viewcode-back" href="../../../api/smac.intensifier.abstract_intensifier.html#smac.intensifier.AbstractIntensifier.load">[docs]</a>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the latest state of the intensifier including the incumbents and trajectory.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
@@ -1693,6 +1745,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_rejected_config_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;rejected_config_ids&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="p">[</span><span class="n">TrajectoryItem</span><span class="p">(</span><span class="o">**</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;trajectory&quot;</span><span class="p">]]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">])</span></div>
+
 
     <span class="k">def</span> <span class="nf">_update_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
@@ -1762,6 +1815,7 @@
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">shuffled_keys</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">instance_seed_keys</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">shuffled_keys</span></div>
+
 </pre></div>
 
               </div>
@@ -1793,7 +1847,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

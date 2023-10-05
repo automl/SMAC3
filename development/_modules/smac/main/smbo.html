@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,18 +21,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1037,7 +1037,9 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="SMBO"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO">[docs]</a><span class="k">class</span> <span class="nc">SMBO</span><span class="p">:</span>
+<div class="viewcode-block" id="SMBO">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO">[docs]</a>
+<span class="k">class</span> <span class="nc">SMBO</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation that contains the main Bayesian optimization loop.</span>
 
 <span class="sd">    Parameters</span>
@@ -1141,7 +1143,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns how much walltime the target function spend so far.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_walltime</span>
 
-<div class="viewcode-block" id="SMBO.ask"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialInfo</span><span class="p">:</span>
+<div class="viewcode-block" id="SMBO.ask">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.ask">[docs]</a>
+    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialInfo</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Asks the intensifier for the next trial.</span>
 
 <span class="sd">        Returns</span>
@@ -1168,7 +1172,10 @@
 
         <span class="k">return</span> <span class="n">trial_info</span></div>
 
-<div class="viewcode-block" id="SMBO.tell"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.tell">[docs]</a>    <span class="k">def</span> <span class="nf">tell</span><span class="p">(</span>
+
+<div class="viewcode-block" id="SMBO.tell">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.tell">[docs]</a>
+    <span class="k">def</span> <span class="nf">tell</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span>
         <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">,</span>
@@ -1232,7 +1239,10 @@
         <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SMBO.update_model"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.update_model">[docs]</a>    <span class="k">def</span> <span class="nf">update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="SMBO.update_model">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.update_model">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the model and updates the acquisition function.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">config_selector</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">_config_selector</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">config_selector</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
@@ -1240,7 +1250,10 @@
             <span class="k">assert</span> <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span></div>
 
-<div class="viewcode-block" id="SMBO.update_acquisition_function"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.update_acquisition_function">[docs]</a>    <span class="k">def</span> <span class="nf">update_acquisition_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="SMBO.update_acquisition_function">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.update_acquisition_function">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_acquisition_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the acquisition function including the associated model and the acquisition</span>
 <span class="sd">        optimizer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1251,7 +1264,10 @@
             <span class="k">assert</span> <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_maximizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_maximizer</span><span class="o">.</span><span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span></div>
 
-<div class="viewcode-block" id="SMBO.optimize"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data_to_scatter</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="SMBO.optimize">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.optimize">[docs]</a>
+    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data_to_scatter</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs the Bayesian optimization loop.</span>
 
 <span class="sd">        Parameters</span>
@@ -1356,7 +1372,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SMBO.reset"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="SMBO.reset">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the internal variables of the optimizer, intensifier, and runhistory.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_walltime</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1365,7 +1384,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SMBO.exists"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+
+<div class="viewcode-block" id="SMBO.exists">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.exists">[docs]</a>
+    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the files associated with the run already exist.</span>
 <span class="sd">        Checks all files that are created by the optimizer.</span>
 
@@ -1386,7 +1408,10 @@
 
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="SMBO.load"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="SMBO.load">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.load">[docs]</a>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the optimizer, intensifier, and runhistory from the output directory specified in the scenario.&quot;&quot;&quot;</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span>
 
@@ -1405,7 +1430,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;finished&quot;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;used_walltime&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="SMBO.save"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="SMBO.save">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.save">[docs]</a>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the current stats, runhistory, and intensifier.&quot;&quot;&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span>
 
@@ -1424,6 +1452,7 @@
             <span class="c1"># And save runhistory and intensifier</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;intensifier.json&quot;</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">_add_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds results from the runner to the runhistory. Although most of the functionality could be written</span>
@@ -1466,7 +1495,9 @@
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cost threshold was reached. Abort is requested.&quot;</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="SMBO.register_callback"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.register_callback">[docs]</a>    <span class="k">def</span> <span class="nf">register_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callback</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="SMBO.register_callback">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.register_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">register_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callback</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Registers a callback to be called before, in between, and after the Bayesian optimization loop.</span>
 
@@ -1483,6 +1514,7 @@
         <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">_initialize_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects whether the optimization is restored from a previous state.&quot;&quot;&quot;</span>
@@ -1547,7 +1579,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-<div class="viewcode-block" id="SMBO.validate"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span>
+<div class="viewcode-block" id="SMBO.validate">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.validate">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
@@ -1592,7 +1626,10 @@
         <span class="n">np_costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np_costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SMBO.print_stats"><a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.print_stats">[docs]</a>    <span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="SMBO.print_stats">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.print_stats">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints all statistics.&quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -1605,7 +1642,9 @@
             <span class="s2">&quot;--- Used target function runtime: &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">used_target_function_walltime</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">cputime_limit</span><span class="si">}</span><span class="s2"> sec</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;----------------------------------------------------&quot;</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
+</div>
+
 </pre></div>
 
               </div>
@@ -1637,7 +1676,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

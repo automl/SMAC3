@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Logging" href="8_logging.html" />
@@ -1035,11 +1035,11 @@
               <div>
                 
   <section id="stopping-criteria">
-<h1>Stopping Criteria<a class="headerlink" href="#stopping-criteria" title="Permalink to this heading">¶</a></h1>
+<h1>Stopping Criteria<a class="headerlink" href="#stopping-criteria" title="Link to this heading">¶</a></h1>
 <p>In addition to the standard stopping criteria like number of trials or wallclock time, SMAC also provides
 more advanced criteria.</p>
 <section id="termination-cost-threshold">
-<h2>Termination Cost Threshold<a class="headerlink" href="#termination-cost-threshold" title="Permalink to this heading">¶</a></h2>
+<h2>Termination Cost Threshold<a class="headerlink" href="#termination-cost-threshold" title="Link to this heading">¶</a></h2>
 <p>SMAC can stop the optimization process after a user-defined cost was reached. In each iteration, the average cost
 (using <code class="docutils literal notranslate"><span class="pre">average_cost</span></code> from the run history) from the incumbent is compared to the termination cost threshold. If one
 of the objective costs is below its associated termination cost threshold, the optimization process is stopped.
@@ -1058,7 +1058,7 @@ highest fidelity, or on all seeds.</p>
 runtime is ignored completely as it is set to infinity. Note here again that SMAC minimizes the objective values.</p>
 </section>
 <section id="automatically-stopping">
-<h2>Automatically Stopping<a class="headerlink" href="#automatically-stopping" title="Permalink to this heading">¶</a></h2>
+<h2>Automatically Stopping<a class="headerlink" href="#automatically-stopping" title="Link to this heading">¶</a></h2>
 <p>Coming in the next version of SMAC.</p>
 </section>
 </section>
@@ -1107,7 +1107,7 @@ runtime is ignored completely as it is set to infinity. Note here again that SMA
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

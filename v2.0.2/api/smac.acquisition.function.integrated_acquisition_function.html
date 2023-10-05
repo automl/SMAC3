@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.acquisition.function.prior_acqusition_function" href="smac.acquisition.function.prior_acqusition_function.html" />
@@ -1093,9 +1093,9 @@
               <div>
                 
   <section id="module-smac.acquisition.function.integrated_acquisition_function">
-<span id="smac-acquisition-function-integrated-acquisition-function"></span><h1>smac.acquisition.function.integrated_acquisition_function<a class="headerlink" href="#module-smac.acquisition.function.integrated_acquisition_function" title="Permalink to this heading">¶</a></h1>
+<span id="smac-acquisition-function-integrated-acquisition-function"></span><h1>smac.acquisition.function.integrated_acquisition_function<a class="headerlink" href="#module-smac.acquisition.function.integrated_acquisition_function" title="Link to this heading">¶</a></h1>
 <section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction" title="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntegratedAcquisitionFunction</span></code></a>(...)</p></td>
@@ -1105,10 +1105,10 @@
 </table>
 </section>
 <section id="interfaces">
-<h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
+<h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.function.integrated_acquisition_function.</span></span><span class="sig-name descname"><span class="pre">IntegratedAcquisitionFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/function/integrated_acquisition_function.html#IntegratedAcquisitionFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.function.integrated_acquisition_function.</span></span><span class="sig-name descname"><span class="pre">IntegratedAcquisitionFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/function/integrated_acquisition_function.html#IntegratedAcquisitionFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.function.abstract_acquisition_function.html#smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
 <p>Compute the integrated acquisition function by marginalizing over model hyperparameters</p>
 <p>See “Practical Bayesian Optimization of Machine Learning Algorithms” by Jasper Snoek et al.
@@ -1121,7 +1121,7 @@ for further details.</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._acquisition_function">
-<span class="sig-name descname"><span class="pre">_acquisition_function</span></span><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._acquisition_function" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_acquisition_function</span></span><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._acquisition_function" title="Link to this definition">¶</a></dt>
 <dd><p>Acquisition function to be integrated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -1132,7 +1132,7 @@ for further details.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._functions">
-<span class="sig-name descname"><span class="pre">_functions</span></span><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._functions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_functions</span></span><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._functions" title="Link to this definition">¶</a></dt>
 <dd><p>Holds n (n = number of models) copies of the acquisition function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -1143,7 +1143,7 @@ for further details.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._eta">
-<span class="sig-name descname"><span class="pre">_eta</span></span><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._eta" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_eta</span></span><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction._eta" title="Link to this definition">¶</a></dt>
 <dd><p>Current incumbent function value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -1154,13 +1154,13 @@ for further details.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction.meta">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction.meta" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction.meta" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the meta data of the created object.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction.name" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#smac.acquisition.function.integrated_acquisition_function.IntegratedAcquisitionFunction.name" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the full name of the acquisition function.</p>
 </dd></dl>
 
@@ -1213,7 +1213,7 @@ for further details.</p>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

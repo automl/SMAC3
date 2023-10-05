@@ -67,18 +67,18 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][smbo.py:319] Finished 0 trials.
     [INFO][smbo.py:319] Finished 0 trials.
     [INFO][abstract_intensifier.py:515] Added config 72f7f7 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:590] Added config 9d67d8 and rejected config 72f7f7 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.15369296073913574
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.947376012802124
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 394
-    [INFO][abstract_intensifier.py:590] Added config eb39a1 and rejected config 72f7f7 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][smbo.py:330] --- Remaining trials: 426
     Default cost (SuccessiveHalving): 0.36672856700711853
-    Incumbent cost (SuccessiveHalving): 0.021148251315382338
+    Incumbent cost (SuccessiveHalving): 0.0178087279480037
     [INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
     [INFO][abstract_facade.py:200] Workers are reduced to 8.
-    /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
+    /opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
     Perhaps you already have a cluster running?
-    Hosting the HTTP server on port 37533 instead
+    Hosting the HTTP server on port 33753 instead
       warnings.warn(
     [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
     [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -98,15 +98,18 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][smbo.py:319] Finished 0 trials.
     [INFO][smbo.py:319] Finished 0 trials.
     [INFO][smbo.py:319] Finished 0 trials.
-    [INFO][abstract_intensifier.py:515] Added config 04388a as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:590] Added config 977e15 and rejected config 04388a as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:590] Added config 9d67d8 and rejected config 977e15 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:515] Added config 2c5ccf as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:590] Added config db304f and rejected config 2c5ccf as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config 6c8a7b and rejected config db304f as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config 300bc9 and rejected config 6c8a7b as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config cadfc4 and rejected config 300bc9 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:590] Added config b2717f and rejected config cadfc4 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.22380280494689941
+    [INFO][smbo.py:328] --- Remaining wallclock time: -1.2019870281219482
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 428
+    [INFO][smbo.py:330] --- Remaining trials: 453
     Default cost (Hyperband): 0.36672856700711853
-    Incumbent cost (Hyperband): 0.0178087279480037
+    Incumbent cost (Hyperband): 0.023375116063138357
 
 
 
@@ -285,7 +288,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  42.263 seconds)
+   **Total running time of the script:** (2 minutes 50.817 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:

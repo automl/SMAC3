@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Stochastic Gradient Descent On Multiple Datasets" href="2_sgd_datasets.html" />
@@ -1025,7 +1025,7 @@
 to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="multi-layer-perceptron-using-multiple-epochs">
-<span id="sphx-glr-examples-2-multi-fidelity-1-mlp-epochs-py"></span><h1>Multi-Layer Perceptron Using Multiple Epochs<a class="headerlink" href="#multi-layer-perceptron-using-multiple-epochs" title="Permalink to this heading">¶</a></h1>
+<span id="sphx-glr-examples-2-multi-fidelity-1-mlp-epochs-py"></span><h1>Multi-Layer Perceptron Using Multiple Epochs<a class="headerlink" href="#multi-layer-perceptron-using-multiple-epochs" title="Link to this heading">¶</a></h1>
 <p>Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of multi-fidelity, the <code class="docutils literal notranslate"><span class="pre">MultiFidelityFacade</span></code> is a good choice. By default,
 <code class="docutils literal notranslate"><span class="pre">MultiFidelityFacade</span></code> internally runs with <a class="reference external" href="https://arxiv.org/abs/1603.06560">hyperband</a> as
@@ -1056,18 +1056,18 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][smbo.py:319] Finished 0 trials.
 [INFO][smbo.py:319] Finished 0 trials.
 [INFO][abstract_intensifier.py:515] Added config 72f7f7 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:590] Added config 9d67d8 and rejected config 72f7f7 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.15369296073913574
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.947376012802124
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 394
-[INFO][abstract_intensifier.py:590] Added config eb39a1 and rejected config 72f7f7 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:330] --- Remaining trials: 426
 Default cost (SuccessiveHalving): 0.36672856700711853
-Incumbent cost (SuccessiveHalving): 0.021148251315382338
+Incumbent cost (SuccessiveHalving): 0.0178087279480037
 [INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
 [INFO][abstract_facade.py:200] Workers are reduced to 8.
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
 Perhaps you already have a cluster running?
-Hosting the HTTP server on port 37533 instead
+Hosting the HTTP server on port 33753 instead
   warnings.warn(
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -1087,15 +1087,18 @@ Hosting the HTTP server on port 37533 instead
 [INFO][smbo.py:319] Finished 0 trials.
 [INFO][smbo.py:319] Finished 0 trials.
 [INFO][smbo.py:319] Finished 0 trials.
-[INFO][abstract_intensifier.py:515] Added config 04388a as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:590] Added config 977e15 and rejected config 04388a as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:590] Added config 9d67d8 and rejected config 977e15 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:515] Added config 2c5ccf as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:590] Added config db304f and rejected config 2c5ccf as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 6c8a7b and rejected config db304f as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 300bc9 and rejected config 6c8a7b as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config cadfc4 and rejected config 300bc9 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config b2717f and rejected config cadfc4 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.22380280494689941
+[INFO][smbo.py:328] --- Remaining wallclock time: -1.2019870281219482
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 428
+[INFO][smbo.py:330] --- Remaining trials: 453
 Default cost (Hyperband): 0.36672856700711853
-Incumbent cost (Hyperband): 0.0178087279480037
+Incumbent cost (Hyperband): 0.023375116063138357
 </pre></div>
 </div>
 <div class="line-block">
@@ -1266,7 +1269,7 @@ Incumbent cost (Hyperband): 0.0178087279480037
     <span class="n">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  42.263 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (2 minutes 50.817 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" width="150px" /></a>
@@ -1324,7 +1327,7 @@ Incumbent cost (Hyperband): 0.0178087279480037
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

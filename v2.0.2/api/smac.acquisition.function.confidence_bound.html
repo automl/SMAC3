@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -1085,9 +1085,9 @@
               <div>
                 
   <section id="module-smac.acquisition.function.confidence_bound">
-<span id="smac-acquisition-function-confidence-bound"></span><h1>smac.acquisition.function.confidence_bound<a class="headerlink" href="#module-smac.acquisition.function.confidence_bound" title="Permalink to this heading">¶</a></h1>
+<span id="smac-acquisition-function-confidence-bound"></span><h1>smac.acquisition.function.confidence_bound<a class="headerlink" href="#module-smac.acquisition.function.confidence_bound" title="Link to this heading">¶</a></h1>
 <section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.acquisition.function.confidence_bound.LCB" title="smac.acquisition.function.confidence_bound.LCB"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LCB</span></code></a>([beta])</p></td>
@@ -1097,10 +1097,10 @@
 </table>
 </section>
 <section id="interfaces">
-<h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
+<h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.acquisition.function.confidence_bound.LCB">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.function.confidence_bound.</span></span><span class="sig-name descname"><span class="pre">LCB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/function/confidence_bound.html#LCB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.function.confidence_bound.</span></span><span class="sig-name descname"><span class="pre">LCB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/function/confidence_bound.html#LCB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.function.abstract_acquisition_function.html#smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction" title="smac.acquisition.function.abstract_acquisition_function.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a></p>
 <p>Computes the lower confidence bound for a given x over the best so far value as acquisition value.</p>
 <p><span class="math notranslate nohighlight">\(LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})\)</span> <a class="reference internal" href="../6_references.html#skks10" id="id1"><span>[SKKS10]</span></a></p>
@@ -1118,7 +1118,7 @@
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.acquisition.function.confidence_bound.LCB._beta">
-<span class="sig-name descname"><span class="pre">_beta</span></span><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB._beta" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_beta</span></span><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB._beta" title="Link to this definition">¶</a></dt>
 <dd><p>Exploration-exploitation trade-off parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -1129,7 +1129,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.acquisition.function.confidence_bound.LCB._num_data">
-<span class="sig-name descname"><span class="pre">_num_data</span></span><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB._num_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_num_data</span></span><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB._num_data" title="Link to this definition">¶</a></dt>
 <dd><p>Number of data points seen so far.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -1140,13 +1140,13 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.function.confidence_bound.LCB.meta">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB.meta" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB.meta" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the meta data of the created object.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="smac.acquisition.function.confidence_bound.LCB.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB.name" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#smac.acquisition.function.confidence_bound.LCB.name" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the full name of the acquisition function.</p>
 </dd></dl>
 
@@ -1199,7 +1199,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

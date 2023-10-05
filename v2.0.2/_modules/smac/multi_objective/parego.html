@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,18 +21,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1015,7 +1015,9 @@
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 
 
-<div class="viewcode-block" id="ParEGO"><a class="viewcode-back" href="../../../api/smac.multi_objective.parego.html#smac.multi_objective.ParEGO">[docs]</a><span class="k">class</span> <span class="nc">ParEGO</span><span class="p">(</span><span class="n">AbstractMultiObjectiveAlgorithm</span><span class="p">):</span>
+<div class="viewcode-block" id="ParEGO">
+<a class="viewcode-back" href="../../../api/smac.multi_objective.parego.html#smac.multi_objective.ParEGO">[docs]</a>
+<span class="k">class</span> <span class="nc">ParEGO</span><span class="p">(</span><span class="n">AbstractMultiObjectiveAlgorithm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;ParEGO implementation based on https://www.cs.bham.ac.uk/~jdk/UKCI-2015.pdf.</span>
 
 <span class="sd">    Parameters</span>
@@ -1058,19 +1060,26 @@
 
         <span class="k">return</span> <span class="n">meta</span>
 
-<div class="viewcode-block" id="ParEGO.update_on_iteration_start"><a class="viewcode-back" href="../../../api/smac.multi_objective.parego.html#smac.multi_objective.ParEGO.update_on_iteration_start">[docs]</a>    <span class="k">def</span> <span class="nf">update_on_iteration_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+<div class="viewcode-block" id="ParEGO.update_on_iteration_start">
+<a class="viewcode-back" href="../../../api/smac.multi_objective.parego.html#smac.multi_objective.ParEGO.update_on_iteration_start">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_on_iteration_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">)</span>
 
         <span class="c1"># Normalize so that all theta values sum up to 1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_theta</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_theta</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ParEGO.__call__"><a class="viewcode-back" href="../../../api/smac.multi_objective.parego.html#smac.multi_objective.ParEGO.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+
+<div class="viewcode-block" id="ParEGO.__call__">
+<a class="viewcode-back" href="../../../api/smac.multi_objective.parego.html#smac.multi_objective.ParEGO.__call__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
         <span class="c1"># Weight the values</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_theta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Iteration not yet initalized; Call `update_on_iteration_start()` first&quot;</span><span class="p">)</span>
 
         <span class="n">theta_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_theta</span> <span class="o">*</span> <span class="n">values</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">theta_f</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">theta_f</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span></div></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">theta_f</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">theta_f</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span></div>
+</div>
+
 </pre></div>
 
               </div>
@@ -1102,7 +1111,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

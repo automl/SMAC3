@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,18 +21,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1036,7 +1036,9 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="RunHistory"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory">[docs]</a><span class="k">class</span> <span class="nc">RunHistory</span><span class="p">(</span><span class="n">Mapping</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]):</span>
+<div class="viewcode-block" id="RunHistory">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory">[docs]</a>
+<span class="k">class</span> <span class="nc">RunHistory</span><span class="p">(</span><span class="n">Mapping</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for the target function run information.</span>
 
 <span class="sd">    Most importantly, the runhistory contains an efficient mapping from each evaluated configuration to the</span>
@@ -1109,7 +1111,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the lower and upper bound of each objective.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span>
 
-<div class="viewcode-block" id="RunHistory.reset"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="RunHistory.reset">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets this runhistory to its default state.&quot;&quot;&quot;</span>
         <span class="c1"># By having the data in a deterministic order we can do useful tests when we</span>
         <span class="c1"># serialize the data and can assume it is still in the same order as it was added.</span>
@@ -1142,27 +1146,45 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_objective_bounds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="RunHistory.__contains__"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.__contains__">[docs]</a>    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.__contains__">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.__contains__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Dictionary semantics for `k in runhistory`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span></div>
 
-<div class="viewcode-block" id="RunHistory.__getitem__"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.__getitem__">[docs]</a>    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">TrialKey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialValue</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.__getitem__">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.__getitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">TrialKey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialValue</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Dictionary semantics for `v = runhistory[k]`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="RunHistory.__iter__"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.__iter__">[docs]</a>    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="RunHistory.__iter__">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.__iter__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Dictionary semantics for `for k in runhistory.keys()`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="RunHistory.__len__"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.__len__">[docs]</a>    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.__len__">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.__len__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enables the `len(runhistory)`&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.__eq__"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.__eq__">[docs]</a>    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.__eq__">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.__eq__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enables to check equality of runhistory if the run is continued.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_data</span></div>
 
-<div class="viewcode-block" id="RunHistory.empty"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.empty">[docs]</a>    <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.empty">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.empty">[docs]</a>
+    <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether the RunHistory is empty.</span>
 
 <span class="sd">        Returns</span>
@@ -1172,7 +1194,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
 
-<div class="viewcode-block" id="RunHistory.add"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span>
+
+<div class="viewcode-block" id="RunHistory.add">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.add">[docs]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">cost</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">],</span>
@@ -1300,7 +1325,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Entry was not added to the runhistory because existing trials will not be overwritten.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.add_trial"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.add_trial">[docs]</a>    <span class="k">def</span> <span class="nf">add_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.add_trial">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.add_trial">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a trial to the runhistory.</span>
 
 <span class="sd">        Parameters</span>
@@ -1321,7 +1349,10 @@
             <span class="n">additional_info</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">additional_info</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.add_running_trial"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.add_running_trial">[docs]</a>    <span class="k">def</span> <span class="nf">add_running_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.add_running_trial">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.add_running_trial">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_running_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a running trial to the runhistory.</span>
 
 <span class="sd">        Parameters</span>
@@ -1339,7 +1370,10 @@
             <span class="n">budget</span><span class="o">=</span><span class="n">trial</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.update_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.update_cost">[docs]</a>    <span class="k">def</span> <span class="nf">update_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.update_cost">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.update_cost">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Stores the performance of a configuration across the instances in `self._cost_per_config`</span>
 <span class="sd">        and also updates `self._num_trials_per_config`.</span>
 
@@ -1360,7 +1394,10 @@
         <span class="n">all_isb</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">highest_observed_budget_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_min_cost_per_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">all_isb</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.incremental_update_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.incremental_update_cost">[docs]</a>    <span class="k">def</span> <span class="nf">incremental_update_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">cost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.incremental_update_cost">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.incremental_update_cost">[docs]</a>
+    <span class="k">def</span> <span class="nf">incremental_update_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">cost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Incrementally updates the performance of a configuration by using a moving average.</span>
 
 <span class="sd">        Parameters</span>
@@ -1389,7 +1426,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_num_trials_per_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_trials</span> <span class="o">+</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_cost">[docs]</a>    <span class="k">def</span> <span class="nf">get_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.get_cost">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_cost">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns empirical cost for a configuration. See the class docstring for how the costs are</span>
 <span class="sd">        computed. The costs are not re-computed, but are read from cache.</span>
 
@@ -1421,7 +1461,10 @@
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_min_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_min_cost">[docs]</a>    <span class="k">def</span> <span class="nf">get_min_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.get_min_cost">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_min_cost">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_min_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the lowest empirical cost for a configuration across all trials.</span>
 
 <span class="sd">        See the class docstring for how the costs are computed. The costs are not re-computed</span>
@@ -1451,7 +1494,10 @@
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.average_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.average_cost">[docs]</a>    <span class="k">def</span> <span class="nf">average_cost</span><span class="p">(</span>
+
+<div class="viewcode-block" id="RunHistory.average_cost">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.average_cost">[docs]</a>
+    <span class="k">def</span> <span class="nf">average_cost</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1497,7 +1543,10 @@
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
 
-<div class="viewcode-block" id="RunHistory.sum_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.sum_cost">[docs]</a>    <span class="k">def</span> <span class="nf">sum_cost</span><span class="p">(</span>
+
+<div class="viewcode-block" id="RunHistory.sum_cost">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.sum_cost">[docs]</a>
+    <span class="k">def</span> <span class="nf">sum_cost</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1542,7 +1591,10 @@
 
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">costs</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="RunHistory.min_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.min_cost">[docs]</a>    <span class="k">def</span> <span class="nf">min_cost</span><span class="p">(</span>
+
+<div class="viewcode-block" id="RunHistory.min_cost">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.min_cost">[docs]</a>
+    <span class="k">def</span> <span class="nf">min_cost</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1593,19 +1645,31 @@
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_config"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.get_config">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the configuration from the configuration id.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ids_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_config_id"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_config_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_config_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.get_config_id">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_config_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_config_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the configuration id from a configuration.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_ids</span><span class="p">[</span><span class="n">config</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="RunHistory.has_config"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.has_config">[docs]</a>    <span class="k">def</span> <span class="nf">has_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.has_config">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.has_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">has_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the config is stored in the runhistory&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_ids</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_configs"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_configs">[docs]</a>    <span class="k">def</span> <span class="nf">get_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sort_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="RunHistory.get_configs">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_configs">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sort_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return all configurations in this RunHistory object.</span>
 
 <span class="sd">        Parameters</span>
@@ -1630,7 +1694,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown sort_by value: </span><span class="si">{</span><span class="n">sort_by</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_configs_per_budget"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_configs_per_budget">[docs]</a>    <span class="k">def</span> <span class="nf">get_configs_per_budget</span><span class="p">(</span>
+
+<div class="viewcode-block" id="RunHistory.get_configs_per_budget">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_configs_per_budget">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_configs_per_budget</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
@@ -1655,7 +1722,10 @@
 
         <span class="k">return</span> <span class="n">configs</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_running_configs"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_running_configs">[docs]</a>    <span class="k">def</span> <span class="nf">get_running_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="RunHistory.get_running_configs">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_running_configs">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_running_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all configurations which have at least one running trial.</span>
 
 <span class="sd">        Returns</span>
@@ -1670,7 +1740,10 @@
 
         <span class="k">return</span> <span class="n">configs</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_trials"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_trials">[docs]</a>    <span class="k">def</span> <span class="nf">get_trials</span><span class="p">(</span>
+
+<div class="viewcode-block" id="RunHistory.get_trials">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_trials">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_trials</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">highest_observed_budget_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -1709,7 +1782,10 @@
 
         <span class="k">return</span> <span class="p">[</span><span class="n">TrialInfo</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">trials</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">budget</span> <span class="ow">in</span> <span class="n">v</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_running_trials"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_running_trials">[docs]</a>    <span class="k">def</span> <span class="nf">get_running_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="RunHistory.get_running_trials">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_running_trials">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_running_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all running trials for the passed configuration.</span>
 
 <span class="sd">        Parameters</span>
@@ -1729,7 +1805,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">trial</span> <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running_trials</span> <span class="k">if</span> <span class="n">trial</span><span class="o">.</span><span class="n">config</span> <span class="o">==</span> <span class="n">config</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="RunHistory.get_instance_seed_budget_keys"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_instance_seed_budget_keys">[docs]</a>    <span class="k">def</span> <span class="nf">get_instance_seed_budget_keys</span><span class="p">(</span>
+
+<div class="viewcode-block" id="RunHistory.get_instance_seed_budget_keys">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.get_instance_seed_budget_keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_instance_seed_budget_keys</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">highest_observed_budget_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -1756,7 +1835,10 @@
         <span class="c1"># Convert to instance-seed-budget key</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">trials</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="RunHistory.save"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.save">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.save">[docs]</a>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves RunHistory to disk.</span>
 
 <span class="sd">        Parameters</span>
@@ -1808,7 +1890,10 @@
                 <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.load"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.load">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.load">[docs]</a>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the runhistory from disk.</span>
 
 <span class="sd">        Warning</span>
@@ -1883,7 +1968,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">][</span><span class="s2">&quot;finished&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">][</span><span class="s2">&quot;running&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="RunHistory.update_from_json"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.update_from_json">[docs]</a>    <span class="k">def</span> <span class="nf">update_from_json</span><span class="p">(</span>
+
+<div class="viewcode-block" id="RunHistory.update_from_json">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.update_from_json">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_from_json</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
@@ -1900,7 +1988,10 @@
         <span class="n">new_runhistory</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">configspace</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">runhistory</span><span class="o">=</span><span class="n">new_runhistory</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.update"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.update">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the current RunHistory by adding new trials from another RunHistory.</span>
 
 <span class="sd">        Parameters</span>
@@ -1926,7 +2017,10 @@
                 <span class="n">additional_info</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">additional_info</span><span class="p">,</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.update_costs"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.update_costs">[docs]</a>    <span class="k">def</span> <span class="nf">update_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RunHistory.update_costs">
+<a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.RunHistory.update_costs">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the cost of all configurations from scratch and overwrites `self._cost_per_config`</span>
 <span class="sd">        and `self._num_trials_per_config` accordingly.</span>
 
@@ -1949,6 +2043,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_cost_per_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">inst_seed_budgets</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_min_cost_per_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">inst_seed_budgets</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_num_trials_per_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inst_seed_budgets</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">_check_json_serializable</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -2104,6 +2199,7 @@
             <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">costs</span></div>
+
 </pre></div>
 
               </div>
@@ -2135,7 +2231,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

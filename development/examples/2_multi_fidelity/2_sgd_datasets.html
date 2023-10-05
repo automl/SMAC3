@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Multi-Objective" href="../3_multi_objective/index.html" />
@@ -1025,7 +1025,7 @@
 to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="stochastic-gradient-descent-on-multiple-datasets">
-<span id="sphx-glr-examples-2-multi-fidelity-2-sgd-datasets-py"></span><h1>Stochastic Gradient Descent On Multiple Datasets<a class="headerlink" href="#stochastic-gradient-descent-on-multiple-datasets" title="Permalink to this heading">¶</a></h1>
+<span id="sphx-glr-examples-2-multi-fidelity-2-sgd-datasets-py"></span><h1>Stochastic Gradient Descent On Multiple Datasets<a class="headerlink" href="#stochastic-gradient-descent-on-multiple-datasets" title="Link to this heading">¶</a></h1>
 <p>Example for optimizing a Multi-Layer Perceptron (MLP) across multiple (dataset) instances.</p>
 <p>Alternative to budgets, here wlog. we consider instances as a fidelity type. An instance represents a specific
 scenario/condition (e.g. different datasets, subsets, transformations) for the algorithm to run. SMAC then returns the
@@ -1053,13 +1053,10 @@ the target function now is required to have an instance argument.</p>
 [INFO][abstract_intensifier.py:590] Added config 884840 and rejected config 812224 as incumbent because it is not better than the incumbents on 15 instances:
 [INFO][smbo.py:319] Finished 100 trials.
 [INFO][smbo.py:319] Finished 150 trials.
-[INFO][smbo.py:319] Finished 200 trials.
-[INFO][smbo.py:319] Finished 250 trials.
-[INFO][smbo.py:319] Finished 300 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.031206130981445312
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.11053133010864258
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 4666
+[INFO][smbo.py:330] --- Remaining trials: 4833
 Default cost: 0.15489347419148672
 Incumbent cost: 0.006249006102246613
 </pre></div>
@@ -1193,7 +1190,7 @@ Incumbent cost: 0.006249006102246613
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  38.145 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 45.174 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-2-sgd-datasets-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/2_sgd_datasets.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" width="150px" /></a>
@@ -1251,7 +1248,7 @@ Incumbent cost: 0.006249006102246613
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

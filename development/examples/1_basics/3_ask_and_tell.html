@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Custom Callback" href="4_callback.html" />
@@ -1025,27 +1025,25 @@
 to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="ask-and-tell">
-<span id="sphx-glr-examples-1-basics-3-ask-and-tell-py"></span><h1>Ask-and-Tell<a class="headerlink" href="#ask-and-tell" title="Permalink to this heading">¶</a></h1>
+<span id="sphx-glr-examples-1-basics-3-ask-and-tell-py"></span><h1>Ask-and-Tell<a class="headerlink" href="#ask-and-tell" title="Link to this heading">¶</a></h1>
 <p>This examples show how to use the Ask-and-Tell interface.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 20 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:515] Added config 38310a as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:590] Added config a840bc and rejected config 38310a as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][abstract_intensifier.py:590] Added config e8ddec and rejected config a840bc as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:590] Added config a9b60d and rejected config e8ddec as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:590] Added config 96f88f and rejected config a9b60d as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:590] Added config 0d4e03 and rejected config 96f88f as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config e74ba7 and rejected config e8ddec as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:590] Added config 737ab9 and rejected config 0d4e03 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:590] Added config eeebb9 and rejected config 737ab9 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:590] Added config 6d9074 and rejected config eeebb9 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:590] Added config a0e706 and rejected config 6d9074 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 1eebbc and rejected config e74ba7 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config f01c34 and rejected config 1eebbc as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 1df946 and rejected config f01c34 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:590] Added config 535c5d and rejected config 1df946 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 100 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
 [INFO][smbo.py:328] --- Remaining wallclock time: inf
 [INFO][smbo.py:329] --- Remaining cpu time: inf
 [INFO][smbo.py:330] --- Remaining trials: 0
 Default cost: 16916.0
-Incumbent cost: 0.8499771879028607
+Incumbent cost: 1.1183978687059386
 </pre></div>
 </div>
 <div class="line-block">
@@ -1127,7 +1125,7 @@ Incumbent cost: 0.8499771879028607
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.585 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.866 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-3-ask-and-tell-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/3_ask_and_tell.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
@@ -1185,7 +1183,7 @@ Incumbent cost: 0.8499771879028607
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>
