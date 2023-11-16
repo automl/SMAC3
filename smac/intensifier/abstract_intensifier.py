@@ -571,8 +571,12 @@ class AbstractIntensifier:
 
         if len(previous_incumbents) == len(new_incumbents):
             if previous_incumbents == new_incumbents:
-                # No changes in the incumbents
-                self._remove_rejected_config(config_id)
+                # No changes in the incumbents, we need this clause because we can't use set difference then
+                if config_id in new_incumbent_ids:
+                    self._remove_rejected_config(config_id)
+                else:
+                    # config worse than incumbents and thus rejected
+                    self._add_rejected_config(config_id)
                 return
             else:
                 # In this case, we have to determine which config replaced which incumbent and reject it
