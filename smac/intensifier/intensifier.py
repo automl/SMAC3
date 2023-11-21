@@ -130,7 +130,7 @@ class Intensifier(AbstractIntensifier):
             fails += 1
 
             # Some criteria to stop the intensification if nothing can be intensified anymore
-            if fails > self._retries:
+            if fails > self._retries and len(self._queue) == 0:
                 logger.error("Intensifier could not find any new trials.")
                 return
 
