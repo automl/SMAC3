@@ -87,7 +87,9 @@ class RandomForest(AbstractRandomForest):
         self._rf_opts.compute_law_of_total_variance = False
         self._rf: BinaryForest | None = None
         self._log_y = log_y
-        self._rng = regression.default_random_engine(seed)
+
+        # Case to `int` incase we get an `np.integer` type
+        self._rng = regression.default_random_engine(int(seed))
 
         self._n_trees = n_trees
         self._n_points_per_tree = n_points_per_tree
