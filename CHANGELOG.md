@@ -5,6 +5,9 @@
 - Add OrdinalHyperparameter for random forest imputer (#1065).
 - Configurations that fail to become incumbents will be added to the rejected lists (#1069).
 
+## Misc
+- ci: Update action version (#1072).
+
 # 2.0.2
 
 ## Improvements
