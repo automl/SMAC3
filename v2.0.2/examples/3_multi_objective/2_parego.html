@@ -1035,26 +1035,34 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:515] Added config 3623cc as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:602] Config 540db2 is a new incumbent. Total number of incumbents: 2.
-[INFO][abstract_intensifier.py:602] Config 3b5efd is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:594] Added config edca48 and rejected config 503b4b as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:602] Config 99f86d is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:602] Config 0c9159 is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:602] Config f81150 is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:594] Added config 9fd03c and rejected config f81150 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][abstract_intensifier.py:602] Config b92f9f is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:594] Added config 2895a7 and rejected config 3b5efd as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][abstract_intensifier.py:594] Added config 978294 and rejected config 9fd03c as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][abstract_intensifier.py:602] Config 1b01ec is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:602] Config 8dcd94 is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:602] Config ce1565 is a new incumbent. Total number of incumbents: 5.
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.006031036376953125
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.3699915409088135
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 173
+[INFO][smbo.py:330] --- Remaining trials: 156
 Validated costs from default config:
---- [0.60155834 0.23677588]
+--- [0.60155834 0.21888936]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.32734382]
---- [0.03033736 0.61645281]
---- [0.02949783 0.78047216]
+--- [0.02421    0.52604556]
+--- [0.03589601 0.37584984]
+--- [0.14135562 0.18027866]
+--- [0.07067858 0.23799729]
+--- [0.05119468 0.32414722]
 </pre></div>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -1222,16 +1230,16 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 34.152 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 34.296 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo2.svg" width="150px" /></a>
 </div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9a6a998bd05ca9b3aff17bd46b9cd502/2_parego.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">2_parego.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>
 </div>
 </div>
 </section>

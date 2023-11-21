@@ -76,7 +76,7 @@ This simple example shows how to call a script with the following content:
 
 |
 
-.. code-block:: default
+.. code-block:: Python
 
 
     from ConfigSpace import ConfigurationSpace
@@ -112,7 +112,7 @@ This simple example shows how to call a script with the following content:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.831 seconds)
+   **Total running time of the script:** (0 minutes 3.944 seconds)
 
 
 .. _sphx_glr_download_examples_5_commandline_1_call_target_function_script.py:
@@ -121,7 +121,6 @@ This simple example shows how to call a script with the following content:
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
-
     .. container:: binder-badge
 
       .. image:: images/binder_badge_logo.svg
@@ -129,12 +128,10 @@ This simple example shows how to call a script with the following content:
         :alt: Launch binder
         :width: 150 px
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: 1_call_target_function_script.ipynb <1_call_target_function_script.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 1_call_target_function_script.py <1_call_target_function_script.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: 1_call_target_function_script.ipynb <1_call_target_function_script.ipynb>`

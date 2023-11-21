@@ -46,20 +46,28 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
     [INFO][abstract_intensifier.py:515] Added config 3623cc as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:602] Config 540db2 is a new incumbent. Total number of incumbents: 2.
-    [INFO][abstract_intensifier.py:602] Config 3b5efd is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:594] Added config edca48 and rejected config 503b4b as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:602] Config 99f86d is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:602] Config 0c9159 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:602] Config f81150 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:594] Added config 9fd03c and rejected config f81150 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:602] Config b92f9f is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:594] Added config 2895a7 and rejected config 3b5efd as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:594] Added config 978294 and rejected config 9fd03c as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:602] Config 1b01ec is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:602] Config 8dcd94 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:602] Config ce1565 is a new incumbent. Total number of incumbents: 5.
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.006031036376953125
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.3699915409088135
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 173
+    [INFO][smbo.py:330] --- Remaining trials: 156
     Validated costs from default config: 
-    --- [0.60155834 0.23677588]
+    --- [0.60155834 0.21888936]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.32734382]
-    --- [0.03033736 0.61645281]
-    --- [0.02949783 0.78047216]
+    --- [0.02421    0.52604556]
+    --- [0.03589601 0.37584984]
+    --- [0.14135562 0.18027866]
+    --- [0.07067858 0.23799729]
+    --- [0.05119468 0.32414722]
 
 
 
@@ -68,7 +76,7 @@ mean accuracy and run-time of each configuration.
 
 |
 
-.. code-block:: default
+.. code-block:: Python
 
     from __future__ import annotations
 
@@ -240,7 +248,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 34.152 seconds)
+   **Total running time of the script:** (0 minutes 34.296 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
@@ -249,7 +257,6 @@ mean accuracy and run-time of each configuration.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
-
     .. container:: binder-badge
 
       .. image:: images/binder_badge_logo.svg
@@ -257,12 +264,10 @@ mean accuracy and run-time of each configuration.
         :alt: Launch binder
         :width: 150 px
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: 2_parego.ipynb <2_parego.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 2_parego.py <2_parego.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: 2_parego.ipynb <2_parego.ipynb>`

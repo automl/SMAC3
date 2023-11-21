@@ -63,12 +63,15 @@ the target function now is required to have an instance argument.
     [INFO][smbo.py:319] Finished 200 trials.
     [INFO][smbo.py:319] Finished 250 trials.
     [INFO][smbo.py:319] Finished 300 trials.
+    [INFO][smbo.py:319] Finished 350 trials.
+    [INFO][abstract_intensifier.py:594] Added config 3c910e and rejected config 884840 as incumbent because it is not better than the incumbents on 45 instances:
+    [INFO][smbo.py:319] Finished 400 trials.
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.05354905128479004
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.015347719192504883
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 4664
+    [INFO][smbo.py:330] --- Remaining trials: 4561
     Default cost: 0.15489347419148672
-    Incumbent cost: 0.006249006102246613
+    Incumbent cost: 0.005937605060508486
 
 
 
@@ -77,7 +80,7 @@ the target function now is required to have an instance argument.
 
 |
 
-.. code-block:: default
+.. code-block:: Python
 
 
     from __future__ import annotations
@@ -208,7 +211,7 @@ the target function now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 38.110 seconds)
+   **Total running time of the script:** (0 minutes 35.078 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:
@@ -217,7 +220,6 @@ the target function now is required to have an instance argument.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
-
     .. container:: binder-badge
 
       .. image:: images/binder_badge_logo.svg
@@ -225,12 +227,10 @@ the target function now is required to have an instance argument.
         :alt: Launch binder
         :width: 150 px
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: 2_sgd_datasets.ipynb <2_sgd_datasets.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 2_sgd_datasets.py <2_sgd_datasets.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: 2_sgd_datasets.ipynb <2_sgd_datasets.ipynb>`

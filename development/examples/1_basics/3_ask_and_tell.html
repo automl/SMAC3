@@ -1031,27 +1031,25 @@ to download the full example code or to run this example in your browser via Bin
 [INFO][abstract_intensifier.py:515] Added config 38310a as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:594] Added config a840bc and rejected config 38310a as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][abstract_intensifier.py:594] Added config e8ddec and rejected config a840bc as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config a9b60d and rejected config e8ddec as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 96f88f and rejected config a9b60d as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 0d4e03 and rejected config 96f88f as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:594] Added config e74ba7 and rejected config e8ddec as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:594] Added config 737ab9 and rejected config 0d4e03 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config eeebb9 and rejected config 737ab9 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 6d9074 and rejected config eeebb9 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config a0e706 and rejected config 6d9074 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:594] Added config 1eebbc and rejected config e74ba7 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:594] Added config f01c34 and rejected config 1eebbc as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:594] Added config 1df946 and rejected config f01c34 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:594] Added config 535c5d and rejected config 1df946 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 100 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
 [INFO][smbo.py:328] --- Remaining wallclock time: inf
 [INFO][smbo.py:329] --- Remaining cpu time: inf
 [INFO][smbo.py:330] --- Remaining trials: 0
 Default cost: 16916.0
-Incumbent cost: 0.8499771879028607
+Incumbent cost: 1.1183978687059386
 </pre></div>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Float</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Float</span>
 
 <span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">HyperparameterOptimizationFacade</span><span class="p">,</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.dataclasses</span> <span class="kn">import</span> <span class="n">TrialValue</span>
@@ -1127,16 +1125,16 @@ Incumbent cost: 0.8499771879028607
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.533 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.636 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-3-ask-and-tell-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/3_ask_and_tell.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
 </div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/a1828630146a41acf93ee176b4deac58/3_ask_and_tell.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">3_ask_and_tell.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9d0cee58c541238b53d0855910f17776/3_ask_and_tell.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">3_ask_and_tell.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/a1828630146a41acf93ee176b4deac58/3_ask_and_tell.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">3_ask_and_tell.py</span></code></a></p>
 </div>
 </div>
 </section>
