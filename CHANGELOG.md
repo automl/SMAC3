@@ -6,6 +6,9 @@
 - Configurations that fail to become incumbents will be added to the rejected lists (#1069).
 - SMAC RandomForest doesn't crash when `np.integer` used, i.e. as generated from a `np.random.RandomState` (#1084).
 
+## Misc
+- ci: Update action version (#1072).
+
 # 2.0.2
 
 ## Improvements
