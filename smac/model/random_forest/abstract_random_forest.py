@@ -6,6 +6,7 @@ import numpy as np
 from ConfigSpace import (
     CategoricalHyperparameter,
     Constant,
+    OrdinalHyperparameter,
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
@@ -36,12 +37,14 @@ class AbstractRandomForest(AbstractModel):
                     self._conditional[idx] = True
                     if isinstance(hp, CategoricalHyperparameter):
                         self._impute_values[idx] = len(hp.choices)
+                    elif isinstance(hp, OrdinalHyperparameter):
+                        self._impute_values[idx] = len(hp.sequence)
                     elif isinstance(hp, (UniformFloatHyperparameter, UniformIntegerHyperparameter)):
                         self._impute_values[idx] = -1
                     elif isinstance(hp, Constant):
                         self._impute_values[idx] = 1
                     else:
-                        raise ValueError
+                        raise ValueError(f"Unsupported hyperparameter type: {type(hp)}")
 
             if self._conditional[idx] is True:
                 nonfinite_mask = ~np.isfinite(X[:, idx])
