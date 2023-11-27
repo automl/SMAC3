@@ -9,6 +9,9 @@
 ## Misc
 - ci: Update action version (#1072).
 
+## Minor
+- When a custom dask client is provided, emit the warning that the `n_workers` parameter is ignored only if it deviates from its default value, `1` ([#1071](https://github.com/automl/SMAC3/pull/1071)).
+
 # 2.0.2
 
 ## Improvements
