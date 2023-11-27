@@ -1197,7 +1197,7 @@
 
         <span class="c1"># In case of multiple jobs, we need to wrap the runner again using DaskParallelRunner</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">n_workers</span> <span class="o">:=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">n_workers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_workers</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                     <span class="s2">&quot;Provided `dask_client`. Ignore `scenario.n_workers`, directly set `n_workers` in `dask_client`.&quot;</span>
                 <span class="p">)</span>

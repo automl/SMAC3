@@ -1056,21 +1056,22 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][smbo.py:319] Finished 0 trials.
 [INFO][smbo.py:319] Finished 0 trials.
 [INFO][smbo.py:319] Finished 50 trials.
-[INFO][smbo.py:319] Finished 50 trials.
 [INFO][abstract_intensifier.py:515] Added config 72f7f7 as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:594] Added config 9d67d8 and rejected config 72f7f7 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 150 trials.
+[INFO][smbo.py:319] Finished 100 trials.
+[INFO][smbo.py:319] Finished 100 trials.
+[INFO][abstract_intensifier.py:594] Added config 67ee32 and rejected config 9d67d8 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.07118654251098633
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.3822062015533447
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 322
+[INFO][smbo.py:330] --- Remaining trials: 309
 Default cost (SuccessiveHalving): 0.36672856700711853
-Incumbent cost (SuccessiveHalving): 0.0178087279480037
+Incumbent cost (SuccessiveHalving): 0.017254719900959392
 [INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
 [INFO][abstract_facade.py:200] Workers are reduced to 8.
 /opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
 Perhaps you already have a cluster running?
-Hosting the HTTP server on port 38193 instead
+Hosting the HTTP server on port 44151 instead
   warnings.warn(
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -1094,10 +1095,11 @@ Hosting the HTTP server on port 38193 instead
 [INFO][abstract_intensifier.py:594] Added config efc781 and rejected config ceb3eb as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][abstract_intensifier.py:594] Added config 9d67d8 and rejected config efc781 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 50 trials.
+[INFO][smbo.py:319] Finished 100 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -1.9365227222442627
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.01265716552734375
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 393
+[INFO][smbo.py:330] --- Remaining trials: 387
 Default cost (Hyperband): 0.36672856700711853
 Incumbent cost (Hyperband): 0.0178087279480037
 </pre></div>
@@ -1270,7 +1272,7 @@ Incumbent cost (Hyperband): 0.0178087279480037
     <span class="n">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (2 minutes 33.182 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (3 minutes 20.237 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" width="150px" /></a>
