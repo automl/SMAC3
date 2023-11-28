@@ -6,7 +6,11 @@ An example of optimizing a simple support vector machine on the digits dataset. 
 [simple example](examples/1_basics/2_svm_cv.py), in which all cross-validation folds are executed
 at once, we use the intensification mechanism described in the original 
 [SMAC paper](https://link.springer.com/chapter/10.1007/978-3-642-25566-3_40) as also demonstrated
-by [Auto-WEKA](https://dl.acm.org/doi/10.1145/2487575.2487629). 
+by [Auto-WEKA](https://dl.acm.org/doi/10.1145/2487575.2487629). This mechanism allows us to
+terminate the evaluation of a configuration if after a certain number of folds, the configuration
+is found to be worse than the incumbent configuration. This is especially useful if the evaluation
+of a configuration is expensive, e.g., if we have to train a neural network or if we have to
+evaluate the configuration on a large dataset.
 """
 __copyright__ = "Copyright 2023, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -76,7 +80,11 @@ if __name__ == "__main__":
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
         classifier.configspace,
-        n_trials=50,  # We want to run max 50 trials (combination of config and seed)
+        n_trials=50,  # We want to run max 50 trials (combination of config and instances in the case of
+                      # deterministic=True. In the case of deterministic=False, this would be the
+                      # combination of instances, seeds and configs). The number of distinct configurations
+                      # evaluated by SMAC will be lower than this number because some of the configurations
+                      # will be executed on more than one instance (CV fold).
         instances=[f"{i}" for i in range(N_FOLDS)],  # Specify all instances by their name (as a string)
         instance_features={f"{i}": [i] for i in range(N_FOLDS)}, # breaks SMAC
         deterministic=True  # To simplify the problem we make SMAC believe that we have a deterministic
