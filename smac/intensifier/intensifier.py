@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Iterator
+import dataclasses
 
 from ConfigSpace import Configuration
 
@@ -90,6 +91,16 @@ class Intensifier(AbstractIntensifier):
 
     def set_state(self, state: dict[str, Any]) -> None:  # noqa: D102
         self._queue = [(self.runhistory.get_config(id), n) for id, n in state["queue"]]
+    
+    def get_data(self):
+        data = {
+            "incumbent_ids": [self.runhistory.get_config_id(config) for config in self._incumbents],
+            "rejected_config_ids": self._rejected_config_ids,
+            "incumbents_changed": self._incumbents_changed,
+            "trajectory": [dataclasses.asdict(item) for item in self._trajectory],
+            "state": self.get_state(),
+        }
+        return data
 
     def __iter__(self) -> Iterator[TrialInfo]:
         """This iter method holds the logic for the intensification loop.
