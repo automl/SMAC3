@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:04.067** total execution time for 1 file **from examples/5_commandline**:
+**00:03.988** total execution time for 1 file **from examples/5_commandline**:
 
 .. container::
 
@@ -33,5 +33,5 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_examples_5_commandline_1_call_target_function_script.py` (``1_call_target_function_script.py``)
-     - 00:04.067
+     - 00:03.988
      - 0.0
