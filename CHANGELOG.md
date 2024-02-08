@@ -16,9 +16,10 @@
 # 2.0.2
 
 ## Improvements
-- Add an error when we get an empty dict data_to_scatter so that we can avoid an internal error caused in Dask precautiously
+- Add an error when we get an empty dict data_to_scatter so that we can avoid an internal error caused in Dask precautiously.
 - Add experimental instruction for installing SMAC in Windows via a WSL.
 - More detailed documentation regarding continuing runs.
+- Add a new example that demonstrates the use of intensification to speed up cross-validation for machine learning.
 
 ## Bugfixes
 - Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).
