@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:45.403** total execution time for 2 files **from examples/3_multi_objective**:
+**00:49.635** total execution time for 2 files **from examples/3_multi_objective**:
 
 .. container::
 
@@ -33,8 +33,8 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_examples_3_multi_objective_2_parego.py` (``2_parego.py``)
-     - 00:36.785
+     - 00:41.212
      - 0.0
    * - :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py` (``1_schaffer.py``)
-     - 00:08.618
+     - 00:08.423
      - 0.0

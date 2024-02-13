@@ -146,7 +146,7 @@ Furthermore, we print some stages of the optimization process.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.150 seconds)
+   **Total running time of the script:** (0 minutes 0.153 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_4_callback.py:
