@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,18 +21,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../../../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1020,7 +1020,9 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="AbstractKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.AbstractKernel">[docs]</a><span class="k">class</span> <span class="nc">AbstractKernel</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractKernel">
+<a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.AbstractKernel">[docs]</a>
+<span class="k">class</span> <span class="nc">AbstractKernel</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,</span>
 <span class="sd">    it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the</span>
@@ -1101,7 +1103,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of non-fixed hyperparameters of the kernel.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dims</span>
 
-<div class="viewcode-block" id="AbstractKernel.get_params"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="AbstractKernel.get_params">
+<a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.get_params">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get parameters of this kernel.</span>
 
 <span class="sd">        Parameters</span>
@@ -1132,7 +1136,10 @@
 
         <span class="k">return</span> <span class="n">params</span></div>
 
-<div class="viewcode-block" id="AbstractKernel.__call__"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+
+<div class="viewcode-block" id="AbstractKernel.__call__">
+<a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.__call__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1174,6 +1181,7 @@
                 <span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_len_active</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">rval</span></div>
+
 
     <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
@@ -1269,7 +1277,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_len_active</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="SumKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.SumKernel">[docs]</a><span class="k">class</span> <span class="nc">SumKernel</span><span class="p">(</span><span class="n">AbstractKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SumKernel">
+<a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.SumKernel">[docs]</a>
+<span class="k">class</span> <span class="nc">SumKernel</span><span class="p">(</span><span class="n">AbstractKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sum kernel implementation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -1286,7 +1297,9 @@
             <span class="n">k2</span><span class="o">=</span><span class="n">k2</span><span class="p">,</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="SumKernel.__call__"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.SumKernel.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+<div class="viewcode-block" id="SumKernel.__call__">
+<a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.SumKernel.__call__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1327,10 +1340,14 @@
 
             <span class="k">return</span> <span class="n">K1</span> <span class="o">+</span> <span class="n">K2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">K1_gradient</span><span class="p">,</span> <span class="n">K2_gradient</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="ProductKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ProductKernel">[docs]</a><span class="k">class</span> <span class="nc">ProductKernel</span><span class="p">(</span><span class="n">AbstractKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ProductKernel">
+<a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ProductKernel">[docs]</a>
+<span class="k">class</span> <span class="nc">ProductKernel</span><span class="p">(</span><span class="n">AbstractKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Product kernel implementation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -1347,7 +1364,9 @@
             <span class="n">k2</span><span class="o">=</span><span class="n">k2</span><span class="p">,</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="ProductKernel.__call__"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ProductKernel.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+<div class="viewcode-block" id="ProductKernel.__call__">
+<a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ProductKernel.__call__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1388,10 +1407,14 @@
 
             <span class="k">return</span> <span class="n">K1</span> <span class="o">*</span> <span class="n">K2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">K1_gradient</span> <span class="o">*</span> <span class="n">K2</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">K2_gradient</span> <span class="o">*</span> <span class="n">K1</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="ConstantKernel"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ConstantKernel">[docs]</a><span class="k">class</span> <span class="nc">ConstantKernel</span><span class="p">(</span><span class="n">AbstractKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">ConstantKernel</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ConstantKernel">
+<a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ConstantKernel">[docs]</a>
+<span class="k">class</span> <span class="nc">ConstantKernel</span><span class="p">(</span><span class="n">AbstractKernel</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">ConstantKernel</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">constant_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -1408,7 +1431,9 @@
             <span class="n">constant_value_bounds</span><span class="o">=</span><span class="n">constant_value_bounds</span><span class="p">,</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="ConstantKernel.__call__"><a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ConstantKernel.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+<div class="viewcode-block" id="ConstantKernel.__call__">
+<a class="viewcode-back" href="../../../../../api/smac.model.gaussian_process.kernels.base_kernels.html#smac.model.gaussian_process.kernels.ConstantKernel.__call__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1467,7 +1492,9 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">K</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">K</span></div></div>
+            <span class="k">return</span> <span class="n">K</span></div>
+</div>
+
 </pre></div>
 
               </div>
@@ -1490,7 +1517,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2024, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>
@@ -1499,7 +1526,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Command-Line Interface &#8212; SMAC3 Documentation 2.0.2 documentation</title>
     
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Stopping Criteria" href="7_stopping_criteria.html" />
@@ -1040,7 +1040,7 @@
               <div>
                 
   <section id="command-line-interface">
-<h1>Command-Line Interface<a class="headerlink" href="#command-line-interface" title="Permalink to this heading">¶</a></h1>
+<h1>Command-Line Interface<a class="headerlink" href="#command-line-interface" title="Link to this heading">¶</a></h1>
 <p>The command-line interface enables the user to run target functions which are non-python code.
 The passed and further called script (using <cite>Popen</cite>) needs to return a standard output which is then interpreted
 to perform the optimization process.</p>
@@ -1050,7 +1050,7 @@ to perform the optimization process.</p>
 interface to call SMAC. The command-line interface is still available in SMAC v1.4.</p>
 </div>
 <section id="call-of-the-target-function">
-<h2>Call of the Target Function<a class="headerlink" href="#call-of-the-target-function" title="Permalink to this heading">¶</a></h2>
+<h2>Call of the Target Function<a class="headerlink" href="#call-of-the-target-function" title="Link to this heading">¶</a></h2>
 <p>The following example shows how the script is called:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>filename<span class="w"> </span>--instance<span class="o">=</span><span class="nb">test</span><span class="w"> </span>--instance_features<span class="o">=</span><span class="nb">test</span><span class="w"> </span>--seed<span class="o">=</span><span class="m">0</span><span class="w"> </span>--hyperparameter1<span class="o">=</span><span class="m">5323</span>
 </pre></div>
@@ -1090,7 +1090,7 @@ passed. If no instance feature for the instance is given, an empty list is passe
 </div>
 </section>
 <section id="return-of-the-target-function">
-<h2>Return of the Target Function<a class="headerlink" href="#return-of-the-target-function" title="Permalink to this heading">¶</a></h2>
+<h2>Return of the Target Function<a class="headerlink" href="#return-of-the-target-function" title="Link to this heading">¶</a></h2>
 <p>The script must return an stdout (echo or print) in the following form (white-spaces are ignored):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cost</span><span class="o">=</span><span class="mf">0.5</span><span class="p">;</span> <span class="n">runtime</span><span class="o">=</span><span class="mf">0.01</span><span class="p">;</span> <span class="n">status</span><span class="o">=</span><span class="n">SUCCESS</span><span class="p">;</span> <span class="n">additional_info</span><span class="o">=</span><span class="n">test</span> <span class="p">(</span><span class="n">single</span><span class="o">-</span><span class="n">objective</span><span class="p">)</span>
 <span class="n">cost</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">;</span> <span class="n">runtime</span><span class="o">=</span><span class="mf">0.01</span><span class="p">;</span> <span class="n">status</span><span class="o">=</span><span class="n">SUCCESS</span><span class="p">;</span> <span class="n">additional_info</span><span class="o">=</span><span class="n">test</span> <span class="p">(</span><span class="n">multi</span><span class="o">-</span><span class="n">objective</span><span class="p">)</span>
@@ -1100,7 +1100,7 @@ passed. If no instance feature for the instance is given, an empty list is passe
 one of the values from <a class="reference internal" href="../api/smac.runhistory.enumerations.html#module-smac.runhistory.enumerations"><span class="std std-ref">StatusType</span></a>.</p>
 </section>
 <section id="start-the-optimization">
-<h2>Start the Optimization<a class="headerlink" href="#start-the-optimization" title="Permalink to this heading">¶</a></h2>
+<h2>Start the Optimization<a class="headerlink" href="#start-the-optimization" title="Link to this heading">¶</a></h2>
 <p>The optimization will be started by the normal python interface. The only difference is that you need to pass
 a string as target function instead of a python function.</p>
 <div class="admonition warning">
@@ -1151,7 +1151,7 @@ a string as target function instead of a python function.</p>
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2024, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>
@@ -1160,7 +1160,7 @@ a string as target function instead of a python function.</p>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

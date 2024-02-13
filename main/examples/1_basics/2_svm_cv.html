@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Support Vector Machine with Cross-Validation &#8212; SMAC3 Documentation 2.0.2 documentation</title>
     
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Ask-and-Tell" href="3_ask_and_tell.html" />
@@ -1025,7 +1025,7 @@
 to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="support-vector-machine-with-cross-validation">
-<span id="sphx-glr-examples-1-basics-2-svm-cv-py"></span><h1>Support Vector Machine with Cross-Validation<a class="headerlink" href="#support-vector-machine-with-cross-validation" title="Permalink to this heading">¶</a></h1>
+<span id="sphx-glr-examples-1-basics-2-svm-cv-py"></span><h1>Support Vector Machine with Cross-Validation<a class="headerlink" href="#support-vector-machine-with-cross-validation" title="Link to this heading">¶</a></h1>
 <p>An example of optimizing a simple support vector machine on the IRIS dataset. We use the
 hyperparameter optimization facade, which uses a random forest as its surrogate model. It is able to
 scale to higher evaluation budgets and a higher number of dimensions. Also, you can use mixed data
@@ -1035,20 +1035,20 @@ types as well as conditional hyperparameters.</p>
   config_dict = config.get_dictionary()
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
@@ -1056,1166 +1056,1166 @@ RecursionError: maximum recursion depth exceeded while calling a Python object
 [INFO][abstract_intensifier.py:515] Added config 4ba1ca as new incumbent because there are no incumbents yet.
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/numpy/lib/function_base.py:4655: RuntimeWarning: invalid value encountered in subtract
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/numpy/lib/function_base.py:4655: RuntimeWarning: invalid value encountered in subtract
   diff_b_a = subtract(b, a)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
 /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: `Configuration` act&#39;s like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
   config_dict = config.get_dictionary()
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/numpy/lib/function_base.py:4655: RuntimeWarning: invalid value encountered in subtract
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/numpy/lib/function_base.py:4655: RuntimeWarning: invalid value encountered in subtract
   diff_b_a = subtract(b, a)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
+/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:220: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
 /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: `Configuration` act&#39;s like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
   config_dict = config.get_dictionary()
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
 [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
 [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 184, in run
     rval = self(config_copy, target_function, kwargs)
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py&quot;, line 257, in __call__
     return algorithm(config, **algorithm_kwargs)
   File &quot;/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py&quot;, line 58, in train
     if &quot;gamma&quot; in config:
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 151, in __contains__
     return item in self
-  [Previous line repeated 2970 more times]
-  File &quot;/opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
+  [Previous line repeated 970 more times]
+  File &quot;/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/ConfigSpace/configuration.py&quot;, line 148, in __contains__
     if not isinstance(item, str):
 RecursionError: maximum recursion depth exceeded while calling a Python object
 
@@ -2232,7 +2232,7 @@ Incumbent cost: inf
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Categorical</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Integer</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace.conditions</span> <span class="kn">import</span> <span class="n">InCondition</span>
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">svm</span>
@@ -2322,16 +2322,16 @@ Incumbent cost: inf
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.265 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.787 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-2-svm-cv-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/2_svm_cv.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
 </div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/7543c6c00a01b61aefff0a6414c7ac77/2_svm_cv.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_svm_cv.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/982e8b26a84f3a0f71dc5c9cdef99865/2_svm_cv.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">2_svm_cv.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/7543c6c00a01b61aefff0a6414c7ac77/2_svm_cv.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_svm_cv.py</span></code></a></p>
 </div>
 </div>
 </section>
@@ -2371,7 +2371,7 @@ Incumbent cost: inf
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2024, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>
@@ -2380,7 +2380,7 @@ Incumbent cost: inf
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

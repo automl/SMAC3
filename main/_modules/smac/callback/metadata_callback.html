@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,18 +21,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1017,12 +1017,16 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="MetadataCallback"><a class="viewcode-back" href="../../../api/smac.callback.metadata_callback.html#smac.callback.MetadataCallback">[docs]</a><span class="k">class</span> <span class="nc">MetadataCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+<div class="viewcode-block" id="MetadataCallback">
+<a class="viewcode-back" href="../../../api/smac.callback.metadata_callback.html#smac.callback.MetadataCallback">[docs]</a>
+<span class="k">class</span> <span class="nc">MetadataCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Arguments must be json serializable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
 
-<div class="viewcode-block" id="MetadataCallback.on_start"><a class="viewcode-back" href="../../../api/smac.callback.metadata_callback.html#smac.callback.MetadataCallback.on_start">[docs]</a>    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="MetadataCallback.on_start">
+<a class="viewcode-back" href="../../../api/smac.callback.metadata_callback.html#smac.callback.MetadataCallback.on_start">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called before the optimization starts.&quot;&quot;&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">smbo</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span>
         <span class="n">meta_dict</span> <span class="o">=</span> <span class="p">{</span>
@@ -1036,7 +1040,9 @@
         <span class="n">path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;metadata.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">meta_dict</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div></div>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">meta_dict</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
               </div>
@@ -1059,7 +1065,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2024, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>
@@ -1068,7 +1074,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

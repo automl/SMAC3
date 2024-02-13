@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,18 +21,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1020,7 +1020,9 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="LCB"><a class="viewcode-back" href="../../../../api/smac.acquisition.function.confidence_bound.html#smac.acquisition.function.LCB">[docs]</a><span class="k">class</span> <span class="nc">LCB</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
+<div class="viewcode-block" id="LCB">
+<a class="viewcode-back" href="../../../../api/smac.acquisition.function.confidence_bound.html#smac.acquisition.function.LCB">[docs]</a>
+<span class="k">class</span> <span class="nc">LCB</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes the lower confidence bound for a given x over the best so far value as acquisition value.</span>
 
 <span class="sd">    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_</span>
@@ -1109,6 +1111,7 @@
         <span class="n">beta_t</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_data</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_beta</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="o">-</span><span class="p">(</span><span class="n">m</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">beta_t</span><span class="p">)</span> <span class="o">*</span> <span class="n">std</span><span class="p">)</span></div>
+
 </pre></div>
 
               </div>
@@ -1131,7 +1134,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2024, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>
@@ -1140,7 +1143,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

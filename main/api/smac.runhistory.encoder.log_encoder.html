@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>smac.runhistory.encoder.log_encoder &#8212; SMAC3 Documentation 2.0.2 documentation</title>
     
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.runhistory.encoder.log_scaled_encoder" href="smac.runhistory.encoder.log_scaled_encoder.html" />
@@ -1057,9 +1057,9 @@
               <div>
                 
   <section id="module-smac.runhistory.encoder.log_encoder">
-<span id="smac-runhistory-encoder-log-encoder"></span><h1>smac.runhistory.encoder.log_encoder<a class="headerlink" href="#module-smac.runhistory.encoder.log_encoder" title="Permalink to this heading">¶</a></h1>
+<span id="smac-runhistory-encoder-log-encoder"></span><h1>smac.runhistory.encoder.log_encoder<a class="headerlink" href="#module-smac.runhistory.encoder.log_encoder" title="Link to this heading">¶</a></h1>
 <section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.runhistory.encoder.log_encoder.RunHistoryLogEncoder" title="smac.runhistory.encoder.log_encoder.RunHistoryLogEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunHistoryLogEncoder</span></code></a>(scenario[, ...])</p></td>
@@ -1069,18 +1069,18 @@
 </table>
 </section>
 <section id="interfaces">
-<h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
+<h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.log_encoder.RunHistoryLogEncoder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.log_encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryLogEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario,</span> <span class="pre">considered_states=[&lt;StatusType.SUCCESS:</span> <span class="pre">1&gt;,</span> <span class="pre">&lt;StatusType.CRASHED:</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;StatusType.MEMORYOUT:</span> <span class="pre">4&gt;],</span> <span class="pre">lower_budget_states=[],</span> <span class="pre">scale_percentage=5,</span> <span class="pre">seed=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/log_encoder.html#RunHistoryLogEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.log_encoder.RunHistoryLogEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.log_encoder.</span></span><span class="sig-name descname"><span class="pre">RunHistoryLogEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">considered_states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[StatusType.SUCCESS,</span> <span class="pre">StatusType.CRASHED,</span> <span class="pre">StatusType.MEMORYOUT]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_budget_states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/log_encoder.html#RunHistoryLogEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.log_encoder.RunHistoryLogEncoder" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.runhistory.encoder.encoder.html#smac.runhistory.encoder.encoder.RunHistoryEncoder" title="smac.runhistory.encoder.encoder.RunHistoryEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistoryEncoder</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.log_encoder.RunHistoryLogEncoder.transform_response_values">
-<span class="sig-name descname"><span class="pre">transform_response_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/log_encoder.html#RunHistoryLogEncoder.transform_response_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.log_encoder.RunHistoryLogEncoder.transform_response_values" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">transform_response_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/log_encoder.html#RunHistoryLogEncoder.transform_response_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.log_encoder.RunHistoryLogEncoder.transform_response_values" title="Link to this definition">¶</a></dt>
 <dd><p>Transforms the response values by using log.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1125,7 +1125,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2024, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>
@@ -1134,7 +1134,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

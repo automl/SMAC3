@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Getting Started &#8212; SMAC3 Documentation 2.0.2 documentation</title>
     
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=88c4da33"></script>
+    <script src="_static/documentation_options.js?v=f0042b85"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Minimal Example" href="4_minimal_example.html" />
@@ -1045,13 +1045,13 @@
               <div>
                 
   <section id="getting-started">
-<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h1>
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
 <p>SMAC needs four core components (configuration space, target function, scenario and a facade) to run an
 optimization process, all of which are explained on this page.</p>
 <p>They interact in the following way:</p>
 <a class="reference internal image-reference" href="_images/smac_components_interaction.jpg"><img alt="Interaction of SMAC's components" src="_images/smac_components_interaction.jpg" style="width: 400px;" /></a>
 <section id="configuration-space">
-<h2>Configuration Space<a class="headerlink" href="#configuration-space" title="Permalink to this heading">¶</a></h2>
+<h2>Configuration Space<a class="headerlink" href="#configuration-space" title="Link to this heading">¶</a></h2>
 <p>The configuration space defines the search space of the hyperparameters and, therefore, the tunable parameters’ legal
 ranges and default values.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">ConfigSpace</span>
@@ -1066,7 +1066,7 @@ ranges and default values.</p>
 <p>Please see the documentation of <a class="reference external" href="https://automl.github.io/ConfigSpace/main/">ConfigSpace</a> for more details.</p>
 </section>
 <section id="target-function">
-<h2>Target Function<a class="headerlink" href="#target-function" title="Permalink to this heading">¶</a></h2>
+<h2>Target Function<a class="headerlink" href="#target-function" title="Link to this heading">¶</a></h2>
 <p>The target function takes a configuration from the configuration space and returns a performance value.
 For example, you could use a Neural Network to predict on your data and get some validation performance.
 If, for instance, you would tune the learning rate of the Network’s optimizer, every learning rate will
@@ -1100,7 +1100,7 @@ used.</p>
 </div>
 </section>
 <section id="scenario">
-<h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this heading">¶</a></h2>
+<h2>Scenario<a class="headerlink" href="#scenario" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="api/smac.scenario.html#module-smac.scenario"><span class="std std-ref">Scenario</span></a> is used to provide environment variables. For example,
 if you want to limit the optimization process by a time limit or want to specify where to save the results.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">smac</span> <span class="kn">import</span> <span class="n">Scenario</span>
@@ -1117,7 +1117,7 @@ if you want to limit the optimization process by a time limit or want to specify
 </div>
 </section>
 <section id="facade">
-<h2>Facade<a class="headerlink" href="#facade" title="Permalink to this heading">¶</a></h2>
+<h2>Facade<a class="headerlink" href="#facade" title="Link to this heading">¶</a></h2>
 <p>A <a class="reference internal" href="api/smac.facade.html#module-smac.facade"><span class="std std-ref">facade</span></a> is the entry point to SMAC, which constructs a default optimization
 pipeline for you. SMAC offers various facades, which satisfy many common use cases and are crucial to
 achieving peak performance. The idea behind the facades is to provide a simple interface to all of SMAC’s components,
@@ -1292,7 +1292,7 @@ to previous versions, instantiated objects are passed instead of <em>kwargs</em>
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2024, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>
@@ -1301,7 +1301,7 @@ to previous versions, instantiated objects are passed instead of <em>kwargs</em>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

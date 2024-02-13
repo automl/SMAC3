@@ -57,7 +57,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 |
 
-.. code-block:: default
+.. code-block:: Python
 
 
     from ConfigSpace import Configuration, ConfigurationSpace, Float
@@ -138,7 +138,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.879 seconds)
+   **Total running time of the script:** (0 minutes 2.664 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_ask_and_tell.py:
@@ -147,7 +147,6 @@ This examples show how to use the Ask-and-Tell interface.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
-
     .. container:: binder-badge
 
       .. image:: images/binder_badge_logo.svg
@@ -155,12 +154,10 @@ This examples show how to use the Ask-and-Tell interface.
         :alt: Launch binder
         :width: 150 px
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: 3_ask_and_tell.ipynb <3_ask_and_tell.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 3_ask_and_tell.py <3_ask_and_tell.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: 3_ask_and_tell.ipynb <3_ask_and_tell.ipynb>`

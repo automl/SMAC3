@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>smac.runner.dask_runner &#8212; SMAC3 Documentation 2.0.2 documentation</title>
     
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.runner.exceptions" href="smac.runner.exceptions.html" />
@@ -1120,9 +1120,9 @@
               <div>
                 
   <section id="module-smac.runner.dask_runner">
-<span id="smac-runner-dask-runner"></span><h1>smac.runner.dask_runner<a class="headerlink" href="#module-smac.runner.dask_runner" title="Permalink to this heading">¶</a></h1>
+<span id="smac-runner-dask-runner"></span><h1>smac.runner.dask_runner<a class="headerlink" href="#module-smac.runner.dask_runner" title="Link to this heading">¶</a></h1>
 <section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.runner.dask_runner.DaskParallelRunner" title="smac.runner.dask_runner.DaskParallelRunner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DaskParallelRunner</span></code></a>(single_worker[, ...])</p></td>
@@ -1132,10 +1132,10 @@
 </table>
 </section>
 <section id="interfaces">
-<h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading">¶</a></h2>
+<h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.dask_runner.</span></span><span class="sig-name descname"><span class="pre">DaskParallelRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">single_worker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dask_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runner.dask_runner.</span></span><span class="sig-name descname"><span class="pre">DaskParallelRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">single_worker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dask_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.runner.abstract_runner.html#smac.runner.abstract_runner.AbstractRunner" title="smac.runner.abstract_runner.AbstractRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractRunner</span></code></a></p>
 <p>Interface to submit and collect a job in a distributed fashion. DaskParallelRunner is
 intended to comply with the bridge design pattern. Nevertheless, to reduce the amount of code
@@ -1170,55 +1170,55 @@ be closed automatically and will have to be closed manually if provided explicit
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.__del__">
-<span class="sig-name descname"><span class="pre">__del__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.__del__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.__del__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__del__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.__del__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.__del__" title="Link to this definition">¶</a></dt>
 <dd><p>Makes sure that when this object gets deleted, the client is terminated. This
 is only done if the client was created by the dask runner.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.close" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.close" title="Link to this definition">¶</a></dt>
 <dd><p>Closes the client.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.count_available_workers">
-<span class="sig-name descname"><span class="pre">count_available_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.count_available_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.count_available_workers" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">count_available_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.count_available_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.count_available_workers" title="Link to this definition">¶</a></dt>
 <dd><p>Total number of workers available. This number is dynamic as more resources
 can be allocated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.is_running">
-<span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.is_running"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.is_running" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.is_running"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.is_running" title="Link to this definition">¶</a></dt>
 <dd><p>Whether there are trials still running.</p>
 <p>Generally, if the runner is serial, launching a trial instantly returns its result. On
 parallel runners, there might be pending configurations to complete.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.iter_results">
-<span class="sig-name descname"><span class="pre">iter_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.iter_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.iter_results" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">iter_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.iter_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.iter_results" title="Link to this definition">¶</a></dt>
 <dd><p>This method returns any finished configuration, and returns a list with the
 results of executing the configurations. This class keeps populating results
 to <code class="docutils literal notranslate"><span class="pre">self._results_queue</span></code> until a call to <code class="docutils literal notranslate"><span class="pre">get_finished</span></code> trials is done. In this case,
@@ -1236,7 +1236,7 @@ the <cite>self._results_queue</cite> list is emptied and all trial values produc
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dask_data_to_scatter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.run" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dask_data_to_scatter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.run" title="Link to this definition">¶</a></dt>
 <dd><p>Runs the target function with a configuration on a single instance-budget-seed
 combination (aka trial).</p>
 <dl class="field-list simple">
@@ -1250,7 +1250,7 @@ handled by the target function internally.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="smac.runhistory.enumerations.html#smac.runhistory.enumerations.StatusType" title="smac.runhistory.enumerations.StatusType"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatusType</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<a class="reference internal" href="smac.runhistory.enumerations.html#smac.runhistory.enumerations.StatusType" title="smac.runhistory.enumerations.StatusType"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatusType</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
@@ -1266,7 +1266,7 @@ handled by the target function internally.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.submit_trial">
-<span class="sig-name descname"><span class="pre">submit_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dask_data_to_scatter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.submit_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.submit_trial" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">submit_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial_info</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dask_data_to_scatter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.submit_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.submit_trial" title="Link to this definition">¶</a></dt>
 <dd><p>This function submits a configuration embedded in a <code class="docutils literal notranslate"><span class="pre">trial_info</span></code> object, and uses one of
 the workers to produce a result locally to each worker.</p>
 <p>The execution of a configuration follows this procedure:</p>
@@ -1290,18 +1290,18 @@ this argument is very useful.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runner.dask_runner.DaskParallelRunner.wait">
-<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.wait" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runner/dask_runner.html#DaskParallelRunner.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runner.dask_runner.DaskParallelRunner.wait" title="Link to this definition">¶</a></dt>
 <dd><p>The SMBO/intensifier might need to wait for trials to finish before making a decision.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1346,7 +1346,7 @@ this argument is very useful.</p></li>
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2024, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>
@@ -1355,7 +1355,7 @@ this argument is very useful.</p></li>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

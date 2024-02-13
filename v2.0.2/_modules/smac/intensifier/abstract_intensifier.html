@@ -1613,12 +1613,8 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_incumbents</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_incumbents</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">previous_incumbents</span> <span class="o">==</span> <span class="n">new_incumbents</span><span class="p">:</span>
-                <span class="c1"># No changes in the incumbents, we need this clause because we can&#39;t use set difference then</span>
-                <span class="k">if</span> <span class="n">config_id</span> <span class="ow">in</span> <span class="n">new_incumbent_ids</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_remove_rejected_config</span><span class="p">(</span><span class="n">config_id</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># config worse than incumbents and thus rejected</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_rejected_config</span><span class="p">(</span><span class="n">config_id</span><span class="p">)</span>
+                <span class="c1"># No changes in the incumbents</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_remove_rejected_config</span><span class="p">(</span><span class="n">config_id</span><span class="p">)</span>
                 <span class="k">return</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># In this case, we have to determine which config replaced which incumbent and reject it</span>

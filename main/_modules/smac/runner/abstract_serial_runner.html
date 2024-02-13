@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,18 +21,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=88c4da33"></script>
+    <script src="../../../_static/documentation_options.js?v=f0042b85"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1011,8 +1011,12 @@
 <span class="kn">from</span> <span class="nn">smac.runner.abstract_runner</span> <span class="kn">import</span> <span class="n">AbstractRunner</span>
 
 
-<div class="viewcode-block" id="AbstractSerialRunner"><a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner">[docs]</a><span class="k">class</span> <span class="nc">AbstractSerialRunner</span><span class="p">(</span><span class="n">AbstractRunner</span><span class="p">):</span>
-<div class="viewcode-block" id="AbstractSerialRunner.submit_trial"><a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.submit_trial">[docs]</a>    <span class="k">def</span> <span class="nf">submit_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractSerialRunner">
+<a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner">[docs]</a>
+<span class="k">class</span> <span class="nc">AbstractSerialRunner</span><span class="p">(</span><span class="n">AbstractRunner</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractSerialRunner.submit_trial">
+<a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.submit_trial">[docs]</a>
+    <span class="k">def</span> <span class="nf">submit_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This function submits a trial_info object in a serial fashion. As there is a single</span>
 <span class="sd">         worker for this task, this interface can be considered a wrapper over the `run` method.</span>
 
@@ -1026,11 +1030,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_results_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_wrapper</span><span class="p">(</span><span class="n">trial_info</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="AbstractSerialRunner.iter_results"><a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.iter_results">[docs]</a>    <span class="k">def</span> <span class="nf">iter_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]]:</span>  <span class="c1"># noqa: D102</span>
+
+<div class="viewcode-block" id="AbstractSerialRunner.iter_results">
+<a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.iter_results">[docs]</a>
+    <span class="k">def</span> <span class="nf">iter_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]]:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_results_queue</span><span class="p">:</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_results_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractSerialRunner.wait"><a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.wait">[docs]</a>    <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="AbstractSerialRunner.wait">
+<a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.wait">[docs]</a>
+    <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The SMBO/intensifier might need to wait for trials to finish before making a decision.</span>
 <span class="sd">        For serial runners, no wait is needed as the result is immediately available.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1040,12 +1050,20 @@
         <span class="c1"># abstract method via a simple return, again, because there is no need to wait</span>
         <span class="k">return</span></div>
 
-<div class="viewcode-block" id="AbstractSerialRunner.is_running"><a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.is_running">[docs]</a>    <span class="k">def</span> <span class="nf">is_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+
+<div class="viewcode-block" id="AbstractSerialRunner.is_running">
+<a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.is_running">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="AbstractSerialRunner.count_available_workers"><a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.count_available_workers">[docs]</a>    <span class="k">def</span> <span class="nf">count_available_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+<div class="viewcode-block" id="AbstractSerialRunner.count_available_workers">
+<a class="viewcode-back" href="../../../api/smac.runner.abstract_serial_runner.html#smac.runner.abstract_serial_runner.AbstractSerialRunner.count_available_workers">[docs]</a>
+    <span class="k">def</span> <span class="nf">count_available_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of available workers. Serial workers only have one worker.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mi">1</span></div></div>
+        <span class="k">return</span> <span class="mi">1</span></div>
+</div>
+
 </pre></div>
 
               </div>
@@ -1068,7 +1086,7 @@
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2024, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>
@@ -1077,7 +1095,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

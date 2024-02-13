@@ -79,7 +79,7 @@ there already is a previous run with the same meta data, this run will be contin
 
 |
 
-.. code-block:: default
+.. code-block:: Python
 
 
     from __future__ import annotations
@@ -170,7 +170,7 @@ there already is a previous run with the same meta data, this run will be contin
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.457 seconds)
+   **Total running time of the script:** (0 minutes 0.799 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_continue.py:
@@ -179,7 +179,6 @@ there already is a previous run with the same meta data, this run will be contin
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
-
     .. container:: binder-badge
 
       .. image:: images/binder_badge_logo.svg
@@ -187,12 +186,10 @@ there already is a previous run with the same meta data, this run will be contin
         :alt: Launch binder
         :width: 150 px
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: 5_continue.ipynb <5_continue.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 5_continue.py <5_continue.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: 5_continue.ipynb <5_continue.ipynb>`

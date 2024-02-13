@@ -1011,7 +1011,6 @@
 <span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">CategoricalHyperparameter</span><span class="p">,</span>
     <span class="n">Constant</span><span class="p">,</span>
-    <span class="n">OrdinalHyperparameter</span><span class="p">,</span>
     <span class="n">UniformFloatHyperparameter</span><span class="p">,</span>
     <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1044,14 +1043,12 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_conditional</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hp</span><span class="p">,</span> <span class="n">CategoricalHyperparameter</span><span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_impute_values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">choices</span><span class="p">)</span>
-                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hp</span><span class="p">,</span> <span class="n">OrdinalHyperparameter</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_impute_values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
                     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hp</span><span class="p">,</span> <span class="p">(</span><span class="n">UniformFloatHyperparameter</span><span class="p">,</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">)):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_impute_values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
                     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hp</span><span class="p">,</span> <span class="n">Constant</span><span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_impute_values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported hyperparameter type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">hp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conditional</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">nonfinite_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">])</span>

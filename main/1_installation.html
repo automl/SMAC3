@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Installation &#8212; SMAC3 Documentation 2.0.2 documentation</title>
     
@@ -22,18 +22,18 @@
       
 
     
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=2eb4fb78" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=88c4da33"></script>
+    <script src="_static/documentation_options.js?v=f0042b85"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Package Overview" href="2_package_overview.html" />
@@ -1045,9 +1045,9 @@
               <div>
                 
   <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h1>
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
 <section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">¶</a></h2>
 <p>SMAC is written in python3 and therefore requires an environment with python&gt;=3.8.
 Furthermore, the Random Forest used in SMAC requires SWIG as a build dependency. Install it either in your
 environment or on your system directly. The command to install swig on linux machines is the following:</p>
@@ -1057,7 +1057,7 @@ environment or on your system directly. The command to install swig on linux mac
 <p>SMAC is tested on Linux and Mac machines with python 3.8, 3.9 and 3.10.</p>
 </section>
 <section id="anaconda">
-<h2>Anaconda<a class="headerlink" href="#anaconda" title="Permalink to this heading">¶</a></h2>
+<h2>Anaconda<a class="headerlink" href="#anaconda" title="Link to this heading">¶</a></h2>
 <p>We recommend using Anaconda to create and activate an environment:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">SMAC</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.10</span>
 <span class="n">conda</span> <span class="n">activate</span> <span class="n">SMAC</span>
@@ -1078,7 +1078,7 @@ environment or on your system directly. The command to install swig on linux mac
 </div>
 </section>
 <section id="conda-forge">
-<h2>Conda-forge<a class="headerlink" href="#conda-forge" title="Permalink to this heading">¶</a></h2>
+<h2>Conda-forge<a class="headerlink" href="#conda-forge" title="Link to this heading">¶</a></h2>
 <p>Installing SMAC from the <cite>conda-forge</cite> channel can be achieved by adding <cite>conda-forge</cite> to your channels with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
 conda<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>channel_priority<span class="w"> </span>strict
@@ -1091,7 +1091,7 @@ conda<span class="w"> </span>config<span class="w"> </span>--set<span class="w">
 <p>Read <a class="reference external" href="https://github.com/conda-forge/smac-feedstock">SMAC feedstock</a> for more details.</p>
 </section>
 <section id="windows-via-wsl-experimental">
-<h2>Windows via WSL (Experimental)<a class="headerlink" href="#windows-via-wsl-experimental" title="Permalink to this heading">¶</a></h2>
+<h2>Windows via WSL (Experimental)<a class="headerlink" href="#windows-via-wsl-experimental" title="Link to this heading">¶</a></h2>
 <p>SMAC can be installed under Windows in a WSL (Windows Subsystem for Linux).
 You can find an instruction on how to do this here: <a class="reference internal" href="10_experimental.html#experimental"><span class="std std-ref">Experimental</span></a>.
 However, this is experimental and might not work in each case.
@@ -1134,7 +1134,7 @@ If you would like to suggest any changes, please let us know.</p>
     <div class="footer-item">
       <p class="copyright">
     &copy; Copyright 
-    Copyright 2023, Marius Lindauer, Katharina Eggensperger,
+    Copyright 2024, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter.<br>
 </p>
@@ -1143,7 +1143,7 @@ If you would like to suggest any changes, please let us know.</p>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.1.1. Template is modified version of <a
+7.2.6. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>
