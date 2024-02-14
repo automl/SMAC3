@@ -190,5 +190,8 @@ class MultiFidelityStoppingCallback:
                 ]
 
             # predict the mean of the variance for the 5 forests
-            predictions = np.sum([forest.predict(x) for forest in forests]) / self._statistical_error_num_forests
+            predictions = (
+                np.sum(np.array([forest.predict(x) for forest in forests]), axis=0)
+                / self._statistical_error_num_forests
+            )
             return np.mean(predictions[:selected_amount])
