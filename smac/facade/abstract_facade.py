@@ -290,7 +290,23 @@ class AbstractFacade:
             Whether the runhistory should be saved.
         """
         return self._optimizer.tell(info, value, save=save)
+    
+    def warmstarting(self, infos, values, save: bool = True) -> None:
+        """Adds the result of a list of trials to the runhistory and updates the intensifier.
 
+        Arguments:
+            infos (List TrialInfo): A list of Trial Info which describes the trials from which to process the results.
+            values (List float): A list containing per item the relevant information regarding the execution of a trial.
+            save (bool, optional): Whether the runhistory should be saved. Defaults to True.
+        """
+        # Check length of info is same as Values
+        if(len(infos)!=len(values)):
+            raise ValueError('Not matching lenght, the lenght of Info list must match the values list')
+        trialValues = [TrialValue(cost=cost) for cost in values]
+        # Use the tell interface to the optimizer
+        for i in range(len(infos)):
+            self._optimizer.tell(info=infos[i], value=trialValues[i], save=save)
+            
     def optimize(self, *, data_to_scatter: dict[str, Any] | None = None) -> Configuration | list[Configuration]:
         """
         Optimizes the configuration of the algorithm.
