@@ -134,38 +134,36 @@ class AbstractGaussianProcess(AbstractModel):
                 continue
             elif isinstance(current_param, Kernel):
                 hps = current_param.hyperparameters
-                assert len(hps) == 1
+                for hp in hps:
+                    if hp.fixed:
+                        continue
 
-                hp = hps[0]
-                if hp.fixed:
-                    continue
+                    bounds = hps[0].bounds
+                    for i in range(hps[0].n_elements):
+                        priors_for_hp = []
 
-                bounds = hps[0].bounds
-                for i in range(hps[0].n_elements):
-                    priors_for_hp = []
+                        if current_param.prior is not None:
+                            priors_for_hp.append(current_param.prior)
 
-                    if current_param.prior is not None:
-                        priors_for_hp.append(current_param.prior)
-
-                    if add_bound_priors:
-                        if add_soft_bounds:
-                            priors_for_hp.append(
-                                SoftTopHatPrior(
-                                    lower_bound=bounds[i][0],
-                                    upper_bound=bounds[i][1],
-                                    seed=self._rng.randint(0, 2**20),
-                                    exponent=2,
+                        if add_bound_priors:
+                            if add_soft_bounds:
+                                priors_for_hp.append(
+                                    SoftTopHatPrior(
+                                        lower_bound=bounds[i][0],
+                                        upper_bound=bounds[i][1],
+                                        seed=self._rng.randint(0, 2**20),
+                                        exponent=2,
+                                    )
                                 )
-                            )
-                        else:
-                            priors_for_hp.append(
-                                TophatPrior(
-                                    lower_bound=bounds[i][0],
-                                    upper_bound=bounds[i][1],
-                                    seed=self._rng.randint(0, 2**20),
+                            else:
+                                priors_for_hp.append(
+                                    TophatPrior(
+                                        lower_bound=bounds[i][0],
+                                        upper_bound=bounds[i][1],
+                                        seed=self._rng.randint(0, 2**20),
+                                    )
                                 )
-                            )
-                    all_priors.append(priors_for_hp)
+                        all_priors.append(priors_for_hp)
 
         return all_priors
 
