@@ -4,14 +4,23 @@
 - Fix path for dask scheduler file (#1055).
 - Add OrdinalHyperparameter for random forest imputer (#1065).
 - Don't use mutable default argument (#1067).
+- Propagate the Scenario random seed to `get_random_design` (#1066).
 - Configurations that fail to become incumbents will be added to the rejected lists (#1069).
+- SMAC RandomForest doesn't crash when `np.integer` used, i.e. as generated from a `np.random.RandomState` (#1084).
+
+## Misc
+- ci: Update action version (#1072).
+
+## Minor
+- When a custom dask client is provided, emit the warning that the `n_workers` parameter is ignored only if it deviates from its default value, `1` ([#1071](https://github.com/automl/SMAC3/pull/1071)).
 
 # 2.0.2
 
 ## Improvements
-- Add an error when we get an empty dict data_to_scatter so that we can avoid an internal error caused in Dask precautiously
+- Add an error when we get an empty dict data_to_scatter so that we can avoid an internal error caused in Dask precautiously.
 - Add experimental instruction for installing SMAC in Windows via a WSL.
 - More detailed documentation regarding continuing runs.
+- Add a new example that demonstrates the use of intensification to speed up cross-validation for machine learning.
 
 ## Bugfixes
 - Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).
