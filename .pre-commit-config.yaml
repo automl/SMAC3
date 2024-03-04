@@ -44,7 +44,8 @@ repos:
         files: smac
         exclude: "scripts|tests"
 
-  - repo: local
+  - repo: https://github.com/pylint-dev/pylint
+    rev: v3.1.0
     hooks:
       - id: pylint
         name: pylint
