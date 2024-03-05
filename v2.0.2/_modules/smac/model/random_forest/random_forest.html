@@ -1094,7 +1094,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_rf_opts</span><span class="o">.</span><span class="n">compute_law_of_total_variance</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rf</span><span class="p">:</span> <span class="n">BinaryForest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log_y</span> <span class="o">=</span> <span class="n">log_y</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span> <span class="o">=</span> <span class="n">regression</span><span class="o">.</span><span class="n">default_random_engine</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="c1"># Case to `int` incase we get an `np.integer` type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span> <span class="o">=</span> <span class="n">regression</span><span class="o">.</span><span class="n">default_random_engine</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_trees</span> <span class="o">=</span> <span class="n">n_trees</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_points_per_tree</span> <span class="o">=</span> <span class="n">n_points_per_tree</span>
