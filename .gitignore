@@ -148,3 +148,7 @@ src
 # Pycharm
 .idea
 .vscode
+
+tmp
+hydra-*
+wandb

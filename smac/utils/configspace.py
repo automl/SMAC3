@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import logging
 from functools import partial
+from typing import Iterable
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
@@ -26,12 +27,12 @@ __license__ = "3-clause BSD"
 get_one_exchange_neighbourhood = partial(get_one_exchange_neighbourhood, stdev=0.05, num_neighbors=8)
 
 
-def convert_configurations_to_array(configs: list[Configuration]) -> np.ndarray:
+def convert_configurations_to_array(configs: Iterable[Configuration]) -> np.ndarray:
     """Impute inactive hyperparameters in configurations with their default.
 
     Parameters
     ----------
-    configs : List[Configuration]
+    configs : Iterable[Configuration]
         List of configuration objects.
 
     Returns

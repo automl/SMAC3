@@ -82,6 +82,14 @@ class AbstractModel:
         # Initial types array which is used to reset the type array at every call to `self.train()`
         self._initial_types = copy.deepcopy(self._types)
 
+        # Variable indicating whether the model has been trained
+        self._fitted = False
+
+    @property
+    def fitted(self) -> bool:
+        """Returns whether the model has been fitted."""
+        return self._fitted
+
     @property
     def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -149,7 +157,10 @@ class AbstractModel:
             if hasattr(self, "_types"):
                 self._types = copy.deepcopy(self._initial_types)
 
-        return self._train(X, Y)
+        result = self._train(X, Y)
+        self._fitted = True
+
+        return result
 
     @abstractmethod
     def _train(self: Self, X: np.ndarray, Y: np.ndarray) -> Self:

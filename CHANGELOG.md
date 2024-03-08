@@ -15,6 +15,11 @@
 
 # 2.0.2
 
+
+## Features
+- Add Upper Confidence Bound as an acquisition function
+- Add Stopping Criterion Callback
+
 ## Improvements
 - Add an error when we get an empty dict data_to_scatter so that we can avoid an internal error caused in Dask precautiously.
 - Add experimental instruction for installing SMAC in Windows via a WSL.
@@ -67,7 +72,6 @@
 
 ## Misc
 - Added benchmarking procedure to compare to previous releases.
-
 
 # 2.0.0b1
 

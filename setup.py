@@ -39,6 +39,9 @@ extras_require = {
         "flake8",
         "pre-commit",
     ],
+    "wandb": [
+        "wandb",
+    ]
 }
 
 setuptools.setup(

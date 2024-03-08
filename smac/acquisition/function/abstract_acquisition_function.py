@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any
+from typing import Any, Iterable
 
 import numpy as np
 from ConfigSpace import Configuration
@@ -71,18 +71,18 @@ class AbstractAcquisitionFunction:
         """
         pass
 
-    def __call__(self, configurations: list[Configuration]) -> np.ndarray:
+    def __call__(self, configurations: Iterable[Configuration]) -> np.ndarray:
         """Compute the acquisition value for a given configuration.
 
         Parameters
         ----------
-        configurations : list[Configuration]
+        configurations : Iterable[Configuration]
             The configurations where the acquisition function should be evaluated.
 
         Returns
         -------
-        np.ndarray [N, 1]
-            Acquisition values for X
+        np.ndarray
+            Acquisition values for X; shape [N, 1]
         """
         X = convert_configurations_to_array(configurations)
         if len(X.shape) == 1:
@@ -108,7 +108,7 @@ class AbstractAcquisitionFunction:
 
         Returns
         -------
-        np.ndarray [N,1]
-            Acquisition function values wrt X.
+        np.ndarray
+            Acquisition function values wrt X; shape [N, 1].
         """
         raise NotImplementedError
