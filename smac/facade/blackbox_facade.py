@@ -240,7 +240,7 @@ class BlackBoxFacade(AbstractFacade):
         n_configs: int | None = None,
         n_configs_per_hyperparamter: int = 8,
         max_ratio: float = 0.25,
-        additional_configs: list[Configuration] = [],
+        additional_configs: list[Configuration] = None,
     ) -> SobolInitialDesign:
         """Returns a Sobol design instance.
 
@@ -259,6 +259,8 @@ class BlackBoxFacade(AbstractFacade):
         additional_configs: list[Configuration], defaults to []
             Adds additional configurations to the initial design.
         """
+        if additional_configs is None:
+            additional_configs = []
         return SobolInitialDesign(
             scenario=scenario,
             n_configs=n_configs,

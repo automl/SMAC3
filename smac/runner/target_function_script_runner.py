@@ -51,8 +51,10 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         self,
         target_function: str,
         scenario: Scenario,
-        required_arguments: list[str] = [],
+        required_arguments: list[str] = None,
     ):
+        if required_arguments is None:
+            required_arguments = []
         super().__init__(scenario=scenario, required_arguments=required_arguments)
         self._target_function = target_function
 

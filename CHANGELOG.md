@@ -3,6 +3,7 @@
 ## Bugfixes
 - Fix path for dask scheduler file (#1055).
 - Add OrdinalHyperparameter for random forest imputer (#1065).
+- Don't use mutable default argument (#1067).
 - Propagate the Scenario random seed to `get_random_design` (#1066).
 - Configurations that fail to become incumbents will be added to the rejected lists (#1069).
 - SMAC RandomForest doesn't crash when `np.integer` used, i.e. as generated from a `np.random.RandomState` (#1084).

@@ -42,17 +42,17 @@ class AbstractRunHistoryEncoder:
     def __init__(
         self,
         scenario: Scenario,
-        considered_states: list[StatusType] = [
-            StatusType.SUCCESS,
-            StatusType.CRASHED,
-            StatusType.MEMORYOUT,
-        ],
-        lower_budget_states: list[StatusType] = [],
+        considered_states: list[StatusType] = None,
+        lower_budget_states: list[StatusType] = None,
         scale_percentage: int = 5,
         seed: int | None = None,
     ) -> None:
         if considered_states is None:
-            raise TypeError("No success states are given.")
+            considered_states = [
+                StatusType.SUCCESS,
+                StatusType.CRASHED,
+                StatusType.MEMORYOUT,
+            ]
 
         if seed is None:
             seed = scenario.seed
@@ -62,7 +62,7 @@ class AbstractRunHistoryEncoder:
         self._scale_percentage = scale_percentage
         self._n_objectives = scenario.count_objectives()
         self._algorithm_walltime_limit = scenario.trial_walltime_limit
-        self._lower_budget_states = lower_budget_states
+        self._lower_budget_states = lower_budget_states if lower_budget_states is not None else []
         self._considered_states = considered_states
 
         self._instances = scenario.instances

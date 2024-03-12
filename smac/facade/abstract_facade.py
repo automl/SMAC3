@@ -117,11 +117,14 @@ class AbstractFacade:
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
         logging_level: int | Path | Literal[False] | None = None,
-        callbacks: list[Callback] = [],
+        callbacks: list[Callback] = None,
         overwrite: bool = False,
         dask_client: Client | None = None,
     ):
         setup_logging(logging_level)
+
+        if callbacks is None:
+            callbacks = []
 
         if model is None:
             model = self.get_model(scenario)
