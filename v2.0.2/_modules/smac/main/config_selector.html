@@ -1098,7 +1098,7 @@
         <span class="n">acquisition_maximizer</span><span class="p">:</span> <span class="n">AbstractAcquisitionMaximizer</span><span class="p">,</span>
         <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
         <span class="n">random_design</span><span class="p">:</span> <span class="n">AbstractRandomDesign</span><span class="p">,</span>
-        <span class="n">callbacks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callback</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">callbacks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callback</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="o">=</span> <span class="n">runhistory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span> <span class="o">=</span> <span class="n">runhistory_encoder</span>
@@ -1106,7 +1106,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_maximizer</span> <span class="o">=</span> <span class="n">acquisition_maximizer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_random_design</span> <span class="o">=</span> <span class="n">random_design</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span> <span class="o">=</span> <span class="n">callbacks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span> <span class="o">=</span> <span class="n">callbacks</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_initial_design_configs</span> <span class="o">=</span> <span class="n">initial_design</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_design_configs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1292,7 +1292,7 @@
             <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_trials</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_considered_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">]</span>
 
-                <span class="c1"># TODO: Add running configs</span>
+                <span class="c1"># Possible add running configs?</span>
                 <span class="n">configs_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span><span class="o">.</span><span class="n">get_configurations</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_considered_budgets</span><span class="p">)</span>
 
                 <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">configs_array</span>

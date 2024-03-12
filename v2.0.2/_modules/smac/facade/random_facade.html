@@ -1107,7 +1107,7 @@
     <span class="k">def</span> <span class="nf">get_initial_design</span><span class="p">(</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">additional_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">additional_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultInitialDesign</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an initial design, which returns the default configuration.</span>
 
@@ -1116,6 +1116,8 @@
 <span class="sd">        additional_configs: list[Configuration], defaults to []</span>
 <span class="sd">            Adds additional configurations to the initial design.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">additional_configs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">additional_configs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="n">DefaultInitialDesign</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
             <span class="n">additional_configs</span><span class="o">=</span><span class="n">additional_configs</span><span class="p">,</span>

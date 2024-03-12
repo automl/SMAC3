@@ -38,11 +38,11 @@ types as well as conditional hyperparameters.
     [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: `Configuration` act's like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
       config_dict = config.get_dictionary()
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -59,11 +59,11 @@ types as well as conditional hyperparameters.
 
 
     [INFO][abstract_intensifier.py:515] Added config 4ba1ca as new incumbent because there are no incumbents yet.
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -79,11 +79,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -99,11 +99,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -119,11 +119,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -139,11 +139,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -159,11 +159,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -179,11 +179,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -199,11 +199,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -219,11 +219,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -239,11 +239,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -259,11 +259,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -279,11 +279,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -299,11 +299,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -401,11 +401,11 @@ types as well as conditional hyperparameters.
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: `Configuration` act's like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
       config_dict = config.get_dictionary()
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -421,11 +421,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -441,11 +441,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -461,11 +461,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -481,11 +481,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -501,11 +501,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -521,11 +521,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -541,11 +541,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -561,11 +561,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -581,11 +581,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -601,11 +601,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -621,11 +621,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -641,11 +641,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -661,11 +661,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -681,11 +681,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -701,11 +701,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -721,11 +721,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -741,11 +741,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -761,11 +761,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -781,11 +781,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -801,11 +801,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -821,11 +821,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -841,11 +841,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -861,11 +861,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -985,11 +985,11 @@ types as well as conditional hyperparameters.
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: `Configuration` act's like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
       config_dict = config.get_dictionary()
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1005,11 +1005,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1025,11 +1025,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1045,11 +1045,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1065,11 +1065,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1085,11 +1085,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1105,11 +1105,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1125,11 +1125,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1145,11 +1145,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1165,11 +1165,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1185,11 +1185,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1205,11 +1205,11 @@ types as well as conditional hyperparameters.
     RecursionError: maximum recursion depth exceeded while calling a Python object
 
 
-    [WARNING][abstract_runner.py:132] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:138] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 184, in run
+    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
+    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
         rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 257, in __call__
+      File "/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
         return algorithm(config, **algorithm_kwargs)
       File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 58, in train
         if "gamma" in config:
@@ -1335,7 +1335,7 @@ types as well as conditional hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.795 seconds)
+   **Total running time of the script:** (0 minutes 0.790 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:
