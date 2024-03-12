@@ -108,7 +108,7 @@
 #                         6: 10,
 #                         7: 8,
 #                         8: 6,
-#                     }.get(len(self.cs_local.get_hyperparameters()), 5)
+#                     }.get(len(self.cs_local), 5)
 
 #                     subspace_acq_func_opt_kwargs.update(
 #                         {"n_steps_plateau_walk": 5, "local_search_iterations": local_search_iterations}

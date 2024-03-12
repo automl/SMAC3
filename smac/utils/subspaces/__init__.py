@@ -93,7 +93,7 @@
 #         else:
 #             self.rng = np.random.RandomState(rng.randint(0, 2**20))
 
-#         n_hypers = len(config_space.get_hyperparameters())
+#         n_hypers = len(config_space)
 #         model_types = copy.deepcopy(hps_types)
 #         model_bounds = copy.deepcopy(bounds)
 
@@ -136,7 +136,7 @@
 #             self.new_config = True
 #             # we normalize the non-CategoricalHyperparameter by x = (x-lb)*scale
 
-#             hps = config_space.get_hyperparameters()
+#             hps = list(config_space.values())
 
 #             # deal with categorical hyperaprameters
 #             for i, cat_idx in enumerate(activate_dims_cat):
@@ -214,7 +214,7 @@
 #             idx_cont = 0
 #             idx_cat = 0
 
-#             hps = config_space.get_hyperparameters()
+#             hps = list(config_space.values())
 
 #             for idx in self.activate_dims:
 #                 param = hps[idx]
@@ -423,7 +423,7 @@
 #             forbidden_hp_name = forbidden.hyperparameter.name
 #             if forbidden_hp_name not in cs_local:
 #                 return None
-#             hp_ss = cs_local.get_hyperparameter(forbidden_hp_name)
+#             hp_ss = cs_local[forbidden_hp_name]
 
 #             def is_value_in_hp(value: Any, hp: Hyperparameter) -> bool:
 #                 """Check if the value is in the range of the hp."""
@@ -629,7 +629,7 @@
 #         self._index = 0
 #         self.config_origin = config_origin
 #         # In case cs_in and cs_out have different dimensions
-#         self.expand_dims = len(cs_global.get_hyperparameters()) != len(cs_local.get_hyperparameters())
+#         self.expand_dims = len(cs_global) != len(cs_local)
 #         self.incumbent_array = incumbent_array
 
 #         if self.expand_dims and self.incumbent_array is None:
@@ -643,11 +643,10 @@
 #             raise StopIteration
 #         challenger = self.challengers[self._index][1]
 #         self._index += 1
-#         value = challenger.get_dictionary()
+#         value = dict(challenger)
 #         if self.expand_dims:
-#             incumbent_array = Configuration(
-#                 configuration_space=self.cs_global, vector=self.incumbent_array
-#             ).get_dictionary()
+#             _config = Configuration(configuration_space=self.cs_global, vector=self.incumbent_array)
+#             incumbent_array = dict(_config)
 #             # we replace the cooresponding value in incumbent array with the value suggested by our optimizer
 #             for k in value.keys():
 #                 incumbent_array[k] = value[k]

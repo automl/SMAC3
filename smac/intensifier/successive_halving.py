@@ -210,7 +210,7 @@ class SuccessiveHalving(AbstractIntensifier):
             for seed, configs in self._tracker[key]:
                 # We have to make key serializable
                 new_key = f"{key[0]},{key[1]}"
-                tracker[new_key].append((seed, [config.get_dictionary() for config in configs]))
+                tracker[new_key].append((seed, [dict(config) for config in configs]))
 
         return {"tracker": tracker}
 

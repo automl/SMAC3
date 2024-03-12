@@ -45,7 +45,7 @@ def test_config_numbers(make_scenario, configspace_small):
     scenario = make_scenario(configspace_small)
     configs = configspace_small.sample_configuration(n_configs)
 
-    n_hps = len(configspace_small.get_hyperparameters())
+    n_hps = len(configspace_small)
 
     dc = AbstractInitialDesign(
         scenario=scenario,

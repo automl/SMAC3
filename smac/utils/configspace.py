@@ -52,11 +52,22 @@ def get_types(
     -------
     The bounds for the instance features are *not* added in this function.
     """
+    # NOTE (eddiebergman): It would be better return a dict[str, tuple[int, float, float]]
+    #   where the str is the hyperparameters name and the dictionary is in sorted order by
+    #   the hyperparameters name.
+    #
+    # We are currently relying on the order of the hyperparameters of the space always
+    #   being the same. Any future extension which might incorporate changing/shrinking spaces
+    #   or even just changes to ConfigSpace can break this subtly.
+    #
+    # To counter-act this, I can implement this in if wanted but needs someone who's aware
+    #   of it's use in the kernels to verify that this will be okay.
+
     # Extract types vector for rf from config space and the bounds
-    types = [0] * len(configspace.get_hyperparameters())
+    types = [0] * len(configspace)
     bounds = [(np.nan, np.nan)] * len(types)
 
-    for i, param in enumerate(configspace.get_hyperparameters()):
+    for i, param in enumerate(configspace.values()):
         parents = configspace.get_parents_of(param.name)
         if len(parents) == 0:
             can_be_inactive = False

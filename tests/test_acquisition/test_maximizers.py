@@ -206,8 +206,8 @@ def model(configspace: ConfigurationSpace):
     model = RandomForest(configspace)
 
     np.random.seed(0)
-    X = np.random.rand(100, len(configspace.get_hyperparameters()))
-    y = 1 - (np.sum(X, axis=1) / len(configspace.get_hyperparameters()))
+    X = np.random.rand(100, len(configspace))
+    y = 1 - (np.sum(X, axis=1) / len(configspace))
     model.train(X, y)
 
     return model

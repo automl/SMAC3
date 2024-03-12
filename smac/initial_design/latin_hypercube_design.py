@@ -16,7 +16,7 @@ class LatinHypercubeInitialDesign(AbstractInitialDesign):
     """
 
     def _select_configurations(self) -> list[Configuration]:
-        params = self._configspace.get_hyperparameters()
+        params = list(self._configspace.values())
 
         constants = 0
         for p in params:
