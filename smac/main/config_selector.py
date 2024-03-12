@@ -282,7 +282,7 @@ class ConfigSelector:
             if X.shape[0] >= self._min_trials:
                 self._considered_budgets = [b]
 
-                # TODO: Add running configs
+                # Possible add running configs?
                 configs_array = self._runhistory_encoder.get_configurations(budget_subset=self._considered_budgets)
 
                 return X, Y, configs_array
