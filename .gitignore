@@ -148,3 +148,5 @@ src
 # Pycharm
 .idea
 .vscode
+tmp
+wandb
