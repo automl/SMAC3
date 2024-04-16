@@ -47,7 +47,7 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     )
     encoder.runhistory = runhistory
 
-    # TODO: Please replace with the more general solution in the future
+    # TODO: Please replace with the more general solution once ConfigSpace 1.0
     # upper = np.array([hp.upper_vectorized for hp in space.values()])
     # lower = np.array([hp.lower_vectorized for hp in space.values()])
     # -
