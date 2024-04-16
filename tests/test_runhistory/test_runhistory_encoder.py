@@ -13,6 +13,8 @@ from smac.runhistory.encoder import (
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runner.abstract_runner import StatusType
 
+from ConfigSpace import Configuration
+
 
 @pytest.fixture
 def configs(configspace_small):
