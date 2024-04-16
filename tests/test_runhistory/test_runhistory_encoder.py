@@ -41,12 +41,35 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     )
 
     # Normal encoder
-    encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
+    encoder = RunHistoryEncoder(
+        scenario=scenario, considered_states=[StatusType.SUCCESS]
+    )
     encoder.runhistory = runhistory
+
+    # TODO: Please replace with the more general solution in the future
+    # upper = np.array([hp.upper_vectorized for hp in space.values()])
+    # lower = np.array([hp.lower_vectorized for hp in space.values()])
+    # -
+    # Categoricals are upperbounded by their size, rest of hyperparameters are
+    # upperbounded by 1.
+    upper_bounds = {
+        hp.name: (hp.get_size() - 1)
+        if isinstance(hp, CategoricalHyperparameter)
+        else 1.0
+        for hp in configspace_small.get_hyperparameters()
+    }
+    # Need to ensure they match the order in the Configuration vectorized form
+    sorted_by_indices = sorted(
+        upper_bounds.items(),
+        key=lambda x: configspace_small._hyperparameter_idx[x[0]],
+    )
+    upper = np.array([upper_bound for _, upper_bound in sorted_by_indices])
+    lower = 0.0
+
     X1, Y1 = encoder.transform()
 
     assert Y1.tolist() == [[1.0], [5.0]]
-    assert ((X1 <= 1.0) & (X1 >= 0.0)).all()
+    assert ((X1 <= upper) & (X1 >= lower)).all()
 
     # Log encoder
     encoder = RunHistoryLogEncoder(
@@ -55,7 +78,7 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryLogScaledEncoder(
         scenario=scenario, considered_states=[StatusType.SUCCESS]
@@ -63,7 +86,7 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryScaledEncoder(
         scenario=scenario, considered_states=[StatusType.SUCCESS]
@@ -71,7 +94,7 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryInverseScaledEncoder(
         scenario=scenario, considered_states=[StatusType.SUCCESS]
@@ -79,7 +102,7 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistorySqrtScaledEncoder(
         scenario=scenario, considered_states=[StatusType.SUCCESS]
@@ -87,7 +110,7 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryEIPSEncoder(
         scenario=scenario, considered_states=[StatusType.SUCCESS]
@@ -95,7 +118,7 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
 
 def test_transform_conditionals(runhistory, make_scenario, configspace_large):
