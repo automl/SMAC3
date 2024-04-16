@@ -14,6 +14,7 @@ from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runner.abstract_runner import StatusType
 
 from ConfigSpace import Configuration
+from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
 
 @pytest.fixture
@@ -183,7 +184,9 @@ def test_multi_objective(runhistory, make_scenario, configspace_small, configs):
 
     # Multi objective algorithm must be set
     with pytest.raises(AssertionError):
-        encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
+        encoder = RunHistoryEncoder(
+            scenario=scenario, considered_states=[StatusType.SUCCESS]
+        )
         encoder.runhistory = runhistory
         _, Y = encoder.transform()
 
@@ -239,7 +242,9 @@ def test_ignore(runhistory, make_scenario, configspace_small, configs):
     )
 
     # Normal encoder
-    encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
+    encoder = RunHistoryEncoder(
+        scenario=scenario, considered_states=[StatusType.SUCCESS]
+    )
     encoder.runhistory = runhistory
     X1, Y1 = encoder.transform()
 
@@ -278,10 +283,14 @@ def test_budgets(runhistory, make_scenario, configspace_small, configs):
         budget=2,
     )
 
-    runhistory.add(config=configs[1], cost=5, time=4, status=StatusType.SUCCESS, budget=2)
+    runhistory.add(
+        config=configs[1], cost=5, time=4, status=StatusType.SUCCESS, budget=2
+    )
 
     # Normal encoder
-    encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
+    encoder = RunHistoryEncoder(
+        scenario=scenario, considered_states=[StatusType.SUCCESS]
+    )
     encoder.runhistory = runhistory
     X, Y = encoder.transform(budget_subset=[2])
     assert Y.tolist() == [[99999999]]
@@ -310,10 +319,14 @@ def test_budgets(runhistory, make_scenario, configspace_small, configs):
         budget=2,
     )
 
-    runhistory.add(config=configs[1], cost=5, time=4, status=StatusType.SUCCESS, budget=2)
+    runhistory.add(
+        config=configs[1], cost=5, time=4, status=StatusType.SUCCESS, budget=2
+    )
 
     # Normal encoder
-    encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
+    encoder = RunHistoryEncoder(
+        scenario=scenario, considered_states=[StatusType.SUCCESS]
+    )
     encoder.runhistory = runhistory
     X, Y = encoder.transform(budget_subset=[2])
     assert Y.tolist() == [[99999999]]
@@ -325,12 +338,20 @@ def test_budgets(runhistory, make_scenario, configspace_small, configs):
 def test_lower_budget_states(runhistory, make_scenario, configspace_small, configs):
     """Tests lower budgets based on budget subset and considered states."""
     scenario = make_scenario(configspace_small)
-    encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
+    encoder = RunHistoryEncoder(
+        scenario=scenario, considered_states=[StatusType.SUCCESS]
+    )
     encoder.runhistory = runhistory
 
-    runhistory.add(config=configs[0], cost=1, time=1, status=StatusType.SUCCESS, budget=3)
-    runhistory.add(config=configs[0], cost=2, time=2, status=StatusType.SUCCESS, budget=4)
-    runhistory.add(config=configs[0], cost=3, time=4, status=StatusType.TIMEOUT, budget=5)
+    runhistory.add(
+        config=configs[0], cost=1, time=1, status=StatusType.SUCCESS, budget=3
+    )
+    runhistory.add(
+        config=configs[0], cost=2, time=2, status=StatusType.SUCCESS, budget=4
+    )
+    runhistory.add(
+        config=configs[0], cost=3, time=4, status=StatusType.TIMEOUT, budget=5
+    )
 
     # We request a higher budget but can't find it, so we expect an empty list
     X, Y = encoder.transform(budget_subset=[500])
