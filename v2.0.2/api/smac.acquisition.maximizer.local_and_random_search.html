@@ -32,7 +32,7 @@
   <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
 
     <script src="../_static/documentation_options.js?v=f0042b85"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -1107,14 +1107,14 @@ priors removed.</p>
 <li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – The original ConfigurationSpace specified by the user.</p></li>
 <li><p><strong>uniform_configspace</strong> (<em>ConfigurationSpace</em>) – A version of the user-defined ConfigurationSpace where all parameters are uniform (or have their weights removed
 in the case of a categorical hyperparameter).</p></li>
-<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>)</p></li>
 <li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 5000</em>) – Number of challengers.</p></li>
 <li><p><strong>max_steps</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – [LocalSearch] Maximum number of steps that the local search will perform.</p></li>
 <li><p><strong>n_steps_plateau_walk</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates.</p></li>
 <li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – [Local Search] number of local search iterations.</p></li>
 <li><p><strong>prior_sampling_fraction</strong> (<em>float</em><em>, </em><em>defaults to 0.5</em>) – The ratio of random samples that are taken from the user-defined ConfigurationSpace, as opposed to the uniform
 version.</p></li>
-<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1133,13 +1133,13 @@ from the Random Forest model at the beginning of the optimization process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>) – </p></li>
-<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – </p></li>
+<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>)</p></li>
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>)</p></li>
 <li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 5000</em>) – Number of challengers.</p></li>
 <li><p><strong>max_steps</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – [LocalSearch] Maximum number of steps that the local search will perform.</p></li>
 <li><p><strong>n_steps_plateau_walk</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates.</p></li>
 <li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defauts to 10</em>) – [Local Search] number of local search iterations.</p></li>
-<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>) – </p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1204,7 +1204,7 @@ from the Random Forest model at the beginning of the optimization process.</p>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.2.6. Template is modified version of <a
+7.3.5. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>
