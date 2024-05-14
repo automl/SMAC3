@@ -30,7 +30,6 @@ from scipy.spatial.distance import euclidean
 from smac.acquisition.function import EI
 from smac.acquisition.maximizer import (
     DifferentialEvolution,
-    LocalAndSortedPriorRandomSearch,
     LocalAndSortedRandomSearch,
     LocalSearch,
     RandomSearch,
@@ -390,26 +389,26 @@ def test_sampling_fractions(configspace_rosenbrock, configspace_prior):
 
     budget_kwargs = {"max_steps": 2, "n_steps_plateau_walk": 2, "local_search_iterations": 2}
 
-    prs_0 = LocalAndSortedPriorRandomSearch(
-        configspace_prior,
-        configspace_rosenbrock,
-        AcquisitionFunction(),
+    prs_0 = LocalAndSortedRandomSearch(
+        configspace=configspace_prior,
+        uniform_configspace=configspace_rosenbrock,
+        acquisition_function=AcquisitionFunction(),
         prior_sampling_fraction=0,
         **budget_kwargs,
     )
 
-    prs_05 = LocalAndSortedPriorRandomSearch(
-        configspace_prior,
-        configspace_rosenbrock,
-        AcquisitionFunction(),
+    prs_05 = LocalAndSortedRandomSearch(
+        configspace=configspace_prior,
+        uniform_configspace=configspace_rosenbrock,
+        acquisition_function=AcquisitionFunction(),
         prior_sampling_fraction=0.9,
         **budget_kwargs,
     )
 
-    prs_1 = LocalAndSortedPriorRandomSearch(
-        configspace_prior,
-        configspace_rosenbrock,
-        AcquisitionFunction(),
+    prs_1 = LocalAndSortedRandomSearch(
+        configspace=configspace_prior,
+        uniform_configspace=configspace_rosenbrock,
+        acquisition_function=AcquisitionFunction(),
         prior_sampling_fraction=1,
         **budget_kwargs,
     )
