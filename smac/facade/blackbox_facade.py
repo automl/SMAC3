@@ -321,4 +321,6 @@ class BlackBoxFacade(AbstractFacade):
         retries: int = 16,
     ) -> ConfigSelector:
         """Returns the default configuration selector."""
-        return ConfigSelector(scenario, retrain_after=retrain_after, retries=retries)
+        return super(BlackBoxFacade, BlackBoxFacade).get_config_selector(scenario,
+                                                                         retrain_after=retrain_after,
+                                                                         retries=retries)
