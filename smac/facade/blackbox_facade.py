@@ -11,6 +11,7 @@ from smac.acquisition.maximizer.local_and_random_search import (
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensifier.intensifier import Intensifier
+from smac.main.config_selector import ConfigSelector
 from smac.model.gaussian_process.abstract_gaussian_process import (
     AbstractGaussianProcess,
 )
@@ -311,3 +312,13 @@ class BlackBoxFacade(AbstractFacade):
     ) -> RunHistoryEncoder:
         """Returns the default runhistory encoder."""
         return RunHistoryEncoder(scenario)
+
+    @staticmethod
+    def get_config_selector(
+        scenario: Scenario,
+        *,
+        retrain_after: int = 1,
+        retries: int = 16,
+    ) -> ConfigSelector:
+        """Returns the default configuration selector."""
+        return ConfigSelector(scenario, retrain_after=retrain_after, retries=retries)
