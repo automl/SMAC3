@@ -25,7 +25,9 @@ class AbstractAcquisitionMaximizer:
     In order to use this class it has to be subclassed and the
     method `_maximize` must be implemented.
 
-    Parameters ---------- configspace : ConfigurationSpace acquisition_function : AbstractAcquisitionFunction
+    Parameters
+    ----------
+    configspace : ConfigurationSpace acquisition_function : AbstractAcquisitionFunction
     challengers : int, defaults to 5000 Number of configurations sampled during the optimization process,
     details depend on the used maximizer. Also, the number of configurations that is returned by calling `maximize`.
     seed : int, defaults to 0
