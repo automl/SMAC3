@@ -53,14 +53,14 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        uniform_configspace: ConfigurationSpace | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
         challengers: int = 5000,
         max_steps: int | None = None,
         n_steps_plateau_walk: int = 10,
         local_search_iterations: int = 10,
-        prior_sampling_fraction: float | None = 0.5,
         seed: int = 0,
+        uniform_configspace: ConfigurationSpace | None = None,
+        prior_sampling_fraction: float | None = None,
     ) -> None:
         super().__init__(
             configspace,
@@ -70,7 +70,7 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         )
 
         if uniform_configspace is not None and prior_sampling_fraction is None:
-            raise ValueError("If `uniform_configspace` is given, `prior_sampling_fraction` must be defined.")
+            prior_sampling_fraction = 0.5
         if uniform_configspace is None and prior_sampling_fraction is not None:
             raise ValueError("If `prior_sampling_fraction` is given, `uniform_configspace` must be defined.")
         if uniform_configspace is not None and prior_sampling_fraction is not None:
@@ -112,18 +112,31 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
     @acquisition_function.setter
     def acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         self._acquisition_function = acquisition_function
-        self._random_search._acquisition_function = acquisition_function
+        if self._uniform_configspace is not None:
+            self._prior_random_search._acquisition_function = acquisition_function
+            self._uniform_random_search._acquisition_function = acquisition_function
+        else:
+            self._random_search._acquisition_function = acquisition_function
         self._local_search._acquisition_function = acquisition_function
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
-        meta.update(
-            {
-                "random_search": self._random_search.meta,
-                "local_search": self._local_search.meta,
-            }
-        )
+        if self._uniform_configspace is None:
+            meta.update(
+                {
+                    "random_search": self._random_search.meta,
+                    "local_search": self._local_search.meta,
+                }
+            )
+        else:
+            meta.update(
+                {
+                    "prior_random_search": self._prior_random_search.meta,
+                    "uniform_random_search": self._uniform_random_search.meta,
+                    "local_search": self._local_search.meta,
+                }
+            )
 
         return meta
 
@@ -133,7 +146,7 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         n_points: int,
     ) -> list[tuple[float, Configuration]]:
 
-        if self._uniform_random_search and self._prior_sampling_fraction:
+        if self._uniform_configspace is not None and self._prior_sampling_fraction is not None:
             # Get configurations sorted by acquisition function value
             next_configs_by_prior_random_search_sorted = self._prior_random_search._maximize(
                 previous_configs,
