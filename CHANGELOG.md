@@ -21,12 +21,20 @@
 - Add experimental instruction for installing SMAC in Windows via a WSL.
 - More detailed documentation regarding continuing runs.
 - Add a new example that demonstrates the use of intensification to speed up cross-validation for machine learning.
+- Change the surrogate model to be retrained after every iteration by default in the case of blackbox optimization.
+- Integrate `LocalAndSortedPriorRandomSearch` functionality into `LocalAndSortedRandomSearch`
+- Change the way the `LocalAndSortedRandomSearch` works such that the incumbent always is a starting point and that
+      random configurations are sampled as the basis of the local search, not in addition.
 
 ## Bugfixes
 - Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).
 - Fix callback order (#1040).
 - Handle configspace as dictionary in mlp and parego example.
 - Adapt sgd loss to newest scikit-learn version.
+- Fix the handling of n_points/ challengers in the acquisition maximizers, such that this number now functions as the
+     number of points that are sampled from the acquisition function to find the next challengers. Now also doesn't
+     restrict the config selector to n_retrain many points for finding the max, and instead uses the defaults that are
+     defined via facades/ scenarios.
 
 # 2.0.1
 
