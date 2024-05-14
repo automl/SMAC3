@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
     """Implement SMAC's default acquisition function optimization.
 
-    This optimizer performs local search from the previous best points according, to the acquisition
+    This optimizer performs local search from the previous best points according to the acquisition
     function, uses the acquisition function to sort randomly sampled configurations.
     Random configurations are interleaved by the main SMAC code.
 
@@ -163,6 +163,7 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
             next_configs_by_random_search_sorted = (
                 next_configs_by_uniform_random_search_sorted + next_configs_by_prior_random_search_sorted
             )
+            next_configs_by_random_search_sorted.sort(reverse=True, key=lambda x: x[0])
         else:
             # Get configurations sorted by acquisition function value
             next_configs_by_random_search_sorted = self._random_search._maximize(
@@ -171,19 +172,16 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
                 _sorted=True,
             )
 
+        # Choose the best self._local_search_iterations random configs to start the local search, and choose only
+        # incumbent from previous configs
+        random_starting_points = next_configs_by_random_search_sorted[: self._local_search_iterations]
         next_configs_by_local_search = self._local_search._maximize(
             previous_configs=previous_configs,
             n_points=self._local_search_iterations,
-            additional_start_points=next_configs_by_random_search_sorted,
+            additional_start_points=random_starting_points,
         )
 
-        # Having the configurations from random search, sorted by their
-        # acquisition function value is important for the first few iterations
-        # of SMAC. As long as the random forest predicts constant value, we
-        # want to use only random configurations. Having them at the begging of
-        # the list ensures this (even after adding the configurations by local
-        # search, and then sorting them)
-        next_configs_by_acq_value = next_configs_by_random_search_sorted + next_configs_by_local_search
+        next_configs_by_acq_value = next_configs_by_local_search
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         first_five = [f"{_[0]} ({_[1].origin})" for _ in next_configs_by_acq_value[:5]]
 

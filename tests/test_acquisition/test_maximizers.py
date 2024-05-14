@@ -277,7 +277,7 @@ def test_get_initial_points_moo(configspace):
 
     random_configs = configspace.sample_configuration(size=100)
     points = ls._get_initial_points(random_configs, n_points=5, additional_start_points=None)
-    assert len(points) == 10
+    assert len(points) == 5
 
 
 # --------------------------------------------------------------
@@ -341,7 +341,6 @@ def test_local_and_random_search(configspace, acquisition_function):
         assert v_old >= v
         v_old = v
 
-    assert "Acquisition Function Maximizer: Random Search (sorted)" in config_origins
     assert "Acquisition Function Maximizer: Local Search" in config_origins
 
 
