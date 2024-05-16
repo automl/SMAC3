@@ -30,6 +30,7 @@ class DifferentialEvolution(AbstractAcquisitionMaximizer):
         previous_configs: list[Configuration],
         n_points: int,
     ) -> list[tuple[float, Configuration]]:
+        # n_points is not used here, but is required by the interface
 
         configs: list[tuple[float, Configuration]] = []
 

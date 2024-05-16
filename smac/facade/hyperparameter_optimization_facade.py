@@ -138,7 +138,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         n_configs: int | None = None,
         n_configs_per_hyperparamter: int = 10,
         max_ratio: float = 0.25,
-        additional_configs: list[Configuration] = [],
+        additional_configs: list[Configuration] | None = None,
     ) -> SobolInitialDesign:
         """Returns a Sobol design instance.
 
@@ -178,7 +178,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         probability : float, defaults to 0.2
             Probability that a configuration will be drawn at random.
         """
-        return ProbabilityRandomDesign(probability=probability)
+        return ProbabilityRandomDesign(probability=probability, seed=scenario.seed)
 
     @staticmethod
     def get_multi_objective_algorithm(  # type: ignore

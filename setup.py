@@ -38,6 +38,7 @@ extras_require = {
         "pydocstyle",
         "flake8",
         "pre-commit",
+        "pylint",
     ],
 }
 
