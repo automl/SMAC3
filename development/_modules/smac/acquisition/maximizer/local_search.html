@@ -1097,9 +1097,9 @@
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">additional_start_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a local search from the given startpoints. Iteratively collect neighbours</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a local search from the given start points. Iteratively collect neighbours</span>
 <span class="sd">        using Configspace.utils.get_one_exchange_neighbourhood and evaluate them.</span>
-<span class="sd">        If the new config is better than the current best, the local search is coninued from the</span>
+<span class="sd">        If the new config is better than the current best, the local search is continued from the</span>
 <span class="sd">        new config.</span>
 
 <span class="sd">        Quit if either the max number of steps is reached or</span>
@@ -1156,16 +1156,22 @@
 <span class="sd">        list[Configuration]</span>
 <span class="sd">            A list of initial points/configurations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="n">sampled_points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">init_points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">n_init_points</span> <span class="o">=</span> <span class="n">n_points</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n_points</span><span class="p">:</span>
+            <span class="n">sampled_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_points</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">))</span>
+            <span class="n">n_init_points</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sampled_points</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">sampled_points</span> <span class="o">=</span> <span class="p">[</span><span class="n">sampled_points</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_init_points_from_previous_configs</span><span class="p">(</span>
                 <span class="n">previous_configs</span><span class="p">,</span>
-                <span class="n">n_points</span><span class="p">,</span>
+                <span class="n">n_init_points</span><span class="p">,</span>
                 <span class="n">additional_start_points</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">init_points</span>
+        <span class="k">return</span> <span class="n">sampled_points</span> <span class="o">+</span> <span class="n">init_points</span>
 
     <span class="k">def</span> <span class="nf">_get_init_points_from_previous_configs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1194,7 +1200,7 @@
 <span class="sd">        previous_configs: list[Configuration]</span>
 <span class="sd">            Previous configuration (e.g., from the runhistory).</span>
 <span class="sd">        n_points: int</span>
-<span class="sd">            Number of initial points to be generated.</span>
+<span class="sd">            Number of initial points to be generated; selected from previous configs (+ random configs if necessary).</span>
 <span class="sd">        additional_start_points: list[tuple[float, Configuration]] | None</span>
 <span class="sd">            Additional starting points.</span>
 
@@ -1204,10 +1210,6 @@
 <span class="sd">            A list of initial points.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-
-        <span class="c1"># configurations with the highest previous EI</span>
-        <span class="n">configs_previous_runs_sorted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sort_by_acquisition_value</span><span class="p">(</span><span class="n">previous_configs</span><span class="p">)</span>
-        <span class="n">configs_previous_runs_sorted</span> <span class="o">=</span> <span class="p">[</span><span class="n">conf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">conf</span> <span class="ow">in</span> <span class="n">configs_previous_runs_sorted</span><span class="p">[:</span><span class="n">n_points</span><span class="p">]]</span>
 
         <span class="c1"># configurations with the lowest predictive cost, check for None to make unit tests work</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1235,14 +1237,13 @@
             <span class="n">previous_configs_sorted_by_cost</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="n">additional_start_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">additional_start_points</span> <span class="o">=</span> <span class="p">[</span><span class="n">asp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">asp</span> <span class="ow">in</span> <span class="n">additional_start_points</span><span class="p">[:</span><span class="n">n_points</span><span class="p">]]</span>
+            <span class="n">additional_start_points</span> <span class="o">=</span> <span class="p">[</span><span class="n">asp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">asp</span> <span class="ow">in</span> <span class="n">additional_start_points</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">additional_start_points</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">init_points</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">init_points_as_set</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">cand</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
-            <span class="n">configs_previous_runs_sorted</span><span class="p">,</span>
             <span class="n">previous_configs_sorted_by_cost</span><span class="p">,</span>
             <span class="n">additional_start_points</span><span class="p">,</span>
         <span class="p">):</span>

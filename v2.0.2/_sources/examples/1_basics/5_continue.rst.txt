@@ -53,14 +53,14 @@ there already is a previous run with the same meta data, this run will be contin
     [INFO][smbo.py:497] Continuing from previous run.
     [INFO][abstract_intensifier.py:287] Added existing seed 209652396 from runhistory to the intensifier.
     [INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
-    [INFO][abstract_intensifier.py:594] Added config 59460a and rejected config f72805 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config f74db6 and rejected config 59460a as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 22beb0 and rejected config f74db6 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config b07de4 and rejected config 22beb0 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 2ec12b and rejected config b07de4 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 7ea8bb and rejected config 2ec12b as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config c4859b and rejected config 7ea8bb as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config e501ff and rejected config c4859b as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:594] Added config d7ecca and rejected config f72805 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:594] Added config 10bb50 and rejected config d7ecca as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:594] Added config 6a2c79 and rejected config 10bb50 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:594] Added config 4380b1 and rejected config 6a2c79 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:594] Added config 15dfc6 and rejected config 4380b1 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:594] Added config b9f3bd and rejected config 15dfc6 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:594] Added config c714f5 and rejected config b9f3bd as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:594] Added config 2da694 and rejected config c714f5 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:319] Finished 50 trials.
     [INFO][smbo.py:327] Configuration budget is exhausted:
     [INFO][smbo.py:328] --- Remaining wallclock time: inf
@@ -70,7 +70,7 @@ there already is a previous run with the same meta data, this run will be contin
     Default cost: 25.0
     Incumbent cost of first run: 0.09616130553975616
     [INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
-    Incumbent cost of continued run: 1.0393385263038637e-07
+    Incumbent cost of continued run: 0.001512079916069889
 
 
 
@@ -170,7 +170,7 @@ there already is a previous run with the same meta data, this run will be contin
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.796 seconds)
+   **Total running time of the script:** (0 minutes 1.546 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_continue.py:

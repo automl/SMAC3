@@ -1034,12 +1034,9 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    configspace : ConfigurationSpace</span>
-<span class="sd">    acquisition_function : AbstractAcquisitionFunction</span>
-<span class="sd">    challengers : int, defaults to 5000</span>
-<span class="sd">        Number of configurations to sample from the configuration space to get</span>
-<span class="sd">        the acquisition function value for, thus challenging the current</span>
-<span class="sd">        incumbent and becoming a candidate for the next function evaluation.</span>
+<span class="sd">    configspace : ConfigurationSpace acquisition_function : AbstractAcquisitionFunction</span>
+<span class="sd">    challengers : int, defaults to 5000 Number of configurations sampled during the optimization process,</span>
+<span class="sd">    details depend on the used maximizer. Also, the number of configurations that is returned by calling `maximize`.</span>
 <span class="sd">    seed : int, defaults to 0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1094,8 +1091,8 @@
 <span class="sd">        previous_configs: list[Configuration]</span>
 <span class="sd">            Previous evaluated configurations.</span>
 <span class="sd">        n_points: int, defaults to None</span>
-<span class="sd">            Number of points to be sampled. If `n_points` is not specified,</span>
-<span class="sd">            `self._challengers` is used.</span>
+<span class="sd">            Number of points to be sampled &amp; number of configurations to be returned. If `n_points` is not specified,</span>
+<span class="sd">            `self._challengers` is used. Semantics depend on concrete implementation.</span>
 <span class="sd">        random_design: AbstractRandomDesign, defaults to None</span>
 <span class="sd">            Part of the returned ChallengerList such that we can interleave random configurations</span>
 <span class="sd">            by a scheme defined by the random design. The method `random_design.next_iteration()`</span>

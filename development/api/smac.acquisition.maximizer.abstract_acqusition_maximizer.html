@@ -1098,11 +1098,10 @@ method <cite>_maximize</cite> must be implemented.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>)</p></li>
-<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>)</p></li>
-<li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 5000</em>) – Number of configurations to sample from the configuration space to get
-the acquisition function value for, thus challenging the current
-incumbent and becoming a candidate for the next function evaluation.</p></li>
+<li><p><strong>configspace</strong> (<em>ConfigurationSpace acquisition_function : AbstractAcquisitionFunction</em>)</p></li>
+<li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 5000 Number</em><em> of </em><em>configurations sampled during the optimization process</em><em>,</em>)</p></li>
+<li><p><strong>Also</strong> (<em>details depend on the used maximizer.</em>)</p></li>
+<li><p><strong>maximize.</strong> (<em>the number</em><em> of </em><em>configurations that is returned by calling</em>)</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>)</p></li>
 </ul>
 </dd>
@@ -1121,8 +1120,8 @@ incumbent and becoming a candidate for the next function evaluation.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>previous_configs</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em>) – Previous evaluated configurations.</p></li>
-<li><p><strong>n_points</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – Number of points to be sampled. If <cite>n_points</cite> is not specified,
-<cite>self._challengers</cite> is used.</p></li>
+<li><p><strong>n_points</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – Number of points to be sampled &amp; number of configurations to be returned. If <cite>n_points</cite> is not specified,
+<cite>self._challengers</cite> is used. Semantics depend on concrete implementation.</p></li>
 <li><p><strong>random_design</strong> (<a class="reference internal" href="smac.random_design.html#smac.random_design.AbstractRandomDesign" title="smac.random_design.AbstractRandomDesign"><em>AbstractRandomDesign</em></a><em>, </em><em>defaults to None</em>) – Part of the returned ChallengerList such that we can interleave random configurations
 by a scheme defined by the random design. The method <cite>random_design.next_iteration()</cite>
 is called at the end of this function.</p></li>

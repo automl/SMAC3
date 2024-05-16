@@ -1061,7 +1061,7 @@
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.acquisition.maximizer.helpers.ChallengerList">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.maximizer.helpers.</span></span><span class="sig-name descname"><span class="pre">ChallengerList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challenger_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design=&lt;smac.random_design.modulus_design.ModulusRandomDesign</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/maximizer/helpers.html#ChallengerList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.maximizer.helpers.ChallengerList" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.acquisition.maximizer.helpers.</span></span><span class="sig-name descname"><span class="pre">ChallengerList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challenger_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_design=&lt;smac.random_design.probability_design.ProbabilityRandomDesign</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/acquisition/maximizer/helpers.html#ChallengerList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.acquisition.maximizer.helpers.ChallengerList" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code></p>
 <p>Helper class to interleave random configurations in a list of challengers.</p>
 <p>Provides an iterator which returns a random configuration in each second
@@ -1072,7 +1072,7 @@ in each iteration which are never looked at.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>configspace</strong> (<em>ConfigurationSpace</em>)</p></li>
-<li><p><strong>challenger_callback</strong> (<em>Callable</em>) – Callback function which returns a list of challengers (without interleaved random configurations, must a be a
+<li><p><strong>challenger_callback</strong> (<em>Callable</em>) – Callback function which returns a list of challengers (without interleaved random configurations), must a be a
 python closure.</p></li>
 <li><p><strong>random_design</strong> (<a class="reference internal" href="smac.random_design.html#smac.random_design.AbstractRandomDesign" title="smac.random_design.AbstractRandomDesign"><em>AbstractRandomDesign</em></a><em> | </em><em>None</em><em>, </em><em>defaults to ModulusRandomDesign</em><em>(</em><em>modulus=2.0</em><em>)</em>) – Which random design should be used.</p></li>
 </ul>

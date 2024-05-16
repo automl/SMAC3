@@ -1394,6 +1394,8 @@ RecursionError: maximum recursion depth exceeded while calling a Python object
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
 /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
+  preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
 /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: `Configuration` act&#39;s like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
   config_dict = config.get_dictionary()
 [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
@@ -1972,12 +1974,6 @@ RecursionError: maximum recursion depth exceeded while calling a Python object
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
 /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
   preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
-  preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
-  preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
-  preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
 /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: `Configuration` act&#39;s like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
   config_dict = config.get_dictionary()
 [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
@@ -2322,7 +2318,7 @@ Incumbent cost: inf
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.810 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.515 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-2-svm-cv-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/2_svm_cv.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>

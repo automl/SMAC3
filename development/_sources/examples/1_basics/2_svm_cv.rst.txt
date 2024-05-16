@@ -399,6 +399,8 @@ types as well as conditional hyperparameters.
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+    /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
+      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: `Configuration` act's like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
       config_dict = config.get_dictionary()
     [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
@@ -977,12 +979,6 @@ types as well as conditional hyperparameters.
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
       preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-    /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/model/random_forest/random_forest.py:222: RuntimeWarning: Mean of empty slice
-      preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: `Configuration` act's like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
       config_dict = config.get_dictionary()
     [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
@@ -1335,7 +1331,7 @@ types as well as conditional hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.810 seconds)
+   **Total running time of the script:** (0 minutes 1.515 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:
