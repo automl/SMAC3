@@ -170,7 +170,7 @@ there already is a previous run with the same meta data, this run will be contin
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.517 seconds)
+   **Total running time of the script:** (0 minutes 1.529 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_continue.py:

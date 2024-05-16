@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Stochastic Gradient Descent On Multiple Datasets &#8212; SMAC3 Documentation 2.0.2 documentation</title>
+    <title>Stochastic Gradient Descent On Multiple Datasets &#8212; SMAC3 Documentation 2.1.0 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -31,8 +31,8 @@
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script src="../../_static/documentation_options.js?v=f0042b85"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/documentation_options.js?v=1d3a154c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -95,11 +95,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.2
+        v2.1.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.2</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.1.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.1.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -1022,7 +1022,7 @@
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-examples-2-multi-fidelity-2-sgd-datasets-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code or to run this example in your browser via Binder</p>
+to download the full example code. or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="stochastic-gradient-descent-on-multiple-datasets">
 <span id="sphx-glr-examples-2-multi-fidelity-2-sgd-datasets-py"></span><h1>Stochastic Gradient Descent On Multiple Datasets<a class="headerlink" href="#stochastic-gradient-descent-on-multiple-datasets" title="Link to this heading">¶</a></h1>
@@ -1047,24 +1047,24 @@ the target function now is required to have an instance argument.</p>
 [INFO][successive_halving.py:329] --- Bracket 2: [15.0, 45.0]
 [INFO][successive_halving.py:329] --- Bracket 3: [45.0]
 [INFO][abstract_intensifier.py:515] Added config e5c425 as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:590] Added config 884840 and rejected config e5c425 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:590] Added config 812224 and rejected config 884840 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:594] Added config 884840 and rejected config e5c425 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:594] Added config 812224 and rejected config 884840 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:590] Added config 884840 and rejected config 812224 as incumbent because it is not better than the incumbents on 15 instances:
+[INFO][abstract_intensifier.py:594] Added config 884840 and rejected config 812224 as incumbent because it is not better than the incumbents on 15 instances:
 [INFO][smbo.py:319] Finished 100 trials.
 [INFO][smbo.py:319] Finished 150 trials.
 [INFO][smbo.py:319] Finished 200 trials.
 [INFO][smbo.py:319] Finished 250 trials.
 [INFO][smbo.py:319] Finished 300 trials.
 [INFO][smbo.py:319] Finished 350 trials.
-[INFO][abstract_intensifier.py:590] Added config 3c910e and rejected config 884840 as incumbent because it is not better than the incumbents on 45 instances:
 [INFO][smbo.py:319] Finished 400 trials.
+[INFO][smbo.py:319] Finished 450 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.02725815773010254
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.0248873233795166
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 4589
+[INFO][smbo.py:330] --- Remaining trials: 4509
 Default cost: 0.15489347419148672
-Incumbent cost: 0.005937605060508486
+Incumbent cost: 0.006249006102246613
 </pre></div>
 </div>
 <div class="line-block">
@@ -1196,7 +1196,7 @@ Incumbent cost: 0.005937605060508486
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 35.441 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 34.062 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-2-sgd-datasets-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/2_sgd_datasets.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" width="150px" /></a>
@@ -1254,7 +1254,7 @@ Incumbent cost: 0.005937605060508486
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.2.6. Template is modified version of <a
+7.3.7. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

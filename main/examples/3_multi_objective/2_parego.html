@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>ParEGO &#8212; SMAC3 Documentation 2.0.2 documentation</title>
+    <title>ParEGO &#8212; SMAC3 Documentation 2.1.0 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -31,8 +31,8 @@
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script src="../../_static/documentation_options.js?v=f0042b85"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/documentation_options.js?v=1d3a154c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -95,11 +95,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.2
+        v2.1.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.2</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.1.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.1.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -1022,7 +1022,7 @@
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-examples-3-multi-objective-2-parego-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code or to run this example in your browser via Binder</p>
+to download the full example code. or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="parego">
 <span id="sphx-glr-examples-3-multi-objective-2-parego-py"></span><h1>ParEGO<a class="headerlink" href="#parego" title="Link to this heading">¶</a></h1>
@@ -1031,33 +1031,34 @@ optimized on the digits dataset using an MLP, and the configurations are shown i
 a Pareto front. The red cross indicates the best configuration selected by SMAC.</p>
 <p>In the optimization, SMAC evaluates the configurations on two different seeds. Therefore, the plot shows the
 mean accuracy and run-time of each configuration.</p>
-<img src="../../_images/sphx_glr_2_parego_001.png" srcset="../../_images/sphx_glr_2_parego_001.png" alt="Pareto-Front" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][target_function_runner.py:72] The argument budget is not set by SMAC: Consider removing it from the target function.
+<img src="../../_images/sphx_glr_2_parego_001.png" srcset="../../_images/sphx_glr_2_parego_001.png" alt="Pareto-Front" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][target_function_runner.py:74] The argument budget is not set by SMAC: Consider removing it from the target function.
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][abstract_intensifier.py:515] Added config 3623cc as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:598] Config 540db2 is a new incumbent. Total number of incumbents: 2.
-[INFO][abstract_intensifier.py:598] Config 0c9159 is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:590] Added config 3b5efd and rejected config 540db2 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:590] Added config b50691 and rejected config 0c9159 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:598] Config a99ea9 is a new incumbent. Total number of incumbents: 4.
-[INFO][abstract_intensifier.py:598] Config 81ac4b is a new incumbent. Total number of incumbents: 5.
-[INFO][abstract_intensifier.py:590] Added config e66edb and rejected config 3b5efd as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:598] Config a6bfad is a new incumbent. Total number of incumbents: 6.
-[INFO][abstract_intensifier.py:598] Config 101028 is a new incumbent. Total number of incumbents: 7.
+[INFO][abstract_intensifier.py:602] Config 540db2 is a new incumbent. Total number of incumbents: 2.
+[INFO][abstract_intensifier.py:602] Config 0c9159 is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:594] Added config 3b5efd and rejected config 540db2 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][abstract_intensifier.py:594] Added config 2e257a and rejected config 0c9159 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][abstract_intensifier.py:602] Config 0db03f is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:602] Config 69de7d is a new incumbent. Total number of incumbents: 5.
+[INFO][abstract_intensifier.py:594] Added config 8f22ab and rejected config 0db03f as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][abstract_intensifier.py:602] Config 3b4431 is a new incumbent. Total number of incumbents: 6.
+[INFO][abstract_intensifier.py:602] Config 322c18 is a new incumbent. Total number of incumbents: 7.
+[INFO][abstract_intensifier.py:602] Config 1ee85c is a new incumbent. Total number of incumbents: 8.
+[INFO][abstract_intensifier.py:602] Config 62825a is a new incumbent. Total number of incumbents: 5.
+[INFO][abstract_intensifier.py:602] Config 242269 is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:602] Config 5a363f is a new incumbent. Total number of incumbents: 5.
+[INFO][smbo.py:319] Finished 50 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.2383584976196289
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.2787330150604248
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 168
+[INFO][smbo.py:330] --- Remaining trials: 146
 Validated costs from default config:
---- [0.60155834 0.20537961]
+--- [0.60155834 0.15590167]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.280056  ]
---- [0.06400418 0.54201114]
---- [0.0281043  1.27145731]
---- [0.04536366 0.60359144]
---- [0.0322849  0.85042059]
---- [0.52836583 0.38558948]
---- [0.72731585 0.33463526]
+--- [0.48551996 0.20876372]
+--- [0.24042324 0.22389865]
+--- [0.03505571 0.24810028]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1231,7 +1232,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 39.384 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 32.093 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo2.svg" width="150px" /></a>
@@ -1289,7 +1290,7 @@ Validated costs from the Pareto front (incumbents):
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.2.6. Template is modified version of <a
+7.3.7. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

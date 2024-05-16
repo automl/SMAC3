@@ -12,6 +12,7 @@ SMAC can call a target function from a script. This is useful if you want to opt
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -29,6 +30,8 @@ SMAC can call a target function from a script. This is useful if you want to opt
       <div class="sphx-glr-thumbnail-title">Call Target Function From Script</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 

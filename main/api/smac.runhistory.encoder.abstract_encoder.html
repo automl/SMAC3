@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>smac.runhistory.encoder.abstract_encoder &#8212; SMAC3 Documentation 2.0.2 documentation</title>
+    <title>smac.runhistory.encoder.abstract_encoder &#8212; SMAC3 Documentation 2.1.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -31,8 +31,8 @@
     
   <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script src="../_static/documentation_options.js?v=f0042b85"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/documentation_options.js?v=1d3a154c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -95,11 +95,11 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.0.2
+        v2.1.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.0.2</a>
+        <a class="list-group-item list-group-item-action" href="#">v2.1.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
@@ -130,7 +130,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.0.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.1.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -1117,17 +1117,17 @@
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.abstract_encoder.</span></span><span class="sig-name descname"><span class="pre">AbstractRunHistoryEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">considered_states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[StatusType.SUCCESS,</span> <span class="pre">StatusType.CRASHED,</span> <span class="pre">StatusType.MEMORYOUT]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_budget_states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/abstract_encoder.html#AbstractRunHistoryEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.encoder.abstract_encoder.</span></span><span class="sig-name descname"><span class="pre">AbstractRunHistoryEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">considered_states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_budget_states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/encoder/abstract_encoder.html#AbstractRunHistoryEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.encoder.abstract_encoder.AbstractRunHistoryEncoder" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract class for preparing data in order to train a surrogate model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scenario</strong> (<em>Scenario object.</em>) – </p></li>
+<li><p><strong>scenario</strong> (<em>Scenario object.</em>)</p></li>
 <li><p><strong>considered_states</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.runhistory.html#smac.runhistory.StatusType" title="smac.runhistory.StatusType"><em>StatusType</em></a><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>StatusType.SUCCESS</em><em>, </em><em>StatusType.CRASHED</em><em>, </em><em>StatusType.MEMORYOUT</em><em>]  </em><em># noqa: E501</em>) – Trials with the passed states are considered.</p></li>
 <li><p><strong>lower_budget_states</strong> (<em>list</em><em>[</em><a class="reference internal" href="smac.runhistory.html#smac.runhistory.StatusType" title="smac.runhistory.StatusType"><em>StatusType</em></a><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>]</em>) – Additionally consider all trials with these states for budget &lt; current budget.</p></li>
 <li><p><strong>scale_percentage</strong> (<em>int</em><em>, </em><em>defaults to 5</em>) – Scaled y-transformation use a percentile to estimate distance to optimum. Only used in some sub-classes.</p></li>
-<li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to none</em>) – </p></li>
+<li><p><strong>seed</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to none</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -1270,7 +1270,7 @@ appended and cost values are not taken into account.</p>
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.2.6. Template is modified version of <a
+7.3.7. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

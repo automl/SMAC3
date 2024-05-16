@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py>`
-        to download the full example code or to run this example in your browser via Binder
+        to download the full example code. or to run this example in your browser via Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -54,24 +54,24 @@ the target function now is required to have an instance argument.
     [INFO][successive_halving.py:329] --- Bracket 2: [15.0, 45.0]
     [INFO][successive_halving.py:329] --- Bracket 3: [45.0]
     [INFO][abstract_intensifier.py:515] Added config e5c425 as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:590] Added config 884840 and rejected config e5c425 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:590] Added config 812224 and rejected config 884840 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:594] Added config 884840 and rejected config e5c425 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:594] Added config 812224 and rejected config 884840 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:319] Finished 50 trials.
-    [INFO][abstract_intensifier.py:590] Added config 884840 and rejected config 812224 as incumbent because it is not better than the incumbents on 15 instances:
+    [INFO][abstract_intensifier.py:594] Added config 884840 and rejected config 812224 as incumbent because it is not better than the incumbents on 15 instances:
     [INFO][smbo.py:319] Finished 100 trials.
     [INFO][smbo.py:319] Finished 150 trials.
     [INFO][smbo.py:319] Finished 200 trials.
     [INFO][smbo.py:319] Finished 250 trials.
     [INFO][smbo.py:319] Finished 300 trials.
     [INFO][smbo.py:319] Finished 350 trials.
-    [INFO][abstract_intensifier.py:590] Added config 3c910e and rejected config 884840 as incumbent because it is not better than the incumbents on 45 instances:
     [INFO][smbo.py:319] Finished 400 trials.
+    [INFO][smbo.py:319] Finished 450 trials.
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.02725815773010254
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.0248873233795166
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 4589
+    [INFO][smbo.py:330] --- Remaining trials: 4509
     Default cost: 0.15489347419148672
-    Incumbent cost: 0.005937605060508486
+    Incumbent cost: 0.006249006102246613
 
 
 
@@ -211,7 +211,7 @@ the target function now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 35.441 seconds)
+   **Total running time of the script:** (0 minutes 34.062 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:

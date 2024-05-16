@@ -48,31 +48,28 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_intensifier.py:602] Config 540db2 is a new incumbent. Total number of incumbents: 2.
     [INFO][abstract_intensifier.py:602] Config 0c9159 is a new incumbent. Total number of incumbents: 3.
     [INFO][abstract_intensifier.py:594] Added config 3b5efd and rejected config 540db2 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:602] Config c174fe is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:594] Added config 6e690e and rejected config c174fe as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:602] Config 7b72d3 is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:602] Config 6bf27c is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:602] Config 161ad2 is a new incumbent. Total number of incumbents: 5.
-    [INFO][abstract_intensifier.py:602] Config 4ef31a is a new incumbent. Total number of incumbents: 6.
-    [INFO][abstract_intensifier.py:602] Config 5bdf33 is a new incumbent. Total number of incumbents: 7.
+    [INFO][abstract_intensifier.py:594] Added config 2e257a and rejected config 0c9159 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:602] Config 0db03f is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:602] Config 69de7d is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:594] Added config 8f22ab and rejected config 0db03f as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:602] Config 3b4431 is a new incumbent. Total number of incumbents: 6.
+    [INFO][abstract_intensifier.py:602] Config 322c18 is a new incumbent. Total number of incumbents: 7.
+    [INFO][abstract_intensifier.py:602] Config 1ee85c is a new incumbent. Total number of incumbents: 8.
+    [INFO][abstract_intensifier.py:602] Config 62825a is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:602] Config 242269 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:602] Config 5a363f is a new incumbent. Total number of incumbents: 5.
     [INFO][smbo.py:319] Finished 50 trials.
-    [INFO][abstract_intensifier.py:594] Added config 879265 and rejected config 161ad2 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:594] Added config a1ccc6 and rejected config 4ef31a as incumbent because it is not better than the incumbents on 2 instances:
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.10341310501098633
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.2787330150604248
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 143
+    [INFO][smbo.py:330] --- Remaining trials: 146
     Validated costs from default config: 
-    --- [0.60155834 0.15300941]
+    --- [0.60155834 0.15590167]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.03561281 0.61124122]
-    --- [0.03701331 0.48268843]
-    --- [0.0742982  0.15764034]
-    --- [0.04730424 0.17007053]
-    --- [0.10016481 0.13139999]
-    --- [0.12829078 0.11593962]
-    --- [0.07011838 0.15983021]
+    --- [0.48551996 0.20876372]
+    --- [0.24042324 0.22389865]
+    --- [0.03505571 0.24810028]
 
 
 
@@ -253,7 +250,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 34.209 seconds)
+   **Total running time of the script:** (0 minutes 32.093 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:

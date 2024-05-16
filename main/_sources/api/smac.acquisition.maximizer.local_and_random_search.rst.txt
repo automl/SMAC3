@@ -19,7 +19,6 @@ smac.acquisition.maximizer.local\_and\_random\_search
 
    .. autosummary::
    
-      LocalAndSortedPriorRandomSearch
       LocalAndSortedRandomSearch
    
    
