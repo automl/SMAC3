@@ -30,7 +30,6 @@ from scipy.spatial.distance import euclidean
 from smac.acquisition.function import EI
 from smac.acquisition.maximizer import (
     DifferentialEvolution,
-    LocalAndSortedPriorRandomSearch,
     LocalAndSortedRandomSearch,
     LocalSearch,
     RandomSearch,
@@ -278,7 +277,7 @@ def test_get_initial_points_moo(configspace):
 
     random_configs = configspace.sample_configuration(size=100)
     points = ls._get_initial_points(random_configs, n_points=5, additional_start_points=None)
-    assert len(points) == 10
+    assert len(points) == 5
 
 
 # --------------------------------------------------------------
@@ -342,7 +341,6 @@ def test_local_and_random_search(configspace, acquisition_function):
         assert v_old >= v
         v_old = v
 
-    assert "Acquisition Function Maximizer: Random Search (sorted)" in config_origins
     assert "Acquisition Function Maximizer: Local Search" in config_origins
 
 
@@ -390,26 +388,26 @@ def test_sampling_fractions(configspace_rosenbrock, configspace_prior):
 
     budget_kwargs = {"max_steps": 2, "n_steps_plateau_walk": 2, "local_search_iterations": 2}
 
-    prs_0 = LocalAndSortedPriorRandomSearch(
-        configspace_prior,
-        configspace_rosenbrock,
-        AcquisitionFunction(),
+    prs_0 = LocalAndSortedRandomSearch(
+        configspace=configspace_prior,
+        uniform_configspace=configspace_rosenbrock,
+        acquisition_function=AcquisitionFunction(),
         prior_sampling_fraction=0,
         **budget_kwargs,
     )
 
-    prs_05 = LocalAndSortedPriorRandomSearch(
-        configspace_prior,
-        configspace_rosenbrock,
-        AcquisitionFunction(),
+    prs_05 = LocalAndSortedRandomSearch(
+        configspace=configspace_prior,
+        uniform_configspace=configspace_rosenbrock,
+        acquisition_function=AcquisitionFunction(),
         prior_sampling_fraction=0.9,
         **budget_kwargs,
     )
 
-    prs_1 = LocalAndSortedPriorRandomSearch(
-        configspace_prior,
-        configspace_rosenbrock,
-        AcquisitionFunction(),
+    prs_1 = LocalAndSortedRandomSearch(
+        configspace=configspace_prior,
+        uniform_configspace=configspace_rosenbrock,
+        acquisition_function=AcquisitionFunction(),
         prior_sampling_fraction=1,
         **budget_kwargs,
     )

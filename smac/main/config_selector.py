@@ -213,7 +213,6 @@ class ConfigSelector:
             # Now we maximize the acquisition function
             challengers = self._acquisition_maximizer.maximize(
                 previous_configs,
-                n_points=self._retrain_after,
                 random_design=self._random_design,
             )
 
