@@ -1,0 +1,42 @@
+smac.runhistory.dataclasses
+===========================
+
+.. automodule:: smac.runhistory.dataclasses
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      InstanceSeedBudgetKey
+      InstanceSeedKey
+      TrajectoryItem
+      TrialInfo
+      TrialKey
+      TrialValue
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

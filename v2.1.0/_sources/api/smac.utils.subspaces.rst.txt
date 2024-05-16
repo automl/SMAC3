@@ -1,0 +1,41 @@
+smac.utils.subspaces
+====================
+
+.. automodule:: smac.utils.subspaces
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   smac.utils.subspaces.boing_subspace
+   smac.utils.subspaces.turbo_subspace
+

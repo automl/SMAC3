@@ -1,0 +1,37 @@
+smac.facade.abstract\_facade
+============================
+
+.. automodule:: smac.facade.abstract_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      AbstractFacade
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
