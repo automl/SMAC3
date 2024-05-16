@@ -2365,7 +2365,7 @@ training the surrogate model.</p>
 <li><p><strong>n_configs_per_hyperparameter</strong> (<em>int</em><em>, </em><em>defaults to 10</em>) – Number of initial configurations per hyperparameter. For example, if my configuration space covers five
 hyperparameters and <code class="docutils literal notranslate"><span class="pre">n_configs_per_hyperparameter</span></code> is set to 10, then 50 initial configurations will be
 samples.</p></li>
-<li><p><strong>max_ratio</strong> (<em>float</em><em>, </em><em>defaults to 0.1</em>) – Use at most <code class="docutils literal notranslate"><span class="pre">scenario.n_trials</span></code> * <code class="docutils literal notranslate"><span class="pre">max_ratio</span></code> number of configurations in the initial design.
+<li><p><strong>max_ratio</strong> (<em>float</em><em>, </em><em>defaults to 0.25</em>) – Use at most <code class="docutils literal notranslate"><span class="pre">scenario.n_trials</span></code> * <code class="docutils literal notranslate"><span class="pre">max_ratio</span></code> number of configurations in the initial design.
 Additional configurations are not affected by this parameter.</p></li>
 <li><p><strong>additional_configs</strong> (<em>list</em><em>[</em><em>Configuration</em><em>]</em><em>, </em><em>defaults to</em><em> [</em><em>]</em>) – Adds additional configurations to the initial design.</p></li>
 </ul>
