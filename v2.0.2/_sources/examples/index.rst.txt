@@ -11,6 +11,9 @@ variety of SMAC.
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 
@@ -24,6 +27,7 @@ Basics
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -127,6 +131,8 @@ Basics
     </div>
 
 
+.. thumbnail-parent-div-close
+
 .. raw:: html
 
     </div>
@@ -141,6 +147,7 @@ Multi-Fidelity and Multi-Instances
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -176,6 +183,8 @@ Multi-Fidelity and Multi-Instances
     </div>
 
 
+.. thumbnail-parent-div-close
+
 .. raw:: html
 
     </div>
@@ -190,6 +199,7 @@ Multi-Objective
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -225,6 +235,8 @@ Multi-Objective
     </div>
 
 
+.. thumbnail-parent-div-close
+
 .. raw:: html
 
     </div>
@@ -239,6 +251,7 @@ SMAC can call a target function from a script. This is useful if you want to opt
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -256,6 +269,8 @@ SMAC can call a target function from a script. This is useful if you want to opt
       <div class="sphx-glr-thumbnail-title">Call Target Function From Script</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 

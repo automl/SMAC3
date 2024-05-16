@@ -12,6 +12,7 @@ Multi-Objective
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -46,6 +47,8 @@ Multi-Objective
       <div class="sphx-glr-thumbnail-title">ParEGO</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 

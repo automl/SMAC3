@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**04:55.535** total execution time for 11 files **from all galleries**:
+**04:20.610** total execution time for 11 files **from all galleries**:
 
 .. container::
 
@@ -33,35 +33,35 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_examples_2_multi_fidelity_1_mlp_epochs.py` (``../examples/2_multi_fidelity/1_mlp_epochs.py``)
-     - 03:06.060
-     - 0.0
-   * - :ref:`sphx_glr_examples_2_multi_fidelity_2_sgd_datasets.py` (``../examples/2_multi_fidelity/2_sgd_datasets.py``)
-     - 00:35.663
+     - 02:27.946
      - 0.0
    * - :ref:`sphx_glr_examples_3_multi_objective_2_parego.py` (``../examples/3_multi_objective/2_parego.py``)
-     - 00:34.905
+     - 00:37.741
+     - 0.0
+   * - :ref:`sphx_glr_examples_2_multi_fidelity_2_sgd_datasets.py` (``../examples/2_multi_fidelity/2_sgd_datasets.py``)
+     - 00:35.837
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_6_priors.py` (``../examples/1_basics/6_priors.py``)
-     - 00:23.797
+     - 00:23.863
      - 0.0
    * - :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py` (``../examples/3_multi_objective/1_schaffer.py``)
-     - 00:05.547
+     - 00:05.631
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_3_ask_and_tell.py` (``../examples/1_basics/3_ask_and_tell.py``)
-     - 00:02.637
+     - 00:02.797
      - 0.0
    * - :ref:`sphx_glr_examples_5_commandline_1_call_target_function_script.py` (``../examples/5_commandline/1_call_target_function_script.py``)
-     - 00:02.616
+     - 00:02.630
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_1_quadratic_function.py` (``../examples/1_basics/1_quadratic_function.py``)
-     - 00:02.445
+     - 00:02.431
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_5_continue.py` (``../examples/1_basics/5_continue.py``)
-     - 00:00.947
+     - 00:00.793
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_2_svm_cv.py` (``../examples/1_basics/2_svm_cv.py``)
-     - 00:00.770
+     - 00:00.791
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_4_callback.py` (``../examples/1_basics/4_callback.py``)
-     - 00:00.148
+     - 00:00.151
      - 0.0

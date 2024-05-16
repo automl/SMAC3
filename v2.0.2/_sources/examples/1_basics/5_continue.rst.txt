@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_examples_1_basics_5_continue.py>`
-        to download the full example code or to run this example in your browser via Binder
+        to download the full example code. or to run this example in your browser via Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -170,7 +170,7 @@ there already is a previous run with the same meta data, this run will be contin
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.947 seconds)
+   **Total running time of the script:** (0 minutes 0.793 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_5_continue.py:

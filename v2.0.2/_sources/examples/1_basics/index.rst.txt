@@ -10,6 +10,7 @@ Basics
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -112,6 +113,8 @@ Basics
       <div class="sphx-glr-thumbnail-title">User Priors over the Optimum</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 

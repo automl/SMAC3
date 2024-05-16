@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_examples_3_multi_objective_2_parego.py>`
-        to download the full example code or to run this example in your browser via Binder
+        to download the full example code. or to run this example in your browser via Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -48,25 +48,22 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_intensifier.py:602] Config 540db2 is a new incumbent. Total number of incumbents: 2.
     [INFO][abstract_intensifier.py:602] Config 0c9159 is a new incumbent. Total number of incumbents: 3.
     [INFO][abstract_intensifier.py:594] Added config 3b5efd and rejected config 540db2 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:594] Added config f5c736 and rejected config 0c9159 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:594] Added config 4f0b90 and rejected config 3b5efd as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:594] Added config 046da3 and rejected config f5c736 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:602] Config 950d7e is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:602] Config 955bf1 is a new incumbent. Total number of incumbents: 5.
-    [INFO][abstract_intensifier.py:594] Added config f9d09e and rejected config 046da3 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:594] Added config 35f33e and rejected config 0c9159 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:602] Config e5e3f4 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:602] Config 6fe24c is a new incumbent. Total number of incumbents: 5.
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.8216798305511475
+    [INFO][smbo.py:328] --- Remaining wallclock time: -2.510913133621216
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 156
+    [INFO][smbo.py:330] --- Remaining trials: 157
     Validated costs from default config: 
-    --- [0.60155834 0.16961634]
+    --- [0.60155834 0.16767466]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.20649695]
-    --- [0.02949938 0.5645802 ]
-    --- [0.03896472 0.4270227 ]
-    --- [0.09321727 0.2738179 ]
-    --- [0.06511838 0.33336294]
+    --- [0.88924791 0.21482599]
+    --- [0.03561281 0.61647487]
+    --- [0.03896085 0.47280598]
+    --- [0.38090452 0.36357713]
+    --- [0.03255648 0.70628035]
 
 
 
@@ -247,7 +244,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 34.905 seconds)
+   **Total running time of the script:** (0 minutes 37.741 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
