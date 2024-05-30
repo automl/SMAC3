@@ -39,6 +39,9 @@
 - Handle configspace as dictionary in mlp and parego example.
 - Adapt sgd loss to newest scikit-learn version.
 
+## Features
+- Log to WandB (#1037)
+
 # 2.0.1
 
 ## Improvements
