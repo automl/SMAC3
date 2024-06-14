@@ -4,7 +4,7 @@ import hashlib
 import logging
 from functools import partial
 from typing import Iterable
-
+from smac.utils.exceptions import NonNumericHyperparameterError
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import (
@@ -19,6 +19,7 @@ from ConfigSpace.hyperparameters import (
     UniformIntegerHyperparameter,
 )
 from ConfigSpace.util import get_one_exchange_neighbourhood
+
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -177,6 +178,17 @@ def print_config_changes(
         else:
             logger.debug("--- %s Remains unchanged: %r", param[0], param[1])
 
+def assert_configspace_structure(configspace: ConfigurationSpace)-> None:
+    """
+    Check if the hyperparameters in the configuration space are all numerical.
+    Raises an error if a non-numeric hyperparameter is found.
+    """
+    for hyperparameter in configspace.get_hyperparameters():
+        if isinstance(hyperparameter, (CategoricalHyperparameter, OrdinalHyperparameter)):
+            raise NonNumericHyperparameterError(
+                f"Hyperparameter {hyperparameter.name} is a {type(hyperparameter).__name__} hyperparameter. Only numerical hyperparameters are supported."
+            )
+        
 
 # def check_subspace_points(
 #     X: np.ndarray,
