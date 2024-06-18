@@ -12,8 +12,8 @@ author_email = "fh@cs.uni-freiburg.de"
 description = "SMAC3, a Python implementation of 'Sequential Model-based Algorithm Configuration'."
 url = "https://www.automl.org/"
 project_urls = {
-    "Documentation": "https://https://github.com/automl.github.io/SMAC3/main",
-    "Source Code": "https://github.com/https://github.com/automl/smac",
+    "Documentation": "https://automl.github.io/SMAC3/main",
+    "Source Code": "https://github.com/automl/SMAC3",
 }
 copyright = f"""
     Copyright {datetime.date.today().strftime('%Y')}, Marius Lindauer, Katharina Eggensperger,
