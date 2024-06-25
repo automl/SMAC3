@@ -1,0 +1,74 @@
+Warmstarting SMAC
+======================================
+
+With the ask and tell interface, we can support warmstarting SMAC. We can communicate rich
+information about the previous trials to SMAC using `TrialInfo` and `TrialValue` instances.
+
+We can communicate using the following objects:
+
+.. code-block:: python
+    class TrialValue:
+        """Values of a trial.
+
+        Parameters
+        ----------
+        cost : float | list[float]
+        time : float, defaults to 0.0
+        status : StatusType, defaults to StatusType.SUCCESS
+        starttime : float, defaults to 0.0
+        endtime : float, defaults to 0.0
+        additional_info : dict[str, Any], defaults to {}
+        """
+
+    class TrialInfo:
+        """Information about a trial.
+
+        Parameters
+        ----------
+        config : Configuration
+        instance : str | None, defaults to None
+        seed : int | None, defaults to None
+        budget : float | None, defaults to None
+        """
+
+Usage Example
+-------------
+For your convenience, consider the following example; Notice, how the two trials are substracted
+from SMAC's budget, implying we will only checkout 98 new configurations.
+
+.. code-block:: python
+    from ConfigSpace import Configuration
+    from smac.runhistory.dataclasses import TrialValue, TrialInfo
+
+    # Assuming model and Scenario have already been defined
+    scenario = Scenario(model.configspace, deterministic=False, n_trials=100)
+    intensifier = HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=1)
+
+    smac = HyperparameterOptimizationFacade(
+        scenario,
+        model.train,
+        intensifier=intensifier,
+        overwrite=True,
+    )
+
+    # Example trial infos and values; Configuration will take care of parameter validation
+    trial_infos = [
+        TrialInfo(config=Configuration(model.configspace, {'x0':1, 'x1':2 }), instance='instance1', seed=1),
+        TrialInfo(config=Configuration(model.configspace, {'x0':-1, 'x1':3 }), instance='instance2', seed=2),
+    ]
+
+    trial_values = [
+        TrialValue(cost=0.5, time=0.1),
+        TrialValue(cost=0.3, time=0.2),
+    ]
+
+    # Warmstart SMAC with the trial information and values
+    for info, value in zip(trial_infos, trial_values):
+        smac.tell(info, value)
+
+    # continue as usual:
+    smac.optimize()
+
+
+For more details on ask and tell consult `advanced_usage/5_ask_and_tell`.
+
