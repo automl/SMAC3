@@ -53,8 +53,8 @@ from SMAC's budget, implying we will only checkout 98 new configurations.
 
     # Example trial infos and values; Configuration will take care of parameter validation
     trial_infos = [
-        TrialInfo(config=Configuration(model.configspace, {'x0':1, 'x1':2 }), instance='instance1', seed=1),
-        TrialInfo(config=Configuration(model.configspace, {'x0':-1, 'x1':3 }), instance='instance2', seed=2),
+        TrialInfo(config=Configuration(model.configspace, {'x0':1, 'x1':2}), instance='instance1', seed=1),
+        TrialInfo(config=Configuration(model.configspace, {'x0':-1, 'x1':3}), instance='instance2', seed=2),
     ]
 
     trial_values = [
@@ -71,4 +71,9 @@ from SMAC's budget, implying we will only checkout 98 new configurations.
 
 
 For more details on ask and tell consult `advanced_usage/5_ask_and_tell`.
+
+Notice, that the initial design will be executed as specified, meaning, we will have to subtract
+from `n_trials` to obtain the remaining number of congigurations that smac will optimizer over once both
+warmstarting and the initial design are finished: `n_trials` - `n_warmstart_configs` - `n_initial_design_configs`.
+
 
