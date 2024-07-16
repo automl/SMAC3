@@ -1,8 +1,10 @@
 # 2.1.1
 
+## Features
+- Add example to specify total budget (fidelity units) instead of n_trials for multi-fidelity/Hyperband (#1121)
+
 ## Dependencies
 - Update numpy NaN (#1122) and restrict numpy and ConfigSpace versions
-- Add example to specify total budget (fidelity units) instead of n_trials for multi-fidelity/Hyperband (#1121)
 
 # 2.1.0
 
