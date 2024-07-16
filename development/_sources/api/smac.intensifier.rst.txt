@@ -38,6 +38,7 @@ Modules
 
    smac.intensifier.abstract_intensifier
    smac.intensifier.hyperband
+   smac.intensifier.hyperband_utils
    smac.intensifier.intensifier
    smac.intensifier.successive_halving
 

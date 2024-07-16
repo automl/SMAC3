@@ -225,6 +225,11 @@
        Stochastic Gradient Descent On Multiple Datasets
       </a>
      </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../2_multi_fidelity/3_specify_HB_via_total_budget.html">
+       Specify Number of Trials via a Total Budget in Hyperband
+      </a>
+     </li>
     </ul>
    </li>
    <li class="toctree-l2 current active has-children">
@@ -629,6 +634,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.intensifier.hyperband_utils.html">
+       smac.intensifier.hyperband_utils
       </a>
      </li>
      <li class="toctree-l3">
@@ -1037,27 +1047,25 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][abstract_intensifier.py:602] Config 540db2 is a new incumbent. Total number of incumbents: 2.
 [INFO][abstract_intensifier.py:602] Config 0c9159 is a new incumbent. Total number of incumbents: 3.
 [INFO][abstract_intensifier.py:594] Added config 3b5efd and rejected config 540db2 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:594] Added config 6e5d1b and rejected config 0c9159 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:594] Added config f01726 and rejected config 6e5d1b as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:602] Config 29ee7e is a new incumbent. Total number of incumbents: 4.
-[INFO][abstract_intensifier.py:594] Added config ca7307 and rejected config f01726 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:594] Added config 2383f3 and rejected config d59842 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:602] Config 8e5cc1 is a new incumbent. Total number of incumbents: 4.
-[INFO][abstract_intensifier.py:602] Config 9c5ae0 is a new incumbent. Total number of incumbents: 5.
-[INFO][smbo.py:319] Finished 50 trials.
+[INFO][abstract_intensifier.py:602] Config 3dbce7 is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:594] Added config 86457c and rejected config 3623cc as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][abstract_intensifier.py:602] Config b636c9 is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:602] Config e9336a is a new incumbent. Total number of incumbents: 5.
+[INFO][abstract_intensifier.py:602] Config 257bf2 is a new incumbent. Total number of incumbents: 6.
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.2554643154144287
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.22296595573425293
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 147
+[INFO][smbo.py:330] --- Remaining trials: 156
 Validated costs from default config:
---- [0.60155834 0.15344048]
+--- [0.60155834 0.15696132]
 
 Validated costs from the Pareto front (incumbents):
---- [0.03561281 0.62059307]
---- [0.03199474 0.68714845]
---- [0.14161715 0.17038023]
---- [0.12159006 0.24027574]
---- [0.37703188 0.15144765]
+--- [0.03534045 0.56337726]
+--- [0.16305014 0.28335488]
+--- [0.38509904 0.16536093]
+--- [0.17502786 0.2682035 ]
+--- [0.45798979 0.16660476]
+--- [0.08681291 0.29409325]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1231,7 +1239,7 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 34.408 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 34.155 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo2.svg" style="width: 150px;" />

@@ -225,6 +225,11 @@
        Stochastic Gradient Descent On Multiple Datasets
       </a>
      </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="3_specify_HB_via_total_budget.html">
+       Specify Number of Trials via a Total Budget in Hyperband
+      </a>
+     </li>
     </ul>
    </li>
    <li class="toctree-l2 has-children">
@@ -629,6 +634,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.hyperband.html">
        smac.intensifier.hyperband
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.intensifier.hyperband_utils.html">
+       smac.intensifier.hyperband_utils
       </a>
      </li>
      <li class="toctree-l3">
@@ -1055,27 +1065,26 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][smbo.py:319] Finished 0 trials.
 [INFO][smbo.py:319] Finished 0 trials.
 [INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 50 trials.
-[INFO][smbo.py:319] Finished 50 trials.
-[INFO][smbo.py:319] Finished 50 trials.
 [INFO][abstract_intensifier.py:515] Added config 598f3b as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:594] Added config 938c0d and rejected config 598f3b as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 31d66e and rejected config 938c0d as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:594] Added config 91ea8c and rejected config 938c0d as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:319] Finished 100 trials.
+[INFO][smbo.py:319] Finished 100 trials.
 [INFO][smbo.py:319] Finished 100 trials.
 [INFO][smbo.py:319] Finished 150 trials.
 [INFO][smbo.py:319] Finished 150 trials.
+[INFO][smbo.py:319] Finished 150 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -2.9295597076416016
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.023777008056640625
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 271
-[INFO][abstract_intensifier.py:594] Added config 5097d0 and rejected config 31d66e as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:330] --- Remaining trials: 279
 Default cost (SuccessiveHalving): 0.36672856700711853
-Incumbent cost (SuccessiveHalving): 0.02225936242649329
+Incumbent cost (SuccessiveHalving): 0.01892602909315999
 [INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
 [INFO][abstract_facade.py:203] Workers are reduced to 8.
 /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
 Perhaps you already have a cluster running?
-Hosting the HTTP server on port 45147 instead
+Hosting the HTTP server on port 44981 instead
   warnings.warn(
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -1099,15 +1108,13 @@ Hosting the HTTP server on port 45147 instead
 [INFO][abstract_intensifier.py:594] Added config 1d30ce and rejected config 16c6ab as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][abstract_intensifier.py:594] Added config 938c0d and rejected config 1d30ce as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 50 trials.
-[INFO][smbo.py:319] Finished 50 trials.
-[INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:594] Added config 87d6f4 and rejected config 938c0d as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:594] Added config 9d0513 and rejected config 938c0d as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 100 trials.
-[INFO][abstract_intensifier.py:594] Added config b61b81 and rejected config 87d6f4 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:594] Added config b61b81 and rejected config 9d0513 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -5.963610410690308
+[INFO][smbo.py:328] --- Remaining wallclock time: -5.0368266105651855
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 372
+[INFO][smbo.py:330] --- Remaining trials: 373
 [INFO][abstract_intensifier.py:594] Added config 5097d0 and rejected config b61b81 as incumbent because it is not better than the incumbents on 1 instances:
 Default cost (Hyperband): 0.36672856700711853
 Incumbent cost (Hyperband): 0.02225936242649329
@@ -1281,7 +1288,7 @@ Incumbent cost (Hyperband): 0.02225936242649329
     <span class="n">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (3 minutes 18.116 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (2 minutes 54.536 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" style="width: 150px;" />
