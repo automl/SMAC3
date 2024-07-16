@@ -132,22 +132,21 @@ def print_hyperband_summary(hyperband_info: dict) -> None:
     hyperband_info : dict
         Info dict about Hyperband
     """
-    I = hyperband_info  # noqa: E741
     print("-" * 30, "HYPERBAND IN MULTI-FIDELITY", "-" * 30)
-    print("total budget:\t\t", I["total_budget"])
-    print("total number of trials:\t", I["n_trials"])
-    print("number of HB rounds:\t", I["total_budget"] / I["budget_used"])
+    print("total budget:\t\t", hyperband_info["total_budget"])
+    print("total number of trials:\t", hyperband_info["n_trials"])
+    print("number of HB rounds:\t", hyperband_info["total_budget"] / hyperband_info["budget_used"])
     print()
 
     print("\t~~~~~~~~~~~~HYPERBAND ROUND")
-    print("\teta:\t\t\t\t\t", I["eta"])
-    print("\tmin budget per trial:\t\t\t", I["min_budget"])
-    print("\tmax budget per trial:\t\t\t", I["max_budget"])
-    print("\ttotal number of trials per HB round:\t", I["trials_used"])
-    print("\tbudget used per HB round:\t\t", I["budget_used"])
-    print("\tnumber of brackets:\t\t\t", I["number_of_brackets"])
-    print("\tbudgets per stage:\t\t\t", I["budgets_in_stage"])
-    print("\tn configs per stage:\t\t\t", I["n_configs_in_stage"])
+    print("\teta:\t\t\t\t\t", hyperband_info["eta"])
+    print("\tmin budget per trial:\t\t\t", hyperband_info["min_budget"])
+    print("\tmax budget per trial:\t\t\t", hyperband_info["max_budget"])
+    print("\ttotal number of trials per HB round:\t", hyperband_info["trials_used"])
+    print("\tbudget used per HB round:\t\t", hyperband_info["budget_used"])
+    print("\tnumber of brackets:\t\t\t", hyperband_info["number_of_brackets"])
+    print("\tbudgets per stage:\t\t\t", hyperband_info["budgets_in_stage"])
+    print("\tn configs per stage:\t\t\t", hyperband_info["n_configs_in_stage"])
     print("-" * (2 * 30 + len("HYPERBAND IN MULTI-FIDELITY") + 2))
 
 
