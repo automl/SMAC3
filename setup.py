@@ -57,11 +57,11 @@ setuptools.setup(
     include_package_data=True,
     python_requires=">=3.8",
     install_requires=[
-        "numpy>=1.23.3",
+        "numpy>=1.23.3,<2.0.0",
         "scipy>=1.9.2",
         "psutil",
         "pynisher>=1.0.0",
-        "ConfigSpace>=0.6.1",
+        "ConfigSpace>=0.6.1,<1.0.0",
         "joblib",
         "scikit-learn>=1.1.2",
         "pyrfr>=0.9.0",
