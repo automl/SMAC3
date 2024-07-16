@@ -17,8 +17,7 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 from matplotlib import pyplot as plt
 
-from smac import MultiFidelityFacade
-from smac import RunHistory, Scenario
+from smac import MultiFidelityFacade, RunHistory, Scenario
 from smac.intensifier.hyperband_utils import get_n_trials_for_hyperband_multifidelity
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -27,6 +26,7 @@ __license__ = "3-clause BSD"
 
 class QuadraticFunction:
     max_budget = 500
+
     @property
     def configspace(self) -> ConfigurationSpace:
         cs = ConfigurationSpace(seed=0)
@@ -41,7 +41,7 @@ class QuadraticFunction:
 
         if budget is None:
             multiplier = 1
-        else: 
+        else:
             multiplier = 1 + budget / self.max_budget
 
         return x**2 * multiplier
@@ -79,21 +79,23 @@ if __name__ == "__main__":
     # fidelity units)
     n_trials = get_n_trials_for_hyperband_multifidelity(
         total_budget=10000,  # this is the total optimization budget we specify in terms of fidelity units
-        min_budget=min_budget, # This influences the Hyperband rounds, minimum budget per trial
-        max_budget=max_budget, # This influences the Hyperband rounds, maximum budget per trial
-        eta=eta, # This influences the Hyperband rounds
-        print_summary=True
+        min_budget=min_budget,  # This influences the Hyperband rounds, minimum budget per trial
+        max_budget=max_budget,  # This influences the Hyperband rounds, maximum budget per trial
+        eta=eta,  # This influences the Hyperband rounds
+        print_summary=True,
     )
 
     # Scenario object specifying the optimization "environment"
-    scenario = Scenario(model.configspace, deterministic=True, n_trials=n_trials, min_budget=min_budget, max_budget=max_budget)
+    scenario = Scenario(
+        model.configspace, deterministic=True, n_trials=n_trials, min_budget=min_budget, max_budget=max_budget
+    )
 
     # Now we use SMAC to find the best hyperparameters
     smac = MultiFidelityFacade(
         scenario,
         model.train,  # We pass the target function here
         overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
-        intensifier=MultiFidelityFacade.get_intensifier(scenario=scenario, eta=eta)
+        intensifier=MultiFidelityFacade.get_intensifier(scenario=scenario, eta=eta),
     )
 
     incumbent = smac.optimize()
