@@ -3,7 +3,6 @@
 ## Dependencies
 - Update numpy NaN (#1122) and restrict numpy and ConfigSpace versions
 
-
 # 2.1.0
 
 ## Improvements
