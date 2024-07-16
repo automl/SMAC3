@@ -1,3 +1,9 @@
+# 2.1.1
+
+## Dependencies
+- Update numpy NaN (#1122)
+
+
 # 2.1.0
 
 ## Improvements
