@@ -67,9 +67,9 @@ the target function now is required to have an instance argument.
     [INFO][smbo.py:319] Finished 400 trials.
     [INFO][smbo.py:319] Finished 450 trials.
     [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.006226062774658203
+    [INFO][smbo.py:328] --- Remaining wallclock time: -0.030642986297607422
     [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 4529
+    [INFO][smbo.py:330] --- Remaining trials: 4523
     Default cost: 0.15489347419148672
     Incumbent cost: 0.006249006102246613
 
@@ -211,7 +211,7 @@ the target function now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 34.232 seconds)
+   **Total running time of the script:** (0 minutes 34.235 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:

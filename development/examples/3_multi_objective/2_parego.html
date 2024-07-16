@@ -1037,25 +1037,21 @@ mean accuracy and run-time of each configuration.</p>
 [INFO][abstract_intensifier.py:602] Config 540db2 is a new incumbent. Total number of incumbents: 2.
 [INFO][abstract_intensifier.py:602] Config 0c9159 is a new incumbent. Total number of incumbents: 3.
 [INFO][abstract_intensifier.py:594] Added config 3b5efd and rejected config 540db2 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:602] Config 47ab87 is a new incumbent. Total number of incumbents: 4.
-[INFO][abstract_intensifier.py:594] Added config bab762 and rejected config 0c9159 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:602] Config f7e9fa is a new incumbent. Total number of incumbents: 5.
-[INFO][abstract_intensifier.py:602] Config 1f1935 is a new incumbent. Total number of incumbents: 6.
-[INFO][abstract_intensifier.py:602] Config 1fc87a is a new incumbent. Total number of incumbents: 6.
+[INFO][abstract_intensifier.py:594] Added config 4affa9 and rejected config 0c9159 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][abstract_intensifier.py:594] Added config 524484 and rejected config 4affa9 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][abstract_intensifier.py:602] Config b501d2 is a new incumbent. Total number of incumbents: 4.
+[INFO][smbo.py:319] Finished 50 trials.
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.4031243324279785
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.25040316581726074
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 158
+[INFO][smbo.py:330] --- Remaining trials: 148
 Validated costs from default config:
---- [0.60155834 0.15285683]
+--- [0.60155834 0.15595925]
 
 Validated costs from the Pareto front (incumbents):
---- [0.03561281 0.60962582]
---- [0.02783039 0.60970736]
---- [0.0367363  0.51679397]
---- [0.04786366 0.40991795]
---- [0.07568323 0.19116282]
---- [0.08070257 0.17534041]
+--- [0.03561281 0.60899425]
+--- [0.04424095 0.28683901]
+--- [0.08960074 0.1612854 ]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1229,10 +1225,11 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 35.875 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 32.804 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo2.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo2.svg" style="width: 150px;" />
+</a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9a6a998bd05ca9b3aff17bd46b9cd502/2_parego.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">2_parego.ipynb</span></code></a></p>
@@ -1287,7 +1284,7 @@ Validated costs from the Pareto front (incumbents):
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.3.7. Template is modified version of <a
+7.4.4. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

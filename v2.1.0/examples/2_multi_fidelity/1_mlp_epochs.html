@@ -99,7 +99,7 @@
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.1.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
@@ -1057,20 +1057,27 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][smbo.py:319] Finished 0 trials.
 [INFO][abstract_intensifier.py:515] Added config 598f3b as new incumbent because there are no incumbents yet.
 [INFO][abstract_intensifier.py:594] Added config 938c0d and rejected config 598f3b as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config b9b3dc and rejected config 938c0d as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:319] Finished 100 trials.
+[INFO][abstract_intensifier.py:594] Added config 9ec712 and rejected config 938c0d as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 150 trials.
+[INFO][smbo.py:319] Finished 150 trials.
+[INFO][smbo.py:319] Finished 150 trials.
+[INFO][smbo.py:319] Finished 150 trials.
+[INFO][smbo.py:319] Finished 150 trials.
+[INFO][smbo.py:319] Finished 150 trials.
+[INFO][smbo.py:319] Finished 200 trials.
+[INFO][abstract_intensifier.py:594] Added config 64513b and rejected config 9ec712 as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.0836181640625
+[INFO][smbo.py:328] --- Remaining wallclock time: -0.1638927459716797
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 317
-[INFO][abstract_intensifier.py:594] Added config f452c6 and rejected config b9b3dc as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:330] --- Remaining trials: 280
 Default cost (SuccessiveHalving): 0.36672856700711853
-Incumbent cost (SuccessiveHalving): 0.021708449396471652
+Incumbent cost (SuccessiveHalving): 0.016142061281337106
 [INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
 [INFO][abstract_facade.py:203] Workers are reduced to 8.
 /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
 Perhaps you already have a cluster running?
-Hosting the HTTP server on port 37115 instead
+Hosting the HTTP server on port 42051 instead
   warnings.warn(
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -1094,15 +1101,16 @@ Hosting the HTTP server on port 37115 instead
 [INFO][abstract_intensifier.py:594] Added config 1d30ce and rejected config 16c6ab as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][abstract_intensifier.py:594] Added config 938c0d and rejected config 1d30ce as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:594] Added config 001690 and rejected config 938c0d as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 100 trials.
-[INFO][abstract_intensifier.py:594] Added config 87a6c5 and rejected config 001690 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:319] Finished 50 trials.
+[INFO][smbo.py:319] Finished 50 trials.
+[INFO][abstract_intensifier.py:594] Added config 8a1ee1 and rejected config 938c0d as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.5304005146026611
+[INFO][smbo.py:328] --- Remaining wallclock time: -2.6658904552459717
 [INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 369
+[INFO][smbo.py:330] --- Remaining trials: 347
+[INFO][abstract_intensifier.py:594] Added config 5fed5e and rejected config 8a1ee1 as incumbent because it is not better than the incumbents on 1 instances:
 Default cost (Hyperband): 0.36672856700711853
-Incumbent cost (Hyperband): 0.019475394614670405
+Incumbent cost (Hyperband): 0.021146703806871003
 </pre></div>
 </div>
 <div class="line-block">
@@ -1273,10 +1281,11 @@ Incumbent cost (Hyperband): 0.019475394614670405
     <span class="n">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (2 minutes 29.830 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (2 minutes 29.903 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" style="width: 150px;" />
+</a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/cd745b0cfbf59a4ad87a24a2fe5463e0/1_mlp_epochs.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">1_mlp_epochs.ipynb</span></code></a></p>
@@ -1331,7 +1340,7 @@ Incumbent cost (Hyperband): 0.019475394614670405
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.3.7. Template is modified version of <a
+7.4.4. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>
