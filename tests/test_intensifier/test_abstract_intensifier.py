@@ -110,7 +110,7 @@ def test_incumbent_selection_multi_objective(make_scenario, configspace_small, m
 
 
 def test_config_rejection_single_objective(configspace_small, make_scenario):
-    """ Tests whether configs are rejected properly if they are worse than the incumbent. """
+    """Tests whether configs are rejected properly if they are worse than the incumbent."""
     scenario = make_scenario(configspace_small, use_instances=False)
     runhistory = RunHistory()
     intensifier = Intensifier(scenario=scenario)
@@ -118,36 +118,21 @@ def test_config_rejection_single_objective(configspace_small, make_scenario):
 
     configs = configspace_small.sample_configuration(3)
 
-    runhistory.add(config=configs[0],
-                   cost=5,
-                   time=0.0,
-                   seed=0,
-                   status=StatusType.SUCCESS,
-                   force_update=True)
+    runhistory.add(config=configs[0], cost=5, time=0.0, seed=0, status=StatusType.SUCCESS, force_update=True)
     intensifier.update_incumbents(configs[0])
 
     assert intensifier._rejected_config_ids == []
 
     # add config that yielded better results, updating incumbent and sending prior incumbent to rejected
-    runhistory.add(config=configs[1],
-                   cost=1,
-                   time=0.0,
-                   seed=0,
-                   status=StatusType.SUCCESS,
-                   force_update=True)
+    runhistory.add(config=configs[1], cost=1, time=0.0, seed=0, status=StatusType.SUCCESS, force_update=True)
     intensifier.update_incumbents(config=configs[1])
-    
+
     assert intensifier._rejected_config_ids == [1]
 
     # add config that is no better should thus go to rejected
-    runhistory.add(config=configs[2],
-                   cost=1,
-                   time=0.0,
-                   seed=0,
-                   status=StatusType.SUCCESS,
-                   force_update=True)
+    runhistory.add(config=configs[2], cost=1, time=0.0, seed=0, status=StatusType.SUCCESS, force_update=True)
     intensifier.update_incumbents(config=configs[2])
-    
+
     assert intensifier._rejected_config_ids == [1, 3]
 
 

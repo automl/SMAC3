@@ -44,7 +44,7 @@ class Branin(object):
         cs = ConfigurationSpace(seed=0)
         x0 = Float("x0", (-5, 10), default=-5, log=False)
         x1 = Float("x1", (0, 15), default=2, log=False)
-        cs.add_hyperparameters([x0, x1])
+        cs.add([x0, x1])
 
         return cs
 

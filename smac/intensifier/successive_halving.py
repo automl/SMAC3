@@ -384,7 +384,7 @@ class SuccessiveHalving(AbstractIntensifier):
             logger.debug("Updating tracker:")
 
             # TODO: Process stages ascending or descending?
-            for (bracket, stage) in list(self._tracker.keys()):
+            for bracket, stage in list(self._tracker.keys()):
                 pairs = self._tracker[(bracket, stage)].copy()
                 for seed, configs in pairs:
                     isb_keys = self._get_instance_seed_budget_keys_by_stage(bracket=bracket, stage=stage, seed=seed)

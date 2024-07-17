@@ -11,9 +11,9 @@ from pathlib import Path
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace
-from ConfigSpace.read_and_write import json as cs_json
 
 from smac.utils.logging import get_logger
+from smac.utils.numpyencoder import NumpyEncoder
 
 logger = get_logger(__name__)
 
@@ -203,12 +203,11 @@ class Scenario:
         # Save everything
         filename = self.output_directory / "scenario.json"
         with open(filename, "w") as fh:
-            json.dump(data, fh, indent=4)
+            json.dump(data, fh, indent=4, cls=NumpyEncoder)
 
         # Save configspace on its own
         configspace_filename = self.output_directory / "configspace.json"
-        with open(configspace_filename, "w") as f:
-            f.write(cs_json.write(self.configspace))
+        self.configspace.to_json(configspace_filename)
 
     @staticmethod
     def load(path: Path) -> Scenario:
@@ -224,9 +223,7 @@ class Scenario:
 
         # Read configspace
         configspace_filename = path / "configspace.json"
-        with open(configspace_filename, "r") as f:
-
-            configspace = cs_json.read(f.read())
+        configspace = ConfigurationSpace.from_json(configspace_filename)
 
         data["configspace"] = configspace
 
