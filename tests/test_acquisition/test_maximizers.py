@@ -262,7 +262,6 @@ def test_get_initial_points_moo(configspace):
             return X, X
 
     class AcquisitionFunction:
-
         model = Model()
 
         def __call__(self, X):
@@ -333,7 +332,7 @@ def test_local_and_random_search(configspace, acquisition_function):
     values = rs._maximize(start_points, 100)
     config_origins = []
     v_old = np.inf
-    for (v, config) in values:
+    for v, config in values:
         config_origins += [config.origin]
         if isinstance(v, np.ndarray):
             v = float(v[0])

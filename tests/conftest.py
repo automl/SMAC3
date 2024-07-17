@@ -143,7 +143,6 @@ def pytest_sessionfinish(session: Session, exitstatus: ExitCode) -> None:
     proc = psutil.Process()
     kill_signal = signal.SIGTERM
     for child in proc.children(recursive=True):
-
         # https://stackoverflow.com/questions/57336095/access-verbosity-level-in-a-pytest-helper-function
         if session.config.getoption("verbose") > 0:
             print(child, child.cmdline())

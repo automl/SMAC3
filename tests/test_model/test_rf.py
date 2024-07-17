@@ -127,7 +127,6 @@ def test_predict_marginalized():
 
 
 def test_predict_marginalized_mocked():
-
     rs = np.random.RandomState(1)
     F = {}
     for i in range(10):

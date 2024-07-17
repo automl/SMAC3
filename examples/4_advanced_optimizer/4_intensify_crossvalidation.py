@@ -35,8 +35,8 @@ class SVM:
         cs = ConfigurationSpace(seed=0)
 
         # First we create our hyperparameters
-        C = Float("C", (2 ** - 5, 2 ** 15), default=1.0, log=True)
-        gamma = Float("gamma", (2 ** -15, 2 ** 3), default=1.0, log=True)
+        C = Float("C", (2**-5, 2**15), default=1.0, log=True)
+        gamma = Float("gamma", (2**-15, 2**3), default=1.0, log=True)
 
         # Add hyperparameters to our configspace
         cs.add([C, gamma])
@@ -45,7 +45,7 @@ class SVM:
 
     def train(self, config: Configuration, instance: str, seed: int = 0) -> float:
         """Creates a SVM based on a configuration and evaluate on the given fold of the digits dataset
-        
+
         Parameters
         ----------
         config: Configuration
@@ -81,15 +81,14 @@ if __name__ == "__main__":
     scenario = Scenario(
         classifier.configspace,
         n_trials=50,  # We want to run max 50 trials (combination of config and instances in the case of
-                      # deterministic=True. In the case of deterministic=False, this would be the
-                      # combination of instances, seeds and configs). The number of distinct configurations
-                      # evaluated by SMAC will be lower than this number because some of the configurations
-                      # will be executed on more than one instance (CV fold).
+        # deterministic=True. In the case of deterministic=False, this would be the
+        # combination of instances, seeds and configs). The number of distinct configurations
+        # evaluated by SMAC will be lower than this number because some of the configurations
+        # will be executed on more than one instance (CV fold).
         instances=[f"{i}" for i in range(N_FOLDS)],  # Specify all instances by their name (as a string)
-        instance_features={f"{i}": [i] for i in range(N_FOLDS)}, # breaks SMAC
+        instance_features={f"{i}": [i] for i in range(N_FOLDS)},  # breaks SMAC
         deterministic=True  # To simplify the problem we make SMAC believe that we have a deterministic
-                            # optimization problem.
-        
+        # optimization problem.
     )
 
     # We want to run the facade's default initial design, but we want to change the number
@@ -102,12 +101,12 @@ if __name__ == "__main__":
         classifier.train,
         initial_design=initial_design,
         overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state
-        # The next line defines the intensifier, i.e., the module that governs the selection of 
+        # The next line defines the intensifier, i.e., the module that governs the selection of
         # instance-seed pairs. Since we set deterministic to True above, it only governs the instance in
         # this example. Technically, it is not necessary to create the intensifier as a user, but it is
         # necessary to do so because we change the argument max_config_calls (the number of instance-seed pairs
         # per configuration to try) to the number of cross-validation folds, while the default would be 3.
-        intensifier=Intensifier(scenario=scenario, max_config_calls=N_FOLDS, seed=0)
+        intensifier=Intensifier(scenario=scenario, max_config_calls=N_FOLDS, seed=0),
     )
 
     incumbent = smac.optimize()

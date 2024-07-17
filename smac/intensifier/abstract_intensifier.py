@@ -26,8 +26,8 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash, print_config_changes
 from smac.utils.logging import get_logger
-from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 from smac.utils.numpyencoder import NumpyEncoder
+from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"

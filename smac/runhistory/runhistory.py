@@ -804,7 +804,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 },
                 fp,
                 indent=2,
-                cls=NumpyEncoder
+                cls=NumpyEncoder,
             )
 
     def load(self, filename: str | Path, configspace: ConfigurationSpace) -> None:
