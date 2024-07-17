@@ -95,8 +95,8 @@ class MLP:
             "learning_rate_init",
             lower=1e-5,
             upper=1.0,
-            mu=np.log(1e-3),
-            sigma=np.log(10),
+            mu=1e-3,  # will be transformed to log space later
+            sigma=10,  # will be transformed to log space later
             log=True,
         )
 
