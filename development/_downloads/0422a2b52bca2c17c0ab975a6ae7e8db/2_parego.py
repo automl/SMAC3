@@ -54,14 +54,14 @@ class MLP:
         learning_rate = Categorical("learning_rate", ["constant", "invscaling", "adaptive"], default="constant")
         learning_rate_init = Float("learning_rate_init", (0.0001, 1.0), default=0.001, log=True)
 
-        cs.add_hyperparameters([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
+        cs.add([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
 
         use_lr = EqualsCondition(child=learning_rate, parent=solver, value="sgd")
         use_lr_init = InCondition(child=learning_rate_init, parent=solver, values=["sgd", "adam"])
         use_batch_size = InCondition(child=batch_size, parent=solver, values=["sgd", "adam"])
 
         # We can also add multiple conditions on hyperparameters at once:
-        cs.add_conditions([use_lr, use_batch_size, use_lr_init])
+        cs.add([use_lr, use_batch_size, use_lr_init])
 
         return cs
 

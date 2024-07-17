@@ -913,6 +913,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1121,22 +1126,22 @@
             <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inactive parameters not supported for Beta and Normal Hyperparameters&quot;</span><span class="p">)</span>
 
-            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">_lower</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">_upper</span><span class="p">)</span>
+            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">lower_vectorized</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">upper_vectorized</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">NormalIntegerHyperparameter</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inactive parameters not supported for Beta and Normal Hyperparameters&quot;</span><span class="p">)</span>
 
-            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">nfhp</span><span class="o">.</span><span class="n">_lower</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">nfhp</span><span class="o">.</span><span class="n">_upper</span><span class="p">)</span>
+            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">lower_vectorized</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">upper_vectorized</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">BetaFloatHyperparameter</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inactive parameters not supported for Beta and Normal Hyperparameters&quot;</span><span class="p">)</span>
 
-            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">_lower</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">_upper</span><span class="p">)</span>
+            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">lower_vectorized</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">upper_vectorized</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">BetaIntegerHyperparameter</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inactive parameters not supported for Beta and Normal Hyperparameters&quot;</span><span class="p">)</span>
 
-            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">bfhp</span><span class="o">.</span><span class="n">_lower</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">bfhp</span><span class="o">.</span><span class="n">_upper</span><span class="p">)</span>
+            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">lower_vectorized</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">upper_vectorized</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">param</span><span class="p">,</span>
             <span class="p">(</span>

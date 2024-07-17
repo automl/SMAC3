@@ -913,6 +913,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1422,7 +1427,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updating tracker:&quot;</span><span class="p">)</span>
 
             <span class="c1"># TODO: Process stages ascending or descending?</span>
-            <span class="k">for</span> <span class="p">(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
                 <span class="n">pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tracker</span><span class="p">[(</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">seed</span><span class="p">,</span> <span class="n">configs</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
                     <span class="n">isb_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_instance_seed_budget_keys_by_stage</span><span class="p">(</span><span class="n">bracket</span><span class="o">=</span><span class="n">bracket</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="n">stage</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>

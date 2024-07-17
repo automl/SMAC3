@@ -40,6 +40,7 @@ Modules
    smac.utils.data_structures
    smac.utils.logging
    smac.utils.multi_objective
+   smac.utils.numpyencoder
    smac.utils.pareto_front
    smac.utils.subspaces
 

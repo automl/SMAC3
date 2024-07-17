@@ -916,6 +916,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1042,41 +1047,37 @@ The black-box facade uses a <a class="reference internal" href="../../7_glossary
 The facade works best on a numerical hyperparameter configuration space and should not
 be applied to problems with large evaluation budgets (up to 1000 evaluations).</p>
 <img src="../../_images/sphx_glr_1_quadratic_function_001.png" srcset="../../_images/sphx_glr_1_quadratic_function_001.png" alt="1 quadratic function" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 0 additional configurations.
-[INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
-[INFO][abstract_intensifier.py:515] Added config f09c3b as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:594] Added config bec0fc and rejected config f09c3b as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config a34626 and rejected config bec0fc as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config f72805 and rejected config a34626 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config d7ecca and rejected config f72805 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 10bb50 and rejected config d7ecca as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 6a2c79 and rejected config 10bb50 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 4380b1 and rejected config 6a2c79 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 15dfc6 and rejected config 4380b1 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config b9f3bd and rejected config 15dfc6 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config c714f5 and rejected config b9f3bd as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 2da694 and rejected config c714f5 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:594] Added config e50a55 and rejected config 2da694 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 4a175d and rejected config e50a55 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config fef2f4 and rejected config 4a175d as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 8b3403 and rejected config fef2f4 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config a028a8 and rejected config 8b3403 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config e1dc2b and rejected config a028a8 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config e66a0e and rejected config e1dc2b as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 9f5b5b and rejected config e66a0e as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 8d6767 and rejected config 9f5b5b as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 1add8f and rejected config 8d6767 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config df326a and rejected config 1add8f as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 2d8007 and rejected config df326a as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config cabaca and rejected config 2d8007 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 100 trials.
-[INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: inf
-[INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 0
-[INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
+[INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
+[INFO][abstract_intensifier.py:516] Added config f09c3b as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:595] Added config bec0fc and rejected config f09c3b as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config a34626 and rejected config bec0fc as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config f72805 and rejected config a34626 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config f47107 and rejected config f72805 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 988484 and rejected config f47107 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 9f53ac and rejected config 988484 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 204797 and rejected config 9f53ac as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config a0cecd and rejected config 204797 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 14f964 and rejected config a0cecd as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config df341a and rejected config 14f964 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config b9e9df and rejected config df341a as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 324506 and rejected config b9e9df as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 3680e8 and rejected config 324506 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 50 trials.
+[INFO][abstract_intensifier.py:595] Added config e8f78f and rejected config 3680e8 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 6bb20f and rejected config e8f78f as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config cffb0d and rejected config 6bb20f as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config bc2e53 and rejected config cffb0d as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 29cde6 and rejected config bc2e53 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 87b45a and rejected config 29cde6 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 8e7a2c and rejected config 87b45a as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:328] Configuration budget is exhausted:
+[INFO][smbo.py:329] --- Remaining wallclock time: inf
+[INFO][smbo.py:330] --- Remaining cpu time: inf
+[INFO][smbo.py:331] --- Remaining trials: 0
+[INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
 Default cost: 25.0
-Incumbent cost: 1.7011175854063811e-09
+Incumbent cost: 1.7011175854094678e-09
 </pre></div>
 </div>
 <div class="line-block">
@@ -1098,7 +1099,7 @@ Incumbent cost: 1.7011175854063811e-09
     <span class="k">def</span> <span class="nf">configspace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfigurationSpace</span><span class="p">:</span>
         <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">default</span><span class="o">=-</span><span class="mi">5</span><span class="p">)</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">cs</span>
 
@@ -1156,7 +1157,7 @@ Incumbent cost: 1.7011175854063811e-09
     <span class="n">plot</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.220 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.275 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-1-quadratic-function-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/1_quadratic_function.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" style="width: 150px;" />

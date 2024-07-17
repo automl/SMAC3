@@ -913,6 +913,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1196,7 +1201,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">configspace</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">IntegerHyperparameter</span><span class="p">):</span>
                 <span class="n">design</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">_inverse_transform</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">design</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]))</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">NumericalHyperparameter</span><span class="p">):</span>

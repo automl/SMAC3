@@ -916,6 +916,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1042,26 +1047,26 @@ Furthermore, we print some stages of the optimization process.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Let&#39;s start!
 
 Evaluated 10 trials so far.
-/home/runner/work/SMAC3/SMAC3/examples/1_basics/4_callback.py:57: DeprecationWarning: `Configuration` act&#39;s like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
+/home/runner/work/SMAC3/SMAC3/examples/1_basics/4_callback.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
   print(f&quot;Current incumbent: {incumbent.get_dictionary()}&quot;)
-Current incumbent: {&#39;x0&#39;: -0.9968221839517355, &#39;x1&#39;: 4.30847043171525}
-Current incumbent value: 1102.7877872130716
+Current incumbent: {&#39;x0&#39;: -0.9968221839517354, &#39;x1&#39;: 4.30847043171525}
+Current incumbent value: 1102.787787213072
 
 Evaluated 20 trials so far.
-Current incumbent: {&#39;x0&#39;: -0.9968221839517355, &#39;x1&#39;: 4.30847043171525}
-Current incumbent value: 1102.7877872130716
+Current incumbent: {&#39;x0&#39;: -0.9968221839517354, &#39;x1&#39;: 4.30847043171525}
+Current incumbent value: 1102.787787213072
 
 Evaluated 30 trials so far.
-Current incumbent: {&#39;x0&#39;: -0.9968221839517355, &#39;x1&#39;: 4.30847043171525}
-Current incumbent value: 1102.7877872130716
+Current incumbent: {&#39;x0&#39;: -0.9968221839517354, &#39;x1&#39;: 4.30847043171525}
+Current incumbent value: 1102.787787213072
 
 Evaluated 40 trials so far.
-Current incumbent: {&#39;x0&#39;: -0.9968221839517355, &#39;x1&#39;: 4.30847043171525}
-Current incumbent value: 1102.7877872130716
+Current incumbent: {&#39;x0&#39;: -0.9968221839517354, &#39;x1&#39;: 4.30847043171525}
+Current incumbent value: 1102.787787213072
 
 Evaluated 50 trials so far.
-Current incumbent: {&#39;x0&#39;: 0.03135360777378082, &#39;x1&#39;: -0.21179260686039925}
-Current incumbent value: 5.465623793958126
+Current incumbent: {&#39;x0&#39;: 0.0313536077737808, &#39;x1&#39;: -0.2117926068603992}
+Current incumbent value: 5.465623793958124
 
 We just triggered to stop the optimization after 50 finished trials.
 </pre></div>
@@ -1089,7 +1094,7 @@ We just triggered to stop the optimization after 50 finished trials.
         <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">default</span><span class="o">=-</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">x1</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">default</span><span class="o">=-</span><span class="mi">4</span><span class="p">)</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">cs</span>
 
@@ -1143,7 +1148,7 @@ We just triggered to stop the optimization after 50 finished trials.
     <span class="p">)</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.154 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.159 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-4-callback-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/4_callback.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" style="width: 150px;" />

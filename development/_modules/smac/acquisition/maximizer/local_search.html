@@ -913,6 +913,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1406,7 +1411,7 @@
                             <span class="k">if</span> <span class="n">acq_val</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">acq_val_candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                                 <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">False</span>
                                 <span class="k">try</span><span class="p">:</span>
-                                    <span class="n">neighbors</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span><span class="o">.</span><span class="n">is_valid_configuration</span><span class="p">()</span>
+                                    <span class="n">neighbors</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span><span class="o">.</span><span class="n">check_valid_configuration</span><span class="p">()</span>
                                     <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">True</span>
                                 <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">ForbiddenValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Local search </span><span class="si">%d</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>

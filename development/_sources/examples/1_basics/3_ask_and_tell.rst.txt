@@ -33,25 +33,27 @@ This examples show how to use the Ask-and-Tell interface.
  .. code-block:: none
 
     [INFO][abstract_initial_design.py:147] Using 20 initial design configurations and 0 additional configurations.
-    [INFO][abstract_intensifier.py:515] Added config 38310a as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:594] Added config a840bc and rejected config 38310a as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 9a770c and rejected config a840bc as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 6a6aa0 and rejected config 9a770c as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 27e052 and rejected config 6a6aa0 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][smbo.py:319] Finished 50 trials.
-    [INFO][abstract_intensifier.py:594] Added config da5bdf and rejected config 27e052 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 4e3320 and rejected config da5bdf as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 58c3ff and rejected config 4e3320 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config ad8450 and rejected config 58c3ff as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 53144c and rejected config ad8450 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 1cfe87 and rejected config 53144c as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][smbo.py:319] Finished 100 trials.
-    [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: inf
-    [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 0
+    [INFO][abstract_intensifier.py:516] Added config 73bd77 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:595] Added config 1a3757 and rejected config 73bd77 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 0c7ad4 and rejected config 1a3757 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 8ee2dd and rejected config 0c7ad4 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config cd8a03 and rejected config 8ee2dd as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 8554e9 and rejected config cd8a03 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][smbo.py:320] Finished 50 trials.
+    [INFO][abstract_intensifier.py:595] Added config 636d32 and rejected config 8554e9 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config dd7491 and rejected config 636d32 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config d1c9ea and rejected config dd7491 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config b888c4 and rejected config d1c9ea as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 858410 and rejected config b888c4 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config dda40a and rejected config 858410 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config d5a193 and rejected config dda40a as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][smbo.py:320] Finished 100 trials.
+    [INFO][smbo.py:328] Configuration budget is exhausted:
+    [INFO][smbo.py:329] --- Remaining wallclock time: inf
+    [INFO][smbo.py:330] --- Remaining cpu time: inf
+    [INFO][smbo.py:331] --- Remaining trials: 0
     Default cost: 16916.0
-    Incumbent cost: 0.6764193577937531
+    Incumbent cost: 0.6260486651666125
 
 
 
@@ -78,7 +80,7 @@ This examples show how to use the Ask-and-Tell interface.
             cs = ConfigurationSpace(seed=0)
             x0 = Float("x0", (-5, 10), default=-3)
             x1 = Float("x1", (-5, 10), default=-4)
-            cs.add_hyperparameters([x0, x1])
+            cs.add([x0, x1])
 
             return cs
 
@@ -141,7 +143,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.885 seconds)
+   **Total running time of the script:** (0 minutes 3.936 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_ask_and_tell.py:

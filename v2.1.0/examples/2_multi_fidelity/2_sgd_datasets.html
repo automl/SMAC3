@@ -916,6 +916,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1056,25 +1061,25 @@ the target function now is required to have an instance argument.</p>
 [INFO][successive_halving.py:329] --- Bracket 1: [5.0, 15.0, 45.0]
 [INFO][successive_halving.py:329] --- Bracket 2: [15.0, 45.0]
 [INFO][successive_halving.py:329] --- Bracket 3: [45.0]
-[INFO][abstract_intensifier.py:515] Added config e5c425 as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:594] Added config 884840 and rejected config e5c425 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 812224 and rejected config 884840 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:594] Added config 884840 and rejected config 812224 as incumbent because it is not better than the incumbents on 15 instances:
-[INFO][smbo.py:319] Finished 100 trials.
-[INFO][smbo.py:319] Finished 150 trials.
-[INFO][smbo.py:319] Finished 200 trials.
-[INFO][smbo.py:319] Finished 250 trials.
-[INFO][smbo.py:319] Finished 300 trials.
-[INFO][smbo.py:319] Finished 350 trials.
-[INFO][smbo.py:319] Finished 400 trials.
-[INFO][smbo.py:319] Finished 450 trials.
-[INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.014480829238891602
-[INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 4517
+[INFO][abstract_intensifier.py:516] Added config 86ef62 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:595] Added config 1b2811 and rejected config 86ef62 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 04353d and rejected config 1b2811 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 50 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 150 trials.
+[INFO][smbo.py:320] Finished 200 trials.
+[INFO][smbo.py:320] Finished 250 trials.
+[INFO][smbo.py:320] Finished 300 trials.
+[INFO][smbo.py:320] Finished 350 trials.
+[INFO][smbo.py:320] Finished 400 trials.
+[INFO][smbo.py:320] Finished 450 trials.
+[INFO][smbo.py:320] Finished 500 trials.
+[INFO][smbo.py:328] Configuration budget is exhausted:
+[INFO][smbo.py:329] --- Remaining wallclock time: -0.006165504455566406
+[INFO][smbo.py:330] --- Remaining cpu time: inf
+[INFO][smbo.py:331] --- Remaining trials: 4454
 Default cost: 0.15489347419148672
-Incumbent cost: 0.006249006102246613
+Incumbent cost: 0.005258470744547927
 </pre></div>
 </div>
 <div class="line-block">
@@ -1142,7 +1147,7 @@ Incumbent cost: 0.006249006102246613
         <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">Categorical</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="s2">&quot;invscaling&quot;</span><span class="p">,</span> <span class="s2">&quot;adaptive&quot;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">)</span>
         <span class="n">eta0</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;eta0&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.00001</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># Add the parameters to configuration space</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">alpha</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">eta0</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">alpha</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">eta0</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">cs</span>
 
@@ -1206,7 +1211,7 @@ Incumbent cost: 0.006249006102246613
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 34.159 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 34.277 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-2-sgd-datasets-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/2_sgd_datasets.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" style="width: 150px;" />

@@ -916,6 +916,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1058,7 +1063,7 @@ number of HB rounds:     3.802816901408451
         n configs per stage:                     {0: [27, 9, 3, 1], 1: [12, 4, 1], 2: [6, 2], 3: [4]}
 -----------------------------------------------------------------------------------------
 [INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 0 additional configurations.
-[INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
+[INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
 [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 10, and max budget 500.
 [INFO][successive_halving.py:323] Number of configs in stage:
 [INFO][successive_halving.py:325] --- Bracket 0: [27, 9, 3, 1]
@@ -1070,32 +1075,30 @@ number of HB rounds:     3.802816901408451
 [INFO][successive_halving.py:329] --- Bracket 1: [55.55555555555555, 166.66666666666666, 500.0]
 [INFO][successive_halving.py:329] --- Bracket 2: [166.66666666666666, 500.0]
 [INFO][successive_halving.py:329] --- Bracket 3: [500.0]
-[INFO][abstract_intensifier.py:515] Added config 3301b5 as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:594] Added config b3f935 and rejected config 3301b5 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config cdd1aa and rejected config b3f935 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:594] Added config 8035c4 and rejected config cdd1aa as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config ba9a35 and rejected config 8035c4 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 7a1d9c and rejected config ba9a35 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config b9cbc7 and rejected config 7a1d9c as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 100 trials.
-[INFO][smbo.py:319] Finished 150 trials.
-[INFO][abstract_intensifier.py:594] Added config 5b688c and rejected config b9cbc7 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 08dfd2 and rejected config 5b688c as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config f79367 and rejected config 08dfd2 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 200 trials.
-[INFO][abstract_intensifier.py:594] Added config bdbb31 and rejected config f79367 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 5afac4 and rejected config bdbb31 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 7cadd3 and rejected config 5afac4 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 328b60 and rejected config 7cadd3 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config ce6578 and rejected config 328b60 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: inf
-[INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 0
-[INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
+[INFO][abstract_intensifier.py:516] Added config ce0554 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:595] Added config b3f935 and rejected config ce0554 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config b99ec7 and rejected config b3f935 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 50 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][abstract_intensifier.py:595] Added config 5487e8 and rejected config b99ec7 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 92ab40 and rejected config 5487e8 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 17b438 and rejected config 92ab40 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 150 trials.
+[INFO][abstract_intensifier.py:595] Added config 90142d and rejected config 17b438 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 55a07b and rejected config 90142d as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config b467f4 and rejected config 55a07b as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 200 trials.
+[INFO][abstract_intensifier.py:595] Added config 65117b and rejected config b467f4 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config aa3524 and rejected config 65117b as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 1ca4da and rejected config aa3524 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 76f610 and rejected config 1ca4da as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:328] Configuration budget is exhausted:
+[INFO][smbo.py:329] --- Remaining wallclock time: inf
+[INFO][smbo.py:330] --- Remaining cpu time: inf
+[INFO][smbo.py:331] --- Remaining trials: 0
+[INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
 Default cost: 50.0
-Incumbent cost: 1.0919630453331843e-09
+Incumbent cost: 8.451187731769955e-09
 </pre></div>
 </div>
 <div class="line-block">
@@ -1121,7 +1124,7 @@ Incumbent cost: 1.0919630453331843e-09
     <span class="k">def</span> <span class="nf">configspace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfigurationSpace</span><span class="p">:</span>
         <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">default</span><span class="o">=-</span><span class="mi">5</span><span class="p">)</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">cs</span>
 
@@ -1202,7 +1205,7 @@ Incumbent cost: 1.0919630453331843e-09
     <span class="n">plot</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.841 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.283 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-3-specify-hb-via-total-budget-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/3_specify_HB_via_total_budget.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" style="width: 150px;" />

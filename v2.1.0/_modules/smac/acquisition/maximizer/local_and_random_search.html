@@ -913,6 +913,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1162,7 +1167,6 @@
         <span class="n">previous_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uniform_configspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prior_sampling_fraction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Get configurations sorted by acquisition function value</span>
             <span class="n">next_configs_by_prior_random_search_sorted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prior_random_search</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span>
