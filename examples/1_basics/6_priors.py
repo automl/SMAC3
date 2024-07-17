@@ -101,7 +101,7 @@ class MLP:
         )
 
         # Add all hyperparameters at once:
-        cs.add_hyperparameters([n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init])
+        cs.add([n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init])
 
         return cs
 

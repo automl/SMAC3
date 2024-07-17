@@ -322,7 +322,7 @@
 #                 hp_list.append(hp_new)
 
 #             # We only consider plain hyperparameters
-#             self.cs_local.add_hyperparameters(hp_list)
+#             self.cs_local.add(hp_list)
 #             forbiddens_ss = []
 #             forbiddens = config_space.get_forbiddens()
 #             for forbidden in forbiddens:

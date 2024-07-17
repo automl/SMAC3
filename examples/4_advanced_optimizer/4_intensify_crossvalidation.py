@@ -39,7 +39,7 @@ class SVM:
         gamma = Float("gamma", (2 ** -15, 2 ** 3), default=1.0, log=True)
 
         # Add hyperparameters to our configspace
-        cs.add_hyperparameters([C, gamma])
+        cs.add([C, gamma])
 
         return cs
 
