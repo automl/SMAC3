@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from typing import Any
+
 import json
 
 import numpy as np
-from typing import Any
 
 
 class NumpyEncoder(json.JSONEncoder):
