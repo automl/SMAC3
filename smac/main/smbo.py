@@ -24,6 +24,7 @@ from smac.runner.dask_runner import DaskParallelRunner
 from smac.scenario import Scenario
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
+from smac.utils.numpyencoder import NumpyEncoder
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -414,7 +415,7 @@ class SMBO:
 
             # Save optimization data
             with open(str(path / "optimization.json"), "w") as file:
-                json.dump(data, file, indent=2)
+                json.dump(data, file, indent=2, cls=NumpyEncoder)
 
             # And save runhistory and intensifier
             self._runhistory.save(path / "runhistory.json")

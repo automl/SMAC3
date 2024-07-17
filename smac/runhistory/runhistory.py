@@ -24,6 +24,7 @@ from smac.runhistory.enumerations import StatusType
 from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
+from smac.utils.numpyencoder import NumpyEncoder
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -803,6 +804,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 },
                 fp,
                 indent=2,
+                cls=NumpyEncoder
             )
 
     def load(self, filename: str | Path, configspace: ConfigurationSpace) -> None:
@@ -955,7 +957,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         trial_value: TrialValue,
     ) -> None:
         try:
-            json.dumps(obj)
+            json.dumps(obj, cls=NumpyEncoder)
         except Exception as e:
             raise ValueError(
                 "Cannot add %s: %s of type %s to runhistory because it raises an error during JSON encoding, "
