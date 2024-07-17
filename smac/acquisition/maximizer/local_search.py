@@ -389,7 +389,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                             if acq_val[acq_index] > acq_val_candidates[i]:
                                 is_valid = False
                                 try:
-                                    neighbors[acq_index].is_valid_configuration()
+                                    neighbors[acq_index].check_valid_configuration()
                                     is_valid = True
                                 except (ValueError, ForbiddenValueError) as e:
                                     logger.debug("Local search %d: %s", i, e)
