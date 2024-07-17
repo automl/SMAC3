@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 
 import numpy as np
+from typing import Any
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -11,7 +12,19 @@ class NumpyEncoder(json.JSONEncoder):
     From https://stackoverflow.com/a/61903895
     """
 
-    def default(self, obj):
+    def default(self, obj: Any) -> Any:
+        """Handle numpy datatypes if present by converting to native python
+
+        Parameters
+        ----------
+        obj : Any
+            Object to serialize
+
+        Returns
+        -------
+        Any
+            Object in native python
+        """
         if isinstance(
             obj,
             (
