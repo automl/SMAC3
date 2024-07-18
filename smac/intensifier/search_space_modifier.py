@@ -13,7 +13,7 @@ from ConfigSpace.hyperparameters import (
 
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import get_logger
-
+from smac.intensifier.exceptions import SearchSpaceShrinkageWarning
 logger = get_logger(__name__)
 
 
@@ -40,7 +40,6 @@ class MultiFidelitySearchSpaceShrinker(AbstractSearchSpaceModifier):
         self.percentage_configurations = percentage_configurations
         self.random_state = np.random.RandomState(seed)
         self.range_multiplier = range_multiplier
-        logger.warning("Max Shrinkage should get removed")
 
     def modify_search_space(
         self, search_space: ConfigurationSpace, runhistory: RunHistory
@@ -83,9 +82,10 @@ class MultiFidelitySearchSpaceShrinker(AbstractSearchSpaceModifier):
                 # Check that std does not increase
                 if isinstance(hyperparameter, (NormalFloatHyperparameter, NormalIntegerHyperparameter)):
                     if std_hyperparamter_value > hyperparameter.sigma:
-                        raise ValueError(
+                        raise SearchSpaceShrinkageWarning(
                             f"Standard deviation of hyperparameter {hyperparameter_name} is larger than the "
-                            f"original sigma. This is not supported."
+                            f"original sigma. In most cases, the standard deviation should decrease when shrinking the "
+                            f"search space."
                         )
 
                 # Create new Hyperparameter in normal distribution
