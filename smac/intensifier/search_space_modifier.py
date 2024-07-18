@@ -32,14 +32,12 @@ class MultiFidelitySearchSpaceShrinker(AbstractSearchSpaceModifier):
         self,
         get_hyperparameter_for_bounds: dict[str, Callable],
         percentage_configurations: float,
-        max_shrinkage: float = 0.5,
         range_multiplier: float = 2.0,
         seed: int = 0,
     ):
         # TODO find better name than range_multiplier
         self.get_hyperparameter_for_bounds = get_hyperparameter_for_bounds
         self.percentage_configurations = percentage_configurations
-        self.max_shrinkage = max_shrinkage
         self.random_state = np.random.RandomState(seed)
         self.range_multiplier = range_multiplier
         logger.warning("Max Shrinkage should get removed")
