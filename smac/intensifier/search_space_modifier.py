@@ -9,6 +9,7 @@ from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
     NormalFloatHyperparameter,
+    Constant
 )
 
 from smac.runhistory.runhistory import RunHistory
@@ -54,6 +55,9 @@ class MultiFidelitySearchSpaceShrinker(AbstractSearchSpaceModifier):
 
         # compute the new boundaries
         for hyperparameter_name in search_space.get_hyperparameter_names():
+            if isinstance(search_space[hyperparameter_name], Constant):
+                continue
+
             if isinstance(search_space[hyperparameter_name], NumericalHyperparameter):
                 # TODO check hyperparamter distribution
                 # Allowed are uniform and normally distributed hyperparameters
