@@ -22,6 +22,7 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
     """Implement SMAC's default acquisition function optimization.
 
     This optimizer performs local search from the previous best points according to the acquisition
+    This optimizer performs local search from the previous best points according to the acquisition
     function, uses the acquisition function to sort randomly sampled configurations.
     Random configurations are interleaved by the main SMAC code.
 
@@ -35,6 +36,10 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         A version of the user-defined ConfigurationSpace where all parameters are uniform (or have their weights removed
         in the case of a categorical hyperparameter). Can optionally be given and sampling ratios be defined via the
         `prior_sampling_fraction` parameter.
+    uniform_configspace : ConfigurationSpace
+        A version of the user-defined ConfigurationSpace where all parameters are uniform (or have their weights removed
+        in the case of a categorical hyperparameter). Can optionally be given and sampling ratios be defined via the
+        `prior_sampling_fraction` parameter.
     acquisition_function : AbstractAcquisitionFunction | None, defaults to None
     challengers : int, defaults to 5000
         Number of challengers.
@@ -44,6 +49,9 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         [LocalSearch] number of steps during a plateau walk before local search terminates.
     local_search_iterations: int, defauts to 10
         [Local Search] number of local search iterations.
+    prior_sampling_fraction: float, defaults to 0.5
+        The ratio of random samples that are taken from the user-defined ConfigurationSpace, as opposed to the uniform
+        version (needs `uniform_configspace`to be defined).
     prior_sampling_fraction: float, defaults to 0.5
         The ratio of random samples that are taken from the user-defined ConfigurationSpace, as opposed to the uniform
         version (needs `uniform_configspace`to be defined).
@@ -61,6 +69,8 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         seed: int = 0,
         uniform_configspace: ConfigurationSpace | None = None,
         prior_sampling_fraction: float | None = None,
+        uniform_configspace: ConfigurationSpace | None = None,
+        prior_sampling_fraction: float | None = None,
     ) -> None:
         super().__init__(
             configspace,
@@ -69,6 +79,28 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
             seed=seed,
         )
 
+        if uniform_configspace is not None and prior_sampling_fraction is None:
+            prior_sampling_fraction = 0.5
+        if uniform_configspace is None and prior_sampling_fraction is not None:
+            raise ValueError("If `prior_sampling_fraction` is given, `uniform_configspace` must be defined.")
+        if uniform_configspace is not None and prior_sampling_fraction is not None:
+            self._prior_random_search = RandomSearch(
+                acquisition_function=acquisition_function,
+                configspace=configspace,
+                seed=seed,
+            )
+
+            self._uniform_random_search = RandomSearch(
+                acquisition_function=acquisition_function,
+                configspace=uniform_configspace,
+                seed=seed,
+            )
+        else:
+            self._random_search = RandomSearch(
+                configspace=configspace,
+                acquisition_function=acquisition_function,
+                seed=seed,
+            )
         if uniform_configspace is not None and prior_sampling_fraction is None:
             prior_sampling_fraction = 0.5
         if uniform_configspace is None and prior_sampling_fraction is not None:
@@ -103,6 +135,8 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         self._local_search_iterations = local_search_iterations
         self._prior_sampling_fraction = prior_sampling_fraction
         self._uniform_configspace = uniform_configspace
+        self._prior_sampling_fraction = prior_sampling_fraction
+        self._uniform_configspace = uniform_configspace
 
     @property
     def acquisition_function(self) -> AbstractAcquisitionFunction | None:  # noqa: D102
@@ -117,11 +151,31 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
             self._uniform_random_search._acquisition_function = acquisition_function
         else:
             self._random_search._acquisition_function = acquisition_function
+        if self._uniform_configspace is not None:
+            self._prior_random_search._acquisition_function = acquisition_function
+            self._uniform_random_search._acquisition_function = acquisition_function
+        else:
+            self._random_search._acquisition_function = acquisition_function
         self._local_search._acquisition_function = acquisition_function
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
+        if self._uniform_configspace is None:
+            meta.update(
+                {
+                    "random_search": self._random_search.meta,
+                    "local_search": self._local_search.meta,
+                }
+            )
+        else:
+            meta.update(
+                {
+                    "prior_random_search": self._prior_random_search.meta,
+                    "uniform_random_search": self._uniform_random_search.meta,
+                    "local_search": self._local_search.meta,
+                }
+            )
         if self._uniform_configspace is None:
             meta.update(
                 {
@@ -174,9 +228,16 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         # Choose the best self._local_search_iterations random configs to start the local search, and choose only
         # incumbent from previous configs
         random_starting_points = next_configs_by_random_search_sorted[: self._local_search_iterations]
+        # Choose the best self._local_search_iterations random configs to start the local search, and choose only
+        # incumbent from previous configs
+        random_starting_points = next_configs_by_random_search_sorted[: self._local_search_iterations]
         next_configs_by_local_search = self._local_search._maximize(
             previous_configs=previous_configs,
             n_points=self._local_search_iterations,
+            additional_start_points=random_starting_points,
+        )
+
+        next_configs_by_acq_value = next_configs_by_local_search
             additional_start_points=random_starting_points,
         )
 
