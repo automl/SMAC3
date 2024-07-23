@@ -103,7 +103,7 @@ if __name__ == "__main__":
         # if you would like to limit the resources consumption of each function evaluation with pynisher, you need to
         # set nanny as False
         # Otherwise, an error `daemonic processes are not allowed to have children` will raise!
-        nanny=False  # if you do not use pynisher to limit the memory/time usage, feel free to set this one as True
+        nanny=False,  # if you do not use pynisher to limit the memory/time usage, feel free to set this one as True
     )
     cluster.scale(jobs=n_workers)
 
