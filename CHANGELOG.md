@@ -1,3 +1,14 @@
+# 2.1.1
+
+## Examples
+- Add example to specify total budget (fidelity units) instead of n_trials for multi-fidelity/Hyperband (#1121)
+- Add example for warmstarting (#1120)
+
+## Dependencies
+- Update numpy NaN (#1122) and restrict numpy version
+- Upgrade to ConfigSpace 1.x.x (#1124)
+
+
 # 2.1.0
 
 ## Improvements

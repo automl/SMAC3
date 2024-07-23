@@ -36,7 +36,7 @@ class Rosenbrock2D:
         cs = ConfigurationSpace(seed=0)
         x0 = Float("x0", (-5, 10), default=-3)
         x1 = Float("x1", (-5, 10), default=-4)
-        cs.add_hyperparameters([x0, x1])
+        cs.add([x0, x1])
 
         return cs
 
