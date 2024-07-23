@@ -69,8 +69,6 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         seed: int = 0,
         uniform_configspace: ConfigurationSpace | None = None,
         prior_sampling_fraction: float | None = None,
-        uniform_configspace: ConfigurationSpace | None = None,
-        prior_sampling_fraction: float | None = None,
     ) -> None:
         super().__init__(
             configspace,
@@ -234,10 +232,6 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         next_configs_by_local_search = self._local_search._maximize(
             previous_configs=previous_configs,
             n_points=self._local_search_iterations,
-            additional_start_points=random_starting_points,
-        )
-
-        next_configs_by_acq_value = next_configs_by_local_search
             additional_start_points=random_starting_points,
         )
 
