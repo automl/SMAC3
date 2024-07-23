@@ -1,4 +1,4 @@
-# 2.1.1
+# 2.2.0
 
 ## Features
 - Add example to specify total budget (fidelity units) instead of n_trials for multi-fidelity/Hyperband (#1121)
