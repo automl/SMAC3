@@ -15,9 +15,6 @@ from smac.runhistory.encoder import (
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runner.abstract_runner import StatusType
 
-from ConfigSpace import Configuration
-from ConfigSpace.hyperparameters import CategoricalHyperparameter
-
 
 @pytest.fixture
 def configs(configspace_small):
@@ -44,9 +41,7 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     )
 
     # Normal encoder
-    encoder = RunHistoryEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
 
     # TODO: Please replace with the more general solution once ConfigSpace 1.0
@@ -56,7 +51,7 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     # Categoricals are upperbounded by their size, rest of hyperparameters are
     # upperbounded by 1.
     upper_bounds = {
-        hp.name: (hp.get_size() - 1) if isinstance(hp, CategoricalHyperparameter) else 1.0
+        hp.name: (hp.size - 1) if isinstance(hp, CategoricalHyperparameter) else 1.0
         for hp in configspace_small.get_hyperparameters()
     }
     # Need to ensure they match the order in the Configuration vectorized form
@@ -67,7 +62,6 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     upper = np.array([upper_bound for _, upper_bound in sorted_by_indices])
     lower = 0.0
 
-
     # TODO: Please replace with the more general solution once ConfigSpace 1.0
     # upper = np.array([hp.upper_vectorized for hp in space.values()])
     # lower = np.array([hp.lower_vectorized for hp in space.values()])
@@ -75,9 +69,7 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     # Categoricals are upperbounded by their size, rest of hyperparameters are
     # upperbounded by 1.
     upper_bounds = {
-        hp.name: (hp.get_size() - 1)
-        if isinstance(hp, CategoricalHyperparameter)
-        else 1.0
+        hp.name: (hp.size - 1) if isinstance(hp, CategoricalHyperparameter) else 1.0
         for hp in configspace_small.get_hyperparameters()
     }
     # Need to ensure they match the order in the Configuration vectorized form
@@ -94,49 +86,37 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     assert ((X1 <= upper) & (X1 >= lower)).all()
 
     # Log encoder
-    encoder = RunHistoryLogEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistoryLogEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
-    encoder = RunHistoryLogScaledEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistoryLogScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
-    encoder = RunHistoryScaledEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistoryScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
-    encoder = RunHistoryInverseScaledEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistoryInverseScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
-    encoder = RunHistorySqrtScaledEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistorySqrtScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
-    encoder = RunHistoryEIPSEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistoryEIPSEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
@@ -144,7 +124,6 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     assert ((X <= upper) & (X >= lower)).all()
 
 
-def test_transform_conditionals(runhistory, make_scenario, configspace_large):
 def test_transform_conditionals(runhistory, make_scenario, configspace_large):
     scenario = make_scenario(configspace_large)
 
@@ -204,9 +183,7 @@ def test_transform_conditionals(runhistory, make_scenario, configspace_large):
         status=StatusType.SUCCESS,
     )
 
-    encoder = RunHistoryEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
 
@@ -228,9 +205,7 @@ def test_multi_objective(runhistory, make_scenario, configspace_small, configs):
 
     # Multi objective algorithm must be set
     with pytest.raises(AssertionError):
-        encoder = RunHistoryEncoder(
-            scenario=scenario, considered_states=[StatusType.SUCCESS]
-        )
+        encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
         encoder.runhistory = runhistory
         _, Y = encoder.transform()
 
@@ -286,9 +261,7 @@ def test_ignore(runhistory, make_scenario, configspace_small, configs):
     )
 
     # Normal encoder
-    encoder = RunHistoryEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X1, Y1 = encoder.transform()
 
@@ -327,14 +300,10 @@ def test_budgets(runhistory, make_scenario, configspace_small, configs):
         budget=2,
     )
 
-    runhistory.add(
-        config=configs[1], cost=5, time=4, status=StatusType.SUCCESS, budget=2
-    )
+    runhistory.add(config=configs[1], cost=5, time=4, status=StatusType.SUCCESS, budget=2)
 
     # Normal encoder
-    encoder = RunHistoryEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform(budget_subset=[2])
     assert Y.tolist() == [[99999999]]
@@ -363,14 +332,10 @@ def test_budgets(runhistory, make_scenario, configspace_small, configs):
         budget=2,
     )
 
-    runhistory.add(
-        config=configs[1], cost=5, time=4, status=StatusType.SUCCESS, budget=2
-    )
+    runhistory.add(config=configs[1], cost=5, time=4, status=StatusType.SUCCESS, budget=2)
 
     # Normal encoder
-    encoder = RunHistoryEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform(budget_subset=[2])
     assert Y.tolist() == [[99999999]]
@@ -382,20 +347,12 @@ def test_budgets(runhistory, make_scenario, configspace_small, configs):
 def test_lower_budget_states(runhistory, make_scenario, configspace_small, configs):
     """Tests lower budgets based on budget subset and considered states."""
     scenario = make_scenario(configspace_small)
-    encoder = RunHistoryEncoder(
-        scenario=scenario, considered_states=[StatusType.SUCCESS]
-    )
+    encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
 
-    runhistory.add(
-        config=configs[0], cost=1, time=1, status=StatusType.SUCCESS, budget=3
-    )
-    runhistory.add(
-        config=configs[0], cost=2, time=2, status=StatusType.SUCCESS, budget=4
-    )
-    runhistory.add(
-        config=configs[0], cost=3, time=4, status=StatusType.TIMEOUT, budget=5
-    )
+    runhistory.add(config=configs[0], cost=1, time=1, status=StatusType.SUCCESS, budget=3)
+    runhistory.add(config=configs[0], cost=2, time=2, status=StatusType.SUCCESS, budget=4)
+    runhistory.add(config=configs[0], cost=3, time=4, status=StatusType.TIMEOUT, budget=5)
 
     # We request a higher budget but can't find it, so we expect an empty list
     X, Y = encoder.transform(budget_subset=[500])
