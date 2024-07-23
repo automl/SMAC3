@@ -66,22 +66,17 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][smbo.py:320] Finished 0 trials.
     [INFO][smbo.py:320] Finished 0 trials.
     [INFO][smbo.py:320] Finished 0 trials.
-    [INFO][smbo.py:320] Finished 100 trials.
-    [INFO][smbo.py:320] Finished 100 trials.
-    [INFO][smbo.py:320] Finished 100 trials.
-    [INFO][smbo.py:320] Finished 100 trials.
-    [INFO][smbo.py:320] Finished 150 trials.
     [INFO][smbo.py:328] Configuration budget is exhausted:
-    [INFO][smbo.py:329] --- Remaining wallclock time: -3.242112874984741
+    [INFO][smbo.py:329] --- Remaining wallclock time: -0.20072674751281738
     [INFO][smbo.py:330] --- Remaining cpu time: inf
-    [INFO][smbo.py:331] --- Remaining trials: 139
+    [INFO][smbo.py:331] --- Remaining trials: 175
     Default cost (SuccessiveHalving): 0.36672856700711853
     Incumbent cost (SuccessiveHalving): inf
     [INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
     [INFO][abstract_facade.py:203] Workers are reduced to 8.
     /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
     Perhaps you already have a cluster running?
-    Hosting the HTTP server on port 36157 instead
+    Hosting the HTTP server on port 42409 instead
       warnings.warn(
     [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
     [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -102,19 +97,17 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     [INFO][smbo.py:320] Finished 0 trials.
     [INFO][smbo.py:320] Finished 0 trials.
     [INFO][abstract_intensifier.py:516] Added config 6ad6db as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:595] Added config 16c413 and rejected config 6ad6db as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:595] Added config 0cbe96 and rejected config 16c413 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config c7974e and rejected config 6ad6db as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config e51ac6 and rejected config c7974e as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config a9f9c9 and rejected config e51ac6 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:320] Finished 100 trials.
-    [INFO][smbo.py:320] Finished 100 trials.
-    [INFO][smbo.py:320] Finished 150 trials.
-    [INFO][smbo.py:320] Finished 150 trials.
-    [INFO][smbo.py:320] Finished 150 trials.
     [INFO][smbo.py:328] Configuration budget is exhausted:
-    [INFO][smbo.py:329] --- Remaining wallclock time: -1.3503968715667725
+    [INFO][smbo.py:329] --- Remaining wallclock time: -0.8839964866638184
     [INFO][smbo.py:330] --- Remaining cpu time: inf
-    [INFO][smbo.py:331] --- Remaining trials: 175
+    [INFO][smbo.py:331] --- Remaining trials: 236
+    [INFO][abstract_intensifier.py:595] Added config 07ad81 and rejected config a9f9c9 as incumbent because it is not better than the incumbents on 1 instances:
     Default cost (Hyperband): 0.36672856700711853
-    Incumbent cost (Hyperband): 0.02226245744351585
+    Incumbent cost (Hyperband): 0.025601980810894487
 
 
 
@@ -293,7 +286,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (2 minutes 11.394 seconds)
+   **Total running time of the script:** (2 minutes 21.761 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_1_mlp_epochs.py:

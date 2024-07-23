@@ -1240,6 +1240,7 @@ The algorithm is due to Storn and Price [1].’</p>
 <dd><p>Bases: <a class="reference internal" href="smac.acquisition.maximizer.abstract_acqusition_maximizer.html#smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer" title="smac.acquisition.maximizer.abstract_acqusition_maximizer.AbstractAcquisitionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionMaximizer</span></code></a></p>
 <p>Implement SMAC’s default acquisition function optimization.</p>
 <p>This optimizer performs local search from the previous best points according to the acquisition
+This optimizer performs local search from the previous best points according to the acquisition
 function, uses the acquisition function to sort randomly sampled configurations.
 Random configurations are interleaved by the main SMAC code.</p>
 <p>The Random configurations are interleaved to circumvent issues from a constant prediction
@@ -1251,6 +1252,9 @@ from the Random Forest model at the beginning of the optimization process.</p>
 <li><p><strong>uniform_configspace</strong> (<em>ConfigurationSpace</em>) – A version of the user-defined ConfigurationSpace where all parameters are uniform (or have their weights removed
 in the case of a categorical hyperparameter). Can optionally be given and sampling ratios be defined via the
 <cite>prior_sampling_fraction</cite> parameter.</p></li>
+<li><p><strong>uniform_configspace</strong> – A version of the user-defined ConfigurationSpace where all parameters are uniform (or have their weights removed
+in the case of a categorical hyperparameter). Can optionally be given and sampling ratios be defined via the
+<cite>prior_sampling_fraction</cite> parameter.</p></li>
 <li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.acquisition.function.html#smac.acquisition.function.AbstractAcquisitionFunction" title="smac.acquisition.function.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a><em> | </em><em>None</em><em>, </em><em>defaults to None</em>)</p></li>
 <li><p><strong>challengers</strong> (<em>int</em><em>, </em><em>defaults to 5000</em>) – Number of challengers.</p></li>
 <li><p><strong>max_steps</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>defaults to None</em>) – [LocalSearch] Maximum number of steps that the local search will perform.</p></li>
@@ -1258,6 +1262,8 @@ in the case of a categorical hyperparameter). Can optionally be given and sampli
 <li><p><strong>local_search_iterations</strong> (<em>int</em><em>, </em><em>defauts to 10</em>) – [Local Search] number of local search iterations.</p></li>
 <li><p><strong>prior_sampling_fraction</strong> (<em>float</em><em>, </em><em>defaults to 0.5</em>) – The ratio of random samples that are taken from the user-defined ConfigurationSpace, as opposed to the uniform
 version (needs <a href="#id1"><span class="problematic" id="id2">`</span></a>uniform_configspace`to be defined).</p></li>
+<li><p><strong>prior_sampling_fraction</strong> – The ratio of random samples that are taken from the user-defined ConfigurationSpace, as opposed to the uniform
+version (needs <a href="#id3"><span class="problematic" id="id4">`</span></a>uniform_configspace`to be defined).</p></li>
 <li><p><strong>seed</strong> (<em>int</em><em>, </em><em>defaults to 0</em>)</p></li>
 </ul>
 </dd>

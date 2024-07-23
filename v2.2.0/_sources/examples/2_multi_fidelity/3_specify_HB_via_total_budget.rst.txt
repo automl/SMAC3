@@ -206,7 +206,7 @@ in terms of the fidelity units and let SMAC calculate how many trials that would
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.667 seconds)
+   **Total running time of the script:** (0 minutes 8.137 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_3_specify_HB_via_total_budget.py:
