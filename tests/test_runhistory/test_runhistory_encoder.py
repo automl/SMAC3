@@ -56,7 +56,7 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     # Categoricals are upperbounded by their size, rest of hyperparameters are
     # upperbounded by 1.
     upper_bounds = {
-        hp.name: (hp.get_size() - 1) if isinstance(hp, CategoricalHyperparameter) else 1.0
+        hp.name: (hp.size - 1) if isinstance(hp, CategoricalHyperparameter) else 1.0
         for hp in configspace_small.get_hyperparameters()
     }
     # Need to ensure they match the order in the Configuration vectorized form
