@@ -1,0 +1,37 @@
+smac.runhistory.encoder.abstract\_encoder
+=========================================
+
+.. automodule:: smac.runhistory.encoder.abstract_encoder
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      AbstractRunHistoryEncoder
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

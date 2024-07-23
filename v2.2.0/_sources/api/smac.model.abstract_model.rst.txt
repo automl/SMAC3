@@ -1,0 +1,37 @@
+smac.model.abstract\_model
+==========================
+
+.. automodule:: smac.model.abstract_model
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      AbstractModel
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

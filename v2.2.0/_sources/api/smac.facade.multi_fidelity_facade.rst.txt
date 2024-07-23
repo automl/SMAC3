@@ -1,0 +1,37 @@
+smac.facade.multi\_fidelity\_facade
+===================================
+
+.. automodule:: smac.facade.multi_fidelity_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      MultiFidelityFacade
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
