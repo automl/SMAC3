@@ -163,7 +163,8 @@ def get_n_trials_for_hyperband_multifidelity(
     Parameters
     ----------
     total_budget : float
-        Total budget for the complete optimization in fidelity units. A fidelity unit can be one epoch or a fraction of a dataset size.
+        Total budget for the complete optimization in fidelity units. 
+        A fidelity unit can be one epoch or a fraction of a dataset size.
     min_budget : float
         Minimum budget per trial in fidelity units
     max_budget : float
