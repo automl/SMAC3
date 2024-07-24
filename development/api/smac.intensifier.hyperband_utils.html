@@ -1101,7 +1101,7 @@
 <td><p>Determine how many Hyperband rounds should happen based on a total budget</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.intensifier.hyperband_utils.get_n_trials_for_hyperband_multifidelity" title="smac.intensifier.hyperband_utils.get_n_trials_for_hyperband_multifidelity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_n_trials_for_hyperband_multifidelity</span></code></a>(...)</p></td>
-<td><p>Caculate the number of trials needed for multi-fidelity optimization</p></td>
+<td><p>Calculate the number of trials needed for multi-fidelity optimization</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#smac.intensifier.hyperband_utils.print_hyperband_summary" title="smac.intensifier.hyperband_utils.print_hyperband_summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_hyperband_summary</span></code></a>(hyperband_info)</p></td>
 <td><p>Print summary about Hyperband as used in the MultiFidelityFacade</p></td>
@@ -1181,12 +1181,13 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="smac.intensifier.hyperband_utils.get_n_trials_for_hyperband_multifidelity">
 <span class="sig-prename descclassname"><span class="pre">smac.intensifier.hyperband_utils.</span></span><span class="sig-name descname"><span class="pre">get_n_trials_for_hyperband_multifidelity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">total_budget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_budget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_budget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_summary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensifier/hyperband_utils.html#get_n_trials_for_hyperband_multifidelity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensifier.hyperband_utils.get_n_trials_for_hyperband_multifidelity" title="Link to this definition">¶</a></dt>
-<dd><p>Caculate the number of trials needed for multi-fidelity optimization</p>
+<dd><p>Calculate the number of trials needed for multi-fidelity optimization</p>
 <p>Specify the total budget and find out how many trials that equals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>total_budget</strong> (<em>float</em>) – Total budget for the complete optimization in fidelity units</p></li>
+<li><p><strong>total_budget</strong> (<em>float</em>) – Total budget for the complete optimization in fidelity units.
+A fidelity unit can be one epoch or a fraction of a dataset size.</p></li>
 <li><p><strong>min_budget</strong> (<em>float</em>) – Minimum budget per trial in fidelity units</p></li>
 <li><p><strong>max_budget</strong> (<em>float</em>) – Maximum budget per trial in fidelity units</p></li>
 <li><p><strong>eta</strong> (<em>int</em><em>, </em><em>defaults to 3</em>) – Input that controls the proportion of configurations discarded in each round of Successive Halving.</p></li>

@@ -1188,14 +1188,15 @@
 <span class="k">def</span> <span class="nf">get_n_trials_for_hyperband_multifidelity</span><span class="p">(</span>
     <span class="n">total_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">min_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">max_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">print_summary</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Caculate the number of trials needed for multi-fidelity optimization</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the number of trials needed for multi-fidelity optimization</span>
 
 <span class="sd">    Specify the total budget and find out how many trials that equals.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    total_budget : float</span>
-<span class="sd">        Total budget for the complete optimization in fidelity units</span>
+<span class="sd">        Total budget for the complete optimization in fidelity units. </span>
+<span class="sd">        A fidelity unit can be one epoch or a fraction of a dataset size.</span>
 <span class="sd">    min_budget : float</span>
 <span class="sd">        Minimum budget per trial in fidelity units</span>
 <span class="sd">    max_budget : float</span>
