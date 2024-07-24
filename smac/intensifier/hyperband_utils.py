@@ -156,14 +156,14 @@ def print_hyperband_summary(hyperband_info: dict) -> None:
 def get_n_trials_for_hyperband_multifidelity(
     total_budget: float, min_budget: float, max_budget: float, eta: int = 3, print_summary: bool = True
 ) -> int:
-    """Caculate the number of trials needed for multi-fidelity optimization
+    """Calculate the number of trials needed for multi-fidelity optimization
 
     Specify the total budget and find out how many trials that equals.
 
     Parameters
     ----------
     total_budget : float
-        Total budget for the complete optimization in fidelity units
+        Total budget for the complete optimization in fidelity units. A fidelity unit can be one epoch or a fraction of a dataset size.
     min_budget : float
         Minimum budget per trial in fidelity units
     max_budget : float
