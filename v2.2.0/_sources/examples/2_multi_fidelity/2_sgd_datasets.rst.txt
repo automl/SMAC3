@@ -69,9 +69,9 @@ the target function now is required to have an instance argument.
     [INFO][abstract_intensifier.py:595] Added config 2cdaac and rejected config 25625b as incumbent because it is not better than the incumbents on 45 instances:
     [INFO][smbo.py:320] Finished 450 trials.
     [INFO][smbo.py:328] Configuration budget is exhausted:
-    [INFO][smbo.py:329] --- Remaining wallclock time: -0.06589818000793457
+    [INFO][smbo.py:329] --- Remaining wallclock time: -0.0034856796264648438
     [INFO][smbo.py:330] --- Remaining cpu time: inf
-    [INFO][smbo.py:331] --- Remaining trials: 4549
+    [INFO][smbo.py:331] --- Remaining trials: 4546
     Default cost: 0.15489347419148672
     Incumbent cost: 0.00426383387912454
 
@@ -213,7 +213,7 @@ the target function now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 34.308 seconds)
+   **Total running time of the script:** (0 minutes 34.152 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:

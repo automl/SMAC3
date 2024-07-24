@@ -1045,7 +1045,6 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Implement SMAC&#39;s default acquisition function optimization.</span>
 
 <span class="sd">    This optimizer performs local search from the previous best points according to the acquisition</span>
-<span class="sd">    This optimizer performs local search from the previous best points according to the acquisition</span>
 <span class="sd">    function, uses the acquisition function to sort randomly sampled configurations.</span>
 <span class="sd">    Random configurations are interleaved by the main SMAC code.</span>
 
@@ -1059,10 +1058,6 @@
 <span class="sd">        A version of the user-defined ConfigurationSpace where all parameters are uniform (or have their weights removed</span>
 <span class="sd">        in the case of a categorical hyperparameter). Can optionally be given and sampling ratios be defined via the</span>
 <span class="sd">        `prior_sampling_fraction` parameter.</span>
-<span class="sd">    uniform_configspace : ConfigurationSpace</span>
-<span class="sd">        A version of the user-defined ConfigurationSpace where all parameters are uniform (or have their weights removed</span>
-<span class="sd">        in the case of a categorical hyperparameter). Can optionally be given and sampling ratios be defined via the</span>
-<span class="sd">        `prior_sampling_fraction` parameter.</span>
 <span class="sd">    acquisition_function : AbstractAcquisitionFunction | None, defaults to None</span>
 <span class="sd">    challengers : int, defaults to 5000</span>
 <span class="sd">        Number of challengers.</span>
@@ -1072,9 +1067,6 @@
 <span class="sd">        [LocalSearch] number of steps during a plateau walk before local search terminates.</span>
 <span class="sd">    local_search_iterations: int, defauts to 10</span>
 <span class="sd">        [Local Search] number of local search iterations.</span>
-<span class="sd">    prior_sampling_fraction: float, defaults to 0.5</span>
-<span class="sd">        The ratio of random samples that are taken from the user-defined ConfigurationSpace, as opposed to the uniform</span>
-<span class="sd">        version (needs `uniform_configspace`to be defined).</span>
 <span class="sd">    prior_sampling_fraction: float, defaults to 0.5</span>
 <span class="sd">        The ratio of random samples that are taken from the user-defined ConfigurationSpace, as opposed to the uniform</span>
 <span class="sd">        version (needs `uniform_configspace`to be defined).</span>
@@ -1122,28 +1114,6 @@
                 <span class="n">acquisition_function</span><span class="o">=</span><span class="n">acquisition_function</span><span class="p">,</span>
                 <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">uniform_configspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">prior_sampling_fraction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">prior_sampling_fraction</span> <span class="o">=</span> <span class="mf">0.5</span>
-        <span class="k">if</span> <span class="n">uniform_configspace</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">prior_sampling_fraction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;If `prior_sampling_fraction` is given, `uniform_configspace` must be defined.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">uniform_configspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">prior_sampling_fraction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prior_random_search</span> <span class="o">=</span> <span class="n">RandomSearch</span><span class="p">(</span>
-                <span class="n">acquisition_function</span><span class="o">=</span><span class="n">acquisition_function</span><span class="p">,</span>
-                <span class="n">configspace</span><span class="o">=</span><span class="n">configspace</span><span class="p">,</span>
-                <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-            <span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_uniform_random_search</span> <span class="o">=</span> <span class="n">RandomSearch</span><span class="p">(</span>
-                <span class="n">acquisition_function</span><span class="o">=</span><span class="n">acquisition_function</span><span class="p">,</span>
-                <span class="n">configspace</span><span class="o">=</span><span class="n">uniform_configspace</span><span class="p">,</span>
-                <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_random_search</span> <span class="o">=</span> <span class="n">RandomSearch</span><span class="p">(</span>
-                <span class="n">configspace</span><span class="o">=</span><span class="n">configspace</span><span class="p">,</span>
-                <span class="n">acquisition_function</span><span class="o">=</span><span class="n">acquisition_function</span><span class="p">,</span>
-                <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-            <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_local_search</span> <span class="o">=</span> <span class="n">LocalSearch</span><span class="p">(</span>
             <span class="n">configspace</span><span class="o">=</span><span class="n">configspace</span><span class="p">,</span>
@@ -1154,8 +1124,6 @@
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_local_search_iterations</span> <span class="o">=</span> <span class="n">local_search_iterations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_prior_sampling_fraction</span> <span class="o">=</span> <span class="n">prior_sampling_fraction</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_uniform_configspace</span> <span class="o">=</span> <span class="n">uniform_configspace</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prior_sampling_fraction</span> <span class="o">=</span> <span class="n">prior_sampling_fraction</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_uniform_configspace</span> <span class="o">=</span> <span class="n">uniform_configspace</span>
 
@@ -1172,31 +1140,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_uniform_random_search</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_random_search</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uniform_configspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prior_random_search</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_uniform_random_search</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_random_search</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_local_search</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
         <span class="n">meta</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">meta</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uniform_configspace</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                <span class="p">{</span>
-                    <span class="s2">&quot;random_search&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_search</span><span class="o">.</span><span class="n">meta</span><span class="p">,</span>
-                    <span class="s2">&quot;local_search&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_search</span><span class="o">.</span><span class="n">meta</span><span class="p">,</span>
-                <span class="p">}</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                <span class="p">{</span>
-                    <span class="s2">&quot;prior_random_search&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prior_random_search</span><span class="o">.</span><span class="n">meta</span><span class="p">,</span>
-                    <span class="s2">&quot;uniform_random_search&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uniform_random_search</span><span class="o">.</span><span class="n">meta</span><span class="p">,</span>
-                    <span class="s2">&quot;local_search&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_search</span><span class="o">.</span><span class="n">meta</span><span class="p">,</span>
-                <span class="p">}</span>
-            <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uniform_configspace</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
                 <span class="p">{</span>
@@ -1246,9 +1194,6 @@
                 <span class="n">_sorted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="c1"># Choose the best self._local_search_iterations random configs to start the local search, and choose only</span>
-        <span class="c1"># incumbent from previous configs</span>
-        <span class="n">random_starting_points</span> <span class="o">=</span> <span class="n">next_configs_by_random_search_sorted</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_search_iterations</span><span class="p">]</span>
         <span class="c1"># Choose the best self._local_search_iterations random configs to start the local search, and choose only</span>
         <span class="c1"># incumbent from previous configs</span>
         <span class="n">random_starting_points</span> <span class="o">=</span> <span class="n">next_configs_by_random_search_sorted</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_search_iterations</span><span class="p">]</span>
