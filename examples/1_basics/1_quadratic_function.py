@@ -26,7 +26,7 @@ class QuadraticFunction:
     def configspace(self) -> ConfigurationSpace:
         cs = ConfigurationSpace(seed=0)
         x = Float("x", (-5, 5), default=-5)
-        cs.add_hyperparameters([x])
+        cs.add([x])
 
         return cs
 

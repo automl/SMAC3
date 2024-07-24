@@ -65,7 +65,7 @@ class MLP:
         learning_rate_init = Float("learning_rate_init", (0.0001, 1.0), default=0.001, log=True)
 
         # Add all hyperparameters at once:
-        cs.add_hyperparameters([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
+        cs.add([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
 
         # Adding conditions to restrict the hyperparameter space...
         # ... since learning rate is only used when solver is 'sgd'.
@@ -76,7 +76,7 @@ class MLP:
         use_batch_size = InCondition(child=batch_size, parent=solver, values=["sgd", "adam"])
 
         # We can also add multiple conditions on hyperparameters at once:
-        cs.add_conditions([use_lr, use_batch_size, use_lr_init])
+        cs.add([use_lr, use_batch_size, use_lr_init])
 
         return cs
 

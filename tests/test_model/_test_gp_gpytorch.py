@@ -325,7 +325,6 @@ class TestGPGPyTorch(TestGP):
         X = np.arange(-5, 5, 0.1).reshape((-1, 1))
         X_test = np.arange(-5.05, 5.05, 0.1).reshape((-1, 1))
         for shape in (None, (-1, 1)):
-
             if shape is None:
                 y = np.sin(X).flatten()
             else:

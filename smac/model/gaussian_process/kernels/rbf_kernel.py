@@ -24,7 +24,6 @@ class RBFKernel(AbstractKernel, kernels.RBF):
         has_conditions: bool = False,
         prior: AbstractPrior | None = None,
     ) -> None:
-
         super().__init__(
             operate_on=operate_on,
             has_conditions=has_conditions,

@@ -54,8 +54,8 @@ class ConfigurationMock(object):
 def configspace_branin() -> ConfigurationSpace:
     """Returns the branin configspace."""
     cs = ConfigurationSpace()
-    cs.add_hyperparameter(Float("x", (-5, 10)))
-    cs.add_hyperparameter(Float("y", (0, 15)))
+    cs.add(Float("x", (-5, 10)))
+    cs.add(Float("y", (0, 15)))
     return cs
 
 
@@ -195,7 +195,7 @@ def configspace() -> ConfigurationSpace:
     c = Float("c", (0, 1), default=0.5)
 
     # Add all hyperparameters at once:
-    cs.add_hyperparameters([a, b, c])
+    cs.add([a, b, c])
 
     return cs
 
@@ -262,7 +262,6 @@ def test_get_initial_points_moo(configspace):
             return X, X
 
     class AcquisitionFunction:
-
         model = Model()
 
         def __call__(self, X):
@@ -333,7 +332,7 @@ def test_local_and_random_search(configspace, acquisition_function):
     values = rs._maximize(start_points, 100)
     config_origins = []
     v_old = np.inf
-    for (v, config) in values:
+    for v, config in values:
         config_origins += [config.origin]
         if isinstance(v, np.ndarray):
             v = float(v[0])
@@ -357,7 +356,7 @@ def configspace_rosenbrock():
     x2 = UniformIntegerHyperparameter("x2", -5, 5, default_value=5)
     x3 = CategoricalHyperparameter("x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5)
     x4 = UniformIntegerHyperparameter("x4", -5, 5, default_value=5)
-    uniform_cs.add_hyperparameters([x1, x2, x3, x4])
+    uniform_cs.add([x1, x2, x3, x4])
 
     return uniform_cs
 
@@ -373,7 +372,7 @@ def configspace_prior():
         "x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5, weights=[999, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     )
     x4 = UniformIntegerHyperparameter("x4", lower=-5, upper=5, default_value=5)
-    prior_cs.add_hyperparameters([x1, x2, x3, x4])
+    prior_cs.add([x1, x2, x3, x4])
 
     return prior_cs
 
