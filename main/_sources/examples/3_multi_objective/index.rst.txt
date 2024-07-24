@@ -16,7 +16,7 @@ Multi-Objective
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="A simple example on how to use multi-objective optimization is shown. The 2D Schaffer function ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="A simple example on how to use multi-objective optimization is shown. The 2D Schaffer function is used. In the plot you can see that all points are on the Pareto front. However, since we set the objective weights, you can notice that SMAC prioritizes the second objective over the first one.">
 
 .. only:: html
 
@@ -33,7 +33,7 @@ Multi-Objective
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="An example of how to use multi-objective optimization with ParEGO. Both accuracy and run-time a...">
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of how to use multi-objective optimization with ParEGO. Both accuracy and run-time are going to be optimized on the digits dataset using an MLP, and the configurations are shown in a plot, highlighting the best ones in  a Pareto front. The red cross indicates the best configuration selected by SMAC.">
 
 .. only:: html
 

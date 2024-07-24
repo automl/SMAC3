@@ -36,9 +36,9 @@ Modules
    :toctree:
    :recursive:
 
-   smac.model.gaussian_process.priors.abstract_prior
-   smac.model.gaussian_process.priors.gamma_prior
-   smac.model.gaussian_process.priors.horseshoe_prior
-   smac.model.gaussian_process.priors.log_normal_prior
-   smac.model.gaussian_process.priors.tophat_prior
+   abstract_prior
+   gamma_prior
+   horseshoe_prior
+   log_normal_prior
+   tophat_prior
 

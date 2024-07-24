@@ -36,7 +36,7 @@ Modules
    :toctree:
    :recursive:
 
-   smac.multi_objective.abstract_multi_objective_algorithm
-   smac.multi_objective.aggregation_strategy
-   smac.multi_objective.parego
+   abstract_multi_objective_algorithm
+   aggregation_strategy
+   parego
 

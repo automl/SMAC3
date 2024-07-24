@@ -36,8 +36,9 @@ Modules
    :toctree:
    :recursive:
 
-   smac.intensifier.abstract_intensifier
-   smac.intensifier.hyperband
-   smac.intensifier.intensifier
-   smac.intensifier.successive_halving
+   abstract_intensifier
+   hyperband
+   hyperband_utils
+   intensifier
+   successive_halving
 

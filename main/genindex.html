@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; SMAC3 Documentation 2.1.0 documentation</title>
+    <title>Index &#8212; SMAC3 Documentation 2.2.0 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -23,14 +23,14 @@
     
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=2eb4fb78" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script src="_static/documentation_options.js?v=1d3a154c"></script>
+    <script src="_static/documentation_options.js?v=b06a6580"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="#" />
@@ -92,11 +92,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.1.0
+        v2.2.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
@@ -127,7 +128,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.1.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.2.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -220,6 +221,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="examples/2_multi_fidelity/2_sgd_datasets.html">
        Stochastic Gradient Descent On Multiple Datasets
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="examples/2_multi_fidelity/3_specify_HB_via_total_budget.html">
+       Specify Number of Trials via a Total Budget in Hyperband
       </a>
      </li>
     </ul>
@@ -629,6 +635,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="api/smac.intensifier.hyperband_utils.html">
+       smac.intensifier.hyperband_utils
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="api/smac.intensifier.intensifier.html">
        smac.intensifier.intensifier
       </a>
@@ -900,6 +911,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="api/smac.utils.multi_objective.html">
        smac.utils.multi_objective
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
       </a>
      </li>
      <li class="toctree-l3">
@@ -1462,20 +1478,26 @@
         <li><a href="api/smac.runner.dask_runner.html#smac.runner.dask_runner.DaskParallelRunner">(class in smac.runner.dask_runner)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.utils.numpyencoder.html#smac.utils.numpyencoder.NumpyEncoder.default">default() (smac.utils.numpyencoder.NumpyEncoder method)</a>
+</li>
       <li><a href="api/smac.initial_design.html#smac.initial_design.DefaultInitialDesign">DefaultInitialDesign (class in smac.initial_design)</a>
 
       <ul>
         <li><a href="api/smac.initial_design.default_design.html#smac.initial_design.default_design.DefaultInitialDesign">(class in smac.initial_design.default_design)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.intensifier.hyperband_utils.html#smac.intensifier.hyperband_utils.determine_HB">determine_HB() (in module smac.intensifier.hyperband_utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/smac.intensifier.hyperband_utils.html#smac.intensifier.hyperband_utils.determine_hyperband_for_multifidelity">determine_hyperband_for_multifidelity() (in module smac.intensifier.hyperband_utils)</a>
+</li>
       <li><a href="api/smac.acquisition.maximizer.html#smac.acquisition.maximizer.DifferentialEvolution">DifferentialEvolution (class in smac.acquisition.maximizer)</a>
 
       <ul>
         <li><a href="api/smac.acquisition.maximizer.differential_evolution.html#smac.acquisition.maximizer.differential_evolution.DifferentialEvolution">(class in smac.acquisition.maximizer.differential_evolution)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.random_design.html#smac.random_design.DynamicModulusRandomDesign">DynamicModulusRandomDesign (class in smac.random_design)</a>
 
       <ul>
@@ -1852,6 +1874,8 @@
         <li><a href="api/smac.facade.html#smac.facade.RandomFacade.get_multi_objective_algorithm">(smac.facade.RandomFacade static method)</a>
 </li>
       </ul></li>
+      <li><a href="api/smac.intensifier.hyperband_utils.html#smac.intensifier.hyperband_utils.get_n_trials_for_hyperband_multifidelity">get_n_trials_for_hyperband_multifidelity() (in module smac.intensifier.hyperband_utils)</a>
+</li>
       <li><a href="api/smac.model.gaussian_process.kernels.html#smac.model.gaussian_process.kernels.AbstractKernel.get_params">get_params() (smac.model.gaussian_process.kernels.AbstractKernel method)</a>
 
       <ul>
@@ -2470,6 +2494,8 @@
 </li>
         <li><a href="api/smac.intensifier.hyperband.html#module-smac.intensifier.hyperband">smac.intensifier.hyperband</a>
 </li>
+        <li><a href="api/smac.intensifier.hyperband_utils.html#module-smac.intensifier.hyperband_utils">smac.intensifier.hyperband_utils</a>
+</li>
         <li><a href="api/smac.intensifier.intensifier.html#module-smac.intensifier.intensifier">smac.intensifier.intensifier</a>
 </li>
         <li><a href="api/smac.intensifier.successive_halving.html#module-smac.intensifier.successive_halving">smac.intensifier.successive_halving</a>
@@ -2602,6 +2628,8 @@
 </li>
         <li><a href="api/smac.utils.multi_objective.html#module-smac.utils.multi_objective">smac.utils.multi_objective</a>
 </li>
+        <li><a href="api/smac.utils.numpyencoder.html#module-smac.utils.numpyencoder">smac.utils.numpyencoder</a>
+</li>
         <li><a href="api/smac.utils.pareto_front.html#module-smac.utils.pareto_front">smac.utils.pareto_front</a>
 </li>
         <li><a href="api/smac.utils.subspaces.html#module-smac.utils.subspaces">smac.utils.subspaces</a>
@@ -2714,6 +2742,8 @@
       <li><a href="api/smac.utils.multi_objective.html#smac.utils.multi_objective.normalize_costs">normalize_costs() (in module smac.utils.multi_objective)</a>
 </li>
       <li><a href="api/smac.runhistory.errors.html#smac.runhistory.errors.NotEvaluatedError">NotEvaluatedError</a>
+</li>
+      <li><a href="api/smac.utils.numpyencoder.html#smac.utils.numpyencoder.NumpyEncoder">NumpyEncoder (class in smac.utils.numpyencoder)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -2856,6 +2886,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.utils.configspace.html#smac.utils.configspace.print_config_changes">print_config_changes() (in module smac.utils.configspace)</a>
+</li>
+      <li><a href="api/smac.intensifier.hyperband_utils.html#smac.intensifier.hyperband_utils.print_hyperband_summary">print_hyperband_summary() (in module smac.intensifier.hyperband_utils)</a>
 </li>
       <li><a href="api/smac.main.smbo.html#smac.main.smbo.SMBO.print_stats">print_stats() (smac.main.smbo.SMBO method)</a>
 </li>
@@ -3389,6 +3421,13 @@
 </li>
       </ul></li>
       <li>
+    smac.intensifier.hyperband_utils
+
+      <ul>
+        <li><a href="api/smac.intensifier.hyperband_utils.html#module-smac.intensifier.hyperband_utils">module</a>
+</li>
+      </ul></li>
+      <li>
     smac.intensifier.intensifier
 
       <ul>
@@ -3853,6 +3892,13 @@
 </li>
       </ul></li>
       <li>
+    smac.utils.numpyencoder
+
+      <ul>
+        <li><a href="api/smac.utils.numpyencoder.html#module-smac.utils.numpyencoder">module</a>
+</li>
+      </ul></li>
+      <li>
     smac.utils.pareto_front
 
       <ul>
@@ -4238,7 +4284,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.3.7. Template is modified version of <a
+7.4.7. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

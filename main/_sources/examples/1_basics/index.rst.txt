@@ -31,7 +31,7 @@ Basics
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="An example of optimizing a simple support vector machine on the IRIS dataset. We use the hyperp...">
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of optimizing a simple support vector machine on the IRIS dataset. We use the hyperparameter optimization facade, which uses a random forest as its surrogate model. It is able to scale to higher evaluation budgets and a higher number of dimensions. Also, you can use mixed data types as well as conditional hyperparameters.">
 
 .. only:: html
 
@@ -65,7 +65,7 @@ Basics
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Using callbacks is the easieast way to integrate custom code inside the Bayesian optimization l...">
+    <div class="sphx-glr-thumbcontainer" tooltip="Using callbacks is the easieast way to integrate custom code inside the Bayesian optimization loop. In this example, we disable SMAC&#x27;s default logging option and use the custom callback to log the evaluated trials. Furthermore, we print some stages of the optimization process.">
 
 .. only:: html
 
@@ -82,7 +82,7 @@ Basics
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="SMAC can also be continued from a previous run. To do so, it reads in old files (derived from s...">
+    <div class="sphx-glr-thumbcontainer" tooltip="SMAC can also be continued from a previous run. To do so, it reads in old files (derived from scenario&#x27;s name, output_directory and seed) and sets the corresponding components. In this example, an optimization of a simple quadratic function is continued.">
 
 .. only:: html
 
@@ -99,7 +99,7 @@ Basics
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) setting priors over the optimum on the hy...">
+    <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) setting priors over the optimum on the hyperparameters. These priors are derived from user knowledge (from previous runs on similar tasks, common knowledge or intuition gained from manual tuning). To create the priors, we make use of the Normal and Beta Hyperparameters, as well as the &quot;weights&quot; property of the CategoricalHyperparameter. This can be integrated into the optimiztion for any SMAC facade, but we stick with the hyperparameter optimization facade here. To incorporate user priors into the optimization, you have to change the acquisition function to PriorAcquisitionFunction.">
 
 .. only:: html
 

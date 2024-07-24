@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.main.smbo &#8212; SMAC3 Documentation 2.1.0 documentation</title>
+    <title>smac.main.smbo &#8212; SMAC3 Documentation 2.2.0 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -23,14 +23,14 @@
     
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script src="../../../_static/documentation_options.js?v=1d3a154c"></script>
+    <script src="../../../_static/documentation_options.js?v=b06a6580"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -92,11 +92,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.1.0
+        v2.2.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
@@ -127,7 +128,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.1.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.2.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -220,6 +221,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../../../examples/2_multi_fidelity/2_sgd_datasets.html">
        Stochastic Gradient Descent On Multiple Datasets
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../examples/2_multi_fidelity/3_specify_HB_via_total_budget.html">
+       Specify Number of Trials via a Total Budget in Hyperband
       </a>
      </li>
     </ul>
@@ -629,6 +635,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.intensifier.hyperband_utils.html">
+       smac.intensifier.hyperband_utils
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.intensifier.intensifier.html">
        smac.intensifier.intensifier
       </a>
@@ -903,6 +914,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1029,6 +1045,7 @@
 <span class="kn">from</span> <span class="nn">smac.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.utils.data_structures</span> <span class="kn">import</span> <span class="n">recursively_compare_dicts</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">smac.utils.numpyencoder</span> <span class="kn">import</span> <span class="n">NumpyEncoder</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2022, automl.org&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
@@ -1447,7 +1464,7 @@
 
             <span class="c1"># Save optimization data</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;optimization.json&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">NumpyEncoder</span><span class="p">)</span>
 
             <span class="c1"># And save runhistory and intensifier</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">)</span>
@@ -1676,7 +1693,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.3.7. Template is modified version of <a
+7.4.7. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

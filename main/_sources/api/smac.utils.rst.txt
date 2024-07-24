@@ -36,10 +36,11 @@ Modules
    :toctree:
    :recursive:
 
-   smac.utils.configspace
-   smac.utils.data_structures
-   smac.utils.logging
-   smac.utils.multi_objective
-   smac.utils.pareto_front
-   smac.utils.subspaces
+   configspace
+   data_structures
+   logging
+   multi_objective
+   numpyencoder
+   pareto_front
+   subspaces
 

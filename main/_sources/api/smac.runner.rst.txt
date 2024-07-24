@@ -36,10 +36,10 @@ Modules
    :toctree:
    :recursive:
 
-   smac.runner.abstract_runner
-   smac.runner.abstract_serial_runner
-   smac.runner.dask_runner
-   smac.runner.exceptions
-   smac.runner.target_function_runner
-   smac.runner.target_function_script_runner
+   abstract_runner
+   abstract_serial_runner
+   dask_runner
+   exceptions
+   target_function_runner
+   target_function_script_runner
 

@@ -40,15 +40,21 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
     [INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 1 additional configurations.
     [WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
-    [INFO][abstract_intensifier.py:515] Added config 7ec7fe as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:594] Added config 6acb23 and rejected config 7ec7fe as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config ce39dc and rejected config 6acb23 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: inf
-    [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 0
+    [INFO][abstract_intensifier.py:516] Added config 145e6c as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:595] Added config 2aab89 and rejected config 145e6c as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 1dd478 and rejected config 2aab89 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 8111d4 and rejected config 1dd478 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 4fcbbb and rejected config 8111d4 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config a18544 and rejected config 4fcbbb as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config ece60c and rejected config a18544 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config fee5c4 and rejected config ece60c as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 649016 and rejected config fee5c4 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][smbo.py:328] Configuration budget is exhausted:
+    [INFO][smbo.py:329] --- Remaining wallclock time: inf
+    [INFO][smbo.py:330] --- Remaining cpu time: inf
+    [INFO][smbo.py:331] --- Remaining trials: 0
     Default cost: 0.038952336737852145
-    Default cost: 0.03506499535747454
+    Default cost: 0.02838904363973993
 
 
 
@@ -144,13 +150,13 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
                 "learning_rate_init",
                 lower=1e-5,
                 upper=1.0,
-                mu=np.log(1e-3),
-                sigma=np.log(10),
+                mu=1e-3,  # will be transformed to log space later
+                sigma=10,  # will be transformed to log space later
                 log=True,
             )
 
             # Add all hyperparameters at once:
-            cs.add_hyperparameters([n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init])
+            cs.add([n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init])
 
             return cs
 
@@ -223,7 +229,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 21.257 seconds)
+   **Total running time of the script:** (0 minutes 39.830 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_6_priors.py:
@@ -246,3 +252,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 6_priors.py <6_priors.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: 6_priors.zip <6_priors.zip>`

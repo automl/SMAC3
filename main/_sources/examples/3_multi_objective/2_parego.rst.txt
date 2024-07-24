@@ -44,27 +44,25 @@ mean accuracy and run-time of each configuration.
 
     [WARNING][target_function_runner.py:74] The argument budget is not set by SMAC: Consider removing it from the target function.
     [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
-    [INFO][abstract_intensifier.py:515] Added config 3623cc as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:602] Config 540db2 is a new incumbent. Total number of incumbents: 2.
-    [INFO][abstract_intensifier.py:602] Config 0c9159 is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:594] Added config 3b5efd and rejected config 540db2 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:594] Added config a52051 and rejected config 0c9159 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:602] Config 2619ca is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:602] Config 9dbbc5 is a new incumbent. Total number of incumbents: 5.
-    [INFO][abstract_intensifier.py:602] Config 7a8491 is a new incumbent. Total number of incumbents: 6.
-    [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: -0.5527753829956055
-    [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 155
+    [INFO][abstract_intensifier.py:516] Added config 71813f as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:603] Config bb3711 is a new incumbent. Total number of incumbents: 2.
+    [INFO][abstract_intensifier.py:603] Config f07b8c is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:603] Config 73b262 is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:595] Added config 121ceb and rejected config cdb251 as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:603] Config 8ed1b7 is a new incumbent. Total number of incumbents: 3.
+    [INFO][abstract_intensifier.py:603] Config 5666ed is a new incumbent. Total number of incumbents: 4.
+    [INFO][smbo.py:328] Configuration budget is exhausted:
+    [INFO][smbo.py:329] --- Remaining wallclock time: -0.16002225875854492
+    [INFO][smbo.py:330] --- Remaining cpu time: inf
+    [INFO][smbo.py:331] --- Remaining trials: 161
     Validated costs from default config: 
-    --- [0.60155834 0.15253484]
+    --- [0.60155834 0.15703392]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.88924791 0.20401144]
-    --- [0.10072037 0.27147245]
-    --- [0.07040699 0.37187016]
-    --- [0.90038997 0.1950109 ]
-    --- [0.02783271 0.55148005]
+    --- [0.72761606 0.20561612]
+    --- [0.02532498 0.49392486]
+    --- [0.04953188 0.22994936]
+    --- [0.03840529 0.32510209]
 
 
 
@@ -120,14 +118,14 @@ mean accuracy and run-time of each configuration.
             learning_rate = Categorical("learning_rate", ["constant", "invscaling", "adaptive"], default="constant")
             learning_rate_init = Float("learning_rate_init", (0.0001, 1.0), default=0.001, log=True)
 
-            cs.add_hyperparameters([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
+            cs.add([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
 
             use_lr = EqualsCondition(child=learning_rate, parent=solver, value="sgd")
             use_lr_init = InCondition(child=learning_rate_init, parent=solver, values=["sgd", "adam"])
             use_batch_size = InCondition(child=batch_size, parent=solver, values=["sgd", "adam"])
 
             # We can also add multiple conditions on hyperparameters at once:
-            cs.add_conditions([use_lr, use_batch_size, use_lr_init])
+            cs.add([use_lr, use_batch_size, use_lr_init])
 
             return cs
 
@@ -245,7 +243,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 34.185 seconds)
+   **Total running time of the script:** (0 minutes 33.133 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
@@ -268,3 +266,7 @@ mean accuracy and run-time of each configuration.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 2_parego.py <2_parego.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: 2_parego.zip <2_parego.zip>`

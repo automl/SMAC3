@@ -36,6 +36,6 @@ Modules
    :toctree:
    :recursive:
 
-   smac.callback.callback
-   smac.callback.metadata_callback
+   callback
+   metadata_callback
 

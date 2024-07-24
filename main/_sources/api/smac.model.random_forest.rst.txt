@@ -36,6 +36,6 @@ Modules
    :toctree:
    :recursive:
 
-   smac.model.random_forest.abstract_random_forest
-   smac.model.random_forest.random_forest
+   abstract_random_forest
+   random_forest
 

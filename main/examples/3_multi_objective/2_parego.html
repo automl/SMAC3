@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>ParEGO &#8212; SMAC3 Documentation 2.1.0 documentation</title>
+    <title>ParEGO &#8212; SMAC3 Documentation 2.2.0 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -24,14 +24,14 @@
     
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script src="../../_static/documentation_options.js?v=1d3a154c"></script>
+    <script src="../../_static/documentation_options.js?v=b06a6580"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -95,11 +95,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.1.0
+        v2.2.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
@@ -130,7 +131,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.1.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.2.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -223,6 +224,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../2_multi_fidelity/2_sgd_datasets.html">
        Stochastic Gradient Descent On Multiple Datasets
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../2_multi_fidelity/3_specify_HB_via_total_budget.html">
+       Specify Number of Trials via a Total Budget in Hyperband
       </a>
      </li>
     </ul>
@@ -632,6 +638,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.intensifier.hyperband_utils.html">
+       smac.intensifier.hyperband_utils
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.intensifier.html">
        smac.intensifier.intensifier
       </a>
@@ -906,6 +917,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1033,27 +1049,25 @@ a Pareto front. The red cross indicates the best configuration selected by SMAC.
 mean accuracy and run-time of each configuration.</p>
 <img src="../../_images/sphx_glr_2_parego_001.png" srcset="../../_images/sphx_glr_2_parego_001.png" alt="Pareto-Front" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[WARNING][target_function_runner.py:74] The argument budget is not set by SMAC: Consider removing it from the target function.
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
-[INFO][abstract_intensifier.py:515] Added config 3623cc as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:602] Config 540db2 is a new incumbent. Total number of incumbents: 2.
-[INFO][abstract_intensifier.py:602] Config 0c9159 is a new incumbent. Total number of incumbents: 3.
-[INFO][abstract_intensifier.py:594] Added config 3b5efd and rejected config 540db2 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:594] Added config a52051 and rejected config 0c9159 as incumbent because it is not better than the incumbents on 2 instances:
-[INFO][abstract_intensifier.py:602] Config 2619ca is a new incumbent. Total number of incumbents: 4.
-[INFO][abstract_intensifier.py:602] Config 9dbbc5 is a new incumbent. Total number of incumbents: 5.
-[INFO][abstract_intensifier.py:602] Config 7a8491 is a new incumbent. Total number of incumbents: 6.
-[INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.5527753829956055
-[INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 155
+[INFO][abstract_intensifier.py:516] Added config 71813f as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:603] Config bb3711 is a new incumbent. Total number of incumbents: 2.
+[INFO][abstract_intensifier.py:603] Config f07b8c is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:603] Config 73b262 is a new incumbent. Total number of incumbents: 4.
+[INFO][abstract_intensifier.py:595] Added config 121ceb and rejected config cdb251 as incumbent because it is not better than the incumbents on 2 instances:
+[INFO][abstract_intensifier.py:603] Config 8ed1b7 is a new incumbent. Total number of incumbents: 3.
+[INFO][abstract_intensifier.py:603] Config 5666ed is a new incumbent. Total number of incumbents: 4.
+[INFO][smbo.py:328] Configuration budget is exhausted:
+[INFO][smbo.py:329] --- Remaining wallclock time: -0.16002225875854492
+[INFO][smbo.py:330] --- Remaining cpu time: inf
+[INFO][smbo.py:331] --- Remaining trials: 161
 Validated costs from default config:
---- [0.60155834 0.15253484]
+--- [0.60155834 0.15703392]
 
 Validated costs from the Pareto front (incumbents):
---- [0.88924791 0.20401144]
---- [0.10072037 0.27147245]
---- [0.07040699 0.37187016]
---- [0.90038997 0.1950109 ]
---- [0.02783271 0.55148005]
+--- [0.72761606 0.20561612]
+--- [0.02532498 0.49392486]
+--- [0.04953188 0.22994936]
+--- [0.03840529 0.32510209]
 </pre></div>
 </div>
 <div class="line-block">
@@ -1104,14 +1118,14 @@ Validated costs from the Pareto front (incumbents):
         <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">Categorical</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="s2">&quot;invscaling&quot;</span><span class="p">,</span> <span class="s2">&quot;adaptive&quot;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">)</span>
         <span class="n">learning_rate_init</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;learning_rate_init&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">n_layer</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">learning_rate_init</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">n_layer</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">learning_rate_init</span><span class="p">])</span>
 
         <span class="n">use_lr</span> <span class="o">=</span> <span class="n">EqualsCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;sgd&quot;</span><span class="p">)</span>
         <span class="n">use_lr_init</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">learning_rate_init</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sgd&quot;</span><span class="p">,</span> <span class="s2">&quot;adam&quot;</span><span class="p">])</span>
         <span class="n">use_batch_size</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sgd&quot;</span><span class="p">,</span> <span class="s2">&quot;adam&quot;</span><span class="p">])</span>
 
         <span class="c1"># We can also add multiple conditions on hyperparameters at once:</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_conditions</span><span class="p">([</span><span class="n">use_lr</span><span class="p">,</span> <span class="n">use_batch_size</span><span class="p">,</span> <span class="n">use_lr_init</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">use_lr</span><span class="p">,</span> <span class="n">use_batch_size</span><span class="p">,</span> <span class="n">use_lr_init</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">cs</span>
 
@@ -1227,16 +1241,20 @@ Validated costs from the Pareto front (incumbents):
     <span class="n">plot_pareto</span><span class="p">(</span><span class="n">smac</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 34.185 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 33.133 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-3-multi-objective-2-parego-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo2.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/3_multi_objective/2_parego.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo2.svg" style="width: 150px;" />
+</a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9a6a998bd05ca9b3aff17bd46b9cd502/2_parego.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">2_parego.ipynb</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0422a2b52bca2c17c0ab975a6ae7e8db/2_parego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">2_parego.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/ed1a42934b5fbe7816cabd752552cf37/2_parego.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">2_parego.zip</span></code></a></p>
 </div>
 </div>
 </section>
@@ -1285,7 +1303,7 @@ Validated costs from the Pareto front (incumbents):
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.3.7. Template is modified version of <a
+7.4.7. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

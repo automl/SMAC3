@@ -37,26 +37,26 @@ Furthermore, we print some stages of the optimization process.
     Let's start!
 
     Evaluated 10 trials so far.
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/4_callback.py:57: DeprecationWarning: `Configuration` act's like a dictionary. Please use `dict(config)` instead of `get_dictionary` if you explicitly need a `dict`
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/4_callback.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       print(f"Current incumbent: {incumbent.get_dictionary()}")
-    Current incumbent: {'x0': -0.9968221839517355, 'x1': 4.30847043171525}
-    Current incumbent value: 1102.7877872130716
+    Current incumbent: {'x0': -0.9968221839517, 'x1': 4.3084704317152}
+    Current incumbent value: 1102.7877872130857
 
     Evaluated 20 trials so far.
-    Current incumbent: {'x0': -0.9968221839517355, 'x1': 4.30847043171525}
-    Current incumbent value: 1102.7877872130716
+    Current incumbent: {'x0': -0.9968221839517, 'x1': 4.3084704317152}
+    Current incumbent value: 1102.7877872130857
 
     Evaluated 30 trials so far.
-    Current incumbent: {'x0': -0.9968221839517355, 'x1': 4.30847043171525}
-    Current incumbent value: 1102.7877872130716
+    Current incumbent: {'x0': -0.9968221839517, 'x1': 4.3084704317152}
+    Current incumbent value: 1102.7877872130857
 
     Evaluated 40 trials so far.
-    Current incumbent: {'x0': -0.9968221839517355, 'x1': 4.30847043171525}
-    Current incumbent value: 1102.7877872130716
+    Current incumbent: {'x0': -0.9968221839517, 'x1': 4.3084704317152}
+    Current incumbent value: 1102.7877872130857
 
     Evaluated 50 trials so far.
-    Current incumbent: {'x0': 0.03135360777378082, 'x1': -0.21179260686039925}
-    Current incumbent value: 5.465623793958126
+    Current incumbent: {'x0': 0.0313536077738, 'x1': -0.2117926068604}
+    Current incumbent value: 5.465623793958172
 
     We just triggered to stop the optimization after 50 finished trials.
 
@@ -90,7 +90,7 @@ Furthermore, we print some stages of the optimization process.
             cs = ConfigurationSpace(seed=0)
             x0 = Float("x0", (-5, 10), default=-3)
             x1 = Float("x1", (-5, 10), default=-4)
-            cs.add_hyperparameters([x0, x1])
+            cs.add([x0, x1])
 
             return cs
 
@@ -146,7 +146,7 @@ Furthermore, we print some stages of the optimization process.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.152 seconds)
+   **Total running time of the script:** (0 minutes 0.158 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_4_callback.py:
@@ -169,3 +169,7 @@ Furthermore, we print some stages of the optimization process.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 4_callback.py <4_callback.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: 4_callback.zip <4_callback.zip>`

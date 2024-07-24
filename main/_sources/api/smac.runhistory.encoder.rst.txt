@@ -36,13 +36,13 @@ Modules
    :toctree:
    :recursive:
 
-   smac.runhistory.encoder.abstract_encoder
-   smac.runhistory.encoder.boing_encoder
-   smac.runhistory.encoder.eips_encoder
-   smac.runhistory.encoder.encoder
-   smac.runhistory.encoder.inverse_scaled_encoder
-   smac.runhistory.encoder.log_encoder
-   smac.runhistory.encoder.log_scaled_encoder
-   smac.runhistory.encoder.scaled_encoder
-   smac.runhistory.encoder.sqrt_scaled_encoder
+   abstract_encoder
+   boing_encoder
+   eips_encoder
+   encoder
+   inverse_scaled_encoder
+   log_encoder
+   log_scaled_encoder
+   scaled_encoder
+   sqrt_scaled_encoder
 

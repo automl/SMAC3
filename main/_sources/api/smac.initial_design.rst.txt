@@ -36,10 +36,10 @@ Modules
    :toctree:
    :recursive:
 
-   smac.initial_design.abstract_initial_design
-   smac.initial_design.default_design
-   smac.initial_design.factorial_design
-   smac.initial_design.latin_hypercube_design
-   smac.initial_design.random_design
-   smac.initial_design.sobol_design
+   abstract_initial_design
+   default_design
+   factorial_design
+   latin_hypercube_design
+   random_design
+   sobol_design
 

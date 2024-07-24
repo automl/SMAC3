@@ -36,6 +36,6 @@ Modules
    :toctree:
    :recursive:
 
-   smac.utils.subspaces.boing_subspace
-   smac.utils.subspaces.turbo_subspace
+   boing_subspace
+   turbo_subspace
 

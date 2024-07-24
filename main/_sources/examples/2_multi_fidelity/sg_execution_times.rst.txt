@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**03:04.062** total execution time for 2 files **from examples/2_multi_fidelity**:
+**02:55.425** total execution time for 3 files **from examples/2_multi_fidelity**:
 
 .. container::
 
@@ -33,8 +33,11 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_examples_2_multi_fidelity_1_mlp_epochs.py` (``1_mlp_epochs.py``)
-     - 02:29.830
+     - 02:13.214
      - 0.0
    * - :ref:`sphx_glr_examples_2_multi_fidelity_2_sgd_datasets.py` (``2_sgd_datasets.py``)
-     - 00:34.232
+     - 00:34.271
+     - 0.0
+   * - :ref:`sphx_glr_examples_2_multi_fidelity_3_specify_HB_via_total_budget.py` (``3_specify_HB_via_total_budget.py``)
+     - 00:07.940
      - 0.0

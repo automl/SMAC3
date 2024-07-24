@@ -33,25 +33,20 @@ This examples show how to use the Ask-and-Tell interface.
  .. code-block:: none
 
     [INFO][abstract_initial_design.py:147] Using 20 initial design configurations and 0 additional configurations.
-    [INFO][abstract_intensifier.py:515] Added config 38310a as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:594] Added config a840bc and rejected config 38310a as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 9a770c and rejected config a840bc as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 6a6aa0 and rejected config 9a770c as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 27e052 and rejected config 6a6aa0 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][smbo.py:319] Finished 50 trials.
-    [INFO][abstract_intensifier.py:594] Added config da5bdf and rejected config 27e052 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 4e3320 and rejected config da5bdf as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 58c3ff and rejected config 4e3320 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config ad8450 and rejected config 58c3ff as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 53144c and rejected config ad8450 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:594] Added config 1cfe87 and rejected config 53144c as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][smbo.py:319] Finished 100 trials.
-    [INFO][smbo.py:327] Configuration budget is exhausted:
-    [INFO][smbo.py:328] --- Remaining wallclock time: inf
-    [INFO][smbo.py:329] --- Remaining cpu time: inf
-    [INFO][smbo.py:330] --- Remaining trials: 0
+    [INFO][abstract_intensifier.py:516] Added config 6ccff1 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:595] Added config 075f19 and rejected config 6ccff1 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config efdd3f and rejected config 075f19 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 6f36d7 and rejected config efdd3f as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 16407a and rejected config 6f36d7 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][smbo.py:320] Finished 50 trials.
+    [INFO][abstract_intensifier.py:595] Added config 434d71 and rejected config 16407a as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][smbo.py:320] Finished 100 trials.
+    [INFO][smbo.py:328] Configuration budget is exhausted:
+    [INFO][smbo.py:329] --- Remaining wallclock time: inf
+    [INFO][smbo.py:330] --- Remaining cpu time: inf
+    [INFO][smbo.py:331] --- Remaining trials: 0
     Default cost: 16916.0
-    Incumbent cost: 0.6764193577937531
+    Incumbent cost: 0.4924238375584856
 
 
 
@@ -78,7 +73,7 @@ This examples show how to use the Ask-and-Tell interface.
             cs = ConfigurationSpace(seed=0)
             x0 = Float("x0", (-5, 10), default=-3)
             x1 = Float("x1", (-5, 10), default=-4)
-            cs.add_hyperparameters([x0, x1])
+            cs.add([x0, x1])
 
             return cs
 
@@ -141,7 +136,7 @@ This examples show how to use the Ask-and-Tell interface.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.738 seconds)
+   **Total running time of the script:** (0 minutes 3.980 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_3_ask_and_tell.py:
@@ -164,3 +159,7 @@ This examples show how to use the Ask-and-Tell interface.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 3_ask_and_tell.py <3_ask_and_tell.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: 3_ask_and_tell.zip <3_ask_and_tell.zip>`

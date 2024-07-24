@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Multi-Layer Perceptron Using Multiple Epochs &#8212; SMAC3 Documentation 2.1.0 documentation</title>
+    <title>Multi-Layer Perceptron Using Multiple Epochs &#8212; SMAC3 Documentation 2.2.0 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -24,14 +24,14 @@
     
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script src="../../_static/documentation_options.js?v=1d3a154c"></script>
+    <script src="../../_static/documentation_options.js?v=b06a6580"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -95,11 +95,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.1.0
+        v2.2.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
@@ -130,7 +131,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.1.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.2.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -223,6 +224,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="2_sgd_datasets.html">
        Stochastic Gradient Descent On Multiple Datasets
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="3_specify_HB_via_total_budget.html">
+       Specify Number of Trials via a Total Budget in Hyperband
       </a>
      </li>
     </ul>
@@ -632,6 +638,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.intensifier.hyperband_utils.html">
+       smac.intensifier.hyperband_utils
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.intensifier.html">
        smac.intensifier.intensifier
       </a>
@@ -906,6 +917,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1047,30 +1063,33 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][successive_halving.py:325] --- Bracket 0: [9, 3, 1]
 [INFO][successive_halving.py:327] Budgets in stage:
 [INFO][successive_halving.py:329] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][abstract_intensifier.py:515] Added config 598f3b as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:594] Added config 938c0d and rejected config 598f3b as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config b9b3dc and rejected config 938c0d as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 150 trials.
-[INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.0836181640625
-[INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 317
-[INFO][abstract_intensifier.py:594] Added config f452c6 and rejected config b9b3dc as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 150 trials.
+[INFO][smbo.py:328] Configuration budget is exhausted:
+[INFO][smbo.py:329] --- Remaining wallclock time: -1.2250981330871582
+[INFO][smbo.py:330] --- Remaining cpu time: inf
+[INFO][smbo.py:331] --- Remaining trials: 175
 Default cost (SuccessiveHalving): 0.36672856700711853
-Incumbent cost (SuccessiveHalving): 0.021708449396471652
+Incumbent cost (SuccessiveHalving): inf
 [INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
 [INFO][abstract_facade.py:203] Workers are reduced to 8.
 /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
 Perhaps you already have a cluster running?
-Hosting the HTTP server on port 37115 instead
+Hosting the HTTP server on port 39477 instead
   warnings.warn(
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -1082,27 +1101,27 @@ Hosting the HTTP server on port 37115 instead
 [INFO][successive_halving.py:329] --- Bracket 0: [2.7777777777777777, 8.333333333333332, 25.0]
 [INFO][successive_halving.py:329] --- Bracket 1: [8.333333333333332, 25.0]
 [INFO][successive_halving.py:329] --- Bracket 2: [25.0]
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][smbo.py:319] Finished 0 trials.
-[INFO][abstract_intensifier.py:515] Added config 16c6ab as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:594] Added config 1d30ce and rejected config 16c6ab as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 938c0d and rejected config 1d30ce as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:594] Added config 001690 and rejected config 938c0d as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 100 trials.
-[INFO][abstract_intensifier.py:594] Added config 87a6c5 and rejected config 001690 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: -0.5304005146026611
-[INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 369
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 0 trials.
+[INFO][abstract_intensifier.py:516] Added config 6ad6db as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:595] Added config 00a2dc and rejected config 6ad6db as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 50 trials.
+[INFO][smbo.py:320] Finished 50 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 150 trials.
+[INFO][abstract_intensifier.py:595] Added config 711e78 and rejected config 00a2dc as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:328] Configuration budget is exhausted:
+[INFO][smbo.py:329] --- Remaining wallclock time: -1.718996524810791
+[INFO][smbo.py:330] --- Remaining cpu time: inf
+[INFO][smbo.py:331] --- Remaining trials: 165
 Default cost (Hyperband): 0.36672856700711853
-Incumbent cost (Hyperband): 0.019475394614670405
+Incumbent cost (Hyperband): 0.02560352831940571
 </pre></div>
 </div>
 <div class="line-block">
@@ -1154,7 +1173,7 @@ Incumbent cost (Hyperband): 0.019475394614670405
         <span class="n">learning_rate_init</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;learning_rate_init&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Add all hyperparameters at once:</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">n_layer</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">learning_rate_init</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">n_layer</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">learning_rate_init</span><span class="p">])</span>
 
         <span class="c1"># Adding conditions to restrict the hyperparameter space...</span>
         <span class="c1"># ... since learning rate is only used when solver is &#39;sgd&#39;.</span>
@@ -1165,7 +1184,7 @@ Incumbent cost (Hyperband): 0.019475394614670405
         <span class="n">use_batch_size</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sgd&quot;</span><span class="p">,</span> <span class="s2">&quot;adam&quot;</span><span class="p">])</span>
 
         <span class="c1"># We can also add multiple conditions on hyperparameters at once:</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_conditions</span><span class="p">([</span><span class="n">use_lr</span><span class="p">,</span> <span class="n">use_batch_size</span><span class="p">,</span> <span class="n">use_lr_init</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">use_lr</span><span class="p">,</span> <span class="n">use_batch_size</span><span class="p">,</span> <span class="n">use_lr_init</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">cs</span>
 
@@ -1273,16 +1292,20 @@ Incumbent cost (Hyperband): 0.019475394614670405
     <span class="n">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (2 minutes 29.830 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (2 minutes 13.214 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" style="width: 150px;" />
+</a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/cd745b0cfbf59a4ad87a24a2fe5463e0/1_mlp_epochs.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">1_mlp_epochs.ipynb</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e36c26bb3a993c4641a06c811122b11e/1_mlp_epochs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_mlp_epochs.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/5f7af4d241173fd9f4d4445891bb8995/1_mlp_epochs.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">1_mlp_epochs.zip</span></code></a></p>
 </div>
 </div>
 </section>
@@ -1331,7 +1354,7 @@ Incumbent cost (Hyperband): 0.019475394614670405
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.3.7. Template is modified version of <a
+7.4.7. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

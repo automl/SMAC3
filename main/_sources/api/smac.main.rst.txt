@@ -36,6 +36,6 @@ Modules
    :toctree:
    :recursive:
 
-   smac.main.config_selector
-   smac.main.smbo
+   config_selector
+   smbo
 

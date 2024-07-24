@@ -36,11 +36,11 @@ Modules
    :toctree:
    :recursive:
 
-   smac.facade.abstract_facade
-   smac.facade.algorithm_configuration_facade
-   smac.facade.blackbox_facade
-   smac.facade.hyperband_facade
-   smac.facade.hyperparameter_optimization_facade
-   smac.facade.multi_fidelity_facade
-   smac.facade.random_facade
+   abstract_facade
+   algorithm_configuration_facade
+   blackbox_facade
+   hyperband_facade
+   hyperparameter_optimization_facade
+   multi_fidelity_facade
+   random_facade
 

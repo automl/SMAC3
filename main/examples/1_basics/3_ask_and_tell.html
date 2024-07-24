@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Ask-and-Tell &#8212; SMAC3 Documentation 2.1.0 documentation</title>
+    <title>Ask-and-Tell &#8212; SMAC3 Documentation 2.2.0 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -24,14 +24,14 @@
     
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script src="../../_static/documentation_options.js?v=1d3a154c"></script>
+    <script src="../../_static/documentation_options.js?v=b06a6580"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -95,11 +95,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.1.0
+        v2.2.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
@@ -130,7 +131,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.1.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.2.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -223,6 +224,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../2_multi_fidelity/2_sgd_datasets.html">
        Stochastic Gradient Descent On Multiple Datasets
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../2_multi_fidelity/3_specify_HB_via_total_budget.html">
+       Specify Number of Trials via a Total Budget in Hyperband
       </a>
      </li>
     </ul>
@@ -632,6 +638,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.intensifier.hyperband_utils.html">
+       smac.intensifier.hyperband_utils
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.intensifier.html">
        smac.intensifier.intensifier
       </a>
@@ -906,6 +917,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1028,25 +1044,20 @@ to download the full example code. or to run this example in your browser via Bi
 <span id="sphx-glr-examples-1-basics-3-ask-and-tell-py"></span><h1>Ask-and-Tell<a class="headerlink" href="#ask-and-tell" title="Link to this heading">¶</a></h1>
 <p>This examples show how to use the Ask-and-Tell interface.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 20 initial design configurations and 0 additional configurations.
-[INFO][abstract_intensifier.py:515] Added config 38310a as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:594] Added config a840bc and rejected config 38310a as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 9a770c and rejected config a840bc as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 6a6aa0 and rejected config 9a770c as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 27e052 and rejected config 6a6aa0 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:594] Added config da5bdf and rejected config 27e052 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 4e3320 and rejected config da5bdf as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 58c3ff and rejected config 4e3320 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config ad8450 and rejected config 58c3ff as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 53144c and rejected config ad8450 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 1cfe87 and rejected config 53144c as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 100 trials.
-[INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: inf
-[INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 0
+[INFO][abstract_intensifier.py:516] Added config 6ccff1 as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:595] Added config 075f19 and rejected config 6ccff1 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config efdd3f and rejected config 075f19 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 6f36d7 and rejected config efdd3f as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 16407a and rejected config 6f36d7 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 50 trials.
+[INFO][abstract_intensifier.py:595] Added config 434d71 and rejected config 16407a as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:328] Configuration budget is exhausted:
+[INFO][smbo.py:329] --- Remaining wallclock time: inf
+[INFO][smbo.py:330] --- Remaining cpu time: inf
+[INFO][smbo.py:331] --- Remaining trials: 0
 Default cost: 16916.0
-Incumbent cost: 0.6764193577937531
+Incumbent cost: 0.4924238375584856
 </pre></div>
 </div>
 <div class="line-block">
@@ -1067,7 +1078,7 @@ Incumbent cost: 0.6764193577937531
         <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">default</span><span class="o">=-</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">x1</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">default</span><span class="o">=-</span><span class="mi">4</span><span class="p">)</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">cs</span>
 
@@ -1128,16 +1139,20 @@ Incumbent cost: 0.6764193577937531
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incumbent cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.738 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.980 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-3-ask-and-tell-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/3_ask_and_tell.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/3_ask_and_tell.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" style="width: 150px;" />
+</a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9d0cee58c541238b53d0855910f17776/3_ask_and_tell.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">3_ask_and_tell.ipynb</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/a1828630146a41acf93ee176b4deac58/3_ask_and_tell.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">3_ask_and_tell.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/6d5784621a777b1b2116cd9e73c2fbb3/3_ask_and_tell.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">3_ask_and_tell.zip</span></code></a></p>
 </div>
 </div>
 </section>
@@ -1186,7 +1201,7 @@ Incumbent cost: 0.6764193577937531
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.3.7. Template is modified version of <a
+7.4.7. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

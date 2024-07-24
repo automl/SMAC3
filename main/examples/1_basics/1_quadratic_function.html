@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Quadratic Function &#8212; SMAC3 Documentation 2.1.0 documentation</title>
+    <title>Quadratic Function &#8212; SMAC3 Documentation 2.2.0 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -24,14 +24,14 @@
     
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script src="../../_static/documentation_options.js?v=1d3a154c"></script>
+    <script src="../../_static/documentation_options.js?v=b06a6580"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -95,11 +95,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.1.0
+        v2.2.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
@@ -130,7 +131,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.1.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.2.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -223,6 +224,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../2_multi_fidelity/2_sgd_datasets.html">
        Stochastic Gradient Descent On Multiple Datasets
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../2_multi_fidelity/3_specify_HB_via_total_budget.html">
+       Specify Number of Trials via a Total Budget in Hyperband
       </a>
      </li>
     </ul>
@@ -632,6 +638,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.intensifier.hyperband_utils.html">
+       smac.intensifier.hyperband_utils
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.intensifier.html">
        smac.intensifier.intensifier
       </a>
@@ -906,6 +917,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1032,41 +1048,37 @@ The black-box facade uses a <a class="reference internal" href="../../7_glossary
 The facade works best on a numerical hyperparameter configuration space and should not
 be applied to problems with large evaluation budgets (up to 1000 evaluations).</p>
 <img src="../../_images/sphx_glr_1_quadratic_function_001.png" srcset="../../_images/sphx_glr_1_quadratic_function_001.png" alt="1 quadratic function" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 0 additional configurations.
-[INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
-[INFO][abstract_intensifier.py:515] Added config f09c3b as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:594] Added config bec0fc and rejected config f09c3b as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config a34626 and rejected config bec0fc as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config f72805 and rejected config a34626 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config d7ecca and rejected config f72805 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 10bb50 and rejected config d7ecca as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 6a2c79 and rejected config 10bb50 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 4380b1 and rejected config 6a2c79 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 15dfc6 and rejected config 4380b1 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config b9f3bd and rejected config 15dfc6 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config c714f5 and rejected config b9f3bd as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 2da694 and rejected config c714f5 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 50 trials.
-[INFO][abstract_intensifier.py:594] Added config e50a55 and rejected config 2da694 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 4a175d and rejected config e50a55 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config fef2f4 and rejected config 4a175d as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 8b3403 and rejected config fef2f4 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config a028a8 and rejected config 8b3403 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config e1dc2b and rejected config a028a8 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config e66a0e and rejected config e1dc2b as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 9f5b5b and rejected config e66a0e as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 8d6767 and rejected config 9f5b5b as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 1add8f and rejected config 8d6767 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config df326a and rejected config 1add8f as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config 2d8007 and rejected config df326a as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config cabaca and rejected config 2d8007 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:319] Finished 100 trials.
-[INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: inf
-[INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 0
-[INFO][abstract_intensifier.py:305] Using only one seed for deterministic scenario.
+[INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
+[INFO][abstract_intensifier.py:516] Added config e08add as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:595] Added config e86960 and rejected config e08add as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 78cf4a and rejected config e86960 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 9c0078 and rejected config 78cf4a as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 9aa814 and rejected config 9c0078 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config d85172 and rejected config 9aa814 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 7c6c87 and rejected config d85172 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 75d013 and rejected config 7c6c87 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 8964ef and rejected config 75d013 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config e90b89 and rejected config 8964ef as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config e486a5 and rejected config e90b89 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config a95115 and rejected config e486a5 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 9cfa74 and rejected config a95115 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 0d7153 and rejected config 9cfa74 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 50 trials.
+[INFO][abstract_intensifier.py:595] Added config f221f1 and rejected config 0d7153 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 49e111 and rejected config f221f1 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 182d99 and rejected config 49e111 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config eb7305 and rejected config 182d99 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 9f08ad and rejected config eb7305 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config e3d7e8 and rejected config 9f08ad as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config e68abf and rejected config e3d7e8 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:328] Configuration budget is exhausted:
+[INFO][smbo.py:329] --- Remaining wallclock time: inf
+[INFO][smbo.py:330] --- Remaining cpu time: inf
+[INFO][smbo.py:331] --- Remaining trials: 0
+[INFO][abstract_intensifier.py:306] Using only one seed for deterministic scenario.
 Default cost: 25.0
-Incumbent cost: 1.7011175854063811e-09
+Incumbent cost: 1.701117581837685e-09
 </pre></div>
 </div>
 <div class="line-block">
@@ -1088,7 +1100,7 @@ Incumbent cost: 1.7011175854063811e-09
     <span class="k">def</span> <span class="nf">configspace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfigurationSpace</span><span class="p">:</span>
         <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">default</span><span class="o">=-</span><span class="mi">5</span><span class="p">)</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">cs</span>
 
@@ -1146,16 +1158,20 @@ Incumbent cost: 1.7011175854063811e-09
     <span class="n">plot</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.134 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.382 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-1-quadratic-function-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/1_quadratic_function.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/1_quadratic_function.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" style="width: 150px;" />
+</a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/b52769935bc438e8bdaecfdcf7e4b4ee/1_quadratic_function.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">1_quadratic_function.ipynb</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/fad685908a63056448219895c5c3a15a/1_quadratic_function.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">1_quadratic_function.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/063faf88baea73dba8e7341bd337a200/1_quadratic_function.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">1_quadratic_function.zip</span></code></a></p>
 </div>
 </div>
 </section>
@@ -1204,7 +1220,7 @@ Incumbent cost: 1.7011175854063811e-09
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.3.7. Template is modified version of <a
+7.4.7. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

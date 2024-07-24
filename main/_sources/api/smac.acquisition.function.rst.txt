@@ -36,11 +36,11 @@ Modules
    :toctree:
    :recursive:
 
-   smac.acquisition.function.abstract_acquisition_function
-   smac.acquisition.function.confidence_bound
-   smac.acquisition.function.expected_improvement
-   smac.acquisition.function.integrated_acquisition_function
-   smac.acquisition.function.prior_acqusition_function
-   smac.acquisition.function.probability_improvement
-   smac.acquisition.function.thompson
+   abstract_acquisition_function
+   confidence_bound
+   expected_improvement
+   integrated_acquisition_function
+   prior_acqusition_function
+   probability_improvement
+   thompson
 

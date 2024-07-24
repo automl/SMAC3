@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Priors over the Optimum &#8212; SMAC3 Documentation 2.1.0 documentation</title>
+    <title>User Priors over the Optimum &#8212; SMAC3 Documentation 2.2.0 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -24,14 +24,14 @@
     
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2eb4fb78" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     
   <link rel="preload" as="script" href="../../_static/js/index.9ea38e314b9e6d9dab77.js">
 
-    <script src="../../_static/documentation_options.js?v=1d3a154c"></script>
+    <script src="../../_static/documentation_options.js?v=b06a6580"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -95,11 +95,12 @@
         <div class="dropdown mt-1">
     <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
         data-toggle="dropdown">
-        v2.1.0
+        v2.2.0
         <span class="caret"></span>
     </button>
     <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
-        <a class="list-group-item list-group-item-action" href="#">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
         <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
@@ -130,7 +131,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
-<div class="mb-3">v2.1.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v2.2.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -223,6 +224,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="../2_multi_fidelity/2_sgd_datasets.html">
        Stochastic Gradient Descent On Multiple Datasets
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../2_multi_fidelity/3_specify_HB_via_total_budget.html">
+       Specify Number of Trials via a Total Budget in Hyperband
       </a>
      </li>
     </ul>
@@ -632,6 +638,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.intensifier.hyperband_utils.html">
+       smac.intensifier.hyperband_utils
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.intensifier.intensifier.html">
        smac.intensifier.intensifier
       </a>
@@ -906,6 +917,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="../../api/smac.utils.numpyencoder.html">
+       smac.utils.numpyencoder
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="../../api/smac.utils.pareto_front.html">
        smac.utils.pareto_front
       </a>
@@ -1035,15 +1051,21 @@ but we stick with the hyperparameter optimization facade here. To incorporate us
 optimization, you have to change the acquisition function to <code class="docutils literal notranslate"><span class="pre">PriorAcquisitionFunction</span></code>.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 1 additional configurations.
 [WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
-[INFO][abstract_intensifier.py:515] Added config 7ec7fe as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:594] Added config 6acb23 and rejected config 7ec7fe as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][abstract_intensifier.py:594] Added config ce39dc and rejected config 6acb23 as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:327] Configuration budget is exhausted:
-[INFO][smbo.py:328] --- Remaining wallclock time: inf
-[INFO][smbo.py:329] --- Remaining cpu time: inf
-[INFO][smbo.py:330] --- Remaining trials: 0
+[INFO][abstract_intensifier.py:516] Added config 145e6c as new incumbent because there are no incumbents yet.
+[INFO][abstract_intensifier.py:595] Added config 2aab89 and rejected config 145e6c as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 1dd478 and rejected config 2aab89 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 8111d4 and rejected config 1dd478 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 4fcbbb and rejected config 8111d4 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config a18544 and rejected config 4fcbbb as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config ece60c and rejected config a18544 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config fee5c4 and rejected config ece60c as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 649016 and rejected config fee5c4 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:328] Configuration budget is exhausted:
+[INFO][smbo.py:329] --- Remaining wallclock time: inf
+[INFO][smbo.py:330] --- Remaining cpu time: inf
+[INFO][smbo.py:331] --- Remaining trials: 0
 Default cost: 0.038952336737852145
-Default cost: 0.03506499535747454
+Default cost: 0.02838904363973993
 </pre></div>
 </div>
 <div class="line-block">
@@ -1133,13 +1155,13 @@ Default cost: 0.03506499535747454
             <span class="s2">&quot;learning_rate_init&quot;</span><span class="p">,</span>
             <span class="n">lower</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>
             <span class="n">upper</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-            <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">),</span>
-            <span class="n">sigma</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+            <span class="n">mu</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>  <span class="c1"># will be transformed to log space later</span>
+            <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c1"># will be transformed to log space later</span>
             <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Add all hyperparameters at once:</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">n_layer</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">learning_rate_init</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">n_layer</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">learning_rate_init</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">cs</span>
 
@@ -1210,16 +1232,20 @@ Default cost: 0.03506499535747454
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default cost: </span><span class="si">{</span><span class="n">incumbent_cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 21.257 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 39.830 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-1-basics-6-priors-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/6_priors.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/1_basics/6_priors.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" style="width: 150px;" />
+</a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/46bc216dfde0ab374a4c12cf76883c13/6_priors.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">6_priors.ipynb</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4ebef42c9f91d235a47f01427ed027a4/6_priors.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">6_priors.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/d198a13b3da9ac20be16998a6bf61983/6_priors.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">6_priors.zip</span></code></a></p>
 </div>
 </div>
 </section>
@@ -1268,7 +1294,7 @@ Default cost: 0.03506499535747454
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.3.7. Template is modified version of <a
+7.4.7. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>
