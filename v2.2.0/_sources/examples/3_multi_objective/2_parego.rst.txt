@@ -47,40 +47,17 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_intensifier.py:516] Added config 71813f as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:603] Config bb3711 is a new incumbent. Total number of incumbents: 2.
     [INFO][abstract_intensifier.py:603] Config f07b8c is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:595] Added config 029a3c and rejected config 281184 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:603] Config 060aeb is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:603] Config ca383c is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:603] Config cc2c2b is a new incumbent. Total number of incumbents: 5.
-    [INFO][abstract_intensifier.py:603] Config 2ce7d9 is a new incumbent. Total number of incumbents: 6.
-    [INFO][abstract_intensifier.py:603] Config b02e1e is a new incumbent. Total number of incumbents: 7.
-    [INFO][abstract_intensifier.py:603] Config f691a7 is a new incumbent. Total number of incumbents: 8.
-    [INFO][abstract_intensifier.py:603] Config de75da is a new incumbent. Total number of incumbents: 9.
-    [INFO][abstract_intensifier.py:603] Config 20bbb6 is a new incumbent. Total number of incumbents: 10.
-    [INFO][abstract_intensifier.py:595] Added config 7780fd and rejected config 20bbb6 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:595] Added config 6233ce and rejected config f691a7 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:603] Config 11acfc is a new incumbent. Total number of incumbents: 11.
-    [INFO][abstract_intensifier.py:628] Removed one incumbent using crowding distance because more than 10 are available.
-    [INFO][smbo.py:320] Finished 50 trials.
-    [INFO][abstract_intensifier.py:603] Config c00065 is a new incumbent. Total number of incumbents: 11.
-    [INFO][abstract_intensifier.py:628] Removed one incumbent using crowding distance because more than 10 are available.
     [INFO][smbo.py:328] Configuration budget is exhausted:
-    [INFO][smbo.py:329] --- Remaining wallclock time: -0.15232491493225098
+    [INFO][smbo.py:329] --- Remaining wallclock time: -2.3799731731414795
     [INFO][smbo.py:330] --- Remaining cpu time: inf
-    [INFO][smbo.py:331] --- Remaining trials: 148
+    [INFO][smbo.py:331] --- Remaining trials: 182
     Validated costs from default config: 
-    --- [0.60155834 0.15452373]
+    --- [0.60155834 0.16958845]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.05092309 0.74322581]
-    --- [0.60407768 0.10240269]
-    --- [0.08652894 0.18247414]
-    --- [0.2490243  0.11120093]
-    --- [0.44185701 0.10148609]
-    --- [0.41235995 0.11730111]
-    --- [0.1964415  0.12692523]
-    --- [0.14051996 0.13725793]
-    --- [0.09626973 0.15918124]
-    --- [0.12104457 0.15442801]
+    --- [0.72761606 0.20369637]
+    --- [0.05092309 0.74873209]
+    --- [0.53243036 0.60367513]
 
 
 
@@ -261,7 +238,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 34.524 seconds)
+   **Total running time of the script:** (0 minutes 35.992 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:

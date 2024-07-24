@@ -53,7 +53,7 @@ in terms of the fidelity units and let SMAC calculate how many trials that would
             max budget per trial:                    500
             total number of trials per HB round:     69
             budget used per HB round:                2629.6296296296296
-            number of brackets:                      3
+            number of brackets:                      4
             budgets per stage:                       {0: [18.51851851851852, 55.55555555555555, 166.66666666666666, 500.0], 1: [55.55555555555555, 166.66666666666666, 500.0], 2: [166.66666666666666, 500.0], 3: [500.0]}
             n configs per stage:                     {0: [27, 9, 3, 1], 1: [12, 4, 1], 2: [6, 2], 3: [4]}
     -----------------------------------------------------------------------------------------
@@ -206,7 +206,7 @@ in terms of the fidelity units and let SMAC calculate how many trials that would
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.835 seconds)
+   **Total running time of the script:** (0 minutes 8.016 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_3_specify_HB_via_total_budget.py:

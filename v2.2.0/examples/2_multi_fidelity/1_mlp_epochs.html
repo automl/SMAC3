@@ -1073,8 +1073,14 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][smbo.py:320] Finished 0 trials.
 [INFO][smbo.py:320] Finished 100 trials.
 [INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
 [INFO][smbo.py:328] Configuration budget is exhausted:
-[INFO][smbo.py:329] --- Remaining wallclock time: -3.065371036529541
+[INFO][smbo.py:329] --- Remaining wallclock time: -3.8923418521881104
 [INFO][smbo.py:330] --- Remaining cpu time: inf
 [INFO][smbo.py:331] --- Remaining trials: 139
 Default cost (SuccessiveHalving): 0.36672856700711853
@@ -1083,7 +1089,7 @@ Incumbent cost (SuccessiveHalving): inf
 [INFO][abstract_facade.py:203] Workers are reduced to 8.
 /opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/distributed/node.py:182: UserWarning: Port 8787 is already in use.
 Perhaps you already have a cluster running?
-Hosting the HTTP server on port 34681 instead
+Hosting the HTTP server on port 39027 instead
   warnings.warn(
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -1105,15 +1111,15 @@ Hosting the HTTP server on port 34681 instead
 [INFO][smbo.py:320] Finished 0 trials.
 [INFO][abstract_intensifier.py:516] Added config 6ad6db as new incumbent because there are no incumbents yet.
 [INFO][smbo.py:320] Finished 50 trials.
-[INFO][abstract_intensifier.py:595] Added config da3ddf and rejected config 6ad6db as incumbent because it is not better than the incumbents on 1 instances:
-[INFO][smbo.py:320] Finished 100 trials.
-[INFO][abstract_intensifier.py:595] Added config 7b9b77 and rejected config da3ddf as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config c36dba and rejected config 6ad6db as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config 00a2dc and rejected config c36dba as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config df87dc and rejected config 00a2dc as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:328] Configuration budget is exhausted:
-[INFO][smbo.py:329] --- Remaining wallclock time: -0.8539242744445801
+[INFO][smbo.py:329] --- Remaining wallclock time: -1.5701942443847656
 [INFO][smbo.py:330] --- Remaining cpu time: inf
-[INFO][smbo.py:331] --- Remaining trials: 201
+[INFO][smbo.py:331] --- Remaining trials: 159
 Default cost (Hyperband): 0.36672856700711853
-Incumbent cost (Hyperband): 0.031168368926029033
+Incumbent cost (Hyperband): 0.028935314144227897
 </pre></div>
 </div>
 <div class="line-block">
@@ -1284,7 +1290,7 @@ Incumbent cost (Hyperband): 0.031168368926029033
     <span class="n">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (2 minutes 14.380 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (2 minutes 19.311 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" style="width: 150px;" />

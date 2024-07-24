@@ -1075,7 +1075,7 @@
         <span class="s2">&quot;budgets_in_stage&quot;</span><span class="p">:</span> <span class="n">_budgets_in_stage</span><span class="p">,</span>
         <span class="s2">&quot;trials_used&quot;</span><span class="p">:</span> <span class="n">total_trials</span><span class="p">,</span>
         <span class="s2">&quot;budget_used&quot;</span><span class="p">:</span> <span class="n">total_budget</span><span class="p">,</span>
-        <span class="s2">&quot;number_of_brackets&quot;</span><span class="p">:</span> <span class="n">_s_max</span><span class="p">,</span>
+        <span class="s2">&quot;number_of_brackets&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">_max_iterations</span><span class="p">),</span>
     <span class="p">}</span></div>
 
 
@@ -1101,13 +1101,19 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dict</span>
-<span class="sd">        Info about the Hyperband round</span>
+<span class="sd">        Info about one Hyperband round</span>
 <span class="sd">            &quot;max_iterations&quot;</span>
 <span class="sd">            &quot;n_configs_in_stage&quot;</span>
 <span class="sd">            &quot;budgets_in_stage&quot;</span>
 <span class="sd">            &quot;trials_used&quot;</span>
 <span class="sd">            &quot;budget_used&quot;</span>
 <span class="sd">            &quot;number_of_brackets&quot;</span>
+<span class="sd">        Info about whole optimization</span>
+<span class="sd">            &quot;n_trials&quot;</span>
+<span class="sd">            &quot;total_budget&quot;</span>
+<span class="sd">            &quot;eta&quot;</span>
+<span class="sd">            &quot;min_budget&quot;</span>
+<span class="sd">            &quot;max_budget&quot;</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Determine the HB</span>
@@ -1134,9 +1140,6 @@
             <span class="c1"># If we are in the case of b*c &gt; remaining_budget, we will not have any</span>
             <span class="c1"># budget left. We can not add full c but the number of trials that still fit</span>
             <span class="n">remaining_budget</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">remaining_budget</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span>
-
-            <span class="c1"># print(stage, b, c)</span>
-            <span class="c1"># print(&quot;-&quot;*20, remaining_trials, remaining_budget)</span>
 
     <span class="n">n_trials</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number_of_full_hb_rounds</span> <span class="o">*</span> <span class="n">trials_used_per_hb_round</span> <span class="o">+</span> <span class="n">remaining_trials</span><span class="p">)</span>
 
