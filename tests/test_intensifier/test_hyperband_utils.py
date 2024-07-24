@@ -14,7 +14,7 @@ def test_determine_HB():
 
     result = determine_HB(min_budget=min_budget, max_budget=max_budget, eta=eta)
 
-    # Test table 1 from https://arxiv.org/pdf/1603.06560.pdf
+    # Follow algorithm (not the table!) from https://arxiv.org/pdf/1603.06560.pdf (see https://github.com/automl/SMAC3/issues/977)
     expected_max_iterations = {0: 5, 1: 4, 2: 3, 3: 2, 4: 1}
     expected_n_configs_in_stage = {
         0: [81, 27, 9, 3, 1],
