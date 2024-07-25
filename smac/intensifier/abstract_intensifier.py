@@ -508,7 +508,6 @@ class AbstractIntensifier:
         # Little sanity check here for consistency
         if len(incumbents) > 0:
             assert incumbent_isb_keys is not None
-            assert len(incumbent_isb_keys) > 0
 
         # If there are no incumbents at all, we just use the new config as new incumbent
         # Problem: We can add running incumbents
