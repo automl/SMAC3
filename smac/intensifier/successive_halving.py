@@ -448,6 +448,10 @@ class SuccessiveHalving(AbstractIntensifier):
                     configs.append(config)
                 except StopIteration:
                     # We stop if we don't find any configuration anymore
+                    logger.warning(
+                        "If you assume your configspace was not yet exhausted, try to "
+                        "increase the number of retries in the config selector."
+                    )
                     return
 
             # We keep track of the seed so we always evaluate on the same instances
