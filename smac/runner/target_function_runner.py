@@ -7,6 +7,7 @@ import inspect
 import math
 import time
 import traceback
+from functools import partial
 
 import numpy as np
 from ConfigSpace import Configuration
@@ -44,8 +45,10 @@ class TargetFunctionRunner(AbstractSerialRunner):
         self,
         scenario: Scenario,
         target_function: Callable,
-        required_arguments: list[str] = [],
+        required_arguments: list[str] = None,
     ):
+        if required_arguments is None:
+            required_arguments = []
         super().__init__(scenario=scenario, required_arguments=required_arguments)
         self._target_function = target_function
 
@@ -88,7 +91,17 @@ class TargetFunctionRunner(AbstractSerialRunner):
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
-        meta.update({"code": str(self._target_function.__code__.co_code)})
+
+        # Partial's don't have a __code__ attribute but are a convenient
+        # way a user might want to pass a function to SMAC, specifying
+        # keyword arguments.
+        f = self._target_function
+        if isinstance(f, partial):
+            f = f.func
+            meta.update({"code": str(f.__code__.co_code)})
+            meta.update({"code-partial-args": repr(f)})
+        else:
+            meta.update({"code": str(self._target_function.__code__.co_code)})
 
         return meta
 

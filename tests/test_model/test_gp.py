@@ -240,7 +240,6 @@ def test_train_continue_on_linalg_error_2():
             raise np.linalg.LinAlgError
 
     with patch.object(sklearn.gaussian_process.GaussianProcessRegressor, "log_marginal_likelihood", Dummy().__call__):
-
         seed = 1
         rs = np.random.RandomState(seed)
         X, Y, n_dims = get_cont_data(rs)
@@ -265,7 +264,6 @@ def test_predict_marginalized_over_instances_no_features():
 
     dummy = Dummy()
     with patch.object(GaussianProcess, "predict", dummy.__call__):
-
         seed = 1
         rs = np.random.RandomState(seed)
 
@@ -375,7 +373,6 @@ def test_sampling_shape():
     X = np.arange(-5, 5, 0.1).reshape((-1, 1))
     X_test = np.arange(-5.05, 5.05, 0.1).reshape((-1, 1))
     for shape in (None, (-1, 1)):
-
         if shape is None:
             y = np.sin(X).flatten()
         else:

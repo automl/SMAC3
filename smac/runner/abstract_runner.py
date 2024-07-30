@@ -50,8 +50,10 @@ class AbstractRunner(ABC):
     def __init__(
         self,
         scenario: Scenario,
-        required_arguments: list[str] = [],
+        required_arguments: list[str] = None,
     ):
+        if required_arguments is None:
+            required_arguments = []
         self._scenario = scenario
         self._required_arguments = required_arguments
 

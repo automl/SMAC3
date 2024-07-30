@@ -76,7 +76,7 @@ class SGD:
         learning_rate = Categorical("learning_rate", ["constant", "invscaling", "adaptive"], default="constant")
         eta0 = Float("eta0", (0.00001, 1), default=0.1, log=True)
         # Add the parameters to configuration space
-        cs.add_hyperparameters([alpha, l1_ratio, learning_rate, eta0])
+        cs.add([alpha, l1_ratio, learning_rate, eta0])
 
         return cs
 
@@ -89,7 +89,7 @@ class SGD:
 
             # SGD classifier using given configuration
             clf = SGDClassifier(
-                loss="log",
+                loss="log_loss",
                 penalty="elasticnet",
                 alpha=config["alpha"],
                 l1_ratio=config["l1_ratio"],

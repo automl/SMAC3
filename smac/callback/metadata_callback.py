@@ -7,6 +7,7 @@ from datetime import datetime
 import smac
 from smac.callback.callback import Callback
 from smac.main.smbo import SMBO
+from smac.utils.numpyencoder import NumpyEncoder
 
 __copyright__ = "Copyright 2023, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -31,4 +32,4 @@ class MetadataCallback(Callback):
         path.mkdir(parents=True, exist_ok=True)
 
         with open(path / "metadata.json", "w") as fp:
-            json.dump(meta_dict, fp, indent=2)
+            json.dump(meta_dict, fp, indent=2, cls=NumpyEncoder)

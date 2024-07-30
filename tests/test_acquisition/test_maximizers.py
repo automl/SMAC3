@@ -30,7 +30,6 @@ from scipy.spatial.distance import euclidean
 from smac.acquisition.function import EI
 from smac.acquisition.maximizer import (
     DifferentialEvolution,
-    LocalAndSortedPriorRandomSearch,
     LocalAndSortedRandomSearch,
     LocalSearch,
     RandomSearch,
@@ -55,8 +54,8 @@ class ConfigurationMock(object):
 def configspace_branin() -> ConfigurationSpace:
     """Returns the branin configspace."""
     cs = ConfigurationSpace()
-    cs.add_hyperparameter(Float("x", (-5, 10)))
-    cs.add_hyperparameter(Float("y", (0, 15)))
+    cs.add(Float("x", (-5, 10)))
+    cs.add(Float("y", (0, 15)))
     return cs
 
 
@@ -196,7 +195,7 @@ def configspace() -> ConfigurationSpace:
     c = Float("c", (0, 1), default=0.5)
 
     # Add all hyperparameters at once:
-    cs.add_hyperparameters([a, b, c])
+    cs.add([a, b, c])
 
     return cs
 
@@ -263,7 +262,6 @@ def test_get_initial_points_moo(configspace):
             return X, X
 
     class AcquisitionFunction:
-
         model = Model()
 
         def __call__(self, X):
@@ -278,7 +276,7 @@ def test_get_initial_points_moo(configspace):
 
     random_configs = configspace.sample_configuration(size=100)
     points = ls._get_initial_points(random_configs, n_points=5, additional_start_points=None)
-    assert len(points) == 10
+    assert len(points) == 5
 
 
 # --------------------------------------------------------------
@@ -334,7 +332,7 @@ def test_local_and_random_search(configspace, acquisition_function):
     values = rs._maximize(start_points, 100)
     config_origins = []
     v_old = np.inf
-    for (v, config) in values:
+    for v, config in values:
         config_origins += [config.origin]
         if isinstance(v, np.ndarray):
             v = float(v[0])
@@ -342,7 +340,6 @@ def test_local_and_random_search(configspace, acquisition_function):
         assert v_old >= v
         v_old = v
 
-    assert "Acquisition Function Maximizer: Random Search (sorted)" in config_origins
     assert "Acquisition Function Maximizer: Local Search" in config_origins
 
 
@@ -359,7 +356,7 @@ def configspace_rosenbrock():
     x2 = UniformIntegerHyperparameter("x2", -5, 5, default_value=5)
     x3 = CategoricalHyperparameter("x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5)
     x4 = UniformIntegerHyperparameter("x4", -5, 5, default_value=5)
-    uniform_cs.add_hyperparameters([x1, x2, x3, x4])
+    uniform_cs.add([x1, x2, x3, x4])
 
     return uniform_cs
 
@@ -375,7 +372,7 @@ def configspace_prior():
         "x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5, weights=[999, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     )
     x4 = UniformIntegerHyperparameter("x4", lower=-5, upper=5, default_value=5)
-    prior_cs.add_hyperparameters([x1, x2, x3, x4])
+    prior_cs.add([x1, x2, x3, x4])
 
     return prior_cs
 
@@ -390,26 +387,26 @@ def test_sampling_fractions(configspace_rosenbrock, configspace_prior):
 
     budget_kwargs = {"max_steps": 2, "n_steps_plateau_walk": 2, "local_search_iterations": 2}
 
-    prs_0 = LocalAndSortedPriorRandomSearch(
-        configspace_prior,
-        configspace_rosenbrock,
-        AcquisitionFunction(),
+    prs_0 = LocalAndSortedRandomSearch(
+        configspace=configspace_prior,
+        uniform_configspace=configspace_rosenbrock,
+        acquisition_function=AcquisitionFunction(),
         prior_sampling_fraction=0,
         **budget_kwargs,
     )
 
-    prs_05 = LocalAndSortedPriorRandomSearch(
-        configspace_prior,
-        configspace_rosenbrock,
-        AcquisitionFunction(),
+    prs_05 = LocalAndSortedRandomSearch(
+        configspace=configspace_prior,
+        uniform_configspace=configspace_rosenbrock,
+        acquisition_function=AcquisitionFunction(),
         prior_sampling_fraction=0.9,
         **budget_kwargs,
     )
 
-    prs_1 = LocalAndSortedPriorRandomSearch(
-        configspace_prior,
-        configspace_rosenbrock,
-        AcquisitionFunction(),
+    prs_1 = LocalAndSortedRandomSearch(
+        configspace=configspace_prior,
+        uniform_configspace=configspace_rosenbrock,
+        acquisition_function=AcquisitionFunction(),
         prior_sampling_fraction=1,
         **budget_kwargs,
     )

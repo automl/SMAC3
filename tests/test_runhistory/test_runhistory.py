@@ -75,7 +75,6 @@ def test_add_and_pickle(runhistory, config1):
 
 
 def test_illegal_input(runhistory):
-
     with pytest.raises(TypeError, match="Configuration must not be None."):
         runhistory.add(config=None, cost=1.23, time=2.34, status=StatusType.SUCCESS)
 
@@ -87,7 +86,6 @@ def test_illegal_input(runhistory):
 
 
 def test_add_multiple_times(runhistory, config1):
-
     for i in range(5):
         runhistory.add(
             config=config1,
@@ -294,7 +292,6 @@ def test_full_update2(runhistory, config1, config2):
 
 
 def test_incremental_update(runhistory, config1):
-
     runhistory.add(
         config=config1,
         cost=10,
@@ -319,7 +316,6 @@ def test_incremental_update(runhistory, config1):
 
 
 def test_multiple_budgets(runhistory, config1):
-
     runhistory.add(
         config=config1,
         cost=10,
@@ -382,7 +378,6 @@ def test_get_configs_per_budget(runhistory, config1, config2, config3):
 
 
 def test_json_origin(configspace_small, config1):
-
     for i, origin in enumerate(["test_origin", None]):
         config1.origin = origin
         runhistory = RunHistory()

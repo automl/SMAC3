@@ -1,7 +1,52 @@
+# 2.2.0
+
+## Features
+- Add example to specify total budget (fidelity units) instead of n_trials for multi-fidelity/Hyperband (#1121)
+
+## Dependencies
+- Update numpy NaN (#1122) and restrict numpy version
+- Upgrade to ConfigSpace 1.x.x (#1124)
+
+# 2.1.0
+
+## Improvements
+- Change the surrogate model to be retrained after every iteration by default in the case of blackbox optimization
+  (#1106).
+- Integrate `LocalAndSortedPriorRandomSearch` functionality into `LocalAndSortedRandomSearch` (#1106).
+- Change the way the `LocalAndSortedRandomSearch` works such that the incumbent always is a starting point and that
+      random configurations are sampled as the basis of the local search, not in addition (#1106).
+
+## Bugfixes
+- Fix path for dask scheduler file (#1055).
+- Add OrdinalHyperparameter for random forest imputer (#1065).
+- Don't use mutable default argument (#1067).
+- Propagate the Scenario random seed to `get_random_design` (#1066).
+- Configurations that fail to become incumbents will be added to the rejected lists (#1069).
+- SMAC RandomForest doesn't crash when `np.integer` used, i.e. as generated from a `np.random.RandomState` (#1084).
+- Fix the handling of n_points/ challengers in the acquisition maximizers, such that this number now functions as the
+     number of points that are sampled from the acquisition function to find the next challengers. Now also doesn't
+     restrict the config selector to n_retrain many points for finding the max, and instead uses the defaults that are
+     defined via facades/ scenarios (#1106).
+
+## Misc
+- ci: Update action version (#1072).
+
+## Minor
+- When a custom dask client is provided, emit the warning that the `n_workers` parameter is ignored only if it deviates from its default value, `1` ([#1071](https://github.com/automl/SMAC3/pull/1071)).
+
 # 2.0.2
+
+## Improvements
+- Add an error when we get an empty dict data_to_scatter so that we can avoid an internal error caused in Dask precautiously.
+- Add experimental instruction for installing SMAC in Windows via a WSL.
+- More detailed documentation regarding continuing runs.
+- Add a new example that demonstrates the use of intensification to speed up cross-validation for machine learning.
 
 ## Bugfixes
 - Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).
+- Fix callback order (#1040).
+- Handle configspace as dictionary in mlp and parego example.
+- Adapt sgd loss to newest scikit-learn version.
 
 ## Features
 - Log to WandB (#1037)

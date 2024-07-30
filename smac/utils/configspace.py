@@ -101,22 +101,22 @@ def get_types(
             if can_be_inactive:
                 raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
 
-            bounds[i] = (param._lower, param._upper)
+            bounds[i] = (param.lower_vectorized, param.upper_vectorized)
         elif isinstance(param, NormalIntegerHyperparameter):
             if can_be_inactive:
                 raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
 
-            bounds[i] = (param.nfhp._lower, param.nfhp._upper)
+            bounds[i] = (param.lower_vectorized, param.upper_vectorized)
         elif isinstance(param, BetaFloatHyperparameter):
             if can_be_inactive:
                 raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
 
-            bounds[i] = (param._lower, param._upper)
+            bounds[i] = (param.lower_vectorized, param.upper_vectorized)
         elif isinstance(param, BetaIntegerHyperparameter):
             if can_be_inactive:
                 raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
 
-            bounds[i] = (param.bfhp._lower, param.bfhp._upper)
+            bounds[i] = (param.lower_vectorized, param.upper_vectorized)
         elif not isinstance(
             param,
             (
@@ -169,12 +169,17 @@ def print_config_changes(
     if incumbent is None or challenger is None:
         return
 
-    params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
-    for param in params:
-        if param[1] != param[2]:
-            logger.info("--- %s: %r -> %r" % param)
-        else:
-            logger.debug("--- %s Remains unchanged: %r", param[0], param[1])
+    inc_keys = set(incumbent.keys())
+    all_keys = inc_keys.union(challenger.keys())
+
+    lines = []
+    for k in sorted(all_keys):
+        inc_k = incumbent.get(k, "-inactive-")
+        cha_k = challenger.get(k, "-inactive-")
+        lines.append(f"--- {k}: {inc_k} -> {cha_k}" + " (unchanged)" if inc_k == cha_k else "")
+
+    msg = "\n".join(lines)
+    logger.debug(msg)
 
 
 # def check_subspace_points(

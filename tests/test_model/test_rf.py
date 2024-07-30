@@ -127,7 +127,6 @@ def test_predict_marginalized():
 
 
 def test_predict_marginalized_mocked():
-
     rs = np.random.RandomState(1)
     F = {}
     for i in range(10):
@@ -257,18 +256,25 @@ def test_with_ordinal():
 
 def test_impute_inactive_hyperparameters():
     cs = ConfigurationSpace(seed=0)
-    a = cs.add_hyperparameter(CategoricalHyperparameter("a", [0, 1]))
+    a = cs.add_hyperparameter(CategoricalHyperparameter("a", [0, 1, 2]))
     b = cs.add_hyperparameter(CategoricalHyperparameter("b", [0, 1]))
     c = cs.add_hyperparameter(UniformFloatHyperparameter("c", 0, 1))
+    d = cs.add_hyperparameter(OrdinalHyperparameter("d", [0, 1, 2]))
     cs.add_condition(EqualsCondition(b, a, 1))
     cs.add_condition(EqualsCondition(c, a, 0))
+    cs.add_condition(EqualsCondition(d, a, 2))
 
     configs = cs.sample_configuration(size=100)
     config_array = convert_configurations_to_array(configs)
     for line in config_array:
         if line[0] == 0:
             assert np.isnan(line[1])
+            assert np.isnan(line[3])
         elif line[0] == 1:
+            assert np.isnan(line[2])
+            assert np.isnan(line[3])
+        elif line[0] == 2:
+            assert np.isnan(line[1])
             assert np.isnan(line[2])
 
     model = RandomForest(configspace=cs)
@@ -276,5 +282,10 @@ def test_impute_inactive_hyperparameters():
     for line in config_array:
         if line[0] == 0:
             assert line[1] == 2
+            assert line[3] == 3
         elif line[0] == 1:
+            assert line[2] == -1
+            assert line[3] == 3
+        elif line[0] == 2:
+            assert line[1] == 2
             assert line[2] == -1

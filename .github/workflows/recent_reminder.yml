@@ -1,0 +1,46 @@
+name: Recent-Reminder
+
+on:
+  schedule:
+    - cron: '00 13 * * 1'
+  workflow_dispatch:
+
+jobs:
+  stale-reminder:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get cutoff dates
+      id: date
+      run: |
+        echo "RECENT_ISSUE_CUTOFF_DATE=$(date -d '-7 days' '+%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Get list of issues that have had interactions in the last week
+      id: recent
+      uses: lee-dohm/select-matching-issues@v1
+      with:
+        format: list
+        path: "recent_issues.md"
+        token: ${{ github.token }}
+        query: >-
+          is:issue
+          is:open
+          updated:>=${{ env.RECENT_ISSUE_CUTOFF_DATE }}
+          sort:updated-asc
+    - name: Combine issues into mail content
+      id: combine
+      run: |
+        echo "## Issues that have had interaction in the last 7 days <br />" >> mail.html
+        echo "$(<recent_issues.md) <br />" >> mail.html
+    - name: Send mail
+      id: mail
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: ${{secrets.MAIL_SERVER_ADDRESS}}
+        server_port: ${{secrets.MAIL_SERVER_PORT}}
+        secure: true
+        username: ${{secrets.MAIL_USERNAME}}
+        password: ${{secrets.MAIL_PASSWORD}}
+        subject: '[Current SMAC3 Issues] Issues that have been interacted with since ${{ env.RECENT_ISSUE_CUTOFF_DATE }}'
+        to: ${{secrets.MAIL_TARGET}}
+        from: SMAC3 Stale-Bot <${{secrets.MAIL_ADDRESS}}>
+        html_body: file://mail.html
+        convert_markdown: true

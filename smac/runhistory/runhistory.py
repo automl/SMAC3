@@ -24,6 +24,7 @@ from smac.runhistory.enumerations import StatusType
 from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
+from smac.utils.numpyencoder import NumpyEncoder
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -178,7 +179,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         budget: float | None = None,
         starttime: float = 0.0,
         endtime: float = 0.0,
-        additional_info: dict[str, Any] = {},
+        additional_info: dict[str, Any] = None,
         force_update: bool = False,
     ) -> None:
         """Adds a new trial to the RunHistory.
@@ -205,6 +206,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             raise TypeError("Configuration must not be None.")
         elif not isinstance(config, Configuration):
             raise TypeError("Configuration is not of type Configuration, but %s." % type(config))
+        if additional_info is None:
+            additional_info = {}
 
         # Squeeze is important to reduce arrays with one element
         # to scalars.
@@ -435,7 +438,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         cost = self._min_cost_per_config.get(config_id, np.nan)  # type: ignore
 
         if self._n_objectives > 1:
-            assert type(cost) == list
+            assert isinstance(cost, list)
             assert self.multi_objective_algorithm is not None
 
             costs = normalize_costs(cost, self._objective_bounds)
@@ -443,7 +446,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             # Note: We have to mean here because we already got the min cost
             return self.multi_objective_algorithm(costs)
 
-        assert type(cost) == float
+        assert isinstance(cost, float)
         return float(cost)
 
     def average_cost(
@@ -801,6 +804,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 },
                 fp,
                 indent=2,
+                cls=NumpyEncoder,
             )
 
     def load(self, filename: str | Path, configspace: ConfigurationSpace) -> None:
@@ -847,7 +851,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         for entry in data["data"]:
             # Set n_objectives first
             if self._n_objectives == -1:
-                if isinstance(entry[4], float) or isinstance(entry[4], int):
+                if isinstance(entry[4], (float, int)):
                     self._n_objectives = 1
                 else:
                     self._n_objectives = len(entry[4])
@@ -953,7 +957,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         trial_value: TrialValue,
     ) -> None:
         try:
-            json.dumps(obj)
+            json.dumps(obj, cls=NumpyEncoder)
         except Exception as e:
             raise ValueError(
                 "Cannot add %s: %s of type %s to runhistory because it raises an error during JSON encoding, "

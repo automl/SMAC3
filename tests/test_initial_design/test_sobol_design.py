@@ -24,7 +24,7 @@ def test_sobol_design(make_scenario, configspace_large):
 def test_max_hyperparameters(make_scenario):
     cs = ConfigurationSpace()
     hyperparameters = [Float("x%d" % (i + 1), (0, 1)) for i in range(21202)]
-    cs.add_hyperparameters(hyperparameters)
+    cs.add(hyperparameters)
 
     scenario = make_scenario(cs)
 
