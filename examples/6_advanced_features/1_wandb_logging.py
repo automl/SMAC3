@@ -2,7 +2,16 @@
 Use Weights and Biases for logging
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This example shows how to use Weights and Biases for logging.
+This example shows how to use Weights and Biases (WandB) for logging.
+
+To use WandB, you need to install the package via pip:
+
+.. code-block:: bash
+
+        pip install wandb
+
+Then you can use the WandBCallback to log the results of the optimization as well as intermediate information to WandB.
+This is done by creating a WandBCallback object and passing it to the used Facade.
 
 """
 from __future__ import annotations
