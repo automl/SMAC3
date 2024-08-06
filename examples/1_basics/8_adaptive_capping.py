@@ -13,7 +13,6 @@ import signal
 from contextlib import contextmanager
 
 from smac.runhistory import InstanceSeedBudgetKey, TrialInfo
-from smac.runner import AbstractRunner
 
 
 class TimeoutException(Exception):
@@ -61,7 +60,8 @@ class CappedProblem:
 
 if __name__ == '__main__':
 
-    from smac import HyperparameterOptimizationFacade
+    # FIXME AC facade instad of HPO
+    from smac import HyperparameterOptimizationFacade, RunHistory
     from smac import Scenario
 
     from smac.intensifier import Intensifier
@@ -72,8 +72,6 @@ if __name__ == '__main__':
         capped_problem.configspace,
         walltime_limit=200,  # After 200 seconds, we stop the hyperparameter optimization
         n_trials=500,  # Evaluate max 500 different trials
-        # FIXME: we will want to have an active capping option, that renders the budgets useless?
-
     )
 
     # We want to run five random configurations before starting the optimization.
@@ -81,7 +79,9 @@ if __name__ == '__main__':
 
 
     class CappedIntensifier(Intensifier):
-        def __init__(self, scenario, runtime_cutoff: int | None = None, *args, **kwargs):
+        def __init__(self, scenario, runtime_cutoff: int | None = None,
+                     adaptive_capping_slackfactor: float = 1.2,
+                     *args, **kwargs):
             """
             Intensifier that caps the runtime of a configuration to a given value.
 
@@ -89,12 +89,14 @@ if __name__ == '__main__':
             ----------
             scenario : Scenario
                 Scenario object
-            runtime_cutoff : int, defaults to None: Initial runtime budget in seconds for adaptive capping.
+            runtime_cutoff : int, defaults to None: Initial runtime budget in seconds for
+            adaptive capping.
                 A non-None value will trigger adaptive capping and require the target algorithm to accept
                 a budget argument that is the number of seconds to maximally run the target algorithm.
             """
             super().__init__(scenario, *args, **kwargs)
             self.runtime_cutoff = runtime_cutoff
+            self.adaptive_capping_slackfactor = adaptive_capping_slackfactor
 
         def _get_next_trials(
                 self,
@@ -107,8 +109,9 @@ if __name__ == '__main__':
             trials = super()._get_next_trials(config, N=N, from_keys=from_keys, shuffle=shuffle)
             if self.runtime_cutoff is not None:
                 # We need to adapt the budget to the runtime cutoff
+                budget = self._get_adaptivecapping_budget(trials)
                 trials = [
-                    TrialInfo(config=t.config, seed=t.seed, budget=self.runtime_cutoff)
+                    TrialInfo(config=t.config, seed=t.seed, budget=budget)
                     for t in trials
                 ]
 
@@ -116,6 +119,66 @@ if __name__ == '__main__':
 
         def uses_budgets(self) -> bool:
             return True
+
+        def _get_adaptivecapping_budget(
+                self,
+                challenger: Configuration,
+
+        ) -> float:
+            """Adaptive capping: Compute cutoff based on time so far used for incumbent and reduce
+            cutoff for next run of challenger accordingly.
+
+            !Only applicable if self.run_obj_time
+
+            !runs on incumbent should be superset of the runs performed for the
+             challenger
+
+            Parameters
+            ----------
+            challenger : Configuration
+                Configuration which challenges incumbent
+
+            inc_sum_cost: float
+                Sum of runtimes of all incumbent runs
+
+            Returns
+            -------
+            cutoff: float
+                Adapted cutoff
+            """
+
+            # cost used by challenger for going over all its runs
+            # should be subset of runs of incumbent (not checked for efficiency
+            # reasons)
+            incumbents = self.get_incumbents(sort_by="num_trials")
+            if len(incumbents) == 0:
+                return  self.runtime_cutoff
+
+            inc_sum_cost = self.runhistory.sum_cost(
+                config=incumbent,
+                instance_seed_budget_keys=None,
+                normalize=True
+            )
+
+            # original logic for get_runs_for_config:
+            # https://github.com/automl/SMAC3/blob/f1d2aa2ea3b6ad4075550af69e3300f19411a5ea/smac/runhistory/runhistory.py#L772
+            # TODAY: runhistory.get_trials?
+            chall_inst_seeds = self.runhistory.get_trials(
+                challenger,
+                highest_observed_budget_only=True
+            )
+            chal_sum_cost = self.runhistory.sum_cost(
+                config=challenger, instance_seed_budget_keys=chall_inst_seeds, normalize=True
+            )
+            assert type(chal_sum_cost) == float
+
+            cutoff = min(
+                self.runtime_cutoff,
+                inc_sum_cost * self.adaptive_capping_slackfactor - chal_sum_cost
+            )
+
+            self.runtime_cutoff = cutoff
+            return cutoff
 
 
     # Create our intensifier
