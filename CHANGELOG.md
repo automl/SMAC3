@@ -1,3 +1,8 @@
+# 2.2.1
+
+## Improvements
+- Add logger information on handling of stopIteration error (#960)
+
 # 2.2.0
 
 ## Features
