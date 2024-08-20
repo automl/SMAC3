@@ -1266,6 +1266,10 @@
                     <span class="n">fails</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
                 <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
                     <span class="c1"># We stop if we don&#39;t find any configuration anymore</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;If you assume your configspace was not yet exhausted, try to &quot;</span>
+                        <span class="s2">&quot;increase the number of retries in the config selector.&quot;</span>
+                    <span class="p">)</span>
                     <span class="k">return</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start finding a new challenger in the queue:&quot;</span><span class="p">)</span>
@@ -1436,7 +1440,7 @@
     <div class="footer-item">
       <p class="sphinx-version">
 Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-7.4.7. Template is modified version of <a
+8.0.2. Template is modified version of <a
 href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
 </p>
     </div>

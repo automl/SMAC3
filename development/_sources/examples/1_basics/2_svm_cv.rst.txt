@@ -43,160 +43,9 @@ types as well as conditional hyperparameters.
       config_dict = config.get_dictionary()
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       config_dict = config.get_dictionary()
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    [INFO][abstract_intensifier.py:595] Added config abecc0 and rejected config 16b2dc as incumbent because it is not better than the incumbents on 3 instances:
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
-      config_dict = config.get_dictionary()
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
+    [INFO][abstract_intensifier.py:595] Added config 22dc7a and rejected config 16b2dc as incumbent because it is not better than the incumbents on 2 instances:
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       config_dict = config.get_dictionary()
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
@@ -227,44 +76,68 @@ types as well as conditional hyperparameters.
       config_dict = config.get_dictionary()
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       config_dict = config.get_dictionary()
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
-    [WARNING][abstract_runner.py:134] Target function returned infinity or nothing at all. Result is treated as CRASHED and cost is set to inf.
-    [WARNING][abstract_runner.py:140] Traceback: Traceback (most recent call last):
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 186, in run
-        rval = self(config_copy, target_function, kwargs)
-      File "/opt/hostedtoolcache/Python/3.10.14/x64/lib/python3.10/site-packages/smac/runner/target_function_runner.py", line 259, in __call__
-        return algorithm(config, **algorithm_kwargs)
-      File "/home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py", line 59, in train
-        config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
-    KeyError: 'gamma'
-
-
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       config_dict = config.get_dictionary()
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       config_dict = config.get_dictionary()
-    [INFO][abstract_intensifier.py:595] Added config e50e31 and rejected config abecc0 as incumbent because it is not better than the incumbents on 3 instances:
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
+    /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
+      config_dict = config.get_dictionary()
     [INFO][smbo.py:320] Finished 50 trials.
     [INFO][smbo.py:328] Configuration budget is exhausted:
     [INFO][smbo.py:329] --- Remaining wallclock time: inf
@@ -387,7 +260,7 @@ types as well as conditional hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.964 seconds)
+   **Total running time of the script:** (0 minutes 1.469 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:

@@ -47,29 +47,22 @@ mean accuracy and run-time of each configuration.
     [INFO][abstract_intensifier.py:516] Added config 71813f as new incumbent because there are no incumbents yet.
     [INFO][abstract_intensifier.py:603] Config bb3711 is a new incumbent. Total number of incumbents: 2.
     [INFO][abstract_intensifier.py:603] Config f07b8c is a new incumbent. Total number of incumbents: 3.
-    [INFO][abstract_intensifier.py:603] Config 3305c3 is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:595] Added config eb4c80 and rejected config f07b8c as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:603] Config 6dbe72 is a new incumbent. Total number of incumbents: 4.
-    [INFO][abstract_intensifier.py:603] Config a87be2 is a new incumbent. Total number of incumbents: 5.
-    [INFO][abstract_intensifier.py:603] Config d2489b is a new incumbent. Total number of incumbents: 6.
-    [INFO][abstract_intensifier.py:595] Added config 975751 and rejected config 6dbe72 as incumbent because it is not better than the incumbents on 2 instances:
-    [INFO][abstract_intensifier.py:603] Config 6f35cb is a new incumbent. Total number of incumbents: 7.
-    [INFO][abstract_intensifier.py:603] Config 077bf0 is a new incumbent. Total number of incumbents: 8.
-    [INFO][abstract_intensifier.py:603] Config adbca6 is a new incumbent. Total number of incumbents: 9.
-    [INFO][abstract_intensifier.py:595] Added config c17be3 and rejected config 6f35cb as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:595] Added config 8a0ca4 and rejected config f07b8c as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:603] Config 0f34ff is a new incumbent. Total number of incumbents: 4.
+    [INFO][abstract_intensifier.py:603] Config 7c4d99 is a new incumbent. Total number of incumbents: 5.
+    [INFO][abstract_intensifier.py:595] Added config ad9ae3 and rejected config 8a0ca4 as incumbent because it is not better than the incumbents on 2 instances:
     [INFO][smbo.py:328] Configuration budget is exhausted:
-    [INFO][smbo.py:329] --- Remaining wallclock time: -4.571095943450928
+    [INFO][smbo.py:329] --- Remaining wallclock time: -1.8205840587615967
     [INFO][smbo.py:330] --- Remaining cpu time: inf
-    [INFO][smbo.py:331] --- Remaining trials: 156
+    [INFO][smbo.py:331] --- Remaining trials: 166
     Validated costs from default config: 
-    --- [0.60155834 0.20700514]
+    --- [0.60155834 0.15334296]
 
     Validated costs from the Pareto front (incumbents):
-    --- [0.72761606 0.19994843]
-    --- [0.05092309 0.75338209]
-    --- [0.06706128 0.38245475]
-    --- [0.07680594 0.37944508]
-    --- [0.08571108 0.26065671]
+    --- [0.72761606 0.19134176]
+    --- [0.02560353 0.86503685]
+    --- [0.03951099 0.47485197]
+    --- [0.0581546  0.39085412]
 
 
 
@@ -250,7 +243,7 @@ mean accuracy and run-time of each configuration.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 39.104 seconds)
+   **Total running time of the script:** (0 minutes 36.116 seconds)
 
 
 .. _sphx_glr_download_examples_3_multi_objective_2_parego.py:
