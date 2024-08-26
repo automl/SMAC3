@@ -14,7 +14,7 @@ __license__ = "3-clause BSD"
 def _get_cs(n_dimensions):
     configspace = ConfigurationSpace()
     for i in range(n_dimensions):
-        configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
+        configspace.add(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
     return configspace
 

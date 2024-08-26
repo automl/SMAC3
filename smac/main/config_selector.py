@@ -177,7 +177,7 @@ class ConfigSelector:
                 # the configspace.
                 logger.debug("No data available to train the model. Sample a random configuration.")
 
-                config = self._scenario.configspace.sample_configuration(1)
+                config = self._scenario.configspace.sample_configuration()
                 self._call_callbacks_on_end(config)
                 yield config
                 self._call_callbacks_on_start()
