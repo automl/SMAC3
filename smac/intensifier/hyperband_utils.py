@@ -52,7 +52,7 @@ def determine_HB(min_budget: float, max_budget: float, eta: int = 3) -> dict:
         "budgets_in_stage": _budgets_in_stage,
         "trials_used": total_trials,
         "budget_used": total_budget,
-        "number_of_brackets": _s_max,
+        "number_of_brackets": len(_max_iterations),
     }
 
 
@@ -75,13 +75,19 @@ def determine_hyperband_for_multifidelity(
     Returns
     -------
     dict
-        Info about the Hyperband round
+        Info about one Hyperband round
             "max_iterations"
             "n_configs_in_stage"
             "budgets_in_stage"
             "trials_used"
             "budget_used"
             "number_of_brackets"
+        Info about whole optimization
+            "n_trials"
+            "total_budget"
+            "eta"
+            "min_budget"
+            "max_budget"
 
     """
     # Determine the HB
@@ -108,9 +114,6 @@ def determine_hyperband_for_multifidelity(
             # If we are in the case of b*c > remaining_budget, we will not have any
             # budget left. We can not add full c but the number of trials that still fit
             remaining_budget = max(0, remaining_budget - b * c)
-
-            # print(stage, b, c)
-            # print("-"*20, remaining_trials, remaining_budget)
 
     n_trials = int(number_of_full_hb_rounds * trials_used_per_hb_round + remaining_trials)
 
@@ -153,14 +156,15 @@ def print_hyperband_summary(hyperband_info: dict) -> None:
 def get_n_trials_for_hyperband_multifidelity(
     total_budget: float, min_budget: float, max_budget: float, eta: int = 3, print_summary: bool = True
 ) -> int:
-    """Caculate the number of trials needed for multi-fidelity optimization
+    """Calculate the number of trials needed for multi-fidelity optimization
 
     Specify the total budget and find out how many trials that equals.
 
     Parameters
     ----------
     total_budget : float
-        Total budget for the complete optimization in fidelity units
+        Total budget for the complete optimization in fidelity units.
+        A fidelity unit can be one epoch or a fraction of a dataset size.
     min_budget : float
         Minimum budget per trial in fidelity units
     max_budget : float
