@@ -53,11 +53,11 @@ def get_types(
     The bounds for the instance features are *not* added in this function.
     """
     # Extract types vector for rf from config space and the bounds
-    types = [0] * len(configspace.get_hyperparameters())
+    types = [0] * len(list(configspace.values()))
     bounds = [(np.nan, np.nan)] * len(types)
 
-    for i, param in enumerate(configspace.get_hyperparameters()):
-        parents = configspace.get_parents_of(param.name)
+    for i, param in enumerate(list(configspace.values())):
+        parents = configspace.parents_of[param.name]
         if len(parents) == 0:
             can_be_inactive = False
         else:

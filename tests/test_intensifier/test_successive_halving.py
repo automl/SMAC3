@@ -131,7 +131,7 @@ def test_incumbents_any_budget(make_scenario, configspace_small, make_config_sel
     intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
     config = configspace_small.get_default_configuration()
-    config2 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration()
 
     # Add some entries to the runhistory
     runhistory.add(config=config, cost=0.5, time=0.0, seed=8, budget=1, status=StatusType.SUCCESS)
@@ -176,7 +176,7 @@ def test_incumbents_highest_observed_budget(make_scenario, configspace_small, ma
     intensifier.runhistory = runhistory
     intensifier.__post_init__()
     config = configspace_small.get_default_configuration()
-    config2 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration()
 
     # Add some entries to the runhistory
     runhistory.add(config=config, cost=0.5, time=0.0, seed=8, budget=1, status=StatusType.SUCCESS)
@@ -217,7 +217,7 @@ def test_incumbents_highest_budget(make_scenario, configspace_small, make_config
     intensifier.runhistory = runhistory
     intensifier.__post_init__()
     config = configspace_small.get_default_configuration()
-    config2 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration()
 
     # Add some entries to the runhistory
     runhistory.add(config=config, cost=0.5, time=0.0, seed=8, budget=1, status=StatusType.SUCCESS)

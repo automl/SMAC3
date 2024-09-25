@@ -12,9 +12,10 @@ class RandomInitialDesign(AbstractInitialDesign):
     """Initial design that evaluates random configurations."""
 
     def _select_configurations(self) -> list[Configuration]:
-        configs = self._configspace.sample_configuration(size=self._n_configs)
         if self._n_configs == 1:
-            configs = [configs]
+            configs = [self._configspace.sample_configuration()]
+        else:
+            configs = self._configspace.sample_configuration(size=self._n_configs)
         for config in configs:
             config.origin = "Initial Design: Random"
         return configs

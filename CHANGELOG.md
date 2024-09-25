@@ -2,6 +2,7 @@
 
 ## Improvements
 - Add logger information on handling of stopIteration error (#960)
+- Replace deprecated ConfigSpace methods (#1139)
 
 # 2.2.0
 

@@ -153,7 +153,10 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         init_points = []
         n_init_points = n_points
         if len(previous_configs) < n_points:
-            sampled_points = self._configspace.sample_configuration(size=n_points - len(previous_configs))
+            if n_points - len(previous_configs) == 1:
+                sampled_points = [self._configspace.sample_configuration()]
+            else:
+                sampled_points = self._configspace.sample_configuration(size=n_points - len(previous_configs))
             n_init_points = len(previous_configs)
             if not isinstance(sampled_points, list):
                 sampled_points = [sampled_points]

@@ -22,14 +22,14 @@ class SobolInitialDesign(AbstractInitialDesign):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
-        if len(self._configspace.get_hyperparameters()) > 21201:
+        if len(list(self._configspace.values())) > 21201:
             raise ValueError(
                 "The default initial design Sobol sequence can only handle up to 21201 dimensions. "
                 "Please use a different initial design, such as the Latin Hypercube design."
             )
 
     def _select_configurations(self) -> list[Configuration]:
-        params = self._configspace.get_hyperparameters()
+        params = list(self._configspace.values())
 
         constants = 0
         for p in params:

@@ -262,7 +262,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         # Construct keys and values for the data dictionary
         for key, value in (
-            ("config", config.get_dictionary()),
+            ("config", dict(config)),
             ("config_id", config_id),
             ("instance", instance),
             ("seed", seed),
@@ -783,7 +783,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         config_origins = {}
         for id_, config in self._ids_config.items():
             if id_ in config_ids_to_serialize:
-                configs[id_] = config.get_dictionary()
+                configs[id_] = dict(config)
 
             config_origins[id_] = config.origin
 

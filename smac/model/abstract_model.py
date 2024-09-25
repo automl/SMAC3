@@ -68,7 +68,7 @@ class AbstractModel:
                         raise RuntimeError("Instances must have the same number of features.")
 
         self._n_features = n_features
-        self._n_hps = len(self._configspace.get_hyperparameters())
+        self._n_hps = len(list(self._configspace.values()))
 
         self._pca = PCA(n_components=self._pca_components)
         self._scaler = MinMaxScaler()

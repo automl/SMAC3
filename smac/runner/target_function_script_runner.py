@@ -132,7 +132,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         status = StatusType.SUCCESS
 
         # Add config arguments to the kwargs
-        for k, v in config.get_dictionary().items():
+        for k, v in dict(config).items():
             if k in kwargs:
                 raise RuntimeError(f"The key {k} is already in use. Please use a different one.")
             kwargs[k] = v
