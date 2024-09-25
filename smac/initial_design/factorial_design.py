@@ -22,7 +22,7 @@ class FactorialInitialDesign(AbstractInitialDesign):
     """Factorial initial design to select corner and middle configurations."""
 
     def _select_configurations(self) -> list[Configuration]:
-        params = self._configspace.get_hyperparameters()
+        params = list(self._configspace.values())
 
         values = []
         mid = []

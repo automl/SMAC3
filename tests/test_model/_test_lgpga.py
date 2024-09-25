@@ -78,7 +78,7 @@ class TestLGPGA(TestGPGPyTorch):
         self.gp_model, self.cs = generate_lgpga(self.kernel, n_dimensions=num_dims, rs=rs)
 
     def test_init(self):
-        np.testing.assert_equal(self.gp_model.cont_dims, np.arange(len(self.cs.get_hyperparameters())))
+        np.testing.assert_equal(self.gp_model.cont_dims, np.arange(len(list(self.cs.values()))))
         np.testing.assert_equal(self.gp_model.cat_dims, np.array([]))
 
     def test_update_attribute(self):

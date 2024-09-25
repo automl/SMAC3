@@ -60,7 +60,7 @@ def get_gp(n_dimensions, rs, noise=None, normalize_y=True) -> GPyTorchGaussianPr
 
     configspace = ConfigurationSpace()
     for i in range(n_dimensions):
-        configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
+        configspace.add(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
     model = GPyTorchGaussianProcess(
         configspace=configspace,
@@ -122,9 +122,9 @@ def get_mixed_gp(cat_dims, cont_dims, rs, normalize_y=True):
 
     cs = ConfigurationSpace()
     for c in cont_dims:
-        cs.add_hyperparameter(UniformFloatHyperparameter("X%d" % c, 0, 1))
+        cs.add(UniformFloatHyperparameter("X%d" % c, 0, 1))
     for c in cat_dims:
-        cs.add_hyperparameter(CategoricalHyperparameter("X%d" % c, [0, 1, 2, 3]))
+        cs.add(CategoricalHyperparameter("X%d" % c, [0, 1, 2, 3]))
 
     model = GPyTorchGaussianProcess(
         configspace=cs,
