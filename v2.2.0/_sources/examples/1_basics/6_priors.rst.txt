@@ -40,15 +40,15 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
     [INFO][abstract_initial_design.py:147] Using 10 initial design configurations and 1 additional configurations.
     [WARNING][prior_acqusition_function.py:107] Discretizing the prior for random forest models.
-    [INFO][abstract_intensifier.py:516] Added config 145e6c as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:595] Added config 2aab89 and rejected config 145e6c as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:595] Added config 1dd478 and rejected config 2aab89 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:595] Added config 8111d4 and rejected config 1dd478 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:595] Added config 4fcbbb and rejected config 8111d4 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:595] Added config a18544 and rejected config 4fcbbb as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:595] Added config ece60c and rejected config a18544 as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:595] Added config fee5c4 and rejected config ece60c as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:595] Added config 649016 and rejected config fee5c4 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:516] Added config 7c9362 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:595] Added config 91773d and rejected config 7c9362 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config a3266d and rejected config 91773d as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config b412f7 and rejected config a3266d as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config f90063 and rejected config b412f7 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 8ce770 and rejected config f90063 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 9dabc2 and rejected config 8ce770 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config 70e325 and rejected config 9dabc2 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config b250d9 and rejected config 70e325 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:328] Configuration budget is exhausted:
     [INFO][smbo.py:329] --- Remaining wallclock time: inf
     [INFO][smbo.py:330] --- Remaining cpu time: inf
@@ -229,7 +229,7 @@ optimization, you have to change the acquisition function to ``PriorAcquisitionF
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 40.250 seconds)
+   **Total running time of the script:** (0 minutes 37.400 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_6_priors.py:

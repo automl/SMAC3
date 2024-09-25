@@ -53,9 +53,9 @@ the target function now is required to have an instance argument.
     [INFO][successive_halving.py:329] --- Bracket 1: [5.0, 15.0, 45.0]
     [INFO][successive_halving.py:329] --- Bracket 2: [15.0, 45.0]
     [INFO][successive_halving.py:329] --- Bracket 3: [45.0]
-    [INFO][abstract_intensifier.py:516] Added config 3549cb as new incumbent because there are no incumbents yet.
-    [INFO][abstract_intensifier.py:595] Added config 264f9d and rejected config 3549cb as incumbent because it is not better than the incumbents on 1 instances:
-    [INFO][abstract_intensifier.py:595] Added config 2b0dc0 and rejected config 264f9d as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:516] Added config 598f51 as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:595] Added config 6fe1e4 and rejected config 598f51 as incumbent because it is not better than the incumbents on 1 instances:
+    [INFO][abstract_intensifier.py:595] Added config df442a and rejected config 6fe1e4 as incumbent because it is not better than the incumbents on 1 instances:
     [INFO][smbo.py:320] Finished 50 trials.
     [INFO][smbo.py:320] Finished 100 trials.
     [INFO][smbo.py:320] Finished 150 trials.
@@ -63,15 +63,15 @@ the target function now is required to have an instance argument.
     [INFO][smbo.py:320] Finished 250 trials.
     [INFO][smbo.py:320] Finished 300 trials.
     [INFO][smbo.py:320] Finished 350 trials.
-    [INFO][abstract_intensifier.py:595] Added config 8ce35d and rejected config 2b0dc0 as incumbent because it is not better than the incumbents on 45 instances:
+    [INFO][abstract_intensifier.py:595] Added config 4b98e9 and rejected config df442a as incumbent because it is not better than the incumbents on 45 instances:
     [INFO][smbo.py:320] Finished 400 trials.
-    [INFO][abstract_intensifier.py:595] Added config 25625b and rejected config 8ce35d as incumbent because it is not better than the incumbents on 45 instances:
-    [INFO][abstract_intensifier.py:595] Added config 2cdaac and rejected config 25625b as incumbent because it is not better than the incumbents on 45 instances:
+    [INFO][abstract_intensifier.py:595] Added config 85083c and rejected config 4b98e9 as incumbent because it is not better than the incumbents on 45 instances:
+    [INFO][abstract_intensifier.py:595] Added config 9caeb6 and rejected config 85083c as incumbent because it is not better than the incumbents on 45 instances:
     [INFO][smbo.py:320] Finished 450 trials.
     [INFO][smbo.py:328] Configuration budget is exhausted:
-    [INFO][smbo.py:329] --- Remaining wallclock time: -0.031464576721191406
+    [INFO][smbo.py:329] --- Remaining wallclock time: -0.05236172676086426
     [INFO][smbo.py:330] --- Remaining cpu time: inf
-    [INFO][smbo.py:331] --- Remaining trials: 4544
+    [INFO][smbo.py:331] --- Remaining trials: 4545
     Default cost: 0.15489347419148672
     Incumbent cost: 0.00426383387912454
 
@@ -213,7 +213,7 @@ the target function now is required to have an instance argument.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 34.179 seconds)
+   **Total running time of the script:** (0 minutes 34.157 seconds)
 
 
 .. _sphx_glr_download_examples_2_multi_fidelity_2_sgd_datasets.py:

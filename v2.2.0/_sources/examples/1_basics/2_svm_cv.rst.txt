@@ -38,14 +38,14 @@ types as well as conditional hyperparameters.
     [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       config_dict = config.get_dictionary()
-    [INFO][abstract_intensifier.py:516] Added config 16b2dc as new incumbent because there are no incumbents yet.
+    [INFO][abstract_intensifier.py:516] Added config 6e02b1 as new incumbent because there are no incumbents yet.
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       config_dict = config.get_dictionary()
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       config_dict = config.get_dictionary()
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       config_dict = config.get_dictionary()
-    [INFO][abstract_intensifier.py:595] Added config 22dc7a and rejected config 16b2dc as incumbent because it is not better than the incumbents on 2 instances:
+    [INFO][abstract_intensifier.py:595] Added config 4ff25a and rejected config 6e02b1 as incumbent because it is not better than the incumbents on 2 instances:
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
       config_dict = config.get_dictionary()
     /home/runner/work/SMAC3/SMAC3/examples/1_basics/2_svm_cv.py:57: DeprecationWarning: Please use `dict(config)` instead of `config.get_dictionary()` or use it as a dictionary directly if needed.
@@ -260,7 +260,7 @@ types as well as conditional hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.579 seconds)
+   **Total running time of the script:** (0 minutes 1.454 seconds)
 
 
 .. _sphx_glr_download_examples_1_basics_2_svm_cv.py:
