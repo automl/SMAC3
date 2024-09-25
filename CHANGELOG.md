@@ -3,6 +3,9 @@
 ## Improvements
 - Add logger information on handling of stopIteration error (#960)
 
+# Examples
+- Add warmstarting example (#1120)
+
 # 2.2.0
 
 ## Examples
