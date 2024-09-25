@@ -1035,9 +1035,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initial design that evaluates random configurations.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
-        <span class="n">configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_configs</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">configs</span><span class="p">]</span>
+            <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">()]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_configs</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;Initial Design: Random&quot;</span>
         <span class="k">return</span> <span class="n">configs</span></div>

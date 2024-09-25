@@ -1308,7 +1308,7 @@
 
         <span class="c1"># Construct keys and values for the data dictionary</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span>
-            <span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()),</span>
+            <span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">)),</span>
             <span class="p">(</span><span class="s2">&quot;config_id&quot;</span><span class="p">,</span> <span class="n">config_id</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">&quot;instance&quot;</span><span class="p">,</span> <span class="n">instance</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">&quot;seed&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="p">),</span>
@@ -1886,7 +1886,7 @@
         <span class="n">config_origins</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ids_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">config_ids_to_serialize</span><span class="p">:</span>
-                <span class="n">configs</span><span class="p">[</span><span class="n">id_</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()</span>
+                <span class="n">configs</span><span class="p">[</span><span class="n">id_</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
             <span class="n">config_origins</span><span class="p">[</span><span class="n">id_</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">origin</span>
 

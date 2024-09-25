@@ -1202,7 +1202,7 @@
                 <span class="c1"># the configspace.</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No data available to train the model. Sample a random configuration.&quot;</span><span class="p">)</span>
 
-                <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_call_callbacks_on_end</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
                 <span class="k">yield</span> <span class="n">config</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_call_callbacks_on_start</span><span class="p">()</span>
