@@ -18,6 +18,7 @@ Navigation
     3_multi_objective
     4_instances
     5_ask_and_tell
+    5.1_warmstarting
     6_commandline
     7_stopping_criteria
     8_logging

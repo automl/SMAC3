@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:48.633** total execution time for 6 files **from examples/1_basics**:
+**00:50.591** total execution time for 7 files **from examples/1_basics**:
 
 .. container::
 
@@ -33,20 +33,23 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_examples_1_basics_6_priors.py` (``6_priors.py``)
-     - 00:37.637
+     - 00:37.964
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_1_quadratic_function.py` (``1_quadratic_function.py``)
-     - 00:04.071
+     - 00:04.246
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_3_ask_and_tell.py` (``3_ask_and_tell.py``)
-     - 00:03.820
+     - 00:03.831
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_5_continue.py` (``5_continue.py``)
-     - 00:01.526
+     - 00:01.549
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_2_svm_cv.py` (``2_svm_cv.py``)
-     - 00:01.430
+     - 00:01.508
+     - 0.0
+   * - :ref:`sphx_glr_examples_1_basics_8_warmstart.py` (``8_warmstart.py``)
+     - 00:01.332
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_4_callback.py` (``4_callback.py``)
-     - 00:00.151
+     - 00:00.161
      - 0.0

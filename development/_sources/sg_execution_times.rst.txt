@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**04:49.805** total execution time for 12 files **from all galleries**:
+**04:50.989** total execution time for 13 files **from all galleries**:
 
 .. container::
 
@@ -33,38 +33,41 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_examples_2_multi_fidelity_1_mlp_epochs.py` (``../examples/2_multi_fidelity/1_mlp_epochs.py``)
-     - 02:16.391
+     - 02:17.198
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_6_priors.py` (``../examples/1_basics/6_priors.py``)
-     - 00:37.637
-     - 0.0
-   * - :ref:`sphx_glr_examples_3_multi_objective_2_parego.py` (``../examples/3_multi_objective/2_parego.py``)
-     - 00:37.008
+     - 00:37.964
      - 0.0
    * - :ref:`sphx_glr_examples_2_multi_fidelity_2_sgd_datasets.py` (``../examples/2_multi_fidelity/2_sgd_datasets.py``)
-     - 00:34.124
+     - 00:34.267
+     - 0.0
+   * - :ref:`sphx_glr_examples_3_multi_objective_2_parego.py` (``../examples/3_multi_objective/2_parego.py``)
+     - 00:33.949
      - 0.0
    * - :ref:`sphx_glr_examples_5_commandline_1_call_target_function_script.py` (``../examples/5_commandline/1_call_target_function_script.py``)
-     - 00:18.154
+     - 00:18.662
      - 0.0
    * - :ref:`sphx_glr_examples_3_multi_objective_1_schaffer.py` (``../examples/3_multi_objective/1_schaffer.py``)
-     - 00:08.136
+     - 00:08.560
      - 0.0
    * - :ref:`sphx_glr_examples_2_multi_fidelity_3_specify_HB_via_total_budget.py` (``../examples/2_multi_fidelity/3_specify_HB_via_total_budget.py``)
-     - 00:07.358
+     - 00:07.762
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_1_quadratic_function.py` (``../examples/1_basics/1_quadratic_function.py``)
-     - 00:04.071
+     - 00:04.246
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_3_ask_and_tell.py` (``../examples/1_basics/3_ask_and_tell.py``)
-     - 00:03.820
+     - 00:03.831
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_5_continue.py` (``../examples/1_basics/5_continue.py``)
-     - 00:01.526
+     - 00:01.549
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_2_svm_cv.py` (``../examples/1_basics/2_svm_cv.py``)
-     - 00:01.430
+     - 00:01.508
+     - 0.0
+   * - :ref:`sphx_glr_examples_1_basics_8_warmstart.py` (``../examples/1_basics/8_warmstart.py``)
+     - 00:01.332
      - 0.0
    * - :ref:`sphx_glr_examples_1_basics_4_callback.py` (``../examples/1_basics/4_callback.py``)
-     - 00:00.151
+     - 00:00.161
      - 0.0

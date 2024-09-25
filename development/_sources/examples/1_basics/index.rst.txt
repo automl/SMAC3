@@ -114,6 +114,23 @@ Basics
     </div>
 
 
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="With the ask and tell interface, we can support warmstarting SMAC. We can communicate rich information about the previous trials to SMAC using TrialInfo and TrialValue instances. For more details on ask and tell consult advanced_usage/5_ask_and_tell.">
+
+.. only:: html
+
+  .. image:: /examples/1_basics/images/thumb/sphx_glr_8_warmstart_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_1_basics_8_warmstart.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Warmstarting SMAC</div>
+    </div>
+
+
 .. thumbnail-parent-div-close
 
 .. raw:: html
@@ -130,4 +147,5 @@ Basics
    /examples/1_basics/4_callback
    /examples/1_basics/5_continue
    /examples/1_basics/6_priors
+   /examples/1_basics/8_warmstart
 

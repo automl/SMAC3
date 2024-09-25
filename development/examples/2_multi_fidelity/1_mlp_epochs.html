@@ -204,6 +204,11 @@
        User Priors over the Optimum
       </a>
      </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../1_basics/8_warmstart.html">
+       Warmstarting SMAC
+      </a>
+     </li>
     </ul>
    </li>
    <li class="toctree-l2 current active has-children">
@@ -307,6 +312,11 @@
    <li class="toctree-l2">
     <a class="reference internal" href="../../advanced_usage/5_ask_and_tell.html">
      Ask-and-Tell Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../advanced_usage/5.1_warmstarting.html">
+     Warmstarting SMAC
     </a>
    </li>
    <li class="toctree-l2">
@@ -1071,17 +1081,20 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 [INFO][smbo.py:320] Finished 0 trials.
 [INFO][smbo.py:320] Finished 0 trials.
 [INFO][smbo.py:320] Finished 0 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
+[INFO][smbo.py:320] Finished 100 trials.
 [INFO][smbo.py:328] Configuration budget is exhausted:
-[INFO][smbo.py:329] --- Remaining wallclock time: -0.2666792869567871
+[INFO][smbo.py:329] --- Remaining wallclock time: -2.0325121879577637
 [INFO][smbo.py:330] --- Remaining cpu time: inf
-[INFO][smbo.py:331] --- Remaining trials: 193
+[INFO][smbo.py:331] --- Remaining trials: 175
 Default cost (SuccessiveHalving): 0.36672856700711853
 Incumbent cost (SuccessiveHalving): inf
 [INFO][abstract_initial_design.py:82] Using `n_configs` and ignoring `n_configs_per_hyperparameter`.
 [INFO][abstract_facade.py:203] Workers are reduced to 8.
 /opt/hostedtoolcache/Python/3.10.15/x64/lib/python3.10/site-packages/distributed/node.py:187: UserWarning: Port 8787 is already in use.
 Perhaps you already have a cluster running?
-Hosting the HTTP server on port 39109 instead
+Hosting the HTTP server on port 33873 instead
   warnings.warn(
 [INFO][abstract_initial_design.py:147] Using 5 initial design configurations and 0 additional configurations.
 [INFO][successive_halving.py:164] Successive Halving uses budget type BUDGETS with eta 3, min budget 1, and max budget 25.
@@ -1102,17 +1115,15 @@ Hosting the HTTP server on port 39109 instead
 [INFO][smbo.py:320] Finished 0 trials.
 [INFO][smbo.py:320] Finished 0 trials.
 [INFO][abstract_intensifier.py:516] Added config e458ff as new incumbent because there are no incumbents yet.
-[INFO][abstract_intensifier.py:595] Added config b5e155 and rejected config e458ff as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][abstract_intensifier.py:595] Added config f5159b and rejected config e458ff as incumbent because it is not better than the incumbents on 1 instances:
 [INFO][smbo.py:320] Finished 50 trials.
-[INFO][smbo.py:320] Finished 100 trials.
-[INFO][abstract_intensifier.py:595] Added config 48af35 and rejected config b5e155 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:320] Finished 150 trials.
 [INFO][smbo.py:328] Configuration budget is exhausted:
-[INFO][smbo.py:329] --- Remaining wallclock time: -0.017377138137817383
+[INFO][smbo.py:329] --- Remaining wallclock time: -0.046861886978149414
 [INFO][smbo.py:330] --- Remaining cpu time: inf
-[INFO][smbo.py:331] --- Remaining trials: 234
-[INFO][abstract_intensifier.py:595] Added config ebffad and rejected config 48af35 as incumbent because it is not better than the incumbents on 1 instances:
+[INFO][smbo.py:331] --- Remaining trials: 178
 Default cost (Hyperband): 0.36672856700711853
-Incumbent cost (Hyperband): 0.023375116063138357
+Incumbent cost (Hyperband): 0.03339987619931917
 </pre></div>
 </div>
 <div class="line-block">
@@ -1283,7 +1294,7 @@ Incumbent cost (Hyperband): 0.023375116063138357
     <span class="n">plot_trajectory</span><span class="p">(</span><span class="n">facades</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (2 minutes 16.391 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (2 minutes 17.198 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-2-multi-fidelity-1-mlp-epochs-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/automl/SMAC3/main?urlpath=lab/tree/notebooks/examples/2_multi_fidelity/1_mlp_epochs.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo1.svg" style="width: 150px;" />
