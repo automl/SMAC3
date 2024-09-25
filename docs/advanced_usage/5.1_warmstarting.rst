@@ -7,6 +7,7 @@ information about the previous trials to SMAC using `TrialInfo` and `TrialValue`
 We can communicate using the following objects:
 
 .. code-block:: python
+
     class TrialValue:
         """Values of a trial.
 
@@ -31,11 +32,14 @@ We can communicate using the following objects:
         budget : float | None, defaults to None
         """
 
+
 Usage Example
--------------
+~~~~~~~~~~~~~
 See `examples/1_basics/8_warmstart.py`.
 
+
 .. code-block:: python
+
     from __future__ import annotations
 
     from smac.scenario import Scenario
