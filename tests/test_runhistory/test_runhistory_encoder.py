@@ -104,7 +104,6 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
-
 def test_transform_conditionals(runhistory, make_scenario, configspace_large):
     scenario = make_scenario(configspace_large)
 

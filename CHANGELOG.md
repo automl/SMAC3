@@ -7,10 +7,14 @@
 ## Dependencies
 - Allow numpy >= 2.x (#1146)
 
+# Examples
+- Add warmstarting example (#1120)
+
 # 2.2.0
 
-## Features
+## Examples
 - Add example to specify total budget (fidelity units) instead of n_trials for multi-fidelity/Hyperband (#1121)
+- Add example for warmstarting (#1120)
 
 ## Dependencies
 - Update numpy NaN (#1122) and restrict numpy
