@@ -18,7 +18,7 @@ class Rosenbrock2D:
         cs = ConfigurationSpace(seed=0)
         x0 = Float("x0", (-5, 10), default=-3)
         x1 = Float("x1", (-5, 10), default=-4)
-        cs.add_hyperparameters([x0, x1])
+        cs.add([x0, x1])
 
         return cs
 
@@ -58,7 +58,7 @@ class SGD:
         eta0 = Float("eta0", (0.00001, 1), default=0.1, log=True)
 
         # Add the parameters to configuration space
-        cs.add_hyperparameters([alpha, l1_ratio, learning_rate, eta0])
+        cs.add([alpha, l1_ratio, learning_rate, eta0])
 
         return cs
 
@@ -71,7 +71,7 @@ class SGD:
 
             # SGD classifier using given configuration
             clf = SGDClassifier(
-                loss="log",
+                loss="log_loss",
                 penalty="elasticnet",
                 alpha=config["alpha"],
                 l1_ratio=config["l1_ratio"],

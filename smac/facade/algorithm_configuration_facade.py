@@ -125,7 +125,7 @@ class AlgorithmConfigurationFacade(AbstractFacade):
     def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
-        additional_configs: list[Configuration] = [],
+        additional_configs: list[Configuration] = None,
     ) -> DefaultInitialDesign:
         """Returns an initial design, which returns the default configuration.
 
@@ -134,6 +134,8 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         additional_configs: list[Configuration], defaults to []
             Adds additional configurations to the initial design.
         """
+        if additional_configs is None:
+            additional_configs = []
         return DefaultInitialDesign(
             scenario=scenario,
             additional_configs=additional_configs,

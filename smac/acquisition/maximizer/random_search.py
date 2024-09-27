@@ -41,7 +41,7 @@ class RandomSearch(AbstractAcquisitionMaximizer):
         if n_points > 1:
             rand_configs = self._configspace.sample_configuration(size=n_points)
         else:
-            rand_configs = [self._configspace.sample_configuration(size=1)]
+            rand_configs = [self._configspace.sample_configuration()]
 
         if _sorted:
             for i in range(len(rand_configs)):

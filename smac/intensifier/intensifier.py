@@ -243,6 +243,10 @@ class Intensifier(AbstractIntensifier):
                     fails = -1
                 except StopIteration:
                     # We stop if we don't find any configuration anymore
+                    logger.warning(
+                        "If you assume your configspace was not yet exhausted, try to "
+                        "increase the number of retries in the config selector."
+                    )
                     return
             else:
                 logger.debug("Start finding a new challenger in the queue:")

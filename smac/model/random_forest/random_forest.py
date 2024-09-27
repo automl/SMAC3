@@ -87,7 +87,9 @@ class RandomForest(AbstractRandomForest):
         self._rf_opts.compute_law_of_total_variance = False
         self._rf: BinaryForest | None = None
         self._log_y = log_y
-        self._rng = regression.default_random_engine(seed)
+
+        # Case to `int` incase we get an `np.integer` type
+        self._rng = regression.default_random_engine(int(seed))
 
         self._n_trees = n_trees
         self._n_points_per_tree = n_points_per_tree
@@ -211,7 +213,7 @@ class RandomForest(AbstractRandomForest):
                 third_dimension = max(max_num_leaf_data, third_dimension)
 
             # Transform list of 2d arrays into a 3d array
-            preds_as_array = np.zeros((X.shape[0], self._rf_opts.num_trees, third_dimension)) * np.NaN
+            preds_as_array = np.zeros((X.shape[0], self._rf_opts.num_trees, third_dimension)) * np.nan
             for i, preds_per_tree in enumerate(all_preds):
                 for j, pred in enumerate(preds_per_tree):
                     preds_as_array[i, j, : len(pred)] = pred

@@ -77,7 +77,7 @@ class AbstractInitialDesign:
 
         self._additional_configs = additional_configs
 
-        n_params = len(self._configspace.get_hyperparameters())
+        n_params = len(list(self._configspace.values()))
         if n_configs is not None:
             logger.info("Using `n_configs` and ignoring `n_configs_per_hyperparameter`.")
             self._n_configs = n_configs
@@ -174,11 +174,10 @@ class AbstractInitialDesign:
         configs : list[Configuration]
             Continuous transformed configs.
         """
-        params = configspace.get_hyperparameters()
+        params = list(configspace.values())
         for idx, param in enumerate(params):
-
             if isinstance(param, IntegerHyperparameter):
-                design[:, idx] = param._inverse_transform(param._transform(design[:, idx]))
+                design[:, idx] = param.to_vector(param.to_value(design[:, idx]))
             elif isinstance(param, NumericalHyperparameter):
                 continue
             elif isinstance(param, Constant):

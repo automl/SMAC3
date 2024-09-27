@@ -91,7 +91,7 @@ class ConfigSelector:
         acquisition_maximizer: AbstractAcquisitionMaximizer,
         acquisition_function: AbstractAcquisitionFunction,
         random_design: AbstractRandomDesign,
-        callbacks: list[Callback] = [],
+        callbacks: list[Callback] = None,
     ) -> None:
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
@@ -99,7 +99,7 @@ class ConfigSelector:
         self._acquisition_maximizer = acquisition_maximizer
         self._acquisition_function = acquisition_function
         self._random_design = random_design
-        self._callbacks = callbacks
+        self._callbacks = callbacks if callbacks is not None else []
 
         self._initial_design_configs = initial_design.select_configurations()
         if len(self._initial_design_configs) == 0:
@@ -182,7 +182,7 @@ class ConfigSelector:
                 # the configspace.
                 logger.debug("No data available to train the model. Sample a random configuration.")
 
-                config = self._scenario.configspace.sample_configuration(1)
+                config = self._scenario.configspace.sample_configuration()
                 self._call_callbacks_on_end(config)
                 yield config
                 self._call_callbacks_on_start()
@@ -218,7 +218,6 @@ class ConfigSelector:
             # Now we maximize the acquisition function            
             challengers = self._acquisition_maximizer.maximize(
                 previous_configs,
-                n_points=self._retrain_after,
                 random_design=self._random_design,
             )
             # DO NOT FIDDLE WITH THE CHALLENGERS LIST because it is an iterator
@@ -277,14 +276,14 @@ class ConfigSelector:
         assert self._runhistory_encoder is not None
 
         # If we use a float value as a budget, we want to train the model only on the highest budget
-        available_budgets = []
-        for run_key in self._runhistory:
-            budget = run_key.budget
-            if budget not in available_budgets:
-                available_budgets.append(run_key.budget)
+        unique_budgets: set[float] = {run_key.budget for run_key in self._runhistory if run_key.budget is not None}
 
-        # Sort available budgets from highest to lowest budget
-        available_budgets = sorted(list(set(available_budgets)), reverse=True)  # type: ignore
+        available_budgets: list[float] | list[None]
+        if len(unique_budgets) > 0:
+            # Sort available budgets from highest to lowest budget
+            available_budgets = sorted(unique_budgets, reverse=True)
+        else:
+            available_budgets = [None]
 
         # Get #points per budget and if there are enough samples, then build a model
         for b in available_budgets:
@@ -293,7 +292,7 @@ class ConfigSelector:
             if X.shape[0] >= self._min_trials:
                 self._considered_budgets = [b]
 
-                # TODO: Add running configs
+                # Possible add running configs?
                 configs_array = self._runhistory_encoder.get_configurations(budget_subset=self._considered_budgets)
 
                 return X, Y, configs_array

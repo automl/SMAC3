@@ -19,7 +19,7 @@ def test_setting_runhistory(make_scenario, configspace_small, make_config_select
     intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
 
     config = configspace_small.get_default_configuration()
-    config2 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration()
 
     # Add some entries to the runhistory
     runhistory.add(
@@ -55,7 +55,7 @@ def test_incumbent_selection_single_objective(make_scenario, configspace_small, 
     intensifier.runhistory = runhistory
 
     config = configspace_small.get_default_configuration()
-    config2 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration()
 
     runhistory.add(config=config, cost=50, time=0.0, instance=scenario.instances[0], seed=999)
     intensifier.update_incumbents(config)
@@ -88,7 +88,7 @@ def test_incumbent_selection_multi_objective(make_scenario, configspace_small, m
     intensifier.runhistory = runhistory
 
     config = configspace_small.get_default_configuration()
-    config2 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration()
 
     runhistory.add(config=config, cost=[50, 10], time=0.0, instance=scenario.instances[0], seed=999)
     intensifier.update_incumbents(config)
@@ -107,6 +107,33 @@ def test_incumbent_selection_multi_objective(make_scenario, configspace_small, m
     runhistory.add(config=config2, cost=[500, 500], time=0.0, instance=scenario.instances[1], seed=999)
     intensifier.update_incumbents(config2)
     assert intensifier.get_incumbents() == [config]
+
+
+def test_config_rejection_single_objective(configspace_small, make_scenario):
+    """Tests whether configs are rejected properly if they are worse than the incumbent."""
+    scenario = make_scenario(configspace_small, use_instances=False)
+    runhistory = RunHistory()
+    intensifier = Intensifier(scenario=scenario)
+    intensifier.runhistory = runhistory
+
+    configs = configspace_small.sample_configuration(3)
+
+    runhistory.add(config=configs[0], cost=5, time=0.0, seed=0, status=StatusType.SUCCESS, force_update=True)
+    intensifier.update_incumbents(configs[0])
+
+    assert intensifier._rejected_config_ids == []
+
+    # add config that yielded better results, updating incumbent and sending prior incumbent to rejected
+    runhistory.add(config=configs[1], cost=1, time=0.0, seed=0, status=StatusType.SUCCESS, force_update=True)
+    intensifier.update_incumbents(config=configs[1])
+
+    assert intensifier._rejected_config_ids == [1]
+
+    # add config that is no better should thus go to rejected
+    runhistory.add(config=configs[2], cost=1, time=0.0, seed=0, status=StatusType.SUCCESS, force_update=True)
+    intensifier.update_incumbents(config=configs[2])
+
+    assert intensifier._rejected_config_ids == [1, 3]
 
 
 def test_incumbent_differences(make_scenario, configspace_small):
@@ -155,8 +182,8 @@ def test_pareto_front1(make_scenario, configspace_small):
     runhistory = RunHistory()
     intensifier = AbstractIntensifier(scenario=scenario, max_config_calls=3, seed=0)
     intensifier.runhistory = runhistory
-    config1 = configspace_small.sample_configuration(1)
-    config2 = configspace_small.sample_configuration(1)
+    config1 = configspace_small.sample_configuration()
+    config2 = configspace_small.sample_configuration()
 
     runhistory.add(
         config=config1,
@@ -184,8 +211,8 @@ def test_pareto_front2(make_scenario, configspace_small):
     runhistory = RunHistory()
     intensifier = AbstractIntensifier(scenario=scenario, max_config_calls=3, seed=0)
     intensifier.runhistory = runhistory
-    config1 = configspace_small.sample_configuration(1)
-    config2 = configspace_small.sample_configuration(1)
+    config1 = configspace_small.sample_configuration()
+    config2 = configspace_small.sample_configuration()
 
     runhistory.add(
         config=config1,
@@ -213,9 +240,9 @@ def test_pareto_front3(make_scenario, configspace_small):
     runhistory = RunHistory()
     intensifier = AbstractIntensifier(scenario=scenario, max_config_calls=3, seed=0)
     intensifier.runhistory = runhistory
-    config1 = configspace_small.sample_configuration(1)
-    config2 = configspace_small.sample_configuration(1)
-    config3 = configspace_small.sample_configuration(1)
+    config1 = configspace_small.sample_configuration()
+    config2 = configspace_small.sample_configuration()
+    config3 = configspace_small.sample_configuration()
 
     runhistory.add(
         config=config1,

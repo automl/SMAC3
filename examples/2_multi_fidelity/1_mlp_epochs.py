@@ -65,7 +65,7 @@ class MLP:
         learning_rate_init = Float("learning_rate_init", (0.0001, 1.0), default=0.001, log=True)
 
         # Add all hyperparameters at once:
-        cs.add_hyperparameters([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
+        cs.add([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
 
         # Adding conditions to restrict the hyperparameter space...
         # ... since learning rate is only used when solver is 'sgd'.
@@ -76,7 +76,7 @@ class MLP:
         use_batch_size = InCondition(child=batch_size, parent=solver, values=["sgd", "adam"])
 
         # We can also add multiple conditions on hyperparameters at once:
-        cs.add_conditions([use_lr, use_batch_size, use_lr_init])
+        cs.add([use_lr, use_batch_size, use_lr_init])
 
         return cs
 
@@ -84,9 +84,9 @@ class MLP:
         # For deactivated parameters (by virtue of the conditions),
         # the configuration stores None-values.
         # This is not accepted by the MLP, so we replace them with placeholder values.
-        lr = config["learning_rate"] if config["learning_rate"] else "constant"
-        lr_init = config["learning_rate_init"] if config["learning_rate_init"] else 0.001
-        batch_size = config["batch_size"] if config["batch_size"] else 200
+        lr = config.get("learning_rate", "constant")
+        lr_init = config.get("learning_rate_init", 0.001)
+        batch_size = config.get("batch_size", 200)
 
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore")

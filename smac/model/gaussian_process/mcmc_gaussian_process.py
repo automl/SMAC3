@@ -247,7 +247,6 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
 
         assert self._samples is not None
         for sample in self._samples:
-
             if (sample < -50).any():
                 sample[sample < -50] = -50
             if (sample > 50).any():

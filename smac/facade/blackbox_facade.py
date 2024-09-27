@@ -11,6 +11,7 @@ from smac.acquisition.maximizer.local_and_random_search import (
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensifier.intensifier import Intensifier
+from smac.main.config_selector import ConfigSelector
 from smac.model.gaussian_process.abstract_gaussian_process import (
     AbstractGaussianProcess,
 )
@@ -111,11 +112,11 @@ class BlackBoxFacade(AbstractFacade):
         cont_dims = np.where(np.array(types) == 0)[0]
         cat_dims = np.where(np.array(types) != 0)[0]
 
-        if (len(cont_dims) + len(cat_dims)) != len(scenario.configspace.get_hyperparameters()):
+        if (len(cont_dims) + len(cat_dims)) != len(list(scenario.configspace.values())):
             raise ValueError(
                 "The inferred number of continuous and categorical hyperparameters "
                 "must equal the total number of hyperparameters. Got "
-                f"{(len(cont_dims) + len(cat_dims))} != {len(scenario.configspace.get_hyperparameters())}."
+                f"{(len(cont_dims) + len(cat_dims))} != {len(list(scenario.configspace.values()))}."
             )
 
         # Constant Kernel
@@ -240,7 +241,7 @@ class BlackBoxFacade(AbstractFacade):
         n_configs: int | None = None,
         n_configs_per_hyperparamter: int = 8,
         max_ratio: float = 0.25,
-        additional_configs: list[Configuration] = [],
+        additional_configs: list[Configuration] = None,
     ) -> SobolInitialDesign:
         """Returns a Sobol design instance.
 
@@ -259,6 +260,8 @@ class BlackBoxFacade(AbstractFacade):
         additional_configs: list[Configuration], defaults to []
             Adds additional configurations to the initial design.
         """
+        if additional_configs is None:
+            additional_configs = []
         return SobolInitialDesign(
             scenario=scenario,
             n_configs=n_configs,
@@ -309,3 +312,15 @@ class BlackBoxFacade(AbstractFacade):
     ) -> RunHistoryEncoder:
         """Returns the default runhistory encoder."""
         return RunHistoryEncoder(scenario)
+
+    @staticmethod
+    def get_config_selector(
+        scenario: Scenario,
+        *,
+        retrain_after: int = 1,
+        retries: int = 16,
+    ) -> ConfigSelector:
+        """Returns the default configuration selector."""
+        return super(BlackBoxFacade, BlackBoxFacade).get_config_selector(
+            scenario, retrain_after=retrain_after, retries=retries
+        )

@@ -26,6 +26,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash, print_config_changes
 from smac.utils.logging import get_logger
+from smac.utils.numpyencoder import NumpyEncoder
 from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -552,8 +553,12 @@ class AbstractIntensifier:
 
         if len(previous_incumbents) == len(new_incumbents):
             if previous_incumbents == new_incumbents:
-                # No changes in the incumbents
-                self._remove_rejected_config(config_id)
+                # No changes in the incumbents, we need this clause because we can't use set difference then
+                if config_id in new_incumbent_ids:
+                    self._remove_rejected_config(config_id)
+                else:
+                    # config worse than incumbents and thus rejected
+                    self._add_rejected_config(config_id)
                 return
             else:
                 # In this case, we have to determine which config replaced which incumbent and reject it
@@ -643,7 +648,7 @@ class AbstractIntensifier:
         }
 
         with open(filename, "w") as fp:
-            json.dump(data, fp, indent=2)
+            json.dump(data, fp, indent=2, cls=NumpyEncoder)
 
     def load(self, filename: str | Path) -> None:
         """Loads the latest state of the intensifier including the incumbents and trajectory."""

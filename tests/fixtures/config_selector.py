@@ -40,7 +40,7 @@ class CustomConfigSelector(ConfigSelector):
             yield config
 
         while True:
-            config = self._scenario.configspace.sample_configuration(1)
+            config = self._scenario.configspace.sample_configuration()
             if config not in self._processed_configs:
                 self._processed_configs.append(config)
                 yield config

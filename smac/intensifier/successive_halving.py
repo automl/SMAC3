@@ -210,7 +210,7 @@ class SuccessiveHalving(AbstractIntensifier):
             for seed, configs in self._tracker[key]:
                 # We have to make key serializable
                 new_key = f"{key[0]},{key[1]}"
-                tracker[new_key].append((seed, [config.get_dictionary() for config in configs]))
+                tracker[new_key].append((seed, [dict(config) for config in configs]))
 
         return {"tracker": tracker}
 
@@ -384,7 +384,7 @@ class SuccessiveHalving(AbstractIntensifier):
             logger.debug("Updating tracker:")
 
             # TODO: Process stages ascending or descending?
-            for (bracket, stage) in list(self._tracker.keys()):
+            for bracket, stage in list(self._tracker.keys()):
                 pairs = self._tracker[(bracket, stage)].copy()
                 for seed, configs in pairs:
                     isb_keys = self._get_instance_seed_budget_keys_by_stage(bracket=bracket, stage=stage, seed=seed)
@@ -448,6 +448,10 @@ class SuccessiveHalving(AbstractIntensifier):
                     configs.append(config)
                 except StopIteration:
                     # We stop if we don't find any configuration anymore
+                    logger.warning(
+                        "If you assume your configspace was not yet exhausted, try to "
+                        "increase the number of retries in the config selector."
+                    )
                     return
 
             # We keep track of the seed so we always evaluate on the same instances

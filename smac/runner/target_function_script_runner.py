@@ -51,8 +51,10 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         self,
         target_function: str,
         scenario: Scenario,
-        required_arguments: list[str] = [],
+        required_arguments: list[str] = None,
     ):
+        if required_arguments is None:
+            required_arguments = []
         super().__init__(scenario=scenario, required_arguments=required_arguments)
         self._target_function = target_function
 
@@ -130,7 +132,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         status = StatusType.SUCCESS
 
         # Add config arguments to the kwargs
-        for k, v in config.get_dictionary().items():
+        for k, v in dict(config).items():
             if k in kwargs:
                 raise RuntimeError(f"The key {k} is already in use. Please use a different one.")
             kwargs[k] = v

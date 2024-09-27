@@ -27,7 +27,7 @@ ranges and default values.
         "species": ["mouse", "cat", "dog"],   # Categorical
     })
 
-Please see the documentation of `ConfigSpace <https://automl.github.io/ConfigSpace/main/>`_ for more details.
+Please see the documentation of `ConfigSpace <https://automl.github.io/ConfigSpace/latest/>`_ for more details.
 
 
 Target Function

@@ -27,12 +27,9 @@ class AbstractAcquisitionMaximizer:
 
     Parameters
     ----------
-    configspace : ConfigurationSpace
-    acquisition_function : AbstractAcquisitionFunction
-    challengers : int, defaults to 5000
-        Number of configurations to sample from the configuration space to get
-        the acquisition function value for, thus challenging the current
-        incumbent and becoming a candidate for the next function evaluation.
+    configspace : ConfigurationSpace acquisition_function : AbstractAcquisitionFunction
+    challengers : int, defaults to 5000 Number of configurations sampled during the optimization process,
+    details depend on the used maximizer. Also, the number of configurations that is returned by calling `maximize`.
     seed : int, defaults to 0
     """
 
@@ -85,8 +82,8 @@ class AbstractAcquisitionMaximizer:
         previous_configs: list[Configuration]
             Previous evaluated configurations.
         n_points: int, defaults to None
-            Number of points to be sampled. If `n_points` is not specified,
-            `self._challengers` is used.
+            Number of points to be sampled & number of configurations to be returned. If `n_points` is not specified,
+            `self._challengers` is used. Semantics depend on concrete implementation.
         random_design: AbstractRandomDesign, defaults to None
             Part of the returned ChallengerList such that we can interleave random configurations
             by a scheme defined by the random design. The method `random_design.next_iteration()`

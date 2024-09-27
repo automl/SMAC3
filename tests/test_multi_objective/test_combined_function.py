@@ -49,7 +49,7 @@ def tae(cfg, seed=0):
 @pytest.fixture
 def configspace():
     cs = ConfigurationSpace()
-    cs.add_hyperparameter(Float("x", (MIN_X, MAX_X), default=MIN_X))
+    cs.add(Float("x", (MIN_X, MAX_X), default=MIN_X))
 
     return cs
 

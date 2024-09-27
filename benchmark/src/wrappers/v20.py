@@ -6,7 +6,7 @@ from src.wrappers.wrapper import Wrapper
 
 
 class Version20(Wrapper):
-    supported_versions: list[str] = ["2.0.1"]
+    supported_versions: list[str] = ["2.1.0"]
 
     def __init__(self, task: Task, seed: int) -> None:
         super().__init__(task, seed)

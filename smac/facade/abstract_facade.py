@@ -92,8 +92,10 @@ class AbstractFacade:
         Callbacks, which are incorporated into the optimization loop.
     overwrite: bool, defaults to False
         When True, overwrites the run results if a previous run is found that is
-        inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked
-        for the exact behaviour (overwrite completely, save old run, or use old results).
+        consistent in the meta data with the current setup. When False and a previous run is found that is
+        consistent in the meta data, the run is continued. When False and a previous run is found that is
+        not consistent in the meta data, the the user is asked for the exact behaviour (overwrite completely
+        or rename old run first).
     dask_client: Client | None, defaults to None
         User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not
         be closed automatically and will have to be closed manually if provided explicitly. If none is provided
@@ -115,11 +117,14 @@ class AbstractFacade:
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
         logging_level: int | Path | Literal[False] | None = None,
-        callbacks: list[Callback] = [],
+        callbacks: list[Callback] = None,
         overwrite: bool = False,
         dask_client: Client | None = None,
     ):
         setup_logging(logging_level)
+
+        if callbacks is None:
+            callbacks = []
 
         if model is None:
             model = self.get_model(scenario)
@@ -188,7 +193,7 @@ class AbstractFacade:
 
         # In case of multiple jobs, we need to wrap the runner again using DaskParallelRunner
         if (n_workers := scenario.n_workers) > 1 or dask_client is not None:
-            if dask_client is not None:
+            if dask_client is not None and n_workers > 1:
                 logger.warning(
                     "Provided `dask_client`. Ignore `scenario.n_workers`, directly set `n_workers` in `dask_client`."
                 )
@@ -457,18 +462,6 @@ class AbstractFacade:
         """Checks if the composition is correct if there are dependencies."""
         # Make sure the same acquisition function is used
         assert self._acquisition_function == self._acquisition_maximizer._acquisition_function
-
-        if isinstance(self._runner, DaskParallelRunner) and (
-            self.scenario.trial_walltime_limit is not None or self.scenario.trial_memory_limit is not None
-        ):
-            # This is probably due to pickling dask jobs
-            raise ValueError(
-                "Parallelization via Dask cannot be used in combination with limiting "
-                "the resources "
-                "of the target function via `scenario.trial_walltime_limit` or "
-                "`scenario.trial_memory_limit`. Set those to `None` if you want "
-                "parallelization. "
-            )
 
     def _get_signature_arguments(self) -> list[str]:
         """Returns signature arguments, which are required by the intensifier."""
