@@ -40,6 +40,9 @@ extras_require = {
         "pre-commit",
         "pylint",
     ],
+    "wandb": [
+        "wandb",
+    ]
 }
 
 setuptools.setup(
