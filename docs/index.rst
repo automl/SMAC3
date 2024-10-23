@@ -52,6 +52,6 @@ For the original idea, we refer to:
 Contact
 -------
 
-SMAC3 is developed by `<https://automl.org>`_.
+SMAC3 is developed by `<https://www.automl.org>`_.
 If you want to contribute or found an issue please visit our github page `<https://github.com/automl/SMAC3>`_.
 Our guidelines for contributing to this package can be found `here <https://github.com/automl/SMAC3/blob/main/CONTRIBUTING.md>`_.
