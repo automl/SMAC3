@@ -13,7 +13,9 @@ environment or on your system directly. The command to install swig on linux mac
     apt-get install swig
 
 
-SMAC is tested on Linux and Mac machines with python 3.8, 3.9 and 3.10.
+.. note::
+
+    SMAC is tested on Linux and Mac machines with python >=3.8.
 
 
 Anaconda
@@ -76,3 +78,14 @@ SMAC can be installed under Windows in a WSL (Windows Subsystem for Linux).
 You can find an instruction on how to do this here: :ref:`Experimental<Experimental>`.
 However, this is experimental and might not work in each case. 
 If you would like to suggest any changes, please let us know. 
+
+Windows (Experimental)
+~~~~~~~~~~~~~~~~~~~~~~
+
+SMAC can also be installed under Windows.
+
+.. warning::
+
+    This is an experimental feature and might not work in each case. 
+
+Please refer to this `issue <https://github.com/automl/SMAC3/issues/952>`_ for installation instructions for SMAC3-1.4 and SMAC3-2.x.
