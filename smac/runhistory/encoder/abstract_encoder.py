@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Mapping
+from typing import Any, Mapping, Iterable
 
 import numpy as np
 
@@ -188,6 +188,29 @@ class AbstractRunHistoryEncoder:
 
         return trials
 
+    def _get_running_trials(
+            self,
+            budget_subset: list | None = None,
+    ) -> dict[TrialKey, TrialValue]:
+        """Returns all trials that are still running."""
+        if budget_subset is not None:
+            trials = {
+                trial: self.runhistory[trial]
+                for trial in self.runhistory
+                if self.runhistory[trial].status == StatusType.RUNNING
+                # and runhistory.data[run].time >= self._algorithm_walltime_limit  # type: ignore
+                and trial.budget in budget_subset
+            }
+        else:
+            trials = {
+                trial: self.runhistory[trial]
+                for trial in self.runhistory
+                if self.runhistory[trial].status == StatusType.RUNNING
+                # and runhistory.data[run].time >= self._algorithm_walltime_limit  # type: ignore
+            }
+
+        return trials
+
     def _get_timeout_trials(
         self,
         budget_subset: list | None = None,
@@ -210,6 +233,13 @@ class AbstractRunHistoryEncoder:
             }
 
         return trials
+
+    def _convert_config_ids_to_array(self,
+                                     config_ids: Iterable[int]) -> np.ndarray:
+        """extract the configurations from rh and transform them into np array"""
+        configurations = [self.runhistory._ids_config[config_id] for config_id in config_ids]
+        configs_array = convert_configurations_to_array(configurations)
+        return configs_array
 
     def get_configurations(
         self,
@@ -236,9 +266,29 @@ class AbstractRunHistoryEncoder:
         t_trials = self._get_timeout_trials(budget_subset)
         t_config_ids = set(t_trial.config_id for t_trial in t_trials)
         config_ids = s_config_ids | t_config_ids
-        configurations = [self.runhistory._ids_config[config_id] for config_id in config_ids]
-        configs_array = convert_configurations_to_array(configurations)
+        configs_array = self._convert_config_ids_to_array(config_ids)
 
+        return configs_array
+
+    def get_running_configurations(
+            self,
+            budget_subset: list | None = None,
+    ) -> np.ndarray:
+        """Returns vector representation of the configurations that are still running.
+
+        Parameters
+        ----------
+        budget_subset : list | None, defaults to none
+            List of budgets to consider.
+
+        Returns
+        -------
+        X : np.ndarray
+            Configuration vector and instance features.
+        """
+        r_trials = self._get_running_trials(budget_subset)
+        r_ids = set(r_trial.config_id for r_trial in r_trials)
+        configs_array = self._convert_config_ids_to_array(r_ids)
         return configs_array
 
     def transform(
@@ -281,6 +331,18 @@ class AbstractRunHistoryEncoder:
 
         logger.debug("Converted %d observations." % (X.shape[0]))
         return X, Y
+
+    def transform_running_configs(
+            self,
+            budget_subset: list | None = None,
+    ) -> np.ndarray:
+        """Return the running configurations"""
+        logger.debug("Transforming Running Configurations into X format...")
+        running_trials = self._get_running_trials(budget_subset)
+        # Y is not required for running configurations
+        X, _ = self._build_matrix(trials=running_trials, store_statistics=True)
+        logger.debug("Converted %d running observations." % (X.shape[0]))
+        return X
 
     @abstractmethod
     def transform_response_values(
