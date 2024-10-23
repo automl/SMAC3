@@ -60,19 +60,9 @@ conda install smac
 
 Read [SMAC feedstock](https://github.com/conda-forge/smac-feedstock) for more details.
 
-## Windows via WSL (Experimental)
+## Windows (native or via WSL, experimental)
 
 SMAC can be installed under Windows in a WSL (Windows Subsystem for Linux). 
-You can find an instruction on how to do this here: [Experimental](#Experimental).
+You can find an instruction on how to do this here: [Experimental](./10_experimental.md).
 However, this is experimental and might not work in each case. 
 If you would like to suggest any changes, please let us know. 
-
-## Windows (Experimental)
-
-SMAC can also be installed under Windows.
-
-!!! warning
-
-    This is an experimental feature and might not work in each case.
-
-Please refer to this [issue](https://github.com/automl/SMAC3/issues/952) for installation instructions for SMAC3-1.4 and SMAC3-2.x.

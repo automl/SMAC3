@@ -1,12 +1,10 @@
-Experimental
-============
+# Experimental
 
-.. warning::
+!!! warning
     This part is experimental and might not work in each case. If you would like to suggest any changes, please let us know. 
 
 
-Installation in Windows via WSL
-------------------------------
+## Installation in Windows via WSL
 
 SMAC can be installed in a WSL (Windows Subsystem for Linux) under Windows.
 
@@ -21,28 +19,31 @@ Download an Anaconda Linux version to drive D under Windows, e.g. D:\\Anaconda3-
     
 In the WSL, Windows resources are mounted under /mnt:
 
-.. code:: bash
-
-    cd /mnt/d
-    bash Anaconda3-2023.03-1-Linux-x86_64
+```bash
+cd /mnt/d
+bash Anaconda3-2023.03-1-Linux-x86_64
+```
 
 Enter this command to create the environment variable:
 
-.. code:: bash
+```bash
+export PATH="$PATH:/home/${USER}/anaconda3/bin
+```
 
-    export PATH="$PATH:/home/${USER}/anaconda3/bin
-
-Input 'python' to check if the installation was successful.
+Input `python` to check if the installation was successful.
 
 **3) Install SMAC**
 
 Change to your home folder and install the general software there:
 
-.. code:: bash
+```bash
+cd /home/${USER}
+sudo apt-get install software-properties-common
+sudo apt-get update
+sudo apt-get install build-essential swig
+conda install gxx_linux-64 gcc_linux-64 swig
+curl https://raw.githubusercontent.com/automl/smac3/master/requirements.txt | xargs -n 1 -L 1 pip install
+```
 
-    cd /home/${USER}
-    sudo apt-get install software-properties-common
-    sudo apt-get update
-    sudo apt-get install build-essential swig
-    conda install gxx_linux-64 gcc_linux-64 swig
-    curl https://raw.githubusercontent.com/automl/smac3/master/requirements.txt | xargs -n 1 -L 1 pip install
+## Installation in Pure Windows
+Please refer to this [issue](https://github.com/automl/SMAC3/issues/952) for installation instructions for SMAC3-1.4 and SMAC3-2.x.
