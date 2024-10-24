@@ -23,7 +23,7 @@ TAB = "    "
 for path in sorted(Path(source_path).rglob("*.py")):
     module_path = path.relative_to(source_path).with_suffix("")
     doc_path = path.relative_to(source_path).with_suffix(".md")
-    full_doc_path = Path("api", doc_path)
+    full_doc_path = Path("api/smac", doc_path)
 
     parts = tuple(module_path.parts)
 
@@ -34,6 +34,8 @@ for path in sorted(Path(source_path).rglob("*.py")):
         continue
 
     with mkdocs_gen_files.open(full_doc_path, "w") as fd:
+        if parts[0] != source_path:
+            parts = (source_path,) + parts
         ident = ".".join(parts)
         fd.write(f"::: {ident}")
 
