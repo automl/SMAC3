@@ -287,9 +287,15 @@ for path in sorted(Path("examples").rglob("*.py")):
     if filename.startswith("_"):
         continue
 
+    heading_fn = Path(path.parent / "heading.txt")
+    if heading_fn.is_file():
+        # This adjusts the navigation section heading to the content in heading.txt
+        heading = heading_fn.read_text().strip()
+        full_doc_path = Path("examples", heading, *doc_path.parts[1:])
+
     example = Example.from_file(path)
     with mkdocs_gen_files.open(full_doc_path, "w") as f:
         f.write(example.generate_doc())
 
     toc_name = example.name
-    mkdocs_gen_files.set_edit_path(full_doc_path, path)
+    mkdocs_gen_files.set_edit_path(full_doc_path, full_doc_path)

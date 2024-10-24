@@ -23,7 +23,7 @@ SMAC supports multiple workers natively via Dask. Just specify ``n_workers`` in 
 ## Running on a Cluster
 
 You can also pass a custom dask client, e.g. to run on a slurm cluster.
-See our [parallelism example](../../examples/1_basics/7_parallelization_cluster.py).
+See our [parallelism example](../../examples/1%20Basics/7_parallelization_cluster).
 
 !!! warning
 
@@ -33,7 +33,7 @@ See our [parallelism example](../../examples/1_basics/7_parallelization_cluster.
 !!! warning
 
     Sometimes you need to modify your launch command which can be done with
-    `SLURMCluster.job_class.submit_command`. 
+    `SLURMCluster.job_class.submit_command`.    
 
 ```python
 cluster.job_cls.submit_command = submit_command

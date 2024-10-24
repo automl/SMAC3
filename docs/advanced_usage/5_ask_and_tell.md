@@ -16,4 +16,4 @@ and report the results of the trial.
     into the intensification process.
 
 
-Please have a look at our [ask-and-tell example](../../examples/1_basics/3_ask_and_tell).
+Please have a look at our [ask-and-tell example](../../examples/1%20Basics/3_ask_and_tell).
