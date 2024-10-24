@@ -93,7 +93,7 @@ class LCB(AbstractAcquisitionFunction):
         assert self._model is not None
         if self._num_data is None:
             raise ValueError(
-                "No current number of data points specified. Call `update` to inform the acqusition function."
+                "No current number of data points specified. Call `update` to inform the acquisition function."
             )
 
         if len(X.shape) == 1:
