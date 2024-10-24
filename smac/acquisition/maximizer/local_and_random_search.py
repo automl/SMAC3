@@ -5,7 +5,7 @@ from typing import Any
 from ConfigSpace import Configuration, ConfigurationSpace
 
 from smac.acquisition.function import AbstractAcquisitionFunction
-from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
+from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.acquisition.maximizer.local_search import LocalSearch
@@ -184,6 +184,6 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         first_five = [f"{_[0]} ({_[1].origin})" for _ in next_configs_by_acq_value[:5]]
 
-        logger.debug(f"First 5 acquisition function values of selected configurations:\n{', '.join(first_five)}")
+        logger.debug(f"First 5 acquisition function values of selected configurations: \n{', '.join(first_five)}")
 
         return next_configs_by_acq_value
