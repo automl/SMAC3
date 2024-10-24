@@ -1,5 +1,4 @@
-Optimizations
-=============
+# Optimizations
 
 SMAC might run faster or slower depending on the user specifications. In general it
 applies that the more you know about the underlying target function, the better you can optimize the optimization
@@ -17,4 +16,4 @@ The following list might help you to make the optimization process more efficien
 
   - High target function evaluation times: As many ``n_workers`` as cores.
   - Low target function evaluation times: Only one worker because the communication might take longer than evaluating
-    on a single thread.
+    on a single thread.   
