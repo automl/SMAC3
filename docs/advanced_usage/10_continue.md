@@ -1,5 +1,4 @@
-Continue
-========
+# Continue
 
 SMAC can automatically restore states where it left off if a run was interrupted or prematurely finished. To do so, 
 it reads in old files (derived from scenario's name, output_directory and seed) and obtains the scenario information
@@ -20,4 +19,4 @@ The behavior can be controlled by setting the parameter ``overwrite`` in the fac
     and the old run is not affected.
 
 
-Please have a look at our :ref:`continue example<Continue an Optimization>`.
+Please have a look at our [continue example](../../examples/1_basics/5_continue).
