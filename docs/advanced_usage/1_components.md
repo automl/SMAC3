@@ -1,14 +1,14 @@
 [](){#components}
 # Components
 
-In addition to the basic components mentioned in :ref:`Getting Started`, all other components are
+In addition to the basic components mentioned in [Getting Started][getting_started], all other components are
 explained in the following paragraphs to give a better picture of SMAC. These components are all used to guide
 the optimization process and simple changes can influence the results drastically.
 
 Before diving into the components, we shortly want to explain the main Bayesian optimization loop in SMAC.
-The :term:`SMBO` receives all instantiated components from the facade and the logic happens here.
+The [SMBO][SMBO] receives all instantiated components from the facade and the logic happens here.
 In general, a while loop is used to ask for the next trial, submit it to the runner, and wait for the runner to 
-finish the evaluation. Since the runner and the :ref:`SMBO<smac.main.smbo>`
+finish the evaluation. Since the runner and the [`SMBO`][smac.main.smbo]
 object are decoupled, the while loop continues and asks for even 
 more trials (e.g., in case of multi-threading), which also can be submitted to the runner. If all workers are
 occupied, SMAC will wait until a new worker is available again. Moreover, limitations like wallclock time and remaining 
@@ -24,7 +24,7 @@ higher dimensional and complex spaces.
 
 The data used to train the surrogate model is collected by the runhistory encoder (receives data from the runhistory 
 and transforms it). If budgets are
-involved, the highest budget which satisfies ``min_trials`` (defaults to 1) in :ref:`smac.main.config_selector` is
+involved, the highest budget which satisfies ``min_trials`` (defaults to 1) in [smac.main.config_selector][smac.main.config_selector] is
 used. If no budgets are used, all observations are used.
 
 If you are using instances, it is recommended to use instance features. The model is trained on each instance 

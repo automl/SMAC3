@@ -1,3 +1,4 @@
+[](){#getting_started}
 # Getting Started
 
 SMAC needs four core components (configuration space, target function, scenario and a facade) to run an
@@ -5,7 +6,10 @@ optimization process, all of which are explained on this page.
 
 They interact in the following way:
 
-<img src="images/smac_components_interaction.jpg" width="400" alt="Interaction of SMAC's components">
+<figure markdown="span">
+  ![Interaction of SMAC's components](./images/smac_components_interaction.jpg){ width="300" }
+  <figcaption>Interaction of SMAC's components</figcaption>
+</figure>
 
 
 ## Configuration Space

@@ -19,7 +19,7 @@ Use categorical, continuous, hierarchical and/or conditional hyperparameters wit
 Optimization with any [objective](#) (e.g., accuracy, runtime, cross-validation, ...) is possible.
 
 #### [Multi-Objective](#) Optimization
-Optimize arbitrary number of objectives using scalarized multi-objective algorithms. Both ParEGO [Know06] and mean aggregation strategies are supported.
+Optimize arbitrary number of objectives using scalarized multi-objective algorithms. Both ParEGO [[Know06][Know06]] and mean aggregation strategies are supported.
 
 #### [Multi-Fidelity](#) Optimization
 Judge configurations on multiple [budgets](#) to discard unsuitable configurations early on. This will result in a massive speed-up, depending on the budgets.
