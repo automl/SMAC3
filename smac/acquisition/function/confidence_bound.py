@@ -18,7 +18,7 @@ logger = get_logger(__name__)
 class LCB(AbstractAcquisitionFunction):
     r"""Computes the lower confidence bound for a given x over the best so far value as acquisition value.
 
-    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
+    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [[SKKS10][SKKS10]]
 
     with
 

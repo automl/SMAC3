@@ -28,7 +28,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     r"""Weight the acquisition function with a user-defined prior over the optimum.
 
     See "piBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization" by Carl
-    Hvarfner et al. [HSSL22]_ for further details.
+    Hvarfner et al. [[HSSL22][HSSL22]] for further details.
 
     Parameters
     ----------
