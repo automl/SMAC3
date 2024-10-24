@@ -16,6 +16,8 @@ site_name: "SMAC3"
 repo_url: https://github.com/automl/SMAC3/
 repo_name: automl/SMAC3
 
+site_dir: docs/site
+
 theme:
   name: material
   logo: images/logo.png
@@ -142,8 +144,6 @@ plugins:
         - docs/example_runner.py
   - literate-nav:
         nav_file: SUMMARY.md
-  # - mkdocs-glossary-plugin:
-  #     glossary_dirs: ["docs/glossary"] # This plugin considers the md files in "docs/glossary" as glossary files.
   - mkdocstrings:
       default_handler: python
       enable_inventory: true
@@ -193,19 +193,30 @@ plugins:
 
 nav:
   - Home: "index.md"
-  - Installation: "installation.md"
+  - Installation: "1_installation.md"
+  - Package Overview: "2_package_overview.md"
+  - Getting Started: "3_getting_started.md"
+  - Advanced Usage:
+    - "advanced_usage/1_components.md"
+    - "advanced_usage/2_multi_fidelity.md"
+    - "advanced_usage/3_multi_objective.md"
+    - "advanced_usage/4_instances.md"
+    - "advanced_usage/5_ask_and_tell.md"
+    - "advanced_usage/6_commandline.md"
+    - "advanced_usage/7_stopping_criteria.md"
+    - "advanced_usage/8_logging.md"
+    - "advanced_usage/9_parallelism.md"
+    - "advanced_usage/10_continue.md"
+    - "advanced_usage/11_reproducibility.md"
+    - "advanced_usage/12_optimizations.md"
   # Auto generated with docs/examples_runner.py
   - Examples: "examples/"
   # Auto generated with docs/api_generator.py
   - API: "api/"
-  # - Guides:
-  #   - "guides/first-steps.md"
-  #   - "guides/hydra.md"
-  #   - "guides/database.md"
-  #   - "guides/containers.md"
-  #   - "guides/large-scale-benchmarking.md"
-  #   - "guides/using-carps.md"
-  # - Commands: "commands.md"
+  - Info & FAQ:
+    - "6_references.md"
+    - "7_glossary.md"
+    - "8_faq.md"
   # - Contributing:
   #   - "contributing/index.md"
   #   - "contributing/contributing-a-benchmark.md"

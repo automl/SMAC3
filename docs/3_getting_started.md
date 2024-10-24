@@ -63,7 +63,7 @@ in an efficient way.
 
 ## Scenario
 
-The :ref:`Scenario<smac.scenario>` is used to provide environment variables. For example, 
+The [Scenario][smac.scenario] is used to provide environment variables. For example, 
 if you want to limit the optimization process by a time limit or want to specify where to save the results.
 
 ```python
@@ -82,12 +82,12 @@ scenario = Scenario(
 
 ## Facade
 
-A :ref:`facade<smac.facade>` is the entry point to SMAC, which constructs a default optimization 
+A [facade][smac.facade.abstract_facade] is the entry point to SMAC, which constructs a default optimization 
 pipeline for you. SMAC offers various facades, which satisfy many common use cases and are crucial to
 achieving peak performance. The idea behind the facades is to provide a simple interface to all of SMAC's components,
 which is easy to use and understand and without the need of deep diving into the material. However, experts are
 invited to change the components to their specific hyperparameter optimization needs. The following
-table (horizontally scrollable) shows you what is supported and reveals the default :ref:`components<Components>`:
+table (horizontally scrollable) shows you what is supported and reveals the default [components][components]:
 
 | | [Black-Box](smac.facade.blackbox_facade) | [Hyperparameter Optimization](smac.facade.hyperparameter_optimization_facade) | [Multi-Fidelity](smac.facade.multi_fidelity_facade) | [Algorithm Configuration](smac.facade.algorithm_configuration_facade) | [Random](smac.facade.random_facade) | [Hyperband](smac.facade.hyperband_facade) |
 | --- | --- | --- | --- | --- | --- | --- |

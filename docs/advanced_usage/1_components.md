@@ -1,3 +1,4 @@
+[](){#components}
 # Components
 
 In addition to the basic components mentioned in :ref:`Getting Started`, all other components are

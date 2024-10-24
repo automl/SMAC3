@@ -87,10 +87,12 @@ tests:
 	$(PYTEST) ${TESTS_DIR}
 
 docs:
-	$(MAKE) -C ${DOCDIR} docs
-	@echo
-	@echo "View docs at:"
-	@echo ${INDEX_HTML}
+	# $(MAKE) -C ${DOCDIR} docs
+	# @echo
+	# @echo "View docs at:"
+	# @echo ${INDEX_HTML}
+	$(PYTHON) -m webbrowser -t "http://127.0.0.1:8000/"
+	$(PYTHON) -m mkdocs serve --clean --watch-theme
 
 examples:
 	$(MAKE) -C ${DOCDIR} examples
