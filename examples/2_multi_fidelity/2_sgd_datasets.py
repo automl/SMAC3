@@ -1,4 +1,5 @@
 """Stochastic Gradient Descent On Multiple Datasets
+# Flags: doc-Runnable
 
 Example for optimizing a Multi-Layer Perceptron (MLP) across multiple (dataset) instances.
 

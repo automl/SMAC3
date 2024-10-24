@@ -1,4 +1,5 @@
 """Speeding up Cross-Validation with Intensification
+# Flags: doc-Runnable
 
 An example of optimizing a simple support vector machine on the digits dataset. In contrast to the
 [simple example](../../1_basics/2_svm_cv), in which all cross-validation folds are executed

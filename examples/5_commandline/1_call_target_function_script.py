@@ -1,4 +1,5 @@
 """Call Target Function From Script
+# Flags: doc-Runnable
 
 This simple example shows how to call a script with the following content:
 

@@ -1,4 +1,5 @@
 """Quadratic Function
+# Flags: doc-Runnable
 
 An example of applying SMAC to optimize a quadratic function.
 
@@ -12,7 +13,7 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 from matplotlib import pyplot as plt
 
-from smac import HyperparameterOptimizationFacade as HPOFacade
+from smac.facade.hyperparameter_optimization_facade import HyperparameterOptimizationFacade as HPOFacade
 from smac import RunHistory, Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

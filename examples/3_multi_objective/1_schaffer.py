@@ -1,4 +1,5 @@
 """2D Schaffer Function with Objective Weights
+# Flags: doc-Runnable
 
 A simple example on how to use multi-objective optimization is shown. The 2D Schaffer function is used. In the plot
 you can see that all points are on the Pareto front. However, since we set the objective weights, you can notice that

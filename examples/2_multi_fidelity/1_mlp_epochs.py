@@ -1,4 +1,5 @@
 """Multi-Layer Perceptron Using Multiple Epochs
+# Flags: doc-Runnable
 
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of multi-fidelity, the ``MultiFidelityFacade`` is a good choice. By default,
