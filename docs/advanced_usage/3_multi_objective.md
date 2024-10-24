@@ -1,9 +1,8 @@
-Multi-Objective Optimization
-============================
+# Multi-Objective Optimization
 
 Often we do not only want to optimize just a single objective, but multiple instead. SMAC offers a multi-objective 
 optimization interface to do exactly that. Right now, the algorithm used for this is a mean aggregation strategy or 
-ParEGO [Know06]_. In both cases, multiple objectives are aggregated into a single scalar objective, which is then 
+ParEGO [[Know06][Know06]]. In both cases, multiple objectives are aggregated into a single scalar objective, which is then 
 optimized by SMAC. However, the run history still keeps the original objectives.
 
 
@@ -18,24 +17,24 @@ The basic recipe is as follows:
   multi-objective algorithm default.
 
 
-.. warning ::
+!!! warning
 
-   The multi-objective algorithm influences which configurations are sampled next. More specifically, 
-   since only one surrogate model is trained, multiple objectives have to be scalarized into a single objective.
-   This scalarized value is used to train the surrogate model, which is used by the acquisition function/maximizer
-   to sample the next configurations.  
+    The multi-objective algorithm influences which configurations are sampled next. More specifically, 
+    since only one surrogate model is trained, multiple objectives have to be scalarized into a single objective.
+    This scalarized value is used to train the surrogate model, which is used by the acquisition function/maximizer
+    to sample the next configurations.  
 
 
 You receive the incumbents (points on the Pareto front) after the optimization process directly. Alternatively, you can 
 use the method ``get_incumbents`` in the intensifier.
 
-.. code-block:: python
+```python
 
-   smac = ...
-   incumbents = smac.optimize()
+  smac = ...
+  incumbents = smac.optimize()
 
-   # Or you use the intensifier
-   incumbents = smac.intensifier.get_incumbents()
+  # Or you use the intensifier
+  incumbents = smac.intensifier.get_incumbents()
+```
 
-
-We show an example of how to use multi-objective with plots in our :ref:`examples<Multi-Objective>`.
+We show an example of how to use multi-objective with plots in our [here][examples<Multi-Objective].
