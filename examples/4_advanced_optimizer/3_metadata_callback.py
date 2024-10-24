@@ -1,21 +1,21 @@
-"""
-Callback for logging run metadata
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Callback for logging run metadata
 
 An example for using a callback to log run metadata to a file. Any arguments passed to the callback will be logged
 to a json file at the beginning of the SMAC run (arguments must be json serializable).
 
 Instead of editing the Git-related information (repository, branch, commit) by hand each time they change,
-this information can also be added automatically using GitPython (install via "pip install GitPython").
+this information can also be added automatically using GitPython (install via `pip install GitPython`).
 There is an example for obtaining the information via GitPython below:
-    from git import Repo
-    repo = Repo(".", search_parent_directories=True)
-    MetadataCallback(
-        repository=repo.working_tree_dir.split("/")[-1],
-        branch=str(repo.active_branch),
-        commit=str(repo.head.commit),
-        command=" ".join([sys.argv[0][len(repo.working_tree_dir) + 1:]] + sys.argv[1:]),
-    )
+```python
+from git import Repo
+repo = Repo(".", search_parent_directories=True)
+MetadataCallback(
+    repository=repo.working_tree_dir.split("/")[-1],
+    branch=str(repo.active_branch),
+    commit=str(repo.head.commit),
+    command=" ".join([sys.argv[0][len(repo.working_tree_dir) + 1:]] + sys.argv[1:]),
+)
+```
 """
 
 import sys

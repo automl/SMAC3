@@ -1,11 +1,10 @@
-"""
-Quadratic Function
-^^^^^^^^^^^^^^^^^^
+"""Quadratic Function
+# Flags: doc-Runnable
 
 An example of applying SMAC to optimize a quadratic function.
 
 We use the black-box facade because it is designed for black-box function optimization.
-The black-box facade uses a :term:`Gaussian Process<GP>` as its surrogate model.
+The black-box facade uses a [Gaussian Process][GP] as its surrogate model.
 The facade works best on a numerical hyperparameter configuration space and should not
 be applied to problems with large evaluation budgets (up to 1000 evaluations).
 """
@@ -14,7 +13,7 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 from matplotlib import pyplot as plt
 
-from smac import HyperparameterOptimizationFacade as HPOFacade
+from smac.facade.hyperparameter_optimization_facade import HyperparameterOptimizationFacade as HPOFacade
 from smac import RunHistory, Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

@@ -1,6 +1,5 @@
-"""
-ParEGO
-^^^^^^
+"""ParEGO
+# Flags: doc-Runnable
 
 An example of how to use multi-objective optimization with ParEGO. Both accuracy and run-time are going to be
 optimized on the digits dataset using an MLP, and the configurations are shown in a plot, highlighting the best ones in 

@@ -1,6 +1,4 @@
-"""
-Parallelization-on-Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Parallelization on Cluster
 
 An example of applying SMAC to optimize Branin using parallelization via Dask client on a 
 SLURM cluster. If you do not want to use a cluster but your local machine, set dask_client
@@ -22,7 +20,7 @@ cluster.job_cls.cancel_command = cancel_command
 
 Here we optimize the synthetic 2d function Branin.
 We use the black-box facade because it is designed for black-box function optimization.
-The black-box facade uses a :term:`Gaussian Process<GP>` as its surrogate model.
+The black-box facade uses a [Gaussian Process][GP] as its surrogate model.
 The facade works best on a numerical hyperparameter configuration space and should not
 be applied to problems with large evaluation budgets (up to 1000 evaluations).
 """

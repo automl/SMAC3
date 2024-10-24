@@ -1,6 +1,5 @@
-"""
-Multi-Layer Perceptron Using Multiple Epochs
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Multi-Layer Perceptron Using Multiple Epochs
+# Flags: doc-Runnable
 
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of multi-fidelity, the ``MultiFidelityFacade`` is a good choice. By default,
@@ -13,7 +12,7 @@ MLP is a deep neural network, and therefore, we choose epochs as fidelity type. 
 that ``budget`` specifies the number of epochs smac wants to allocate. The digits dataset
 is chosen to optimize the average accuracy on 5-fold cross validation.
 
-.. note::
+!!! note
 
     This example uses the ``MultiFidelityFacade`` facade, which is the closest implementation to
     `BOHB <https://github.com/automl/HpBandSter>`_.

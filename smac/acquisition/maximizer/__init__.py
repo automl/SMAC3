@@ -1,4 +1,4 @@
-from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
+from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.acquisition.maximizer.differential_evolution import DifferentialEvolution
