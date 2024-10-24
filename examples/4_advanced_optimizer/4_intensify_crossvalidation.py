@@ -1,6 +1,4 @@
-"""
-Speeding up Cross-Validation with Intensification
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Speeding up Cross-Validation with Intensification
 
 An example of optimizing a simple support vector machine on the digits dataset. In contrast to the
 [simple example](examples/1_basics/2_svm_cv.py), in which all cross-validation folds are executed

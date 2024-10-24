@@ -1,6 +1,4 @@
-"""
-Ask-and-Tell
-^^^^^^^^^^^^
+"""Ask-and-Tell
 
 This examples show how to use the Ask-and-Tell interface.
 """

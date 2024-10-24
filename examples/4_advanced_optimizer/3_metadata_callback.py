@@ -1,6 +1,4 @@
-"""
-Callback for logging run metadata
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Callback for logging run metadata
 
 An example for using a callback to log run metadata to a file. Any arguments passed to the callback will be logged
 to a json file at the beginning of the SMAC run (arguments must be json serializable).

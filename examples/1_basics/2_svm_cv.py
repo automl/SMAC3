@@ -1,6 +1,4 @@
-"""
-Support Vector Machine with Cross-Validation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Support Vector Machine with Cross-Validation
 
 An example of optimizing a simple support vector machine on the IRIS dataset. We use the
 hyperparameter optimization facade, which uses a random forest as its surrogate model. It is able to

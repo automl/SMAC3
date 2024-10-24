@@ -1,6 +1,4 @@
-"""
-Warmstarting SMAC
-======================================
+"""Warmstarting SMAC
 
 With the ask and tell interface, we can support warmstarting SMAC. We can communicate rich
 information about the previous trials to SMAC using `TrialInfo` and `TrialValue` instances.

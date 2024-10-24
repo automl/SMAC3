@@ -1,6 +1,4 @@
-"""
-Quadratic Function
-^^^^^^^^^^^^^^^^^^
+"""Quadratic Function
 
 An example of applying SMAC to optimize a quadratic function.
 

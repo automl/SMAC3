@@ -1,6 +1,5 @@
-"""
-Specify Number of Trials via a Total Budget in Hyperband
-^^^^^^^^^^^^^^^^^^
+"""Specify Number of Trials via a Total Budget in Hyperband
+
 This example uses a dummy function but illustrates how to setup Hyperband if you 
 want to specify a total optimization budget in terms of fidelity units.
 

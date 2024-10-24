@@ -1,6 +1,4 @@
-"""
-Continue an Optimization
-^^^^^^^^^^^^^^^^^^^^^^^^
+"""Continue an Optimization
 
 SMAC can also be continued from a previous run. To do so, it reads in old files (derived from scenario's name,
 output_directory and seed) and sets the corresponding components. In this example, an optimization of a simple quadratic

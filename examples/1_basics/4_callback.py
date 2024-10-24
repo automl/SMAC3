@@ -1,6 +1,4 @@
-"""
-Custom Callback
-^^^^^^^^^^^^^^^
+"""Custom Callback
 
 Using callbacks is the easieast way to integrate custom code inside the Bayesian optimization loop.
 In this example, we disable SMAC's default logging option and use the custom callback to log the evaluated trials.
