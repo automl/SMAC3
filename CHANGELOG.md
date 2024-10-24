@@ -2,7 +2,7 @@
 
 ## Documentation
 - Update windows install guide (#952)
-- Migrate sphinx docs to mkdocs (#1154)
+- Migrate sphinx docs to mkdocs (#1155)
 
 # 2.2.1
 
