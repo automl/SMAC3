@@ -14,7 +14,7 @@
 - [](){#ROAR}**ROAR**: See `Random Online Adaptive Racing`.
 - [](){#SMAC}**SMAC**: Sequential Model-Based Algorithm Configuration.
 - [](){#SMBO}**SMBO**: Sequential Mode-Based Optimization.
-- [](){#Bayesian Optimization}**Bayesian Optimization**: Bayesian optimization is a sequential design strategy for global optimization of black-box functions that does not assume any functional forms. It is usually employed to optimize expensive-to-evaluate functions. A Bayesian optimization weights exploration and exploitation to find the minimum of its objective.
+- [](){#BayesianOptimization}**Bayesian Optimization**: Bayesian optimization is a sequential design strategy for global optimization of black-box functions that does not assume any functional forms. It is usually employed to optimize expensive-to-evaluate functions. A Bayesian optimization weights exploration and exploitation to find the minimum of its objective.
 - [](){#Black-Box}**Black-Box**: Refers to an algorithm being optimized, where only input and output are observable.
 - [](){#Budget}**Budget**: Budget is another word for fidelity. Examples are the number of training epochs or the size of the data subset the algorithm is trained on. However, budget can also be used in the context of instances. For example, if you have 100 instances (let's say we optimize across datasets) and you want to run your algorithm on 10 of them, then the budget is 10.
 - [](){#Hyperband}**Hyperband**: [Hyperband](https://arxiv.org/abs/1603.06560). A novel bandit-based algorithm for hyperparameter optimization. Hyperband is an extension of successive halving and therefore works with multi-fidelities.
