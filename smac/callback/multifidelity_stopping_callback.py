@@ -183,6 +183,9 @@ class MultiFidelityStoppingCallback:
             indices = np.argsort(y)
             x = x[indices]
             y = y[indices]
+            # TODO I added this. This feels untested
+            x=  x.squeeze(1)
+            y= y.squeeze(1)
             forests = []
             for i in range(self._statistical_error_num_forests):
                 forests += [
