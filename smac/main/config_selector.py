@@ -299,9 +299,9 @@ class ConfigSelector:
                     configs_array_running = self._runhistory_encoder.get_running_configurations(
                         budget_subset=self._considered_budgets
                     )
-                    X = np.concatenate([X, X_running], dim=0)
-                    Y = np.concatenate([Y, Y_estimated], dim=0)
-                    configs_array = np.concatenate([configs_array, configs_array_running], dim=0)
+                    X = np.concatenate([X, X_running], axis=0)
+                    Y = np.concatenate([Y, Y_estimated], axis=0)
+                    configs_array = np.concatenate([configs_array, configs_array_running], axis=0)
 
                 return X, Y, configs_array
 
@@ -346,15 +346,15 @@ class ConfigSelector:
             return None
         if estimate_strategy == 'CL_max':
             # constant liar max, we take the maximal values of all the evaluated Y and apply them to the running X
-            Y_estimated = np.max(Y_evaluated, dim=0, keepdims=True)
+            Y_estimated = np.nanmax(Y_evaluated, axis=0, keepdims=True)
             return np.repeat(Y_estimated, n_running_points, 0)
         elif estimate_strategy == 'CL_min':
             # constant liar min, we take the minimal values of all the evaluated Y and apply them to the running X
-            Y_estimated = np.max(Y_evaluated, dim=0, keepdims=True)
+            Y_estimated = np.nanmin(Y_evaluated, axis=0, keepdims=True)
             return np.repeat(Y_estimated, n_running_points, 0)
         elif estimate_strategy == 'CL_mean':
-            # constant liar min, we take the minimal values of all the evaluated Y and apply them to the running X
-            Y_estimated = np.mean(Y_evaluated, dim=0, keepdims=True)
+            # constant liar min, we take the mean values of all the evaluated Y and apply them to the running X
+            Y_estimated = np.nanmean(Y_evaluated, axis=0, keepdims=True)
             return np.repeat(Y_estimated, n_running_points, 0)
         elif estimate_strategy == 'kriging_believer':
             # in kriging believer, we apply the predicted means of the surrogate model to estimate the running X
