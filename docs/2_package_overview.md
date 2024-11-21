@@ -15,7 +15,7 @@ Optimization is only aware of input and output. It is agnostic to internals of t
 #### Flexible Hyperparameters
 Use categorical, continuous, hierarchical and/or conditional hyperparameters with the well-integrated [ConfigurationSpace](https://automl.github.io/ConfigSpace). SMAC can optimize *up to 100 hyperparameters* efficiently.
 
-#### Any Objectives
+#### Any [Objectives][Objective]
 Optimization with any [objective][Objective] (e.g., accuracy, runtime, cross-validation, ...) is possible.
 
 #### [Multi-Objective][Multi-Objective] Optimization

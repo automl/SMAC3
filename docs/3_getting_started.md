@@ -27,7 +27,7 @@ cs = ConfigurationSpace({
 })
 ```
 
-Please see the documentation of `ConfigSpace <https://automl.github.io/ConfigSpace/latest/>`_ for more details.
+Please see the documentation of [ConfigurationSpace](https://automl.github.io/ConfigSpace) for more details.
 
 
 ## Target Function
@@ -48,10 +48,6 @@ in an efficient way.
         return 1 - accuracy  # SMAC always minimizes (the smaller the better)
 ```
 
-!!! warning
-    SMAC *always* minimizes the value returned from the target function.
-
-
 !!! note
     In general, the arguments of the target function depend on the intensifier. However,
     in all cases, the first argument must be the configuration (arbitrary argument name is possible here) and a seed.
@@ -59,6 +55,10 @@ in an efficient way.
     ``SuccessiveHalving`` or ``Hyperband`` as intensifier but you did not specify instances, SMAC passes `budget` as
     argument to the target function. But don't worry: SMAC will tell you if something is missing or if something is not
     used.
+
+
+!!! warning
+    SMAC *always* minimizes the value returned from the target function.
 
 
 !!! warning

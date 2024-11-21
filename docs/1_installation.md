@@ -3,19 +3,14 @@
 ## Requirements
 
 SMAC is written in python3 and therefore requires an environment with python>=3.8.
-Furthermore, the Random Forest used in SMAC requires SWIG as a build dependency. Install it either in your
-environment or on your system directly. The command to install swig on linux machines is the following:
-
-```bash
-apt-get install swig
-```
+Furthermore, the Random Forest used in SMAC requires SWIG as a build dependency.
 
 !!! info 
 
     SMAC is tested on Linux and Mac machines with python >=3.8.
 
 
-## Anaconda
+## SetUp
 
 We recommend using Anaconda to create and activate an environment:
 
@@ -24,13 +19,22 @@ conda create -n SMAC python=3.10
 conda activate SMAC
 ```
 
-If you haven't installed swig yet, you can install it directly inside the Anaconda environment:
+Now install swig either on the system level e.g. using the following command for Linux:
+```bash
+apt-get install swig
+```
+
+Or install swig inside of an already created conda environment using:
 
 ```bash
 conda install gxx_linux-64 gcc_linux-64 swig
 ```
 
-Now install SMAC via PyPI:
+## Install SMAC
+You can install SMAC either using PyPI or Conda-forge.
+
+### PYPI
+To install SMAC with PyPI call:
 
 ```bash
 pip install smac
@@ -40,10 +44,10 @@ Or alternatively, clone the environment from GitHub directly:
 
 ```bash
 git clone https://github.com/automl/SMAC3.git && cd SMAC3
-pip install -e .[dev]
+pip install -e ".[dev]"
 ```
 
-## Conda-forge
+### Conda-forge
 
 Installing SMAC from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
 
