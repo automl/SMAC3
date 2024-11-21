@@ -1,5 +1,5 @@
-[](){#components}
 # Components
+[](){#components}
 
 In addition to the basic components mentioned in [Getting Started][getting_started], all other components are
 explained in the following paragraphs to give a better picture of SMAC. These components are all used to guide
