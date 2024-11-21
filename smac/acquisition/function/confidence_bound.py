@@ -18,7 +18,7 @@ logger = get_logger(__name__)
 class LCB(AbstractAcquisitionFunction):
     r"""Computes the lower confidence bound for a given x over the best so far value as acquisition value.
 
-    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
+    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [[SKKS10][SKKS10]]
 
     with
 
@@ -93,7 +93,7 @@ class LCB(AbstractAcquisitionFunction):
         assert self._model is not None
         if self._num_data is None:
             raise ValueError(
-                "No current number of data points specified. Call `update` to inform the acqusition function."
+                "No current number of data points specified. Call `update` to inform the acquisition function."
             )
 
         if len(X.shape) == 1:

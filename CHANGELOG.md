@@ -1,3 +1,10 @@
+# 2.3.0
+
+## Documentation
+- Update windows install guide (#952)
+- Correct intensifier for Algorithm Configuration Facade (#1162, #1165)
+- Migrate sphinx docs to mkdocs (#1155)
+
 # 2.2.1
 
 ## Improvements
@@ -688,7 +695,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
   conditions when starting multiple runs on a cluster.
 * MAINT #209: adds the seed or a pseudo-seed to the output directory name for
   better identifiability of the output directories.
-* FIX #216: replace broken call to in EIPS acqusition function.
+* FIX #216: replace broken call to in EIPS acquisition function.
 * MAINT: use codecov.io instead of coveralls.io.
 * MAINT: increase minimal required version of the ConfigSpace package to 0.3.2.
 

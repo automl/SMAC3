@@ -747,14 +747,14 @@ def test_ts_NxD(model, acq_ts):
 
 
 def test_ts_rng():
-    """Test TS acqusition function with model that only has attribute 'rng'"""
+    """Test TS acquisition function with model that only has attribute 'rng'"""
     model = MockModelRNG()
     ts = TS()
     ts.model = model
 
 
 def test_ts_sampler():
-    "Test TS acqusition function with model that only has attribute 'sample_functions'"
+    "Test TS acquisition function with model that only has attribute 'sample_functions'"
     model = MockModelSampler()
     ts = TS()
     ts.model = model
