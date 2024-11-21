@@ -1,3 +1,4 @@
+"""Constants used in SMAC, e.g. maximum number of cutoffs, very small number, etc."""
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
