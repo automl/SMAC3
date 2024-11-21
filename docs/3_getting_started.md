@@ -93,22 +93,22 @@ which is easy to use and understand and without the need of deep diving into the
 invited to change the components to their specific hyperparameter optimization needs. The following
 table (horizontally scrollable) shows you what is supported and reveals the default [components][components]:
 
-| | [Black-Box](smac.facade.blackbox_facade) | [Hyperparameter Optimization](smac.facade.hyperparameter_optimization_facade) | [Multi-Fidelity](smac.facade.multi_fidelity_facade) | [Algorithm Configuration](smac.facade.algorithm_configuration_facade) | [Random](smac.facade.random_facade) | [Hyperband](smac.facade.hyperband_facade) |
+| | [Black-Box][smac.facade.blackbox_facade] | [Hyperparameter Optimization][smac.facade.hyperparameter_optimization_facade] | [Multi-Fidelity][smac.facade.multi_fidelity_facade] | [Algorithm Configuration][smac.facade.algorithm_configuration_facade] | [Random][smac.facade.random_facade] | [Hyperband][smac.facade.hyperband_facade] |
 | --- | --- | --- | --- | --- | --- | --- |
 | #Parameters | low | low/medium/high | low/medium/high | low/medium/high | low/medium/high | low/medium/high |
 | Supports Instances | ❌ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | Supports Multi-Fidelity | ❌ | ❌ | ✅ | ✅ | ❌ | ✅ |
-| Initial Design | [Sobol](smac.initial_design.sobol_design) | [Sobol](smac.initial_design.sobol_design) | [Random](smac.initial_design.random_design) | [Default](smac.initial_design.default_design) | [Default](smac.initial_design.default_design) | [Default](smac.initial_design.default_design) |
-| Surrogate Model | [Gaussian Process](smac.model.gaussian_process.gaussian_process) | [Random Forest](smac.model.random_forest.random_forest) | [Random Forest](smac.model.random_forest.random_forest) | [Random Forest](smac.model.random_forest.random_forest) | Not used | Not used |
-| Acquisition Function | [Expected Improvement](smac.acquisition.function.expected_improvement) | [Log Expected Improvement](smac.acquisition.function.expected_improvement) | [Log Expected Improvement](smac.acquisition.function.expected_improvement) | [Expected Improvement](smac.acquisition.function.expected_improvement) | Not used | Not used |
-| Acquisition Maximizer | [Local and Sorted Random Search](smac.acquisition.maximizer.local_and_random_search) | [Local and Sorted Random Search](smac.acquisition.maximizer.local_and_random_search) | [Local and Sorted Random Search](smac.acquisition.maximizer.local_and_random_search) | [Local and Sorted Random Search](smac.acquisition.maximizer.local_and_random_search) | [Local and Sorted Random Search](smac.acquisition.maximizer.random_search) | [Local and Sorted Random Search](smac.acquisition.maximizer.random_search) |
-| Intensifier | [Default](smac.intensifier.intensifier) | [Default](smac.intensifier.intensifier) | [Hyperband](smac.intensifier.hyperband) | [Hyperband](smac.intensifier.hyperband) | [Default](smac.intensifier.intensifier) | [Hyperband](smac.intensifier.hyperband) |
-| Runhistory Encoder | [Default](smac.runhistory.encoder.encoder) | [Log](smac.runhistory.encoder.log_encoder) | [Log](smac.runhistory.encoder.log_encoder) | [Default](smac.runhistory.encoder.encoder) | [Default](smac.runhistory.encoder.encoder) | [Default](smac.runhistory.encoder.encoder) |
+| Initial Design | [Sobol][smac.initial_design.sobol_design] | [Sobol][smac.initial_design.sobol_design] | [Random][smac.initial_design.random_design] | [Default][smac.initial_design.default_design] | [Default][smac.initial_design.default_design] | [Default][smac.initial_design.default_design] |
+| Surrogate Model | [Gaussian Process][smac.model.gaussian_process.gaussian_process] | [Random Forest][smac.model.random_forest.random_forest] | [Random Forest][smac.model.random_forest.random_forest] | [Random Forest][smac.model.random_forest.random_forest] | Not used | Not used |
+| Acquisition Function | [Expected Improvement][smac.acquisition.function.expected_improvement] | [Log Expected Improvement][smac.acquisition.function.expected_improvement] | [Log Expected Improvement][smac.acquisition.function.expected_improvement] | [Expected Improvement][smac.acquisition.function.expected_improvement] | Not used | Not used |
+| Acquisition Maximizer | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | [Local and Sorted Random Search][smac.acquisition.maximizer.random_search] | [Local and Sorted Random Search][smac.acquisition.maximizer.random_search] |
+| Intensifier | [Default][smac.intensifier.intensifier] | [Default][smac.intensifier.intensifier] | [Hyperband][smac.intensifier.hyperband] | [Default][smac.intensifier.intensifier] | [Default][smac.intensifier.intensifier] | [Hyperband][smac.intensifier.hyperband] |
+| Runhistory Encoder | [Default][smac.runhistory.encoder.encoder] | [Log][smac.runhistory.encoder.log_encoder] | [Log][smac.runhistory.encoder.log_encoder] | [Default][smac.runhistory.encoder.encoder] | [Default][smac.runhistory.encoder.encoder] | [Default][smac.runhistory.encoder.encoder] |
 | Random Design Probability | 8.5% | 20% | 20% | 50% | Not used | Not used |
 
 
 !!! info
-    The multi-fidelity facade is the closest implementation to `BOHB <https://github.com/automl/HpBandSter>`_.
+    The multi-fidelity facade is the closest implementation to [BOHB](https://github.com/automl/HpBandSter).
 
 
 !!! note
