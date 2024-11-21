@@ -37,4 +37,4 @@ use the method ``get_incumbents`` in the intensifier.
   incumbents = smac.intensifier.get_incumbents()
 ```
 
-We show an example of how to use multi-objective with plots in our [examples](../../examples/3%20Multi-Objective/1_schaffer).
+We show an example of how to use multi-objective with plots in our [examples](../examples/3%20Multi-Objective/1_schaffer.html).
