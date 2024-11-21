@@ -2,6 +2,7 @@
 
 ## Documentation
 - Update windows install guide (#952)
+- Correct intensifier for Algorithm Configuration Facade (#1162, #1165)
 - Migrate sphinx docs to mkdocs (#1155)
 
 # 2.2.1
