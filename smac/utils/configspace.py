@@ -183,6 +183,8 @@ def print_config_changes(
     msg = "\n".join(lines)
     logger.debug(msg)
 
+### Below functions are needed to adapt the Configuration Space during the optimization process. Should this functionality be added to ConfigurationSpace, we can remove these functions.
+
 def modify_hyperparameter(space:Dict[str,tuple[int, int]
                 | tuple[float, float]
                 | Sequence[Any]
@@ -297,7 +299,51 @@ def modify_hyperparameter(space:Dict[str,tuple[int, int]
 
     return space
 
+def recreate_configspace(
+    name: str,
+    space: dict,
+    conditions: list = None,
+    forbidden_clauses: list = None,
+    default_configuration: dict = None,
+) -> ConfigurationSpace:
+    """
+    Recreates a ConfigurationSpace from the modified hyperparameter space and other attributes.
+    Needed upon modifying the Configuration Space due to caching issues.
 
+    Parameters:
+        space (dict): The modified space dictionary containing hyperparameters.
+        name (str): The name for the new ConfigurationSpace.
+        conditions (list): List of conditions to apply to the ConfigurationSpace.
+        forbidden_clauses (list): List of forbidden clauses for the ConfigurationSpace.
+        default_configuration (dict): Default configuration for the ConfigurationSpace.
+
+    Returns:
+        ConfigurationSpace: The reconstructed ConfigurationSpace object.
+    """
+    # Initialize a new ConfigurationSpace with the specified name
+    cs = ConfigurationSpace(name=name)
+
+    # Add hyperparameters to the ConfigurationSpace
+    for hp_name, hp_obj in space.items():
+        cs.add(hp_obj)
+
+    # Add conditions, if any
+    if conditions:
+        for condition in conditions:
+            cs.add(condition)
+
+    # Add forbidden clauses, if any
+    if forbidden_clauses:
+        for clause in forbidden_clauses:
+            cs.add(clause)
+
+    # Set the default configuration, if provided
+    if default_configuration:
+        cs.default_configuration = default_configuration
+
+    return cs
+
+### Above functions are needed to adapt the Configuration Space during the optimization process. Should this functionality be added to ConfigurationSpace, we can remove these functions.
 
 # def check_subspace_points(
 #     X: np.ndarray,

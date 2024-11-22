@@ -6,9 +6,10 @@ from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-
+from ConfigSpace.conditions import EqualsCondition
+from ConfigSpace.forbidden import ForbiddenEqualsClause
 from smac.utils.configspace import (
-    modify_hyperparameter,
+    modify_hyperparameter, recreate_configspace
 )
 # Test data for parameterized test
 @pytest.mark.parametrize(
@@ -77,6 +78,51 @@ def test_modify_hyperparameter(space, hyperparameter_name, modifications, expect
                 assert list(modified_hp.sequence) == list(value), f"Sequence expected to be {value}, got {modified_hp.sequence}"
             else:
                 assert getattr(modified_hp, key) == value, f"Attribute '{key}' expected to be {value}, got {getattr(modified_hp, key)}"
+
+
+
+def test_recreate_configspace():
+    # Example hyperparameters
+    space = {
+        "learning_rate": UniformFloatHyperparameter(
+            name="learning_rate", lower=0.01, upper=0.1, default_value=0.05
+        ),
+        "optimizer": CategoricalHyperparameter(
+            name="optimizer", choices=["adam", "sgd"], default_value="adam"
+        ),
+    }
+
+    # Example condition
+    conditions = [
+        EqualsCondition(space["learning_rate"], space["optimizer"], "adam")
+    ]
+
+    # Example forbidden clause
+    forbidden_clauses = [
+        ForbiddenEqualsClause(space["optimizer"], "sgd")
+    ]
+
+    # Example default configuration
+    default_configuration = {"learning_rate": 0.05, "optimizer": "adam"}
+
+    # Call the function
+    configspace = recreate_configspace(
+        name="TestConfigSpace",
+        space=space,
+        conditions=conditions,
+        forbidden_clauses=forbidden_clauses,
+        default_configuration=default_configuration,
+    )
+
+    # Assertions
+    assert configspace.name == "TestConfigSpace"
+    assert len(list(space.values())) == len(space)
+    assert configspace["learning_rate"].default_value == 0.05
+    assert configspace["optimizer"].default_value == "adam"
+    assert len(configspace.conditions) == len(conditions)
+    assert len(configspace.forbidden_clauses) == len(forbidden_clauses)
+    assert configspace.get_default_configuration().get("learning_rate") == 0.05
+    assert configspace.get_default_configuration().get("optimizer") == "adam"
 
 # Run the test
 if __name__ == "__main__":
