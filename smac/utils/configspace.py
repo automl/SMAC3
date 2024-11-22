@@ -343,6 +343,20 @@ def recreate_configspace(
 
     return cs
 
+def update_configspace(smac: "AbstractFacade", new_configspace: ConfigurationSpace): # Typehints lead to circular imports
+    """
+    Provided a new Configuration Space, updates the SMAC object and its components.
+
+    Parameters:
+        smac (AbstractFacade): The SMAC object to update.
+        new_configspace (ConfigurationSpace): The new ConfigurationSpace object to set.
+    """
+    smac.scenario.configspace = new_configspace
+    smac._acquisition_maximizer._configspace = new_configspace
+    smac._model._configspace = new_configspace
+    smac._optimizer._configspace = new_configspace
+    smac._intensifier._scenario.configspace = new_configspace
+
 ### Above functions are needed to adapt the Configuration Space during the optimization process. Should this functionality be added to ConfigurationSpace, we can remove these functions.
 
 # def check_subspace_points(
