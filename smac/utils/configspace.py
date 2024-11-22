@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import logging
 from functools import partial
+from typing import Any, Mapping, Sequence, Dict
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
@@ -15,6 +16,7 @@ from ConfigSpace.hyperparameters import (
     NormalIntegerHyperparameter,
     OrdinalHyperparameter,
     UniformFloatHyperparameter,
+    Hyperparameter,
     UniformIntegerHyperparameter,
 )
 from ConfigSpace.util import get_one_exchange_neighbourhood
@@ -180,6 +182,121 @@ def print_config_changes(
 
     msg = "\n".join(lines)
     logger.debug(msg)
+
+def modify_hyperparameter(space:Dict[str,tuple[int, int]
+                | tuple[float, float]
+                | Sequence[Any]
+                | int
+                | float
+                | str
+                | Hyperparameter,
+            ], hyperparameter_name:str, **modifications):
+    """
+    Modifies a specific hyperparameter in the space dictionary of a ConfigurationSpace by applying given modifications.
+
+    Parameters:
+        space (Dict): The `space` dictionary extracted from a ConfigurationSpace.
+        hyperparameter_name (str): The name of the hyperparameter to modify.
+        **modifications: The keyword arguments specifying the modifications (e.g., `lower`, `upper`, etc.).
+
+    Returns:
+        dict: The modified space dictionary.
+    """
+    # Check if the hyperparameter exists in the space dictionary
+    if hyperparameter_name not in space.keys():
+        raise ValueError(f"Hyperparameter '{hyperparameter_name}' not found in the space.")
+
+    # Get the original hyperparameter
+    original_hp = space[hyperparameter_name]
+    hp_class = type(original_hp)
+
+    # Prepare updated attributes
+    new_args = original_hp.__dict__.copy()
+    new_args.update(modifications)
+
+    # Recreate the hyperparameter with updated values
+    if hp_class is CategoricalHyperparameter:
+        updated_hp = CategoricalHyperparameter(
+            name=new_args["name"],
+            choices=new_args["choices"],
+            default_value=new_args.get("default_value", None)
+        )
+    elif hp_class is Constant:
+        updated_hp = Constant(
+            name=new_args["name"],
+            value=new_args["value"]
+        )
+    elif hp_class is OrdinalHyperparameter:
+        updated_hp = OrdinalHyperparameter(
+            name=new_args["name"],
+            sequence=new_args["sequence"],
+            default_value=new_args.get("default_value", None)
+        )
+    elif hp_class is UniformFloatHyperparameter:
+        updated_hp = UniformFloatHyperparameter(
+            name=new_args["name"],
+            lower=new_args["lower"],
+            upper=new_args["upper"],
+            default_value=new_args.get("default_value", None),
+            log=new_args.get("log", False)
+        )
+    elif hp_class is UniformIntegerHyperparameter:
+        updated_hp = UniformIntegerHyperparameter(
+            name=new_args["name"],
+            lower=new_args["lower"],
+            upper=new_args["upper"],
+            default_value=new_args.get("default_value", None),
+            log=new_args.get("log", False)
+        )
+    elif hp_class is NormalFloatHyperparameter:
+        updated_hp = NormalFloatHyperparameter(
+            name=new_args["name"],
+            mu=new_args["mu"],
+            sigma=new_args["sigma"],
+            lower=new_args.get("lower", None),
+            upper=new_args.get("upper", None),
+            default_value=new_args.get("default_value", None),
+            log=new_args.get("log", False)
+        )
+    elif hp_class is NormalIntegerHyperparameter:
+        updated_hp = NormalIntegerHyperparameter(
+            name=new_args["name"],
+            mu=new_args["mu"],
+            sigma=new_args["sigma"],
+            lower=new_args.get("lower", None),
+            upper=new_args.get("upper", None),
+            default_value=new_args.get("default_value", None),
+            log=new_args.get("log", False)
+        )
+    elif hp_class is BetaFloatHyperparameter:
+        updated_hp = BetaFloatHyperparameter(
+            name=new_args["name"],
+            alpha=new_args["alpha"],
+            beta=new_args["beta"],
+            lower=new_args.get("lower", None),
+            upper=new_args.get("upper", None),
+            default_value=new_args.get("default_value", None),
+            log=new_args.get("log", False)
+        )
+    elif hp_class is BetaIntegerHyperparameter:
+        updated_hp = BetaIntegerHyperparameter(
+            name=new_args["name"],
+            alpha=new_args["alpha"],
+            beta=new_args["beta"],
+            lower=new_args.get("lower", None),
+            upper=new_args.get("upper", None),
+            default_value=new_args.get("default_value", None),
+            log=new_args.get("log", False)
+        )
+    else:
+        raise ValueError(f"Unsupported hyperparameter type: {hp_class}")
+
+    # Replace the hyperparameter in the space dictionary
+    del space[hyperparameter_name]
+    space[hyperparameter_name] = updated_hp 
+
+    return space
+
 
 
 # def check_subspace_points(
