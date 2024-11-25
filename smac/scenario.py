@@ -18,7 +18,7 @@ from smac.utils.numpyencoder import NumpyEncoder
 logger = get_logger(__name__)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=False)
 class Scenario:
     """
     The scenario manages environment variables and therefore gives context in which frame the optimization is performed.

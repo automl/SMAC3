@@ -58,7 +58,7 @@ if __name__ == "__main__":
         model.train,
         intensifier=intensifier,
         overwrite=True,
-        acquisition_maximizer=RandomSearch(scenario.configspace, EI()),
+        #acquisition_maximizer=RandomSearch(scenario.configspace, EI()),
     )
 
     # Run for 20 trials, the initial design

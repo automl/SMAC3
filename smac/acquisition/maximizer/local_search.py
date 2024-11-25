@@ -8,10 +8,14 @@ import time
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.exceptions import ForbiddenValueError
-
 from smac.acquisition.function import AbstractAcquisitionFunction
 from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
     AbstractAcquisitionMaximizer,
+)
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    NumericalHyperparameter,
+    OrdinalHyperparameter,
 )
 from smac.utils.configspace import (
     convert_configurations_to_array,
@@ -161,6 +165,9 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             if not isinstance(sampled_points, list):
                 sampled_points = [sampled_points]
         if len(previous_configs) > 0:
+            # TODO adapt this such that only previous configs which reside inside of the configuration space are considered
+            previous_configs = filter_configurations_in_configspace(self._configspace, previous_configs)
+
             init_points = self._get_init_points_from_previous_configs(
                 previous_configs,
                 n_init_points,
@@ -178,7 +185,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         """
         Generate a set of initial points from the previous configurations and possibly additional points.
 
-        The idea is to decouple runhistory from the local search model and replace it with a more general
+    The idea is to decouple runhistory from the local search model and replace it with a more general
         form (list[Configuration]). This is useful to more quickly collect new configurations
         along the iterations, rather than feeding it to the runhistory every time.
 
@@ -454,3 +461,35 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         )
 
         return [(a, i) for a, i in zip(acq_val_candidates, candidates)]
+
+def filter_configurations_in_configspace(configspace: ConfigurationSpace, configurations: list[Configuration]) -> list[Configuration]:
+    """Filter configurations that are not in the configuration space.
+
+    Parameters
+    ----------
+    configspace : ConfigurationSpace
+        Configuration space.
+    configurations : list[Configuration]
+        Configurations to filter.
+
+    Returns
+    -------
+    list[Configuration]
+        Configurations that are in the configuration space.
+    """
+    logger.warning("Filtering configurations that are not in the configuration space is very slow. Find good solution.")
+    # Not easily moved to the AcquisitionFunctionMaximizer, because the runhistory is shared between all objects.
+    for hyperparameter_name, hyperparameter in configspace.items():
+        for i, configuration in reversed(list(enumerate(configurations))):
+            value = configuration[hyperparameter_name]
+
+            if isinstance(hyperparameter, CategoricalHyperparameter):
+                if value not in hyperparameter.choices:
+                    del configurations[i]  # Remove invalid configuration by index
+            elif isinstance(hyperparameter, OrdinalHyperparameter):
+                if value not in hyperparameter.sequence:
+                    del configurations[i]  # Remove invalid configuration by index
+            elif isinstance(hyperparameter, NumericalHyperparameter):
+                if value < hyperparameter.lower or value > hyperparameter.upper:
+                    del configurations[i]  # Remove invalid configuration by index
+    return configurations

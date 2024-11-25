@@ -351,11 +351,18 @@ def update_configspace(smac: "AbstractFacade", new_configspace: ConfigurationSpa
         smac (AbstractFacade): The SMAC object to update.
         new_configspace (ConfigurationSpace): The new ConfigurationSpace object to set.
     """
+    # Update the Configuration Space in SMAC
     smac.scenario.configspace = new_configspace
-    smac._acquisition_maximizer._configspace = new_configspace
     smac._model._configspace = new_configspace
     smac._optimizer._configspace = new_configspace
     smac._intensifier._scenario.configspace = new_configspace
+    smac._acquisition_maximizer._configspace = new_configspace
+
+    from smac.acquisition.maximizer.local_and_random_search import LocalAndSortedRandomSearch
+    if isinstance(smac._acquisition_maximizer, LocalAndSortedRandomSearch):
+        smac._acquisition_maximizer._local_search._configspace = new_configspace
+        smac._acquisition_maximizer._random_search._configspace = new_configspace
+
 
 ### Above functions are needed to adapt the Configuration Space during the optimization process. Should this functionality be added to ConfigurationSpace, we can remove these functions.
 
