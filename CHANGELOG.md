@@ -10,6 +10,7 @@
 ## Improvements
 - Add logger information on handling of stopIteration error (#960)
 - Replace deprecated ConfigSpace methods (#1139)
+- Separated Wallclock time measurements from CPU time measurements and storing them under new 'cpu_time' variable (#????)
 
 ## Dependencies
 - Allow numpy >= 2.x (#1146)

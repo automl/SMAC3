@@ -163,7 +163,7 @@ class DaskParallelRunner(AbstractRunner):
         budget: float | None = None,
         seed: int | None = None,
         **dask_data_to_scatter: dict[str, Any],
-    ) -> tuple[StatusType, float | list[float], float, dict]:  # noqa: D102
+    ) -> tuple[StatusType, float | list[float], float, float, dict]:  # noqa: D102
         return self._single_worker.run(
             config=config, instance=instance, seed=seed, budget=budget, **dask_data_to_scatter
         )

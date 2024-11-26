@@ -17,7 +17,7 @@ def test_success(configspace, make_scenario):
     runner = TargetFunctionScriptRunner(script, scenario, required_arguments=["seed", "instance"])
 
     config = configspace.get_default_configuration()
-    status, cost, runtime, additional_info = runner.run(config, instance=scenario.instances[0], seed=0)
+    status, cost, runtime, cpu_time, additional_info = runner.run(config, instance=scenario.instances[0], seed=0)
 
     assert status == StatusType.SUCCESS
     assert cost == config["x0"]
@@ -30,7 +30,7 @@ def test_success_multi_objective(configspace, make_scenario):
     runner = TargetFunctionScriptRunner(script, scenario, required_arguments=["seed", "instance"])
 
     config = configspace.get_default_configuration()
-    status, cost, runtime, additional_info = runner.run(config, instance=scenario.instances[0], seed=0)
+    status, cost, runtime, cpu_time, additional_info = runner.run(config, instance=scenario.instances[0], seed=0)
 
     assert status == StatusType.SUCCESS
     assert cost == [config["x0"], config["x0"]]
@@ -43,7 +43,7 @@ def test_exit(configspace, make_scenario):
     runner = TargetFunctionScriptRunner(script, scenario, required_arguments=["seed", "instance"])
 
     config = configspace.get_default_configuration()
-    status, cost, runtime, additional_info = runner.run(config, instance=scenario.instances[0], seed=0)
+    status, cost, runtime, cpu_time, additional_info = runner.run(config, instance=scenario.instances[0], seed=0)
 
     assert status == StatusType.CRASHED
     assert "error" in additional_info
@@ -55,7 +55,7 @@ def test_crashed(configspace, make_scenario):
     runner = TargetFunctionScriptRunner(script, scenario, required_arguments=["seed", "instance"])
 
     config = configspace.get_default_configuration()
-    status, cost, runtime, additional_info = runner.run(config, instance=scenario.instances[0], seed=0)
+    status, cost, runtime, cpu_time, additional_info = runner.run(config, instance=scenario.instances[0], seed=0)
 
     assert status == StatusType.CRASHED
     assert cost == np.inf
@@ -67,7 +67,7 @@ def test_python(configspace, make_scenario):
     runner = TargetFunctionScriptRunner(script, scenario, required_arguments=["seed", "instance"])
 
     config = configspace.get_default_configuration()
-    status, cost, runtime, additional_info = runner.run(config, instance=scenario.instances[0], seed=0)
+    status, cost, runtime, cpu_time, additional_info = runner.run(config, instance=scenario.instances[0], seed=0)
 
     assert status == StatusType.SUCCESS
     assert cost == config["x0"]

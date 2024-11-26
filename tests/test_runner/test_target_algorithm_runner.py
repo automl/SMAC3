@@ -148,7 +148,7 @@ def test_call(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     config = runner._scenario.configspace.get_default_configuration()
 
     SEED = 2345
-    status, cost, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)
+    status, cost, _, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)
 
     assert cost == SEED
     assert status == StatusType.SUCCESS
@@ -163,7 +163,7 @@ def test_multi_objective(make_runner: Callable[..., TargetFunctionRunner]) -> No
         config = runner._scenario.configspace.get_default_configuration()
 
         SEED = 2345
-        status, cost, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)
+        status, cost, _, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)
 
         assert isinstance(cost, list)
         assert cost == [SEED, SEED]

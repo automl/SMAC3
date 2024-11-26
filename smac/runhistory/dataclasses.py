@@ -98,6 +98,7 @@ class TrialValue:
     ----------
     cost : float | list[float]
     time : float, defaults to 0.0
+    cpu_time : float, defaults to 0.0
     status : StatusType, defaults to StatusType.SUCCESS
     starttime : float, defaults to 0.0
     endtime : float, defaults to 0.0
@@ -106,6 +107,7 @@ class TrialValue:
 
     cost: float | list[float]
     time: float = 0.0
+    cpu_time: float = 0.0
     status: StatusType = StatusType.SUCCESS
     starttime: float = 0.0
     endtime: float = 0.0
