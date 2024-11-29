@@ -211,7 +211,7 @@ class AbstractRunner(ABC):
         runtime : float
             The time the target function took to run.
         cpu_time : float
-            The CPU time the target function took to run.
+            The time the target function took on hardware to run.
         additional_info : dict
             All further additional trial information.
         """
