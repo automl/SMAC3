@@ -127,7 +127,12 @@ def test_serial_runs(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     _, first_run_value = first
     _, second_run_value = second
     assert int(first_run_value.endtime) <= int(second_run_value.starttime)
-
+    # For these examples, runtime must be larger or equal to cputime
+    assert first_run_value.time >= first_run_value.cpu_time
+    assert second_run_value.time >= second_run_value.cpu_time
+    # And cpu time must be near zero because the target function just sleeps
+    assert first_run_value.cpu_time < 0.001
+    assert second_run_value.cpu_time < 0.001
 
 def test_fail(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     """Test traceback and error end up in the additional info of a failing run"""
