@@ -140,7 +140,7 @@ class SMBO:
 
     @property
     def used_target_function_cputime(self) -> float:
-        """Returns how much cputime the target function spend so far."""
+        """Returns how much time the target function spend on the hardware so far."""
         return self._used_target_function_cputime
 
     def ask(self) -> TrialInfo:

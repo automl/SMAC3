@@ -144,7 +144,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         runtime : float
             The time the target function took to run.
         cpu_time : float
-            The CPU time the target function took to run.
+            The time the target function took on the hardware to run.
         additional_info : dict
             All further additional trial information.
         """

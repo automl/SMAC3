@@ -193,7 +193,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         time : float
             How much time was needed to evaluate the trial.
         cpu_time : float
-            How much CPU time was needed to evaluate the trial.
+            How much time was needed on the hardware to evaluate the trial.
         status : StatusType, defaults to StatusType.SUCCESS
             The status of the trial.
         instance : str | None, defaults to none
