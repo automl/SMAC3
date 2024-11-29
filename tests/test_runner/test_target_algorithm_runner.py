@@ -127,7 +127,12 @@ def test_serial_runs(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     _, first_run_value = first
     _, second_run_value = second
     assert int(first_run_value.endtime) <= int(second_run_value.starttime)
-
+    # For these examples, runtime must be larger or equal to cputime
+    assert first_run_value.time >= first_run_value.cpu_time
+    assert second_run_value.time >= second_run_value.cpu_time
+    # And cpu time must be near zero because the target function just sleeps
+    assert first_run_value.cpu_time < 0.001
+    assert second_run_value.cpu_time < 0.001
 
 def test_fail(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     """Test traceback and error end up in the additional info of a failing run"""
@@ -148,7 +153,7 @@ def test_call(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     config = runner._scenario.configspace.get_default_configuration()
 
     SEED = 2345
-    status, cost, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)
+    status, cost, _, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)
 
     assert cost == SEED
     assert status == StatusType.SUCCESS
@@ -163,7 +168,7 @@ def test_multi_objective(make_runner: Callable[..., TargetFunctionRunner]) -> No
         config = runner._scenario.configspace.get_default_configuration()
 
         SEED = 2345
-        status, cost, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)
+        status, cost, _, _, _ = runner.run(config=config, instance=None, seed=SEED, budget=None)
 
         assert isinstance(cost, list)
         assert cost == [SEED, SEED]
