@@ -100,6 +100,7 @@ class AbstractIntensifier:
         return {
             "name": self.__class__.__name__,
             "max_incumbents": self._max_incumbents,
+            "max_config_calls": self._max_config_calls,
             "seed": self._seed,
         }
 
@@ -594,7 +595,7 @@ class AbstractIntensifier:
                     self._remove_rejected_config(config_id)
                     logger.info(
                         f"Added config {config_hash} and rejected config {removed_incumbent_hash} as incumbent because "
-                        f"it is not better than the incumbents on {len(config_isb_keys)} instances:"
+                        f"it is not better than the incumbents on {len(config_isb_keys)} instances: "
                     )
                     print_config_changes(rh.get_config(removed_incumbent_id), config, logger=logger)
         elif len(previous_incumbents) < len(new_incumbents):

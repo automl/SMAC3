@@ -1,6 +1,5 @@
-"""
-Ask-and-Tell
-^^^^^^^^^^^^
+"""Ask-and-Tell
+# Flags: doc-Runnable
 
 This examples show how to use the Ask-and-Tell interface.
 """

@@ -1,31 +1,29 @@
-"""
-Call Target Function From Script
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Call Target Function From Script
+# Flags: doc-Runnable
 
 This simple example shows how to call a script with the following content:
 
-.. code-block:: bash
+```bash
+#!/bin/bash
 
-    #!/bin/bash
+# Set arguments first
+for argument in "$@"
+do
+    key=$(echo $argument | cut -f1 -d=)
+    value=$(echo $argument | cut -f2 -d=)  
 
-    # Set arguments first
-    for argument in "$@"
-    do
-        key=$(echo $argument | cut -f1 -d=)
-        value=$(echo $argument | cut -f2 -d=)  
+    if [[ $key == *"--"* ]]; then
+        v="${key/--/}"
+        declare $v="${value}"
+    fi
+done
 
-        if [[ $key == *"--"* ]]; then
-            v="${key/--/}"
-            declare $v="${value}"
-        fi
-    done
+# We simply set the cost to our parameter
+cost=$x0
 
-    # We simply set the cost to our parameter
-    cost=$x0
-
-    # Return everything
-    echo "cost=$cost"
-
+# Return everything
+echo "cost=$cost"
+```
 """
 
 from ConfigSpace import ConfigurationSpace

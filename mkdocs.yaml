@@ -1,0 +1,225 @@
+# This project uses mkdocs to generate the documentation.
+# Specifically it uses the mkdocs-material theme, which provides a whole
+# host of nice features and customization
+#
+# mkdocs: https://www.mkdocs.org/getting-started/#getting-started-with-mkdocs
+# mkdocs-material: https://squidfunk.github.io/mkdocs-material/
+#
+# Please refer to these links for more information on how to use mkdocs
+#
+# For serving the docs locally, you can take a look at the `justfile` at
+# the root of this repository, it contains a few commands for generating the docs
+# with different levels of execution.
+#
+# Please refer to individual sections for any additional notes
+site_name: "SMAC3"
+repo_url: https://github.com/automl/SMAC3/
+repo_name: automl/SMAC3
+
+site_dir: docs/site
+
+theme:
+  name: material
+  logo: images/logo.png
+  favicon: images/logo.png
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - navigation.footer
+    - navigation.sections
+    - toc.follow
+    - toc.integrate
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - header.autohide
+    - search.suggest
+    - search.highlight
+    - search.share
+  font:
+    text: Roboto
+    code: Roboto Mono
+  palette:
+    - scheme: slate
+      media: "(prefers-color-scheme: dark)"
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/eye-outline
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - scheme: default
+      media: "(prefers-color-scheme: light)"
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/eye
+        name: Switch to dark mode
+
+
+# The `mike` versioning provider
+# https://github.com/jimporter/mike
+#
+# This is what allows us to create versioned docs in the github cli
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/automl
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/automl_org
+
+# We do have some extra custom css
+# If for whatever reason you think this is breaking something,
+# please feel free to remove it.
+extra_css:
+  - stylesheets/custom.css
+
+watch:
+  - smac
+  - docs
+  - examples
+  - CONTRIBUTING.md
+
+markdown_extensions:
+  - admonition
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: "#"
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.magiclink:
+      hide_protocol: true
+      repo_url_shortener: true
+      repo_url_shorthand: true
+      user: automl
+      repo: SMAC3
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences:
+      custom_fences:
+      - name: mermaid
+        class: mermaid
+        format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+# These are files that are run when serving the docs.
+hooks:
+  # This prevents logging messages from polluting the doc build
+  - docs/hooks/cleanup_log_output.py
+  # This prevents markdown_exec (plugin) from executing code blocks
+  # dependant on environment variables. These env variables are
+  # automatically set with the `justfile` commands to build docs
+  - docs/hooks/disable_markdown_exec.py
+  # This hook simply prints the page being rendered for an easier time debugging
+  # any issues with code in docs
+  - docs/hooks/debug_which_page_is_being_rendered.py
+
+plugins:
+  - search
+  - autorefs
+  - glightbox
+  - offline:
+      enabled: !ENV [SMAC_DOCS_OFFLINE, false]
+  - markdown-exec
+  - mike:
+      version_selector: true
+      css_dir: css
+      javascript_dir: js
+      canonical_version: latest
+  - gen-files:
+      scripts:
+        - docs/api_generator.py
+        - docs/example_runner.py
+  - literate-nav:
+        nav_file: SUMMARY.md
+  - mkdocstrings:
+      default_handler: python
+      enable_inventory: true
+      handlers:
+        python:
+          paths: [smac]
+          # Extra objects which allow for linking to external docs
+          import:
+            - 'https://docs.python.org/3/objects.inv'
+            - 'https://numpy.org/doc/stable/objects.inv'
+            - 'https://pandas.pydata.org/docs/objects.inv'
+            - 'https://optuna.readthedocs.io/en/stable/objects.inv'
+            - 'https://scikit-learn.org/stable/objects.inv'
+            - 'https://pytorch.org/docs/stable/objects.inv'
+            - 'https://jobqueue.dask.org/en/latest/objects.inv'
+          # Please do not try to change these without having
+          # looked at all of the documentation and seeing if it
+          # causes the API docs to look weird anywhere.
+          options:  # https://mkdocstrings.github.io/python/usage/
+            docstring_section_style: spacy
+            docstring_options:
+              ignore_init_summary: true
+              trim_doctest_flags: true
+              returns_multiple_items: false
+            show_docstring_attributes: true
+            show_docstring_description: true
+            show_root_heading: true
+            show_root_toc_entry: true
+            show_object_full_path: false
+            show_root_members_full_path: false
+            signature_crossrefs: true
+            merge_init_into_class: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            docstring_style: google
+            inherited_members: true
+            show_if_no_docstring: false
+            show_bases: true
+            show_source: true
+            members_order: "alphabetical"
+            group_by_category: true
+            show_signature: true
+            separate_signature: true
+            show_signature_annotations: true
+            filters:
+              - "!^_[^_]"
+
+nav:
+  - Home: "index.md"
+  - Installation: "1_installation.md"
+  - Package Overview: "2_package_overview.md"
+  - Getting Started: "3_getting_started.md"
+  - Advanced Usage:
+    - "advanced_usage/1_components.md"
+    - "advanced_usage/2_multi_fidelity.md"
+    - "advanced_usage/3_multi_objective.md"
+    - "advanced_usage/4_instances.md"
+    - "advanced_usage/5_ask_and_tell.md"
+    - "advanced_usage/6_commandline.md"
+    - "advanced_usage/7_stopping_criteria.md"
+    - "advanced_usage/8_logging.md"
+    - "advanced_usage/9_parallelism.md"
+    - "advanced_usage/10_continue.md"
+    - "advanced_usage/11_reproducibility.md"
+    - "advanced_usage/12_optimizations.md"
+  # Auto generated with docs/examples_runner.py
+  - Examples: "examples/"
+  # Auto generated with docs/api_generator.py
+  - API: "api/"
+  - Info & FAQ:
+    - "6_references.md"
+    - "7_glossary.md"
+    - "8_faq.md"
+  # - Contributing:
+  #   - "contributing/index.md"
+  #   - "contributing/contributing-a-benchmark.md"
+  #   - "contributing/contributing-an-optimizer.md"
+  # - What's New?: "changelog.md"
+
