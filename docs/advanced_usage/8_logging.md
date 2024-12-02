@@ -116,7 +116,7 @@ The runhistory.json in split into four parts. `stats`, `data`, `configs`, and `c
   ]
 ```
 
-`configs` contains a human readable dictionary of configurations. Note that this list starts by one, therefore the 0 entry from above is mapped to 1.
+`configs` is a human-readable dictionary of configurations, where the keys are the one-based `config_id` It is important to note that in `runhistory.json`, the indexing is zero-based.
 ```json
   "configs": {
     "1": {
@@ -124,7 +124,7 @@ The runhistory.json in split into four parts. `stats`, `data`, `configs`, and `c
     },
 ```
 
-Lastly, `config_origins` contains the origin of a configuration. 
+Lastly, `config_origins` specifies the source of a configuration, indicating whether it stems from the initial design or results from the maximization of an acquisition function.
 ```json
   "config_origins": {
     "1": "Initial Design: Sobol",
