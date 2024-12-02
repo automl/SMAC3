@@ -116,7 +116,7 @@ The runhistory.json in split into four parts. `stats`, `data`, `configs`, and `c
   ]
 ```
 
-`configs` is a human-readable dictionary of configurations, where the keys are the one-based `config_id` It is important to note that in `runhistory.json`, the indexing is zero-based.
+`configs` is a human-readable dictionary of configurations, where the keys are the one-based `config_id`. It is important to note that in `runhistory.json`, the indexing is zero-based.
 ```json
   "configs": {
     "1": {
