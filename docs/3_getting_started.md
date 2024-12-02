@@ -93,7 +93,7 @@ which is easy to use and understand and without the need of deep diving into the
 invited to change the components to their specific hyperparameter optimization needs. The following
 table (horizontally scrollable) shows you what is supported and reveals the default [components][components]:
 
-| | [Black-Box][smac.facade.blackbox_facade] | [Hyperparameter Optimization][smac.facade.hyperparameter_optimization_facade] | [Multi-Fidelity][smac.facade.multi_fidelity_facade] | [Algorithm Configuration][smac.facade.algorithm_configuration_facade] | [Random][smac.facade.random_facade]           | [Hyperband][smac.facade.hyperband_facade]     |
+| | [Black-Box][smac.facade.blackbox_facade] | [Hyperparameter Optimization][smac.facade.hyperparameter_optimization_facade] | [Multi-Fidelity][smac.facade.multi_fidelity_facade] | [Algorithm Configuration][smac.facade.algorithm_configuration_facade] | [Random][smac.facade.random_facade] | [Hyperband][smac.facade.hyperband_facade] |
 | --- | --- | --- | --- | --- | --- | --- |
 | #Parameters | low | low/medium/high | low/medium/high | low/medium/high | low/medium/high | low/medium/high |
 | Supports Instances | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
