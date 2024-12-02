@@ -84,7 +84,8 @@ scenario = Scenario(
 )
 ```
 
-Note that if no experiment_name is given, a hash of the experiment is generated. Running the same experiment again at a later time will result in exactly the same hash. This is important, because the optimization will warmstart on the preexisting evaluations, if not otherwise specified in the [Facade][smac.facade.abstract_facade].
+!!! note
+    If no `name` is given, a hash of the experiment is used. Running the same experiment again at a later time will result in exactly the same hash. This is important, because the optimization will warmstart on the preexisting evaluations, if not otherwise specified in the [Facade][smac.facade.abstract_facade].
 
 
 ## Facade
