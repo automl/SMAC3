@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Tuple
+
 from ConfigSpace import Configuration
 
 import smac
@@ -53,7 +55,9 @@ class Callback:
         """Called after the intensifier is asked for the next trial."""
         pass
 
-    def on_tell_start(self, smbo: smac.main.smbo.SMBO, info: TrialInfo, value: TrialValue) -> bool | None:
+    def on_tell_start(
+        self, smbo: smac.main.smbo.SMBO, info: TrialInfo, value: TrialValue
+    ) -> (Tuple[bool, TrialInfo, TrialValue] | None):
         """Called before the stats are updated and the trial is added to the runhistory. Optionally, returns false
         to gracefully stop the optimization.
         """

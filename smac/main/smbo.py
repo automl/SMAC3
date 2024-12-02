@@ -184,7 +184,7 @@ class SMBO:
             info.config.origin = "Custom"
 
         for callback in self._callbacks:
-            response = callback.on_tell_start(self, info, value)
+            response, info, value = callback.on_tell_start(self, info, value)
 
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
