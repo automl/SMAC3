@@ -105,9 +105,9 @@ class AbstractRunner(ABC):
             Contains information about the status/performance of config.
         """
         start = time.time()
-
+        cpu_time = time.process_time()
         try:
-            status, cost, runtime, additional_info = self.run(
+            status, cost, runtime, cpu_time, additional_info = self.run(
                 config=trial_info.config,
                 instance=trial_info.instance,
                 budget=trial_info.budget,
@@ -117,6 +117,7 @@ class AbstractRunner(ABC):
         except Exception as e:
             status = StatusType.CRASHED
             cost = self._crash_cost
+            cpu_time = time.process_time() - cpu_time
             runtime = time.time() - start
 
             # Add context information to the error message
@@ -148,6 +149,7 @@ class AbstractRunner(ABC):
             status=status,
             cost=cost,
             time=runtime,
+            cpu_time=cpu_time,
             additional_info=additional_info,
             starttime=start,
             endtime=end,
@@ -185,7 +187,7 @@ class AbstractRunner(ABC):
         instance: str | None = None,
         budget: float | None = None,
         seed: int | None = None,
-    ) -> tuple[StatusType, float | list[float], float, dict]:
+    ) -> tuple[StatusType, float | list[float], float, float, dict]:
         """Runs the target function with a configuration on a single instance-budget-seed
         combination (aka trial).
 
@@ -208,6 +210,8 @@ class AbstractRunner(ABC):
             Resulting cost(s) of the trial.
         runtime : float
             The time the target function took to run.
+        cpu_time : float
+            The time the target function took on hardware to run.
         additional_info : dict
             All further additional trial information.
         """

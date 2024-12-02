@@ -173,6 +173,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         config: Configuration,
         cost: int | float | list[int | float],
         time: float = 0.0,
+        cpu_time: float = 0.0,
         status: StatusType = StatusType.SUCCESS,
         instance: str | None = None,
         seed: int | None = None,
@@ -191,6 +192,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             Cost of the evaluated trial. Might be a list in case of multi-objective.
         time : float
             How much time was needed to evaluate the trial.
+        cpu_time : float
+            How much time was needed on the hardware to evaluate the trial.
         status : StatusType, defaults to StatusType.SUCCESS
             The status of the trial.
         instance : str | None, defaults to none
@@ -254,6 +257,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         v = TrialValue(
             cost=c,
             time=time,
+            cpu_time=cpu_time,
             status=status,
             starttime=starttime,
             endtime=endtime,
@@ -269,6 +273,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             ("budget", budget),
             ("cost", c),
             ("time", time),
+            ("cpu_time", cpu_time),
             ("status", status),
             ("starttime", starttime),
             ("endtime", endtime),
@@ -310,6 +315,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             config=info.config,
             cost=value.cost,
             time=value.time,
+            cpu_time=value.cpu_time,
             status=value.status,
             instance=info.instance,
             seed=info.seed,
@@ -331,6 +337,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             config=trial.config,
             cost=float(MAXINT),
             time=0.0,
+            cpu_time=0.0,
             status=StatusType.RUNNING,
             instance=trial.instance,
             seed=trial.seed,
@@ -771,6 +778,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                     float(k.budget) if k.budget is not None else None,
                     v.cost,
                     v.time,
+                    v.cpu_time,
                     v.status,
                     v.starttime,
                     v.endtime,
@@ -848,6 +856,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self._n_id = len(self._config_ids)
 
         # Important to use add method to use all data structure correctly
+        # NOTE: These hardcoded indices can easily lead to trouble
         for entry in data["data"]:
             # Set n_objectives first
             if self._n_objectives == -1:
@@ -866,13 +875,14 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 config=self._ids_config[int(entry[0])],
                 cost=cost,
                 time=float(entry[5]),
-                status=StatusType(entry[6]),
+                cpu_time=float(entry[6]),
+                status=StatusType(entry[7]),
                 instance=entry[1],
                 seed=entry[2],
                 budget=entry[3],
-                starttime=entry[7],
-                endtime=entry[8],
-                additional_info=entry[9],
+                starttime=entry[8],
+                endtime=entry[9],
+                additional_info=entry[10],
             )
 
         # Although adding trials should give us the same stats, the trajectory might be different
@@ -916,6 +926,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 config=config,
                 cost=value.cost,
                 time=value.time,
+                cpu_time=value.cpu_time,
                 status=value.status,
                 instance=key.instance,
                 starttime=value.starttime,

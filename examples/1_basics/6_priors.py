@@ -1,6 +1,5 @@
-"""
-User Priors over the Optimum
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""User Priors over the Optimum
+# Flags: doc-Runnable
 
 Example for optimizing a Multi-Layer Perceptron (MLP) setting priors over the optimum on the
 hyperparameters. These priors are derived from user knowledge (from previous runs on similar

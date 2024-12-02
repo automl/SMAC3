@@ -32,7 +32,7 @@ jobs:
         echo "$(<recent_issues.md) <br />" >> mail.html
     - name: Send mail
       id: mail
-      uses: dawidd6/action-send-mail@v3
+      uses: dawidd6/action-send-mail@v4
       with:
         server_address: ${{secrets.MAIL_SERVER_ADDRESS}}
         server_port: ${{secrets.MAIL_SERVER_PORT}}
