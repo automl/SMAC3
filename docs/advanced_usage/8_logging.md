@@ -87,7 +87,7 @@ The optimization process is portrayed in `optimization.json` with the following 
 ``` 
 ### runhistory.json
 The runhistory.json in split into four parts. `stats`, `data`, `configs`, and `config_origins`.
-`stats` contains overall broad stats on the different evaluated configruations:
+`stats` contains overall broad stats on the different evaluated configurations:
 ```json
   "stats": {
     "submitted": 73,
@@ -116,7 +116,7 @@ The runhistory.json in split into four parts. `stats`, `data`, `configs`, and `c
   ]
 ```
 
-`configs` contians a human readable dictionary of configurations. Note that this list starts by one, therefore the 0 entry from above is mapped to 1.
+`configs` contains a human readable dictionary of configurations. Note that this list starts by one, therefore the 0 entry from above is mapped to 1.
 ```json
   "configs": {
     "1": {
