@@ -75,6 +75,7 @@ from smac import Scenario
 
 scenario = Scenario(
     configspace=cs,
+    name="experiment_name",
     output_directory=Path("your_output_directory")
     walltime_limit=120,  # Limit to two minutes
     n_trials=500,  # Evaluated max 500 trials
@@ -83,8 +84,14 @@ scenario = Scenario(
 )
 ```
 
+!!! note
+    If no `name` is given, a hash of the experiment is used. Running the same experiment again at a later time will result in exactly the same hash. This is important, because the optimization will warmstart on the preexisting evaluations, if not otherwise specified in the [Facade][smac.facade.abstract_facade].
+
 
 ## Facade
+
+!!! warn
+    By default Facades will try to warmstart on preexisting logs. This behavior can be specified using the `overwrite` parameter.
 
 A [facade][smac.facade.abstract_facade] is the entry point to SMAC, which constructs a default optimization 
 pipeline for you. SMAC offers various facades, which satisfy many common use cases and are crucial to
