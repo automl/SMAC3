@@ -29,7 +29,7 @@ The table shows you the specific levels:
 
 ## Standard Logging Files
 
-By default, SMAC generates several files to document the optimization process. These files are stored in the directory structure ./output_directory/name/seed, where name is replaced by a hash if no name is explicitly provided. This behavior can be customized through the [Scenario][smac.scenario] configuration, as shown in the example below:
+By default, SMAC generates several files to document the optimization process. These files are stored in the directory structure `./output_directory/name/seed`, where name is replaced by a hash if no name is explicitly provided. This behavior can be customized through the [Scenario][smac.scenario] configuration, as shown in the example below:
 ```python
 Scenario(
     configspace = some_configspace,
@@ -38,7 +38,7 @@ Scenario(
     ...
 )
 ```
-Notably, if an output already exists at ./some_directory/experiment_name/seed, the behavior is determined by the overwrite parameter in the [facade's][smac/facade/abstract_facade] settings. This parameter specifies whether to continue the previous run (default) or start a new run.
+Notably, if an output already exists at `./some_directory/experiment_name/seed`, the behavior is determined by the overwrite parameter in the [facade's][smac/facade/abstract_facade] settings. This parameter specifies whether to continue the previous run (default) or start a new run.
 
 The output is split into four different log files, and a copy of the utilized [Configuration Space of the ConfigSpace library](https://automl.github.io/ConfigSpace/latest/).
 
@@ -133,7 +133,7 @@ Lastly, `config_origins` contains the origin of a configuration.
 ```
 
 ### scenario.json
-The ´scenario.json´ file contains the state of the scenario.
+The ´scenario.json´ file contains the overall state of the [Scenario][smac.scenario] logged to a json file.
 
 ## Custom File
 
