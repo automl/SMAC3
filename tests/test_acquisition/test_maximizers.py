@@ -351,6 +351,7 @@ def test_sorted_random_search_categorical(configspace_categorical, acquisition_f
 
     values = rs._maximize(start_points, 1, _sorted=True)
 
+
 # --------------------------------------------------------------
 # TestLocalAndRandomSearch
 # --------------------------------------------------------------

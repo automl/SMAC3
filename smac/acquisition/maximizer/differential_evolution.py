@@ -4,7 +4,9 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from scipy.optimize._differentialevolution import DifferentialEvolutionSolver
 
-from smac.acquisition.function.abstract_acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition.function.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
 from smac.acquisition.maximizer import AbstractAcquisitionMaximizer
 from smac.utils.configspace import transform_continuous_designs
 
@@ -26,7 +28,7 @@ class DifferentialEvolution(AbstractAcquisitionMaximizer):
     [1] Storn, R and Price, K, Differential Evolution - a Simple and Efficient Heuristic for Global
      Optimization over Continuous Spaces, Journal of Global Optimization, 1997, 11, 341 - 359.
 
-     Parameters
+    Parameters
     ----------
     configspace : ConfigurationSpace
     acquisition_function : AbstractAcquisitionFunction
@@ -44,16 +46,19 @@ class DifferentialEvolution(AbstractAcquisitionMaximizer):
         The recombination constant.
     seed : int, defaults to 0
     """
-    def __init__(self, 
-                 configspace: ConfigurationSpace, 
-                 acquisition_function: AbstractAcquisitionFunction | None = None, 
-                 max_iter: int = 1000,
-                 challengers: int = 50000, 
-                 strategy: str = "best1bin",
-                 polish: bool = True,
-                 mutation: tuple[float, float] = (0.5, 1.0),
-                 recombination: float =0.7,
-                 seed: int = 0):
+
+    def __init__(
+        self,
+        configspace: ConfigurationSpace,
+        acquisition_function: AbstractAcquisitionFunction | None = None,
+        max_iter: int = 1000,
+        challengers: int = 50000,
+        strategy: str = "best1bin",
+        polish: bool = True,
+        mutation: tuple[float, float] = (0.5, 1.0),
+        recombination: float = 0.7,
+        seed: int = 0,
+    ):
         super().__init__(configspace, acquisition_function, challengers, seed)
         # raise NotImplementedError("DifferentialEvolution is not yet implemented.")
         self.max_iter = max_iter
@@ -74,12 +79,18 @@ class DifferentialEvolution(AbstractAcquisitionMaximizer):
         def func(x: np.ndarray) -> np.ndarray:
             assert self._acquisition_function is not None
             if len(x.shape) == 1:
-                return -self._acquisition_function([transform_continuous_designs(
-                 design=np.expand_dims(x, axis=0), origin="Diffrential Evolution", configspace=self._configspace
-                 )[0]])
-            return -self._acquisition_function(transform_continuous_designs(
-                design=x.T, origin="Diffrential Evolution", configspace=self._configspace
-                ))
+                return -self._acquisition_function(
+                    [
+                        transform_continuous_designs(
+                            design=np.expand_dims(x, axis=0),
+                            origin="Diffrential Evolution",
+                            configspace=self._configspace,
+                        )[0]
+                    ]
+                )
+            return -self._acquisition_function(
+                transform_continuous_designs(design=x.T, origin="Diffrential Evolution", configspace=self._configspace)
+            )
 
         ds = DifferentialEvolutionSolver(
             func,
@@ -97,14 +108,16 @@ class DifferentialEvolution(AbstractAcquisitionMaximizer):
             disp=False,
             init="latinhypercube",
             atol=0,
-            vectorized=True
+            vectorized=True,
         )
 
         _ = ds.solve()
         for pop, val in zip(ds.population, ds.population_energies):
             rc = transform_continuous_designs(
-                design=np.expand_dims(pop, axis=0), origin="Acquisition Function Maximizer: Differential Evolution", configspace=self._configspace
-                )[0]
+                design=np.expand_dims(pop, axis=0),
+                origin="Acquisition Function Maximizer: Differential Evolution",
+                configspace=self._configspace,
+            )[0]
             configs.append((-val, rc))
 
         configs.sort(key=lambda t: t[0])
