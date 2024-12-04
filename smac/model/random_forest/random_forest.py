@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TYPE_CHECKING
+from threading import Thread, Condition, Event, Lock
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace
@@ -11,8 +12,66 @@ from pyrfr.regression import default_data_container as DataContainer
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
 from smac.model.random_forest import AbstractRandomForest
 
+if TYPE_CHECKING:
+    from pyrfr.regression import forest_opts as ForestOpts
+
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
+
+class RFTrainer(Thread):
+    def __init__(self):
+        self._model: BinaryForest | None = None
+        # we could use a RWLockFair from https://pypi.org/project/readerwriterlock/, but it seems to be a bit of an
+        # overkill since critical section are rather short
+        self.model_lock = Lock()
+        self.model_available = Event()
+
+        self.data = None
+        self.opts = None
+        self.data_cv = Condition()
+
+        super().__init__(daemon=True)
+        self.start()
+
+    @property
+    def model(self):
+        self.model_available.wait()
+        with self.model_lock:
+            return self._model
+
+    def submit_for_training(self, data: DataContainer, opts: ForestOpts):
+        # use condition variable to wake up the trainer thread if it's sleeping
+        with self.data_cv:
+            assert data is not None
+            # overwrite with latest training data
+            self.data = data
+            self.opts = opts
+            self.data_cv.notify()
+
+    def run(self) -> None:
+        while True:
+            # sleep until new data is submitted for training
+            with self.data_cv:
+                while self.data is None:
+                    self.data_cv.wait()
+                data = self.data
+                self.data = None
+
+            # here we could (conditionally) call self.model_available.clear() in order to make _some_ worker threads
+            # wait for training to finish before receiving a new configuration to try, depending on CPU load; we might
+            # have to replace the Event by a Condition
+
+            _rf = regression.binary_rss_forest()
+            _rf.options = self.opts
+
+            _rf.fit(data, rng=self._rng)
+
+            with self.model_lock:
+                self._model = _rf
+
+            if not self.model_available.is_set():
+                self.model_available.set()
 
 
 class RandomForest(AbstractRandomForest):
@@ -85,7 +144,7 @@ class RandomForest(AbstractRandomForest):
         self._rf_opts.tree_opts.epsilon_purity = eps_purity
         self._rf_opts.tree_opts.max_num_nodes = max_nodes
         self._rf_opts.compute_law_of_total_variance = False
-        self._rf: BinaryForest | None = None
+        self._rf = RFTrainer()
         self._log_y = log_y
 
         # Case to `int` incase we get an `np.integer` type
@@ -142,16 +201,18 @@ class RandomForest(AbstractRandomForest):
         # self.X = X
         # self.y = y.flatten()
 
+        data = self._init_data_container(X, y)
+
         if self._n_points_per_tree <= 0:
             self._rf_opts.num_data_points_per_tree = X.shape[0]
         else:
             self._rf_opts.num_data_points_per_tree = self._n_points_per_tree
 
-        self._rf = regression.binary_rss_forest()
-        self._rf.options = self._rf_opts
+        self._rf.submit_for_training(data, self._rf_opts)
 
-        data = self._init_data_container(X, y)
-        self._rf.fit(data, rng=self._rng)
+        # call this to make sure that there exists a trained model before returning (actually, not sure this is
+        # required, since we check within predict() anyway)
+        # _ = self._rf.model
 
         return self
 
@@ -198,7 +259,9 @@ class RandomForest(AbstractRandomForest):
         if covariance_type != "diagonal":
             raise ValueError("`covariance_type` can only take `diagonal` for this model.")
 
-        assert self._rf is not None
+        rf = self._rf.model
+
+        assert rf is not None
         X = self._impute_inactive(X)
 
         if self._log_y:
@@ -207,7 +270,7 @@ class RandomForest(AbstractRandomForest):
 
             # Gather data in a list of 2d arrays and get statistics about the required size of the 3d array
             for row_X in X:
-                preds_per_tree = self._rf.all_leaf_values(row_X)
+                preds_per_tree = rf.all_leaf_values(row_X)
                 all_preds.append(preds_per_tree)
                 max_num_leaf_data = max(map(len, preds_per_tree))
                 third_dimension = max(max_num_leaf_data, third_dimension)
@@ -227,7 +290,7 @@ class RandomForest(AbstractRandomForest):
         else:
             means, vars_ = [], []
             for row_X in X:
-                mean_, var = self._rf.predict_mean_var(row_X)
+                mean_, var = rf.predict_mean_var(row_X)
                 means.append(mean_)
                 vars_.append(var)
 
@@ -273,11 +336,12 @@ class RandomForest(AbstractRandomForest):
         if X.shape[1] != len(self._bounds):
             raise ValueError("Rows in X should have %d entries but have %d!" % (len(self._bounds), X.shape[1]))
 
-        assert self._rf is not None
+        rf = self._rf.model
+        assert rf is not None
         X = self._impute_inactive(X)
 
         X_feat = list(self._instance_features.values())
-        dat_ = self._rf.predict_marginalized_over_instances_batch(X, X_feat, self._log_y)
+        dat_ = rf.predict_marginalized_over_instances_batch(X, X_feat, self._log_y)
         dat_ = np.array(dat_)
 
         # 3. compute statistics across trees

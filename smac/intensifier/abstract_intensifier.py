@@ -62,7 +62,7 @@ class AbstractIntensifier:
     ):
         self._scenario = scenario
         self._config_selector: ConfigSelector | None = None
-        self._config_generator: Iterator[ConfigSelector] | None = None
+        self._config_generator: Iterator[Configuration] | None = None
         self._runhistory: RunHistory | None = None
 
         if seed is None:
