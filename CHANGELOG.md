@@ -15,6 +15,9 @@
 ## Dependencies
 - Allow numpy >= 2.x (#1146)
 
+## Bugfixes
+- Fix bug in differential evolution acquisition maximizer in case the search space contains categorical hyperparameters (#1150)
+
 # Examples
 - Add warmstarting example (#1120)
 
