@@ -6,15 +6,7 @@ from typing import Any
 from collections import OrderedDict
 
 import numpy as np
-from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
-from ConfigSpace.hyperparameters import (
-    CategoricalHyperparameter,
-    Constant,
-    IntegerHyperparameter,
-    NumericalHyperparameter,
-    OrdinalHyperparameter,
-)
-from ConfigSpace.util import ForbiddenValueError, deactivate_inactive_hyperparameters
+from ConfigSpace.configuration_space import Configuration
 
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
