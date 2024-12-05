@@ -11,7 +11,6 @@ from scipy.stats.qmc import Sobol
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.utils.configspace import transform_continuous_designs
 
-
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
@@ -45,6 +44,4 @@ class SobolInitialDesign(AbstractInitialDesign):
             warnings.simplefilter("ignore")
             sobol = sobol_gen.random(self._n_configs)
 
-        return transform_continuous_designs(
-            design=sobol, origin="Initial Design: Sobol", configspace=self._configspace
-        )
+        return transform_continuous_designs(design=sobol, origin="Initial Design: Sobol", configspace=self._configspace)
