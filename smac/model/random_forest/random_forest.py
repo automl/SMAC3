@@ -1,9 +1,14 @@
 from __future__ import annotations
 
-from typing import Any, TYPE_CHECKING
-from threading import Thread, Condition, Event, Lock
+from typing import Any, Optional, TYPE_CHECKING
+from enum import IntEnum, unique, auto
+
+import math
+from multiprocessing import Process, Queue, Lock, shared_memory
+from contextlib import contextmanager
 
 import numpy as np
+import numpy.typing as npt
 from ConfigSpace import ConfigurationSpace
 from pyrfr import regression
 from pyrfr.regression import binary_rss_forest as BinaryForest
@@ -19,25 +24,156 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class RFTrainer(Thread):
+# make it IntEnum for easier serialization
+@unique
+class DataCommand(IntEnum):
+    RESIZE = auto()  # trainer proc doesn't have to reinit shared mem, just read more lines from the buffer
+    GROW = auto()  # trainer proc has to reint shared mem bc it has been reallocated
+    SHUTDOWN = auto()  # join thread
+
+
+def dtypes_are_equal(dtype1: np.dtype, dtype2: np.dtype) -> bool:
+    return np.issubdtype(dtype2, dtype1) and np.issubdtype(dtype1, dtype2)
+
+
+@contextmanager
+def single_read_shared_mem(name: str):
+    shm = shared_memory.SharedMemory(name)
+    try:
+        yield shm
+    finally:
+        shm.close()
+
+
+class GrowingSharedArrayReaderView:
+    basename_X: str = 'X'
+    basename_y: str = 'y'
+
+    def __init__(self, lock: Lock):
+        self.lock = lock
+        self.shm_X: Optional[shared_memory.SharedMemory] = None
+        self.shm_y: Optional[shared_memory.SharedMemory] = None
+
+    def __del__(self):
+        if self.shm_X is not None:
+            self.shm_X.close()
+        if self.shm_y is not None:
+            self.shm_y.close()
+
+    @property
+    def capacity(self) -> Optional[int]:
+        if self.shm_y is None:
+            return None
+        assert self.shm_y.size % np.float64.itemsize == 0
+        return self.shm_y.size / np.float64.itemsize
+
+    @property
+    def row_size(self) -> Optional[int]:
+        if self.shm_X is None:
+            return None
+        if self.shm_X.size == 0:
+            assert self.shm_y.size == 0
+            return 0
+        assert self.shm_X.size % self.shm_y.size == 0
+        return self.shm_X.size // self.shm_y.size
+
+    def np_view(self, size: int) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+        X = np.ndarray(shape=(self.capacity, self.row_size), dtype=np.float64, buffer=self.shm_X.buf)
+        y = np.ndarray(shape=(self.capacity,), dtype=np.float64, buffer=self.shm_y.buf)
+        return X[:size], y[:size]
+
+    def get_data(self, shm_id: int, size: int) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+        # TODO: measure perf: currently, we opted for releasing the memory immediately after read, which might make
+        #  things a bit slower because we need to create the shared mem object every time even if it wasn't changed.
+        #  This has the advantage that it requires less memory when reallocation occurs, and it simplifies memory
+        #  management (i.e., I don't know if `unlink` blocks until all handles are `close`d)
+        # [parentheses in 'with' only work starting with python 3.10]
+        with self.lock, single_read_shared_mem(f'{self.basename_X}_{shm_id}') as shm_X, single_read_shared_mem(f'{self.basename_y}_{shm_id}') as shm_y:
+            self.shm_X, self.shm_y = shm_X, shm_y
+            shared_X, shared_y = self.np_view(size)
+            X, y = np.array(shared_X), np.array(shared_y)  # make copies
+            self.shm_X = self.shm_y = None
+        return X, y
+
+
+class GrowingSharedArray(GrowingSharedArrayReaderView):
+    def __init__(self):
+        self.shm_id: int = 0
+        self.growth_rate = 1.5
+        super().__init__(lock=Lock())
+
+    def set_data(self, X: npt.NDArray[np.float64], y: npt.NDArray[np.float64]) -> None:
+        assert len(X) == len(y)
+        assert X.ndim == 2
+        assert y.ndim == 1
+        assert dtypes_are_equal(X.dtype, np.float64)
+        assert dtypes_are_equal(y.dtype, np.float64)
+        assert X.dtype.itemsize == 8
+        assert y.dtype.itemsize == 8
+
+        size = len(y)
+        grow = size > self.capacity
+        if grow:
+            if self.capacity:
+                n_growth = math.ceil(math.log(size / self.capacity, self.growth_rate))
+                capacity = int(math.ceil(self.capacity * self.growth_rate ** n_growth))
+                self.shm_id += 1
+            else:
+                assert self.shm_X is None
+                assert self.shm_y is None
+                capacity = size
+
+            if self.row_size is not None:
+                assert X.shape[1] == self.row_size
+
+            shm_X = shared_memory.SharedMemory(f'{self.basename_X}_{self.shm_id}', create=True,
+                                               size=capacity * self.row_size * X.dtype.itemsize)
+            shm_y = shared_memory.SharedMemory(f'{self.basename_y}_{self.shm_id}', create=True,
+                                               size=capacity * y.dtype.itemsize)
+
+        with self.lock:
+            if grow:
+                if self.capacity:
+                    assert self.shm_X is not None
+                    self.shm_X.close()
+                    self.shm_X.unlink()
+                    assert self.shm_y is not None
+                    self.shm_y.close()
+                    self.shm_y.unlink()
+                self.shm_X = shm_X
+                self.shm_y = shm_y
+            X_buf, y_buf = self.np_view(size)
+            X_buf[...] = X
+            y_buf[...] = y
+
+
+class RFTrainer(Process):
     def __init__(self):
         self._model: BinaryForest | None = None
-        # we could use a RWLockFair from https://pypi.org/project/readerwriterlock/, but it seems to be a bit of an
-        # overkill since critical section are rather short
         self.model_lock = Lock()
-        self.model_available = Event()
+        self.model_queue = Queue(maxsize=1)
 
-        self.data = None
+        self.X = None
+        self.y = None
         self.opts = None
-        self.data_cv = Condition()
+        self.data_queue = Queue(maxsize=1)
 
         super().__init__(daemon=True)
         self.start()
 
     @property
     def model(self):
-        self.model_available.wait()
+        model = None
+        while True:
+            m = self.model_queue.get(block=False)
+            if m is None:
+                break
+            else:
+                model = m
+
         with self.model_lock:
+            if model is not None:
+                self._model = model
             return self._model
 
     def submit_for_training(self, data: DataContainer, opts: ForestOpts):
