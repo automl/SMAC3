@@ -42,8 +42,9 @@ def rf_training_loop(
     # Case to `int` incase we get an `np.integer` type
     rng = regression.default_random_engine(int(seed))
     shared_arrs = GrowingSharedArrayReaderView(data_lock)
+
     while True:
-        msg = data_queue.get()  # wait for training data or shutdown signal
+        msg = data_queue.get()  # if queue is empty, wait for training data or shutdown signal
         # discard all but the last msg in the queue
         while True:
             try:
@@ -68,11 +69,13 @@ def rf_training_loop(
 
         rf.fit(data, rng)
 
-        # remove previous models from pipe, if any
+        # remove previous models from queue, if any, and replace them with the latest
         while True:
-            m = model_queue.get(block=False)
-            if m is None:
+            try:
+                old_rf = model_queue.get(block=False)
+            except queue.Empty:
                 break
+
         model_queue.put(rf)
 
 
@@ -85,10 +88,10 @@ class RFTrainer:
             max_depth: int, eps_purity: float, max_nodes: int, n_points_per_tree: int
     ) -> None:
         self._model: Optional[BinaryForest] = None
-        self.model_queue = Queue(maxsize=1)
-        self.data_queue = Queue(maxsize=1)
         self.shared_arrs = GrowingSharedArray()
 
+        self.model_queue = Queue(maxsize=1)
+        self.data_queue = Queue(maxsize=1)
         self.training_loop_proc = Process(daemon=True, target=rf_training_loop, name='rf_trainer', args=(
             self.model_queue, self.data_queue, self.shared_arrs.lock, tuple(bounds), seed, n_trees, bootstrapping,
             max_features, min_samples_split, min_samples_leaf, max_depth, eps_purity, max_nodes, n_points_per_tree
