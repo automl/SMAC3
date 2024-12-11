@@ -1,17 +1,37 @@
 Adaptive Capping
 =================
 
-When minimizing the runtime of an algorithm across multiple instances is the objective, we can use adaptive capping to
-allocate budgets to configurations dynamically.
+Adaptive capping is a feature that can be used to speedup the evaluation of candidate configurations when the objective
+is to minimize runtime of an algorithm across a set of instances. The basic idea is to terminate unpromising candidates
+early and adapting the timeout for solving a single instance dynamically based on the incumbent's runtime and the.
+runtime already used by the challenging configuration.
+
+Theoretical Background
+----
+When comparing a challenger configuration with the current incumbent for a (sub-)set of instances, we already know how
+much cost (in terms of runtime) was incurred by the incumbent to solve the set of instances. As soon as the challenger
+configuration exceeds the cost of the incumbent, it is evident that the challenger will not become the new incumbent
+since the costs accumulate over time and are strictly positive, i.e., solving an instance cannot have negative runtime.
+
+Example:
+*Let the incumbent be evaluated for two instances with observed runtimes 3s and 4s. When a challenger configuration is
+evaluated and compared against the incumbent, it is first evaluated on a first instance. For example, we observe a
+runtime of 2s. As the challenger appears to be a promising configuration, its evaluation is intensified and the budget
+is doubled, i.e., the budget is increased to 2. For solving the second instance, adaptive capping will allow a timeout
+of 5s since the sum of runtimes for the incumbent is 7s and the challenger used up 2s for solving the first instance so
+far so that 5s remain until the costs of the incumbent are exceeded. Even if the challenger configuration would need 10s
+to solve the second instance, its execution would be aborted. In this example, by adaptive capping we thus save 5s of
+evaluation costs for the challenger to notice that it will not replace the current incumbent.*
+
+In combination with random online aggressive racing, we can further speedup the evaluation of challenger configurations
+as we increase the horizon for adaptive capping step by step with every step of intensification. Note that
+intensification will double the number of instances to which the challenger configuration (and eventually also the
+incumbent configuration) are applied to. Furthermore, to increase the trust into the current incumbent, the incumbent is
+regularly subject to intensification.
 
 
-Setting up Capping
+Setting up Adaptive Capping
 --------------------------
-
-Capping is useful, when given that we have seen an incumbent configuration
-perform on a subset of instances, we can expect that a challenger configurations will not outperform the incumbent anymore,
-because the challenger already accumulated too much runtime across instances to be compatible.
-In that case we want to stop the evaluation of the challenger configuration early to save resources.
 
 To achieve this, the user must take active care in the termination of their target function.
 The capped problem.train will receive a budget keyword argument, detailing the seconds allocated to the configuration.
@@ -63,8 +83,6 @@ global runtime cutoff in the intensifier. Then we optimize as usual.
 
 
  .. code-block:: python
-
-
 
     from smac.intensifier import Intensifier
     from smac.scenario.scenario import Scenario
