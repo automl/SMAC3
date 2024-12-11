@@ -115,7 +115,7 @@ class RFTrainer:
             self.training_loop_proc = None
 
         if self.model_queue is not None:
-            _ = self.model  # flush the model queue, and return latest model
+            _ = self.model  # try to flush the model queue, and store the latest model
             self.model_queue.close()
             self.model_queue.join_thread()
             del self.model_queue
@@ -125,15 +125,34 @@ class RFTrainer:
         self.close()
 
     @property
-    def model(self) -> Optional[BinaryForest]:
-        # discard all but the last model in the queue
-        while True:
-            try:
-                self._model = self.model_queue.get(block=False)
-            except queue.Empty:
-                break
+    def model(self) -> BinaryForest:
+        if self._model is None:
+            if self.model_queue is None:
+                raise RuntimeError('rf training loop process has been stopped before being able to train a model')
+            # wait until the first training is done
+            self._model = self.model_queue.get()
+
+        if self.model_queue is not None:
+            # discard all but the last model in the queue
+            while True:
+                try:
+                    self._model = self.model_queue.get(block=False)
+                except queue.Empty:
+                    break
         return self._model
 
     def submit_for_training(self, X: npt.NDArray[np.float64], y: npt.NDArray[np.float64]):
         self.shared_arrs.set_data(X, y)
+
+        if self.data_queue is None:
+            raise RuntimeError('rf training loop process has been stopped, so we cannot submit new training data')
+
+        # flush queue before pushing new data onto it
+        while True:
+            try:
+                old_data = self.data_queue.get(block=False)
+            except queue.Empty:
+                break
+            else:
+                assert old_data != SHUTDOWN
         self.data_queue.put((self.shared_arrs.shm_id, len(X)))
