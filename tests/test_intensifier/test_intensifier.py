@@ -328,7 +328,7 @@ def test_intensifier_with_capping(make_scenario, configspace_small, make_config_
 
     runhistory.add(
         config=config2.config,
-        cost=budget2 - 2,  # we beat the incumbent here!
+        cost=budget2 - 1,  # we beat the incumbent here!
         budget=0,
         seed=config2.seed,
         status=StatusType.SUCCESS,
@@ -350,7 +350,7 @@ def test_intensifier_with_capping(make_scenario, configspace_small, make_config_
         "config3 should be evaluated on a new instance subset"
 
     # we have a new incumbent, so its budget is immediately set to the cutoff
-    assert config3.budget == RUNTIME_CUTOFF - (budget1 + budget2 - 2)
+    assert config3.budget == RUNTIME_CUTOFF - (budget1 + budget2 - 1)
     budget3 = 2
     runhistory.add(
         config=config3.config,
@@ -363,8 +363,23 @@ def test_intensifier_with_capping(make_scenario, configspace_small, make_config_
     )
 
     intensifier.update_incumbents(config3.config)
-    assert config3.config == intensifier.get_incumbents(sort_by="num_trials")[0]  # no incumbent
-    # change
+    assert config3.config == intensifier.get_incumbents(sort_by="num_trials")[0]
+
+    config4 = next(gen)
+
+    runhistory.add(
+        config=config4.config,
+        cost=config4.budget,
+        budget=0,
+        seed=config4.seed,
+        status=StatusType.SUCCESS,
+        time=0.0,
+        instance=config4.instance
+    )
+
+    intensifier.update_incumbents(config4.config)
+
+    config5 = next(gen)
 
     # intensifier._queue sollte die config nicht mehr halten
     # TODO how do i test a reject in config? wouldn't the config be able to recover, once we have access
