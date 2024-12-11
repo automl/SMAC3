@@ -24,11 +24,26 @@ class GrowingSharedArrayReaderView:
         self.shm_X: Optional[shared_memory.SharedMemory] = None
         self.shm_y: Optional[shared_memory.SharedMemory] = None
 
-    def __del__(self):
+    def open(self, shm_id: int):
+        if shm_id != self.shm_id:
+            self.close()
+            self.shm_X = shared_memory.SharedMemory(f'{self.basename_X}_{shm_id}')
+            self.shm_y = shared_memory.SharedMemory(f'{self.basename_y}_{shm_id}')
+            self.shm_id = shm_id
+
+    def close(self):
         if self.shm_X is not None:
             self.shm_X.close()
+            del self.shm_X
+            self.shm_X = None
         if self.shm_y is not None:
             self.shm_y.close()
+            del self.shm_y
+            self.shm_y = None
+        self.shm_id = None
+
+    def __del__(self):
+        self.close()
 
     @property
     def capacity(self) -> Optional[int]:
@@ -54,19 +69,7 @@ class GrowingSharedArrayReaderView:
 
     def get_data(self, shm_id: int, size: int) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
         with self.lock:
-            # single_read_shared_mem() as shm_X, single_read_shared_mem(f'{self.basename_y}_{shm_id}') as shm_y:
-            if shm_id != self.shm_id:
-                self.shm_X.close()
-                del self.shm_X
-                self.shm_X = None
-
-                self.shm_y.close()
-                del self.shm_y
-                self.shm_y = None
-
-                self.shm_X = shared_memory.SharedMemory(f'{self.basename_X}_{shm_id}')
-                self.shm_y = shared_memory.SharedMemory(f'{self.basename_y}_{shm_id}')
-
+            self.open(shm_id)
             shared_X, shared_y = self.np_view(size)
             X, y = np.array(shared_X), np.array(shared_y)  # make copies
 

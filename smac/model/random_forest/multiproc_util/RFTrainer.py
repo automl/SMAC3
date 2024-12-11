@@ -3,16 +3,49 @@
 
 from typing import TYPE_CHECKING, Optional
 
-from multiprocessing import Process, Lock, Queue
+from multiprocessing import Lock, Queue
 
 from numpy import typing as npt
 import numpy as np
+from pyrfr.regression import binary_rss_forest
 
 if TYPE_CHECKING:
     from pyrfr.regression import binary_rss_forest as BinaryForest, forest_opts as ForestOpts
 
+from .GrowingSharedArray import GrowingSharedArrayReaderView
 
-class RFTrainer(Process):
+
+SHUTDOWN = -1
+
+
+def training_loop_proc(data_queue: Queue, data_lock: Lock):
+    shared_arrs = GrowingSharedArrayReaderView(data_lock)
+    while True:
+        # discard all but the last msg in the queue
+        msg = None
+        while True:
+            m = data_queue.get(block=False)
+            if m is None:
+                break
+            else:
+                msg = m
+
+        if msg == SHUTDOWN:
+            break
+
+        shm_id, size = msg
+
+        X, y = shared_arrs.get_data(shm_id, size)
+
+        data = init_data_container(X, y)
+
+        _rf = binary_rss_forest()
+        _rf.options = opts
+
+        _rf.fit(data, rng=self._rng)
+
+
+class RFTrainer:
     def __init__(self):
         self._model: Optional[BinaryForest] = None
         self.model_lock = Lock()
@@ -26,6 +59,7 @@ class RFTrainer(Process):
 
     @property
     def model(self):
+        # discard all but the last model in the queue
         model = None
         while True:
             m = self.model_queue.get(block=False)
@@ -61,12 +95,7 @@ class RFTrainer(Process):
             # wait for training to finish before receiving a new configuration to try, depending on CPU load; we might
             # have to replace the Event by a Condition
 
-            data = self._init_data_container(X, y)
 
-            _rf = regression.binary_rss_forest()
-            _rf.options = self.opts
-
-            _rf.fit(data, rng=self._rng)
 
             with self.model_lock:
                 self._model = _rf
