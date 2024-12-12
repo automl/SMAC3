@@ -105,6 +105,9 @@ class RandomForest(AbstractRandomForest):
         #    self._seed,
         # ]
 
+    def __del__(self):
+        self._rf.close()
+
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
