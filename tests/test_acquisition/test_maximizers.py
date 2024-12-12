@@ -1,21 +1,14 @@
 from __future__ import annotations
 
-from typing import Any
-
-import os
 import unittest
 import unittest.mock
 
 import numpy as np
 import pytest
 from ConfigSpace import (
-    Categorical,
     Configuration,
     ConfigurationSpace,
-    EqualsCondition,
     Float,
-    InCondition,
-    Integer,
 )
 from ConfigSpace.hyperparameters import (
     BetaIntegerHyperparameter,
@@ -24,7 +17,6 @@ from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-from ConfigSpace.read_and_write import pcs
 from scipy.spatial.distance import euclidean
 
 from smac.acquisition.function import EI
@@ -35,8 +27,6 @@ from smac.acquisition.maximizer import (
     RandomSearch,
 )
 from smac.model.random_forest.random_forest import RandomForest
-from smac.runhistory.runhistory import RunHistory
-from smac.runner.abstract_runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
