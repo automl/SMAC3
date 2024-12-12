@@ -15,7 +15,7 @@ from .GrowingSharedArray import GrowingSharedArrayReaderView, GrowingSharedArray
 from ..util import init_data_container
 
 
-SHUTDOWN = -1
+SHUTDOWN = None
 
 
 def rf_training_loop(
@@ -25,7 +25,7 @@ def rf_training_loop(
         # rf opts
         n_trees: int, bootstrapping: bool, max_features: int, min_samples_split: int, min_samples_leaf: int,
         max_depth: int, eps_purity: float, max_nodes: int, n_points_per_tree: int
-):
+) -> None:
     rf_opts = regression.forest_opts()
     rf_opts.num_trees = n_trees
     rf_opts.do_bootstrapping = bootstrapping
@@ -51,14 +51,12 @@ def rf_training_loop(
                 msg = data_queue.get(block=False)
             except queue.Empty:
                 break
-
-        if msg == SHUTDOWN:
-            break
+            else:
+                if msg == SHUTDOWN:
+                    return
 
         shm_id, size = msg
-
         X, y = shared_arrs.get_data(shm_id, size)
-
         data = init_data_container(X, y, bounds)
 
         if n_points_per_tree <= 0:
@@ -66,16 +64,14 @@ def rf_training_loop(
 
         rf = BinaryForest()
         rf.options = rf_opts
-
         rf.fit(data, rng)
 
-        # remove previous models from queue, if any, and replace them with the latest
+        # remove previous models from queue, if any, before pushing the latest model
         while True:
             try:
-                old_rf = model_queue.get(block=False)
+                _ = model_queue.get(block=False)
             except queue.Empty:
                 break
-
         model_queue.put(rf)
 
 
@@ -85,10 +81,13 @@ class RFTrainer:
             self, bounds: Iterable[tuple[float, float]], seed: int,
             # rf opts
             n_trees: int, bootstrapping: bool, max_features: int, min_samples_split: int, min_samples_leaf: int,
-            max_depth: int, eps_purity: float, max_nodes: int, n_points_per_tree: int
+            max_depth: int, eps_purity: float, max_nodes: int, n_points_per_tree: int,
+            # process synchronization
+            sync: bool = False
     ) -> None:
         self._model: Optional[BinaryForest] = None
         self.shared_arrs = GrowingSharedArray()
+        self.sync = sync
 
         self.model_queue = Queue(maxsize=1)
         self.data_queue = Queue(maxsize=1)
@@ -159,3 +158,6 @@ class RFTrainer:
             else:
                 assert old_data != SHUTDOWN
         self.data_queue.put((self.shared_arrs.shm_id, len(X)))
+
+        if self.sync:
+            self._model = self.model_queue.get()
