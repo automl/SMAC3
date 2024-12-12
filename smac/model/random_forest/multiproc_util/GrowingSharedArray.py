@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+import uuid
 from typing import Optional
 
 import math
@@ -116,12 +116,12 @@ class GrowingSharedArray(GrowingSharedArrayReaderView):
             if self.capacity:
                 n_growth = math.ceil(math.log(size / self.capacity, self.growth_rate))
                 capacity = int(math.ceil(self.capacity * self.growth_rate ** n_growth))
-                shm_id = self.shm_id + 1
             else:
                 assert self.shm_X is None
                 assert self.shm_y is None
                 capacity = size
-                shm_id = 0
+
+            shm_id = uuid.uuid4().int
 
             row_size = X.shape[1]
             if self.row_size is not None:

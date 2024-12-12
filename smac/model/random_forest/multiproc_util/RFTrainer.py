@@ -54,7 +54,7 @@ def rf_training_loop(
             except queue.Empty:
                 break
             else:
-                must_shutdown |= msg == SHUTDOWN
+                must_shutdown = must_shutdown or msg == SHUTDOWN
         if must_shutdown:
             shared_arrs.close()
             model_queue.put(SHUTDOWN)
@@ -133,7 +133,7 @@ class RFTrainer:
 
         if self.training_loop_proc is not None:
             # wait for training to finish
-            self.training_loop_proc.join()
+            self.training_loop_proc.join()  # TODO: fix: this happens to hang
             del self.training_loop_proc
             self.training_loop_proc = None
 
