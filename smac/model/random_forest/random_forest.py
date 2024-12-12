@@ -75,8 +75,8 @@ class RandomForest(AbstractRandomForest):
 
         max_features = 0 if ratio_features > 1.0 else max(1, int(len(self._types) * ratio_features))
 
-        self._rf = RFTrainer(self._bounds, seed, n_trees, bootstrapping, max_features, min_samples_split,
-                             min_samples_leaf, max_depth, eps_purity, max_nodes, n_points_per_tree)
+        self._rf_trainer = RFTrainer(self._bounds, seed, n_trees, bootstrapping, max_features, min_samples_split,
+                                     min_samples_leaf, max_depth, eps_purity, max_nodes, n_points_per_tree)
         self._log_y = log_y
 
         self._rng = regression.default_random_engine(int(seed))
@@ -106,7 +106,7 @@ class RandomForest(AbstractRandomForest):
         # ]
 
     def __del__(self):
-        self._rf.close()
+        self._rf_trainer.close()
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -135,7 +135,7 @@ class RandomForest(AbstractRandomForest):
         # self.X = X
         # self.y = y.flatten()
 
-        self._rf.submit_for_training(X, y)
+        self._rf_trainer.submit_for_training(X, y)
 
         # call this to make sure that there exists a trained model before returning (actually, not sure this is
         # required, since we check within predict() anyway)
@@ -157,7 +157,7 @@ class RandomForest(AbstractRandomForest):
         if covariance_type != "diagonal":
             raise ValueError("`covariance_type` can only take `diagonal` for this model.")
 
-        rf = self._rf.model
+        rf = self._rf_trainer.model
 
         assert rf is not None
         X = self._impute_inactive(X)
@@ -234,7 +234,7 @@ class RandomForest(AbstractRandomForest):
         if X.shape[1] != len(self._bounds):
             raise ValueError("Rows in X should have %d entries but have %d!" % (len(self._bounds), X.shape[1]))
 
-        rf = self._rf.model
+        rf = self._rf_trainer.model
         assert rf is not None
         X = self._impute_inactive(X)
 

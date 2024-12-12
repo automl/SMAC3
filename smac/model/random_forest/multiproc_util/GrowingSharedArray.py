@@ -4,7 +4,8 @@
 from typing import Optional
 
 import math
-from multiprocessing import Lock, shared_memory
+from multiprocessing import Lock
+from .SharedMemory import SharedMemory
 
 import numpy as np
 from numpy import typing as npt
@@ -21,15 +22,15 @@ class GrowingSharedArrayReaderView:
     def __init__(self, lock: Lock):
         self.lock = lock
         self.shm_id: Optional[int] = None
-        self.shm_X: Optional[shared_memory.SharedMemory] = None
-        self.shm_y: Optional[shared_memory.SharedMemory] = None
+        self.shm_X: Optional[SharedMemory] = None
+        self.shm_y: Optional[SharedMemory] = None
         self.size: Optional[int] = None
 
     def open(self, shm_id: int, size: int):
         if shm_id != self.shm_id:
             self.close()
-            self.shm_X = shared_memory.SharedMemory(f'{self.basename_X}_{shm_id}')
-            self.shm_y = shared_memory.SharedMemory(f'{self.basename_y}_{shm_id}')
+            self.shm_X = SharedMemory(f'{self.basename_X}_{shm_id}', track=False)
+            self.shm_y = SharedMemory(f'{self.basename_y}_{shm_id}', track=False)
             self.shm_id = shm_id
         self.size = size
 
@@ -125,20 +126,22 @@ class GrowingSharedArray(GrowingSharedArrayReaderView):
             row_size = X.shape[1]
             if self.row_size is not None:
                 assert row_size == self.row_size
-            shm_X = shared_memory.SharedMemory(f'{self.basename_X}_{shm_id}', create=True,
-                                               size=capacity * row_size * X.dtype.itemsize)
-            shm_y = shared_memory.SharedMemory(f'{self.basename_y}_{shm_id}', create=True,
-                                               size=capacity * y.dtype.itemsize)
+            shm_X = SharedMemory(f'{self.basename_X}_{shm_id}', create=True,
+                                 size=capacity * row_size * X.dtype.itemsize, track=False)
+            shm_y = SharedMemory(f'{self.basename_y}_{shm_id}', create=True, size=capacity * y.dtype.itemsize,
+                                 track=False)
 
         with self.lock:
             if grow:
                 if self.capacity:
-                    # TODO: here before rallocating we unlink the underlying shared memory without making sure that the
-                    #  training loop process has had a chance to close it first, so this might lead to some warnings
+                    #  here, before, reallocating we unlink the underlying shared memory without making sure that the
+                    #  training loop process has had a chance to close() it first, so this might lead to some warnings
                     #  references:
                     #  - https://stackoverflow.com/a/63004750/2447427
                     #  - https://github.com/python/cpython/issues/84140
-                    #  - https://github.com/python/cpython/issues/82300 - provides a fix that turns off tracking
+                    #  - https://github.com/python/cpython/issues/82300
+                    #    - comment provides a fix that turns off tracking:
+                    #    https://github.com/python/cpython/issues/82300#issuecomment-2169035092
                     self.close()
                 self.shm_X = shm_X
                 self.shm_y = shm_y

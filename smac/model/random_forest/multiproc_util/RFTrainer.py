@@ -62,7 +62,9 @@ def rf_training_loop(
 
         shm_id, size = msg
         X, y = shared_arrs.get_data(shm_id, size)
-        # TODO: when shm_id changes, notify main thread it can call unlink the shared memory bc we called close() on it
+        # when shm_id changes, here we should notify main thread it can call unlink the shared memory bc we called
+        # close() on it
+        # UPDATE: we avoided the warnings by disabling tracking for shared memory
         data = init_data_container(X, y, bounds)
 
         if n_points_per_tree <= 0:
