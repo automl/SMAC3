@@ -5,7 +5,12 @@ from typing import Optional
 
 import math
 from multiprocessing import Lock
-from .SharedMemory import SharedMemory
+
+# from multiprocessing.shared_memory import SharedMemory
+from .SharedMemory import SharedMemory as TrackableSharedMemory
+def SharedMemory(*args, **kwargs) -> TrackableSharedMemory:
+    return TrackableSharedMemory(*args, track=False, **kwargs)
+
 
 import numpy as np
 from numpy import typing as npt
@@ -29,8 +34,8 @@ class GrowingSharedArrayReaderView:
     def open(self, shm_id: int, size: int):
         if shm_id != self.shm_id:
             self.close()
-            self.shm_X = SharedMemory(f'{self.basename_X}_{shm_id}', track=False)
-            self.shm_y = SharedMemory(f'{self.basename_y}_{shm_id}', track=False)
+            self.shm_X = SharedMemory(f'{self.basename_X}_{shm_id}')
+            self.shm_y = SharedMemory(f'{self.basename_y}_{shm_id}')
             self.shm_id = shm_id
         self.size = size
 
@@ -121,15 +126,14 @@ class GrowingSharedArray(GrowingSharedArrayReaderView):
                 assert self.shm_y is None
                 capacity = size
 
-            shm_id = uuid.uuid4().int
+            shm_id = uuid.uuid4().int  # self.shm_id + 1 if self.shm_id else 0
 
             row_size = X.shape[1]
             if self.row_size is not None:
                 assert row_size == self.row_size
             shm_X = SharedMemory(f'{self.basename_X}_{shm_id}', create=True,
-                                 size=capacity * row_size * X.dtype.itemsize, track=False)
-            shm_y = SharedMemory(f'{self.basename_y}_{shm_id}', create=True, size=capacity * y.dtype.itemsize,
-                                 track=False)
+                                 size=capacity * row_size * X.dtype.itemsize)
+            shm_y = SharedMemory(f'{self.basename_y}_{shm_id}', create=True, size=capacity * y.dtype.itemsize)
 
         with self.lock:
             if grow:
