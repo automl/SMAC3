@@ -175,9 +175,7 @@ def test_get_next_by_random_search():
 # TestLocalSearch
 # --------------------------------------------------------------
 
-
-@pytest.fixture
-def configspace() -> ConfigurationSpace:
+def get_configspace() -> ConfigurationSpace:
     cs = ConfigurationSpace(seed=0)
 
     a = Float("a", (0, 1), default=0.5)
@@ -191,23 +189,40 @@ def configspace() -> ConfigurationSpace:
 
 
 @pytest.fixture
-def model(configspace: ConfigurationSpace):
+def configspace() -> ConfigurationSpace:
+    return get_configspace()
+
+
+def get_model(configspace: ConfigurationSpace) -> RandomForest:
     model = RandomForest(configspace)
 
     np.random.seed(0)
-    X = np.random.rand(100, len(configspace.get_hyperparameters()))
-    y = 1 - (np.sum(X, axis=1) / len(configspace.get_hyperparameters()))
+    X = np.random.rand(100, len(configspace.values()))
+    y = 1 - (np.sum(X, axis=1) / len(configspace.values()))
     model.train(X, y)
 
     return model
 
 
 @pytest.fixture
-def acquisition_function(model):
+def model(configspace: ConfigurationSpace) -> RandomForest:
+    model = get_model(configspace)
+    # return model
+    yield model
+    model.close()
+
+
+
+def get_acquisition_function(model):
     ei = EI()
     ei.update(model=model, eta=0.5)
 
     return ei
+
+
+@pytest.fixture
+def acquisition_function(model):
+    return get_acquisition_function(model)
 
 
 def test_local_search(configspace):
@@ -256,6 +271,9 @@ def test_get_initial_points_moo(configspace):
 
         def __call__(self, X):
             return np.array([x.get_array().sum() for x in X]).reshape((-1, 1))
+
+        def close(self):
+            pass
 
     ls = LocalSearch(
         configspace=configspace,
@@ -375,6 +393,9 @@ def test_sampling_fractions(configspace_rosenbrock, configspace_prior):
                 rval.append([-rosenbrock_4d(array)])
             return np.array(rval)
 
+        def close(self):
+            pass
+
     budget_kwargs = {"max_steps": 2, "n_steps_plateau_walk": 2, "local_search_iterations": 2}
 
     prs_0 = LocalAndSortedRandomSearch(
@@ -417,3 +438,58 @@ def test_differential_evolution(configspace, acquisition_function):
 
     values = rs._maximize(start_points, 1)
     values[0][1].origin == "Acquisition Function Maximizer: Differential Evolution"
+
+
+# manual testing
+
+def differential_evolution():
+    cs = get_configspace()
+    m = get_model(cs)
+    af = get_acquisition_function(m)
+    test_differential_evolution(cs, af)
+
+
+def min_repro_differential_evolution_bug():
+    cs = ConfigurationSpace(seed=0)
+    a = Float("a", (0, 1), default=0.5)
+    cs.add(a)
+
+    model = RandomForest(cs)
+
+    af = EI()
+    af.update(model=model, eta=0.5)
+
+    np.random.seed(0)
+    X = np.random.rand(100, len(cs.values()))
+    y = 1 - (np.sum(X, axis=1) / len(cs.values()))
+    model.train(X, y)
+
+    start_points = cs.sample_configuration(100)
+    # start_point = cs.sample_configuration()  # this circumvents bug
+    rs = DifferentialEvolution(cs, af, challengers=1000)
+    values = rs._maximize(start_points, 1)
+    values[0][1].origin == "Acquisition Function Maximizer: Differential Evolution"
+    # model._rf_trainer.close()  # this circumvents the bug
+
+
+def random_search():
+    cs = get_configspace()
+    m = get_model(cs)
+    af = get_acquisition_function(m)
+    test_random_search(cs, af)
+
+
+def main():
+    # TODO: running all these three IN THIS ORDER causes a hang, probably because of the dependency graph growing too
+    #  complex for the garbage collector to handle, so RFTrainer.close() is never called. In order to avoid hangs while
+    #  running tests, we explicitly call RFTrainer.close() during model fixture teardown
+    print('differential_evolution:')
+    differential_evolution()
+    print('\nmin_repro_differential_evolution_bug:')
+    min_repro_differential_evolution_bug()
+    print('\nrandom_search:')
+    random_search()
+
+
+if __name__ == '__main__':
+    main()

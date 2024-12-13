@@ -7,9 +7,9 @@ import math
 from multiprocessing import Lock
 
 # from multiprocessing.shared_memory import SharedMemory
-from .SharedMemory import SharedMemory as TrackableSharedMemory
-def SharedMemory(*args, **kwargs) -> TrackableSharedMemory:
-    return TrackableSharedMemory(*args, track=False, **kwargs)
+from .SharedMemory import SharedMemory as UntrackableSharedMemory
+def SharedMemory(*args, **kwargs) -> UntrackableSharedMemory:
+    return UntrackableSharedMemory(*args, track=False, **kwargs)
 
 
 import numpy as np

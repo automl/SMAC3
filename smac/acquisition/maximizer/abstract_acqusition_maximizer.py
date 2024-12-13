@@ -46,6 +46,13 @@ class AbstractAcquisitionMaximizer:
         self._seed = seed
         self._rng = np.random.RandomState(seed=seed)
 
+    def close(self):
+        if self.acquisition_function:
+            self.acquisition_function.close()
+
+    def __del__(self):
+        self.close()
+
     @property
     def acquisition_function(self) -> AbstractAcquisitionFunction | None:
         """The acquisition function used for maximization."""

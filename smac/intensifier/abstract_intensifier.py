@@ -80,6 +80,13 @@ class AbstractIntensifier:
         # Reset everything
         self.reset()
 
+    def close(self):
+        if self._config_selector:
+            self._config_selector.close()
+
+    def __del__(self):
+        self.close()
+
     def reset(self) -> None:
         """Reset the internal variables of the intensifier."""
         self._tf_seeds: list[int] = []

@@ -105,8 +105,11 @@ class RandomForest(AbstractRandomForest):
         #    self._seed,
         # ]
 
-    def __del__(self):
+    def close(self):
         self._rf_trainer.close()
+
+    def __del__(self):
+        self.close()
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102

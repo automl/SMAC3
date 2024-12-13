@@ -230,6 +230,19 @@ class AbstractFacade:
         # every time new information are available
         self._optimizer.register_callback(self._intensifier.get_callback(), index=0)
 
+    def close(self):
+        if self._model:
+            self._model.close()
+        if self._acquisition_function:
+            self._acquisition_function.close()
+        if self._acquisition_maximizer:
+            self._acquisition_maximizer.close()
+        if self._config_selector:
+            self._config_selector.close()
+
+    def __del__(self):
+        self.close()
+
     @property
     def scenario(self) -> Scenario:
         """The scenario object which holds all environment information."""

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Iterable, Optional
+from typing import Iterable, Optional, Union
 
 from multiprocessing import Lock, Queue, Process
 import queue
@@ -44,8 +44,12 @@ def rf_training_loop(
     shared_arrs = GrowingSharedArrayReaderView(data_lock)
 
     while True:
+        # print('TRAINER WAIT MSG', flush=True)
         msg = data_queue.get()  # if queue is empty, wait for training data or shutdown signal
+        # print(f'TRAINER GOT MSG: {msg}', flush=True)
         must_shutdown = msg == SHUTDOWN
+        # if must_shutdown:
+        #     print(f'TRAINER GOT SHUTDOWN 1', flush=True)
 
         # discard all but the last msg in the queue
         while True:
@@ -54,10 +58,18 @@ def rf_training_loop(
             except queue.Empty:
                 break
             else:
+                # if msg == SHUTDOWN:
+                #     print(f'TRAINER GOT SHUTDOWN 2', flush=True)
                 must_shutdown = must_shutdown or msg == SHUTDOWN
         if must_shutdown:
             shared_arrs.close()
+            # TODO: empty queue before pushing SHUTDOWN
+            # print(f'TRAINER SENDS SHUTDOWN CONFIRMATION', flush=True)
             model_queue.put(SHUTDOWN)
+            # print(f'TRAINER FINISHED SEND SHUTDOWN CONFIRMATION', flush=True)
+            model_queue.close()
+            # model_queue.join_thread()  # TODO: enable this again
+            # print(f'TRAINER BYE BYE', flush=True)
             break
 
         shm_id, size = msg
@@ -74,13 +86,17 @@ def rf_training_loop(
         rf.options = rf_opts
         rf.fit(data, rng)
 
+        # print(f'TRAINER FINISHED TRAINING', flush=True)
+
         # remove previous models from queue, if any, before pushing the latest model
         while True:
             try:
                 _ = model_queue.get(block=False)
             except queue.Empty:
                 break
+        # print(f'TRAINER SENDING MODEL', flush=True)
         model_queue.put(rf)
+        # print(f'TRAINER SENDING MODEL DONE', flush=True)
 
 
 class RFTrainer:
@@ -114,33 +130,33 @@ class RFTrainer:
         self.shared_arrs = GrowingSharedArray()
         self.model_queue = Queue(maxsize=1)
         self.data_queue = Queue(maxsize=1)
-        self.training_loop_proc = Process(daemon=True, target=rf_training_loop, name='rf_trainer', args=(
-            self.model_queue, self.data_queue, self.shared_arrs.lock, tuple(bounds), seed, n_trees, bootstrapping,
-            max_features, min_samples_split, min_samples_leaf, max_depth, eps_purity, max_nodes, n_points_per_tree
-        ))
+        self.training_loop_proc = Process(
+            target=rf_training_loop, daemon=True,  name='rf_trainer',
+            args=(self.model_queue, self.data_queue, self.shared_arrs.lock, tuple(bounds), seed, n_trees, bootstrapping,
+                  max_features, min_samples_split, min_samples_leaf, max_depth, eps_purity, max_nodes,
+                  n_points_per_tree)
+        )
         self.training_loop_proc.start()
 
     def close(self):
-        # I think this might be redundant, since according to the official docs, close and join_thread are called
-        # anyway when garbage-collecting queues, and we don't use JoinableQueues
+        # send kill signal to training process
         if self.data_queue is not None:
             if self.training_loop_proc is not None:
-                self.data_queue.put(SHUTDOWN)
+                # print('MAIN SEND SHUTDOWN', flush=True)
+                self.send_to_training_loop_proc(SHUTDOWN)
+                # print('MAIN FINISHED SEND SHUTDOWN', flush=True)
+            # make sure the shutdown message is flush before moving on
             self.data_queue.close()
             self.data_queue.join_thread()
-            del self.data_queue
-            self.data_queue = None
 
-        if self.training_loop_proc is not None:
-            # wait for training to finish
-            self.training_loop_proc.join()  # TODO: fix: this happens to hang
-            del self.training_loop_proc
-            self.training_loop_proc = None
-
-        if self.model_queue is not None:
+        # wait till the training process died
+        if self.model_queue is not None and self.training_loop_proc is not None and self.training_loop_proc.is_alive():
             # flush the model queue, and store the latest model
             while True:
+                # print('MAIN WAIT SHUTDOWN CONFIRM', flush=True)
                 msg = self.model_queue.get()
+                # print(f'MAIN RECEIVED {"SHUTDOWN CONFIRMATION" if msg == SHUTDOWN else msg} '
+                #       f'AFTER WAITING FOR SHUTDOWN CONFIRMATION', flush=True)
                 # wait for SHUTDOWN message, because that guarantees that shared_arrs.close() has been called within
                 # the training process; this way we make sure we call unlink only after close has had the chance to be
                 # called within the child process
@@ -148,8 +164,23 @@ class RFTrainer:
                     break
                 else:
                     self._model = msg
-            self.model_queue.close()
-            self.model_queue.join_thread()
+
+        if self.training_loop_proc is not None:
+            # wait for training to finish
+            if self.training_loop_proc.is_alive():
+                self.training_loop_proc.join()
+            del self.training_loop_proc
+            self.training_loop_proc = None
+
+        # I think this might be redundant, since according to the official docs, close and join_thread are called
+        # anyway when garbage-collecting queues, and we don't use JoinableQueues
+        if self.data_queue is not None:
+            del self.data_queue
+            self.data_queue = None
+
+        if self.model_queue is not None:
+            # self.model_queue.close()
+            # self.model_queue.join_thread()
             del self.model_queue
             self.model_queue = None
 
@@ -189,13 +220,8 @@ class RFTrainer:
                         self._model = msg
         return self._model
 
-    def submit_for_training(self, X: npt.NDArray[np.float64], y: npt.NDArray[np.float64]):
-        self.shared_arrs.set_data(X, y)
-
-        if self.data_queue is None:
-            raise RuntimeError('rf training loop process has been stopped, so we cannot submit new training data')
-
-        # flush queue before pushing new data onto it
+    def send_to_training_loop_proc(self, data_info: Union[tuple[int, int], type[SHUTDOWN]]):
+        # empty queue before pushing new data onto it
         while True:
             try:
                 old_data = self.data_queue.get(block=False)
@@ -203,7 +229,15 @@ class RFTrainer:
                 break
             else:
                 assert old_data != SHUTDOWN
-        self.data_queue.put((self.shared_arrs.shm_id, len(X)))
+        self.data_queue.put(data_info)
+
+    def submit_for_training(self, X: npt.NDArray[np.float64], y: npt.NDArray[np.float64]):
+        self.shared_arrs.set_data(X, y)
+
+        if self.data_queue is None:
+            raise RuntimeError('rf training loop process has been stopped, so we cannot submit new training data')
+
+        self.send_to_training_loop_proc((self.shared_arrs.shm_id, len(X)))
 
         if self.sync:
             self._model = self.model_queue.get()
