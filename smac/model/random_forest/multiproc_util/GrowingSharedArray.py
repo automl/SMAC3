@@ -39,7 +39,7 @@ class GrowingSharedArrayReaderView:
             self.shm_id = shm_id
         self.size = size
 
-    def close_impl(self, unlink=False):
+    def close_shm(self, unlink=False):
         if self.shm_X is not None:
             self.shm_X.close()
             if unlink:
@@ -56,7 +56,7 @@ class GrowingSharedArrayReaderView:
         self.size = None
 
     def close(self):
-        self.close_impl()
+        self.close_shm()
 
     def __del__(self):
         self.close()
@@ -101,7 +101,7 @@ class GrowingSharedArray(GrowingSharedArrayReaderView):
         super().__init__(lock=Lock())
 
     def close(self):
-        self.close_impl(unlink=True)
+        self.close_shm(unlink=True)
 
     def __del__(self):
         self.close()

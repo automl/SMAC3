@@ -480,9 +480,11 @@ def random_search():
 
 
 def main():
-    # TODO: running all these three IN THIS ORDER causes a hang, probably because of the dependency graph growing too
-    #  complex for the garbage collector to handle, so RFTrainer.close() is never called. In order to avoid hangs while
-    #  running tests, we explicitly call RFTrainer.close() during model fixture teardown
+    from smac.model.random_forest.multiproc_util import RFTrainer
+    RFTrainer.ENABLE_DBG_PRINT = True
+    # TODO: running ALL these three IN THIS ORDER causes a hang, probably because of the dependency graph growing too
+    #  complex and circular for the garbage collector to handle, so RFTrainer.close() is never called. In order to avoid
+    #  hangs while running tests, we explicitly call RFTrainer.close() in model fixture teardown
     print('differential_evolution:')
     differential_evolution()
     print('\nmin_repro_differential_evolution_bug:')
