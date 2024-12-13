@@ -112,7 +112,7 @@ class RFTrainer:
                  n_trees: int, bootstrapping: bool, max_features: int, min_samples_split: int, min_samples_leaf: int,
                  max_depth: int, eps_purity: float, max_nodes: int, n_points_per_tree: int,
                  # process synchronization
-                 background_training: Optional[Concurrency] = Concurrency.MULTIPROC) -> None:
+                 background_training: Optional[Concurrency] = None) -> None:
         self.background_training = background_training
 
         self._model: Optional[BinaryForest] = None
@@ -258,5 +258,5 @@ class RFTrainer:
                 raise NotImplementedError
             self.shared_arrs.set_data(X, y)
             self.send_to_training_loop_proc((self.shared_arrs.shm_id, len(X)))
-            if self.background_training in Concurrency.MULTIPROC_SYNCED:
+            if self.background_training is Concurrency.MULTIPROC_SYNCED:
                 self._model = self.model_queue.get()

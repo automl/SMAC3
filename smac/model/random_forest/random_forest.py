@@ -7,7 +7,7 @@ from ConfigSpace import ConfigurationSpace
 
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
 from . import AbstractRandomForest
-from .multiproc_util.RFTrainer import RFTrainer
+from .multiproc_util.RFTrainer import RFTrainer, Concurrency
 
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -74,9 +74,11 @@ class RandomForest(AbstractRandomForest):
 
         max_features = 0 if ratio_features > 1.0 else max(1, int(len(self._types) * ratio_features))
 
-        self._rf_trainer = RFTrainer(self._bounds, seed, n_trees, bootstrapping, max_features, min_samples_split,
-                                     min_samples_leaf, max_depth, eps_purity, max_nodes, n_points_per_tree,
-                                     background_training=None)
+        self._rf_trainer = RFTrainer(
+            self._bounds, seed, n_trees, bootstrapping, max_features, min_samples_split,
+            min_samples_leaf, max_depth, eps_purity, max_nodes, n_points_per_tree,
+            # background_training=Concurrency.MULTIPROC
+        )
         self._log_y = log_y
 
         # this is NOT used when training in background
