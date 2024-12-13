@@ -9,11 +9,21 @@ import sys
 
 from numpy import typing as npt
 import numpy as np
-from pyrfr import regression
-from pyrfr.regression import binary_rss_forest as BinaryForest
+from pyrfr.regression import (binary_rss_forest as BinaryForest, default_random_engine as DefaultRandomEngine,
+                              forest_opts as ForestOpts)
 
 from .GrowingSharedArray import GrowingSharedArrayReaderView, GrowingSharedArray
-from ..util import init_data_container
+from ..util import get_rf_opts, train
+
+from enum import Enum, auto, unique
+
+
+@unique
+class Concurrency(Enum):
+    THREADING = auto()
+    THREADING_SYNCED = auto()
+    MULTIPROC = auto()
+    MULTIPROC_SYNCED = auto()
 
 
 SHUTDOWN = None
@@ -27,10 +37,9 @@ def debug_print(*args, file=sys.stdout, **kwargs):
         print(*args, **kwargs, flush=True, file=file)
         file.flush()
 
+
 # TODO: the type of the value passed for the 'bounds' param below is a tuple of tuples. Might this add some memory
 #  dependency between the processes which might mess up the cleanup process?
-
-
 def rf_training_loop(
         model_queue: Queue, data_queue: Queue, data_lock: Lock,
         # init rf train
@@ -39,21 +48,11 @@ def rf_training_loop(
         n_trees: int, bootstrapping: bool, max_features: int, min_samples_split: int, min_samples_leaf: int,
         max_depth: int, eps_purity: float, max_nodes: int, n_points_per_tree: int
 ) -> None:
-    rf_opts = regression.forest_opts()
-    rf_opts.num_trees = n_trees
-    rf_opts.do_bootstrapping = bootstrapping
-    rf_opts.tree_opts.max_features = max_features
-    rf_opts.tree_opts.min_samples_to_split = min_samples_split
-    rf_opts.tree_opts.min_samples_in_leaf = min_samples_leaf
-    rf_opts.tree_opts.max_depth = max_depth
-    rf_opts.tree_opts.epsilon_purity = eps_purity
-    rf_opts.tree_opts.max_num_nodes = max_nodes
-    rf_opts.compute_law_of_total_variance = False
-    if n_points_per_tree > 0:
-        rf_opts.num_data_points_per_tree = n_points_per_tree
+    rf_opts = get_rf_opts(n_trees, bootstrapping, max_features, min_samples_split, min_samples_leaf, max_depth,
+                          eps_purity, max_nodes, n_points_per_tree)
 
-    # Case to `int` incase we get an `np.integer` type
-    rng = regression.default_random_engine(int(seed))
+    # Cast to `int` incase we get an `np.integer` type
+    rng = DefaultRandomEngine(int(seed))
     shared_arrs = GrowingSharedArrayReaderView(data_lock)
 
     def send_to_optimization_loop_process(msg: Union[BinaryForest, type(SHUTDOWN)]):
@@ -98,16 +97,9 @@ def rf_training_loop(
         # when shm_id changes, here we should notify main thread it can call unlink the shared memory bc we called
         # close() on it
         # UPDATE: we avoided the warnings by disabling tracking for shared memory
-        data = init_data_container(X, y, bounds)
 
-        if n_points_per_tree <= 0:
-            rf_opts.num_data_points_per_tree = len(X)
+        rf = train(rng, rf_opts, n_points_per_tree, bounds, X, y)
 
-        rf = BinaryForest()
-        rf.options = rf_opts
-        debug_print(f'TRAINER STARTS TRAINING', file=sys.stderr)
-        rf.fit(data, rng)
-        debug_print(f'TRAINER FINISHED TRAINING', file=sys.stderr)
         send_to_optimization_loop_process(rf)
     debug_print(f'TRAINER BYE BYE', file=sys.stderr)
 
@@ -120,8 +112,8 @@ class RFTrainer:
                  n_trees: int, bootstrapping: bool, max_features: int, min_samples_split: int, min_samples_leaf: int,
                  max_depth: int, eps_purity: float, max_nodes: int, n_points_per_tree: int,
                  # process synchronization
-                 sync: bool = False) -> None:
-        self.sync = sync
+                 background_training: Optional[Concurrency] = Concurrency.MULTIPROC) -> None:
+        self.background_training = background_training
 
         self._model: Optional[BinaryForest] = None
         self.shared_arrs: Optional[GrowingSharedArray] = None
@@ -129,29 +121,43 @@ class RFTrainer:
         self.data_queue: Optional[Queue] = None
         self.training_loop_proc: Optional[Process] = None
 
-        self.open(bounds, seed, n_trees, bootstrapping, max_features, min_samples_split, min_samples_leaf, max_depth,
-                  eps_purity, max_nodes, n_points_per_tree)
+        # in case we disable training in the background, and we need these objects in the main thread
+        self.opts: ForestOpts = get_rf_opts(n_trees, bootstrapping, max_features, min_samples_split, min_samples_leaf,
+                                            max_depth, eps_purity, max_nodes, n_points_per_tree)
+        self.n_points_per_tree: int = n_points_per_tree
+        self.bounds = tuple(bounds)
+
+        # this is NOT used when training in background
+        # Cast to `int` incase we get an `np.integer` type
+        self.rng = DefaultRandomEngine(int(seed))
+
+        self.open(seed)
 
         super().__init__()
 
-    def open(self,
-             # init rf train
-             bounds: Iterable[tuple[float, float]], seed: int,
-             # rf opts
-             n_trees: int, bootstrapping: bool, max_features: int, min_samples_split: int, min_samples_leaf: int,
-             max_depth: int, eps_purity: float, max_nodes: int, n_points_per_tree: int) -> None:
-        self.shared_arrs = GrowingSharedArray()
-        self.model_queue = Queue(maxsize=1)
-        self.data_queue = Queue(maxsize=1)
-        self.training_loop_proc = Process(
-            target=rf_training_loop,
-            daemon=True,
-            # name='rf_trainer',
-            args=(self.model_queue, self.data_queue, self.shared_arrs.lock, tuple(bounds), seed, n_trees, bootstrapping,
-                  max_features, min_samples_split, min_samples_leaf, max_depth, eps_purity, max_nodes,
-                  n_points_per_tree)
-        )
-        self.training_loop_proc.start()
+    def open(self, seed: int) -> None:
+        assert self.background_training is None or self.background_training in Concurrency
+        if self.background_training is None:
+            pass
+        elif self.background_training is Concurrency.THREADING:
+            raise NotImplementedError
+        elif self.background_training is Concurrency.THREADING_SYNCED:
+            raise NotImplementedError
+        else:
+            self.shared_arrs = GrowingSharedArray()
+            self.model_queue = Queue(maxsize=1)
+            self.data_queue = Queue(maxsize=1)
+            self.training_loop_proc = Process(
+                target=rf_training_loop,
+                daemon=True,
+                name='rf_trainer',
+                args=(self.model_queue, self.data_queue, self.shared_arrs.lock, self.bounds, seed, self.opts.num_trees,
+                      self.opts.do_bootstrapping, self.opts.tree_opts.max_features,
+                      self.opts.tree_opts.min_samples_to_split, self.opts.tree_opts.min_samples_in_leaf,
+                      self.opts.tree_opts.max_depth, self.opts.tree_opts.epsilon_purity,
+                      self.opts.tree_opts.max_num_nodes, self.n_points_per_tree)
+            )
+            self.training_loop_proc.start()
 
     def close(self):
         # send kill signal to training process
@@ -227,6 +233,7 @@ class RFTrainer:
                         raise RuntimeError("the shutdown message wasn't supposed to end up here")
                     else:
                         self._model = msg
+
         return self._model
 
     def send_to_training_loop_proc(self, data_info: Union[tuple[int, int], type[SHUTDOWN]]):
@@ -244,7 +251,12 @@ class RFTrainer:
         self.data_queue.put(data_info)
 
     def submit_for_training(self, X: npt.NDArray[np.float64], y: npt.NDArray[np.float64]):
-        self.shared_arrs.set_data(X, y)
-        self.send_to_training_loop_proc((self.shared_arrs.shm_id, len(X)))
-        if self.sync:
-            self._model = self.model_queue.get()
+        if self.background_training is None:
+            self._model = train(self.rng, self.opts, self.n_points_per_tree, self.bounds, X, y)
+        else:
+            if self.background_training in (Concurrency.THREADING, Concurrency.THREADING_SYNCED):
+                raise NotImplementedError
+            self.shared_arrs.set_data(X, y)
+            self.send_to_training_loop_proc((self.shared_arrs.shm_id, len(X)))
+            if self.background_training in Concurrency.MULTIPROC_SYNCED:
+                self._model = self.model_queue.get()

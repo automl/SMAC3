@@ -36,6 +36,9 @@ class MockModel:
             [np.mean(X, axis=1).reshape((1, -1))] * self.num_targets
         ).reshape((-1, 1))
 
+    def close(self):
+        pass
+
 
 class MockModelDual:
     def __init__(self, num_targets=1):
@@ -45,6 +48,9 @@ class MockModelDual:
         return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2)), np.array(
             [np.mean(X, axis=1).reshape((1, -1))] * self.num_targets
         ).reshape((-1, 2))
+
+    def close(self):
+        pass
 
 
 class MockPrior:
@@ -116,6 +122,9 @@ class PriorMockModel:
     def update_prior(self, hyperparameter_dict):
         self._configspace.get_hyperparameters_dict.return_value = hyperparameter_dict
 
+    def close(self):
+        pass
+
 
 class MockModelRNG(MockModel):
     def __init__(self, num_targets=1, seed=0):
@@ -154,9 +163,13 @@ def acquisition_function(model):
 # Test AbstractAcquisitionFunction
 # --------------------------------------------------------------
 
+class CloseableString(str):
+    def close(self):
+        pass
+
 
 def test_update_model_and_eta(model, acquisition_function):
-    model = "abc"
+    model = CloseableString("abc")
     assert acquisition_function._eta is None
     acquisition_function.update(model=model, eta=0.1)
     assert acquisition_function.model == model
@@ -164,7 +177,8 @@ def test_update_model_and_eta(model, acquisition_function):
 
 
 def test_update_with_kwargs(acquisition_function):
-    acquisition_function.update(model="abc", eta=0.0, other="hi there:)")
+    model = CloseableString("abc")
+    acquisition_function.update(model=model, eta=0.0, other="hi there:)")
     assert acquisition_function.model == "abc"
 
 

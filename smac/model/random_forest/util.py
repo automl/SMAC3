@@ -6,16 +6,33 @@ from __future__ import annotations
 from typing import Iterable, TYPE_CHECKING
 
 import numpy as np
-from pyrfr import regression
+from pyrfr.regression import (default_data_container as DataContainer, forest_opts as ForestOpts,
+                              binary_rss_forest as BinaryForest, default_random_engine as DefaultRandomEngine)
 
 if TYPE_CHECKING:
-    from pyrfr.regression import default_data_container as DataContainer
     from numpy import typing as npt
 
 
-def init_data_container(
-        X: npt.NDArray[np.float64], y: npt.NDArray[np.float64], bounds: Iterable[tuple[float, float]]
-) -> DataContainer:
+def get_rf_opts(n_trees: int, bootstrapping: bool, max_features: int, min_samples_split: int, min_samples_leaf: int,
+                max_depth: int, eps_purity: float, max_nodes: int, n_points_per_tree: int) -> ForestOpts:
+    rf_opts = ForestOpts()
+    rf_opts.num_trees = n_trees
+    rf_opts.do_bootstrapping = bootstrapping
+    rf_opts.tree_opts.max_features = max_features
+    rf_opts.tree_opts.min_samples_to_split = min_samples_split
+    rf_opts.tree_opts.min_samples_in_leaf = min_samples_leaf
+    rf_opts.tree_opts.max_depth = max_depth
+    rf_opts.tree_opts.epsilon_purity = eps_purity
+    rf_opts.tree_opts.max_num_nodes = max_nodes
+    rf_opts.compute_law_of_total_variance = False
+    if n_points_per_tree > 0:
+        rf_opts.num_data_points_per_tree = n_points_per_tree
+
+    return rf_opts
+
+
+def init_data_container(X: npt.NDArray[np.float64], y: npt.NDArray[np.float64],
+                        bounds: Iterable[tuple[float, float]]) -> DataContainer:
     """Fills a pyrfr default data container s.t. the forest knows categoricals and bounds for continous data.
 
     Parameters
@@ -31,7 +48,7 @@ def init_data_container(
         The filled data container that pyrfr can interpret.
     """
     # Retrieve the types and the bounds from the ConfigSpace
-    data = regression.default_data_container(X.shape[1])
+    data = DataContainer(X.shape[1])
 
     for i, (mn, mx) in enumerate(bounds):
         if np.isnan(mx):
@@ -43,3 +60,19 @@ def init_data_container(
         data.add_data_point(row_X, row_y)
 
     return data
+
+
+def train(rng: DefaultRandomEngine, rf_opts: ForestOpts, n_points_per_tree: int, bounds: Iterable[tuple[float, float]],
+          X: npt.NDArray[np.float64], y: npt.NDArray[np.float64]) -> BinaryForest:
+    data = init_data_container(X, y, bounds)
+
+    if n_points_per_tree <= 0:
+        rf_opts.num_data_points_per_tree = len(X)
+
+    rf = BinaryForest()
+    rf.options = rf_opts
+
+    rf.fit(data, rng)
+
+    return rf
+

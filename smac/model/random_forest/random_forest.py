@@ -4,7 +4,6 @@ from typing import Any
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace
-from pyrfr import regression
 
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
 from . import AbstractRandomForest
@@ -76,10 +75,12 @@ class RandomForest(AbstractRandomForest):
         max_features = 0 if ratio_features > 1.0 else max(1, int(len(self._types) * ratio_features))
 
         self._rf_trainer = RFTrainer(self._bounds, seed, n_trees, bootstrapping, max_features, min_samples_split,
-                                     min_samples_leaf, max_depth, eps_purity, max_nodes, n_points_per_tree)
+                                     min_samples_leaf, max_depth, eps_purity, max_nodes, n_points_per_tree,
+                                     background_training=None)
         self._log_y = log_y
 
-        self._rng = regression.default_random_engine(int(seed))
+        # this is NOT used when training in background
+        self._rng = self._rf_trainer.rng
 
         self._n_trees = n_trees
         self._n_points_per_tree = n_points_per_tree
