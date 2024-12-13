@@ -100,7 +100,6 @@ The runhistory.json in split into four parts. `stats`, `data`, `configs`, and `c
 ```json
   "data": {
     "1": {
-      "config_id": 1,
       "instance": null,
       "seed": 398764591,
       "budget": null,

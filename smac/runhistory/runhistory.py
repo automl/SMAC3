@@ -771,7 +771,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         data = dict()
         for k, v in self._data.items():
             data[k.config_id] = {
-                "config_id": k.config_id,
                 "instance": k.instance if k.instance is not None else None,
                 "seed": k.seed if k.seed is not None else None,
                 "budget": k.budget if k.budget is not None else None,
@@ -868,7 +867,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             else:
                 cost = [float(x) for x in value["cost"]]
             self.add(
-                config=self._ids_config[int(key)], # TODO probably -1
+                config=self._ids_config[int(key)],
                 cost=cost,
                 time=value["time"],
                 cpu_time=value["cpu_time"],
