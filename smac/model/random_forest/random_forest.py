@@ -77,7 +77,7 @@ class RandomForest(AbstractRandomForest):
         self._rf_trainer = RFTrainer(
             self._bounds, seed, n_trees, bootstrapping, max_features, min_samples_split,
             min_samples_leaf, max_depth, eps_purity, max_nodes, n_points_per_tree,
-            # background_training=Concurrency.MULTIPROC
+            background_training=Concurrency.MULTIPROC
         )
         self._log_y = log_y
 
