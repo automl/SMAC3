@@ -9,8 +9,7 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-@pytest.fixture
-def make_facade(digits_dataset, make_sgd) -> HyperparameterOptimizationFacade:
+def get_make_facade(digits_dataset, make_sgd) -> HyperparameterOptimizationFacade:
     def create(
         deterministic: bool = True, use_instances: bool = False, max_config_calls: int = 5
     ) -> HyperparameterOptimizationFacade:
@@ -45,6 +44,11 @@ def make_facade(digits_dataset, make_sgd) -> HyperparameterOptimizationFacade:
         return model, smac
 
     return create
+
+
+@pytest.fixture
+def make_facade(digits_dataset, make_sgd) -> HyperparameterOptimizationFacade:
+    return get_make_facade(digits_dataset, make_sgd)
 
 
 # --------------------------------------------------------------
@@ -171,3 +175,23 @@ def test_multiple_asks_successively(make_facade):
         # Make sure the trials are different
         assert trial_info not in info
         info += [trial_info]
+
+
+def ask_and_tell_after_optimization():
+    from ..fixtures.datasets import DigitsDataset, Dataset
+    from ..fixtures.models import SGD
+    digits_dataset = DigitsDataset()
+
+    def make_sgd(dataset: Dataset) -> SGD:
+        return SGD(dataset)
+
+    make_facade = get_make_facade(digits_dataset, make_sgd)
+    test_ask_and_tell_after_optimization(make_facade)
+
+
+def main():
+    ask_and_tell_after_optimization()
+
+
+if __name__ == '__main__':
+    main()

@@ -82,6 +82,17 @@ class ConfigSelector:
         # Processed configurations should be stored here; this is important to not return the same configuration twice
         self._processed_configs: list[Configuration] = []
 
+    def close(self):
+        if self._model:
+            self._model.close()
+        if self._acquisition_maximizer:
+            self._acquisition_maximizer.close()
+        if self._acquisition_function:
+            self._acquisition_function.close()
+
+    def __del__(self):
+        self.close()
+
     def _set_components(
         self,
         initial_design: AbstractInitialDesign,

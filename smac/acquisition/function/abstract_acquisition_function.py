@@ -23,6 +23,13 @@ class AbstractAcquisitionFunction:
     def __init__(self) -> None:
         self._model: AbstractModel | None = None
 
+    def close(self):
+        if self._model:
+            self._model.close()
+
+    def __del__(self):
+        self.close()
+
     @property
     def name(self) -> str:
         """Returns the full name of the acquisition function."""

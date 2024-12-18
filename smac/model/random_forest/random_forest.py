@@ -4,12 +4,11 @@ from typing import Any
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace
-from pyrfr import regression
-from pyrfr.regression import binary_rss_forest as BinaryForest
-from pyrfr.regression import default_data_container as DataContainer
 
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
-from smac.model.random_forest import AbstractRandomForest
+from . import AbstractRandomForest
+from .multiproc_util.RFTrainer import RFTrainer, Concurrency
+
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -75,21 +74,15 @@ class RandomForest(AbstractRandomForest):
 
         max_features = 0 if ratio_features > 1.0 else max(1, int(len(self._types) * ratio_features))
 
-        self._rf_opts = regression.forest_opts()
-        self._rf_opts.num_trees = n_trees
-        self._rf_opts.do_bootstrapping = bootstrapping
-        self._rf_opts.tree_opts.max_features = max_features
-        self._rf_opts.tree_opts.min_samples_to_split = min_samples_split
-        self._rf_opts.tree_opts.min_samples_in_leaf = min_samples_leaf
-        self._rf_opts.tree_opts.max_depth = max_depth
-        self._rf_opts.tree_opts.epsilon_purity = eps_purity
-        self._rf_opts.tree_opts.max_num_nodes = max_nodes
-        self._rf_opts.compute_law_of_total_variance = False
-        self._rf: BinaryForest | None = None
+        self._rf_trainer = RFTrainer(
+            self._bounds, seed, n_trees, bootstrapping, max_features, min_samples_split,
+            min_samples_leaf, max_depth, eps_purity, max_nodes, n_points_per_tree,
+            background_training=Concurrency.MULTIPROC
+        )
         self._log_y = log_y
 
-        # Case to `int` incase we get an `np.integer` type
-        self._rng = regression.default_random_engine(int(seed))
+        # this is NOT used when training in background
+        self._rng = self._rf_trainer.rng
 
         self._n_trees = n_trees
         self._n_points_per_tree = n_points_per_tree
@@ -114,6 +107,12 @@ class RandomForest(AbstractRandomForest):
         #    eps_purity,
         #    self._seed,
         # ]
+
+    def close(self):
+        self._rf_trainer.close()
+
+    def __del__(self):
+        self.close()
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -142,47 +141,13 @@ class RandomForest(AbstractRandomForest):
         # self.X = X
         # self.y = y.flatten()
 
-        if self._n_points_per_tree <= 0:
-            self._rf_opts.num_data_points_per_tree = X.shape[0]
-        else:
-            self._rf_opts.num_data_points_per_tree = self._n_points_per_tree
+        self._rf_trainer.submit_for_training(X, y)
 
-        self._rf = regression.binary_rss_forest()
-        self._rf.options = self._rf_opts
-
-        data = self._init_data_container(X, y)
-        self._rf.fit(data, rng=self._rng)
+        # call this to make sure that there exists a trained model before returning (actually, not sure this is
+        # required, since we check within predict() anyway)
+        # _ = self._rf.model
 
         return self
-
-    def _init_data_container(self, X: np.ndarray, y: np.ndarray) -> DataContainer:
-        """Fills a pyrfr default data container s.t. the forest knows categoricals and bounds for continous data.
-
-        Parameters
-        ----------
-        X : np.ndarray [#samples, #hyperparameter + #features]
-            Input data points.
-        Y : np.ndarray [#samples, #objectives]
-            The corresponding target values.
-
-        Returns
-        -------
-        data : DataContainer
-            The filled data container that pyrfr can interpret.
-        """
-        # Retrieve the types and the bounds from the ConfigSpace
-        data = regression.default_data_container(X.shape[1])
-
-        for i, (mn, mx) in enumerate(self._bounds):
-            if np.isnan(mx):
-                data.set_type_of_feature(i, mn)
-            else:
-                data.set_bounds_of_feature(i, mn, mx)
-
-        for row_X, row_y in zip(X, y):
-            data.add_data_point(row_X, row_y)
-
-        return data
 
     def _predict(
         self,
@@ -198,7 +163,9 @@ class RandomForest(AbstractRandomForest):
         if covariance_type != "diagonal":
             raise ValueError("`covariance_type` can only take `diagonal` for this model.")
 
-        assert self._rf is not None
+        rf = self._rf_trainer.model
+
+        assert rf is not None
         X = self._impute_inactive(X)
 
         if self._log_y:
@@ -207,13 +174,13 @@ class RandomForest(AbstractRandomForest):
 
             # Gather data in a list of 2d arrays and get statistics about the required size of the 3d array
             for row_X in X:
-                preds_per_tree = self._rf.all_leaf_values(row_X)
+                preds_per_tree = rf.all_leaf_values(row_X)
                 all_preds.append(preds_per_tree)
                 max_num_leaf_data = max(map(len, preds_per_tree))
                 third_dimension = max(max_num_leaf_data, third_dimension)
 
             # Transform list of 2d arrays into a 3d array
-            preds_as_array = np.zeros((X.shape[0], self._rf_opts.num_trees, third_dimension)) * np.nan
+            preds_as_array = np.zeros((X.shape[0], self._n_trees, third_dimension)) * np.nan
             for i, preds_per_tree in enumerate(all_preds):
                 for j, pred in enumerate(preds_per_tree):
                     preds_as_array[i, j, : len(pred)] = pred
@@ -227,7 +194,7 @@ class RandomForest(AbstractRandomForest):
         else:
             means, vars_ = [], []
             for row_X in X:
-                mean_, var = self._rf.predict_mean_var(row_X)
+                mean_, var = rf.predict_mean_var(row_X)
                 means.append(mean_)
                 vars_.append(var)
 
@@ -273,11 +240,12 @@ class RandomForest(AbstractRandomForest):
         if X.shape[1] != len(self._bounds):
             raise ValueError("Rows in X should have %d entries but have %d!" % (len(self._bounds), X.shape[1]))
 
-        assert self._rf is not None
+        rf = self._rf_trainer.model
+        assert rf is not None
         X = self._impute_inactive(X)
 
         X_feat = list(self._instance_features.values())
-        dat_ = self._rf.predict_marginalized_over_instances_batch(X, X_feat, self._log_y)
+        dat_ = rf.predict_marginalized_over_instances_batch(X, X_feat, self._log_y)
         dat_ = np.array(dat_)
 
         # 3. compute statistics across trees

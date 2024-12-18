@@ -62,7 +62,7 @@ class AbstractIntensifier:
     ):
         self._scenario = scenario
         self._config_selector: ConfigSelector | None = None
-        self._config_generator: Iterator[ConfigSelector] | None = None
+        self._config_generator: Iterator[Configuration] | None = None
         self._runhistory: RunHistory | None = None
 
         if seed is None:
@@ -79,6 +79,13 @@ class AbstractIntensifier:
 
         # Reset everything
         self.reset()
+
+    def close(self):
+        if self._config_selector:
+            self._config_selector.close()
+
+    def __del__(self):
+        self.close()
 
     def reset(self) -> None:
         """Reset the internal variables of the intensifier."""
