@@ -17,6 +17,13 @@ from ..util import get_rf_opts, train
 
 from enum import Enum, auto, unique
 
+try:
+    from setproctitle import setproctitle
+except ImportError:
+    setproctitle = None
+else:
+    import uuid
+
 
 @unique
 class Concurrency(Enum):
@@ -48,6 +55,9 @@ def rf_training_loop(
         n_trees: int, bootstrapping: bool, max_features: int, min_samples_split: int, min_samples_leaf: int,
         max_depth: int, eps_purity: float, max_nodes: int, n_points_per_tree: int
 ) -> None:
+    if setproctitle is not None:
+        setproctitle(f'rf_trainer_{uuid.uuid4().int}'[:15])
+
     rf_opts = get_rf_opts(n_trees, bootstrapping, max_features, min_samples_split, min_samples_leaf, max_depth,
                           eps_purity, max_nodes, n_points_per_tree)
 

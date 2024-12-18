@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import uuid
 from typing import Optional
 
 import math
 from multiprocessing import Lock
 
-# from multiprocessing.shared_memory import SharedMemory
-from .SharedMemory import SharedMemory as UntrackableSharedMemory
-def SharedMemory(*args, **kwargs) -> UntrackableSharedMemory:
-    return UntrackableSharedMemory(*args, track=False, **kwargs)
-
-
+import uuid
 import numpy as np
 from numpy import typing as npt
+
+# from multiprocessing.shared_memory import SharedMemory
+from .SharedMemory import SharedMemory as UntrackableSharedMemory
+
+
+def SharedMemory(*args, **kwargs) -> UntrackableSharedMemory:
+    return UntrackableSharedMemory(*args, track=False, **kwargs)
 
 
 def dtypes_are_equal(dtype1: np.dtype, dtype2: np.dtype) -> bool:
