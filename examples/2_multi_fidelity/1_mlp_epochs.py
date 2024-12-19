@@ -140,7 +140,7 @@ if __name__ == "__main__":
     mlp = MLP()
 
     facades: list[AbstractFacade] = []
-    for intensifier_object in [SuccessiveHalving, Hyperband]:
+    for intensifier_object in [ Hyperband]:
         # Define our environment variables
         scenario = Scenario(
             mlp.configspace,

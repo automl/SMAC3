@@ -768,22 +768,23 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         ----------
         filename : str | Path, defaults to "runhistory.json"
         """
-        data = dict()
+        data = list()
         for k, v in self._data.items():
-            data[k.config_id] = {
-                "instance": k.instance if k.instance is not None else None,
-                "seed": k.seed if k.seed is not None else None,
-                "budget": k.budget if k.budget is not None else None,
+            data.append({
+                "config_id": int(k.config_id),
+                "instance": str(k.instance) if k.instance is not None else None,
+                "seed": int(k.seed) if k.seed is not None else None,
+                "budget":  float(k.budget) if k.budget is not None else None,
                 "cost": v.cost,
                 "time": v.time,
                 "cpu_time": v.cpu_time,
                 "status": v.status,
                 "starttime": v.starttime,
                 "endtime": v.endtime,
-                "additional_info": v.additional_info
-            }
+                "additional_info": v.additional_info,
+            })
 
-        config_ids_to_serialize = set(data.keys())
+        config_ids_to_serialize = set([entry["config_id"] for entry in data])
         configs = {}
         config_origins = {}
         for id_, config in self._ids_config.items():
@@ -854,30 +855,30 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         # Important to use add method to use all data structure correctly
         # NOTE: These hardcoded indices can easily lead to trouble
-        for key, value in data["data"].items():
+        for entry in data["data"]:
             if self._n_objectives == -1:
-                if isinstance(value["cost"], (float, int)):
+                if isinstance(entry["cost"], (float, int)):
                     self._n_objectives = 1
                 else:
-                    self._n_objectives = len(value["cost"])
+                    self._n_objectives = len(entry["cost"])
 
             cost: list[float] | float
             if self._n_objectives == 1:
-                cost = float(value["cost"])
+                cost = float(entry["cost"])
             else:
-                cost = [float(x) for x in value["cost"]]
+                cost = [float(x) for x in entry["cost"]]
             self.add(
-                config=self._ids_config[int(key)],
+                config=self._ids_config[int(entry["config_id"])],
                 cost=cost,
-                time=value["time"],
-                cpu_time=value["cpu_time"],
-                status=StatusType(value["status"]),
-                instance=value["instance"],
-                seed=value["seed"],
-                budget=value["budget"],
-                starttime=value["starttime"],
-                endtime=value["endtime"],
-                additional_info=value["additional_info"],
+                time=entry["time"],
+                cpu_time=entry["cpu_time"],
+                status=StatusType(entry["status"]),
+                instance=entry["instance"],
+                seed=entry["seed"],
+                budget=entry["budget"],
+                starttime=entry["starttime"],
+                endtime=entry["endtime"],
+                additional_info=entry["additional_info"],
             )
 
         # Although adding trials should give us the same stats, the trajectory might be different
