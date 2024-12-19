@@ -770,19 +770,21 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         """
         data = list()
         for k, v in self._data.items():
-            data.append({
-                "config_id": int(k.config_id),
-                "instance": str(k.instance) if k.instance is not None else None,
-                "seed": int(k.seed) if k.seed is not None else None,
-                "budget":  float(k.budget) if k.budget is not None else None,
-                "cost": v.cost,
-                "time": v.time,
-                "cpu_time": v.cpu_time,
-                "status": v.status,
-                "starttime": v.starttime,
-                "endtime": v.endtime,
-                "additional_info": v.additional_info,
-            })
+            data.append(
+                {
+                    "config_id": int(k.config_id),
+                    "instance": str(k.instance) if k.instance is not None else None,
+                    "seed": int(k.seed) if k.seed is not None else None,
+                    "budget": float(k.budget) if k.budget is not None else None,
+                    "cost": v.cost,
+                    "time": v.time,
+                    "cpu_time": v.cpu_time,
+                    "status": v.status,
+                    "starttime": v.starttime,
+                    "endtime": v.endtime,
+                    "additional_info": v.additional_info,
+                }
+            )
 
         config_ids_to_serialize = set([entry["config_id"] for entry in data])
         configs = {}
