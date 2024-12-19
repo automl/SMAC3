@@ -198,7 +198,6 @@ class AbstractRunHistoryEncoder:
                 trial: self.runhistory[trial]
                 for trial in self.runhistory
                 if self.runhistory[trial].status == StatusType.RUNNING
-                # and runhistory.data[run].time >= self._algorithm_walltime_limit  # type: ignore
                 and trial.budget in budget_subset
             }
         else:
@@ -206,7 +205,6 @@ class AbstractRunHistoryEncoder:
                 trial: self.runhistory[trial]
                 for trial in self.runhistory
                 if self.runhistory[trial].status == StatusType.RUNNING
-                # and runhistory.data[run].time >= self._algorithm_walltime_limit  # type: ignore
             }
 
         return trials
@@ -236,7 +234,19 @@ class AbstractRunHistoryEncoder:
 
     def _convert_config_ids_to_array(self,
                                      config_ids: Iterable[int]) -> np.ndarray:
-        """extract the configurations from rh and transform them into np array"""
+        """extract the configurations from runhistory with their ids and transform them into np array
+
+        Parameters
+        ----------
+        config_ids : Iterable[int]
+            a collections of configuration ids
+
+        Returns
+        -------
+        configs_array : np.ndarray
+            the corresponding configuration arrays
+
+        """
         configurations = [self.runhistory._ids_config[config_id] for config_id in config_ids]
         configs_array = convert_configurations_to_array(configurations)
         return configs_array

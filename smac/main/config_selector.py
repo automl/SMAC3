@@ -306,6 +306,7 @@ class ConfigSelector:
                     Y_estimated = self.estimate_running_config_costs(
                         X_running, Y, self._batch_sampling_estimation_strategy
                     )
+                    # if there is no running configurations, we directly return X, Y and configs_array
                     if Y_estimated is not None:
                         configs_array_running = self._runhistory_encoder.get_running_configurations(
                             budget_subset=self._considered_budgets
@@ -335,8 +336,8 @@ class ConfigSelector:
             X_running: np.ndarray,
             Y_evaluated: np.ndarray,
             estimation_strategy: str = 'CL_max'):
-        """
-        This function is implemented to estimate the still pending/ running configurations
+        """This function is implemented to estimate the still pending/ running configurations
+
         Parameters
         ----------
         X_running : np.ndarray
@@ -344,8 +345,16 @@ class ConfigSelector:
         Y_evaluated : np.ndarray
             a np array with size (n_evaluated_configs, n_obj) that records the costs of all the previous evaluated
             configurations
+
         estimation_strategy: str
-            how do we estimate the target y_running values
+            how do we estimate the target y_running values, we have the following strategy:
+            CL_max: constant liar max, we take the maximal of all the evaluated Y and apply them to the running X
+            CL_min: constant liar min, we take the minimal of all the evaluated Y and apply them to the running X
+            CL_mean: constant liar mean, we take the mean of all the evaluated Y and apply them to the running X
+            kriging_believer: kriging believer, we apply the predicted means from the surrogate model to running X
+             values
+            sample: estimations for X are sampled from the surrogate models. Since the samples need to be sampled from a
+              joint distribution for all X, we only allow sample strategy with GP as surrogate models.
 
         Returns
         -------
@@ -364,11 +373,11 @@ class ConfigSelector:
             Y_estimated = np.nanmin(Y_evaluated, axis=0, keepdims=True)
             return np.repeat(Y_estimated, n_running_points, 0)
         elif estimation_strategy == 'CL_mean':
-            # constant liar min, we take the mean values of all the evaluated Y and apply them to the running X
+            # constant liar mean, we take the mean values of all the evaluated Y and apply them to the running X
             Y_estimated = np.nanmean(Y_evaluated, axis=0, keepdims=True)
             return np.repeat(Y_estimated, n_running_points, 0)
         elif estimation_strategy == 'kriging_believer':
-            # in kriging believer, we apply the predicted means of the surrogate model to estimate the running X
+            # kriging believer, we apply the predicted means of the surrogate model to estimate the running X
             return self._model.predict_marginalized(X_running)[0]
         elif estimation_strategy == 'sample':
             # https://papers.nips.cc/paper_files/paper/2012/file/05311655a15b75fab86956663e1819cd-Paper.pdf
