@@ -74,7 +74,8 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self._rescale = isinstance(acquisition_type, (LCB, TS))
         
         # Variables needed to adapt the weighting of the prior
-        self._iteration_number = 0 # The amount of configurations the prior was used in the selection of configurations
+        self._initial_design_size = None # The amount of datapoints in the initial design
+        self._iteration_number = 1 # The amount of configurations the prior was used in the selection of configurations. It starts at 1
 
     @property
     def name(self) -> str:  # noqa: D102
@@ -122,7 +123,9 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
 
         # TODO this is an imperfect fix, but it is better than previously.
         # We need to decide how to handle the values sampled initially
-        self._iteration_number = kwargs["num_data"]
+        if self._initial_design_size is None:
+            self._initial_design_size = kwargs["num_data"]
+        self._iteration_number = kwargs["num_data"] - self._initial_design_size + 1
         self._eta = kwargs["eta"]
 
         assert self.model is not None
