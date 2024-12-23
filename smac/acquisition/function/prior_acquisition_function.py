@@ -72,7 +72,9 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             acquisition_type = self._acquisition_function
 
         self._rescale = isinstance(acquisition_type, (LCB, TS))
-        self._iteration_number = 0
+        
+        # Variables needed to adapt the weighting of the prior
+        self._iteration_number = 0 # The amount of configurations the prior was used in the selection of configurations
 
     @property
     def name(self) -> str:  # noqa: D102
@@ -117,7 +119,10 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             Current incumbent value.
         """
         assert "eta" in kwargs
-        self._iteration_number += 1
+
+        # TODO this is an imperfect fix, but it is better than previously.
+        # We need to decide how to handle the values sampled initially
+        self._iteration_number = kwargs["num_data"]
         self._eta = kwargs["eta"]
 
         assert self.model is not None
