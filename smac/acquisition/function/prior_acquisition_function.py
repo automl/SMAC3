@@ -100,6 +100,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     @model.setter
     def model(self, model: AbstractModel) -> None:
         self._model = model
+        # TODO replace deprecated method
         self._hyperparameters = model._configspace.get_hyperparameters_dict()
 
         if isinstance(model, AbstractRandomForest):
@@ -178,6 +179,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             The user prior over the optimum for the parameter at hand.
         """
         # Evaluates the actual pdf on all the relevant points
+        # Replace deprecated method
         pdf_values = hyperparameter._pdf(X_col[:, np.newaxis])
 
         # Retrieves the largest value of the pdf in the domain
