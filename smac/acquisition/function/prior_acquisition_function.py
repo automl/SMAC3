@@ -17,6 +17,7 @@ from smac.acquisition.function.thompson import TS
 from smac.model.abstract_model import AbstractModel
 from smac.model.random_forest.abstract_random_forest import AbstractRandomForest
 from smac.utils.logging import get_logger
+from ConfigSpace import ConfigurationSpace
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -49,6 +50,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self,
         acquisition_function: AbstractAcquisitionFunction,
         decay_beta: float,
+        prior_configspace: ConfigurationSpace,
         prior_floor: float = 1e-12,
         discretize: bool = False,
         discrete_bins_factor: float = 10.0,
@@ -58,8 +60,9 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self._functions: list[AbstractAcquisitionFunction] = []
         self._eta: float | None = None
 
-        self._hyperparameters: dict[Any, Configuration] | None = None
         self._decay_beta = decay_beta
+        self._prior_configspace = prior_configspace
+        self._hyperparameters: dict[Any, Configuration] | None = dict(self._prior_configspace)
         self._prior_floor = prior_floor
         self._discretize = discretize
         self._discrete_bins_factor = discrete_bins_factor
@@ -72,10 +75,12 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             acquisition_type = self._acquisition_function
 
         self._rescale = isinstance(acquisition_type, (LCB, TS))
-        
+
         # Variables needed to adapt the weighting of the prior
-        self._initial_design_size = None # The amount of datapoints in the initial design
-        self._iteration_number = 1 # The amount of configurations the prior was used in the selection of configurations. It starts at 1
+        self._initial_design_size = (
+            None  # The amount of datapoints in the initial design
+        )
+        self._iteration_number = 1  # The amount of configurations the prior was used in the selection of configurations. It starts at 1
 
     @property
     def name(self) -> str:  # noqa: D102
@@ -103,8 +108,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     @model.setter
     def model(self, model: AbstractModel) -> None:
         self._model = model
-        # TODO replace deprecated method
-        self._hyperparameters = model._configspace.get_hyperparameters_dict()
 
         if isinstance(model, AbstractRandomForest):
             if not self._discretize:
