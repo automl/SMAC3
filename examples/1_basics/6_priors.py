@@ -209,7 +209,7 @@ if __name__ == "__main__":
             scenario
         ),
         decay_beta=scenario.n_trials / 10,  # Proven solid value
-        prior_configsapce=mlp.prior_configspace,
+        prior_configspace=mlp.prior_configspace,
     )
 
     # We only want one config call (use only one seed in this example)
