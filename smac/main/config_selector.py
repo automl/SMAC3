@@ -381,8 +381,8 @@ class ConfigSelector:
             return self._model.predict_marginalized(X_running)[0]
         elif estimation_strategy == 'sample':
             # https://papers.nips.cc/paper_files/paper/2012/file/05311655a15b75fab86956663e1819cd-Paper.pdf
-            # since this requires a multi-variant gaussian distribution, we need to restrict the model needs to be a
-            # gaussian process
+            # since this requires a multi-variant gaussian distribution for the candidates, we need to restrict the
+            # model to be a gaussian process
             assert isinstance(self._model, GaussianProcess), 'Sample based estimate strategy only allows ' \
                                                              'GP as surrogate model!'
             return self._model.sample_functions(X_test=X_running, n_funcs=1)
