@@ -17,21 +17,24 @@ logger = get_logger(__name__)
 
 
 class EI(AbstractAcquisitionFunction):
-    r"""Expected Improvement (with or without function values in log space) acquisition function
+    r"""The Expected Improvement (EI) criterion is used to decide where to evaluate a function f(x) next. The goal is to
+    balance exploration and exploitation. Expected Improvement in a genereal form (with or without function values in
+    log space) acquisition function
 
     :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,
     with :math:`f(X^+)` as the best location.
 
-    This is the original equation for logEI:
-    :math: `\alpha_{\log \text{EI}}(x | \mathcal{D}) = y^\star \Phi(z) - \exp\left(\mu + \frac{\sigma^2}{2}\right) \Phi(z - \sigma)`
-    Reference:
-    Hutter, F. and Hoos, H. and Leyton-Brown, K. and Murphy, K. (2009). An experimental investigation of model-based parameter optimisation: SPO and beyond. In: Conference on Genetic and Evolutionary Computation
+    For logEI, this equation is implemented:
+    :math: `logEI(X) :=  y^\star \Phi(z) - \exp\left(\mu + \frac{\sigma^2}{2}\right) \Phi(z - \sigma)`
 
-    :math: `EI(X) := \mathbb{E} \left[ \max \{ 0, f(X^+) - f_{t+1}(X) - \xi \} \right]`
+    The equation is derived from the orginal equation for logEI:
+    :math: `logEI = \int_{-\infty}^{\log y^*} \left(y^* - \exp l \right) p(l \mid \mathbf{x}, \mathcal{D}) \, dl`
+    Reference: Hutter, F. and Hoos, H. and Leyton-Brown, K. and Murphy, K. (2009). An experimental investigation of
+    model-based parameter optimisation: SPO and beyond. In: Conference on Genetic and Evolutionary Computation
 
     The derivation of the equation can be found here:
-    Watanabe, S. (2024). Derivation of Closed Form of Expected Improvement for Gaussian Process Trained on Log-Transformed Objective. https://arxiv.org/abs/2411.18095 
-}
+    Watanabe, S. (2024). Derivation of Closed Form of Expected Improvement for Gaussian Process Trained on
+    Log-Transformed Objective. https://arxiv.org/abs/2411.18095
 
     Parameters
     ----------
