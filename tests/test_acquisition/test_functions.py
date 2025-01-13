@@ -298,16 +298,16 @@ def test_prior_init_ts(prior_model, acq_ts, beta):
 
 def test_prior_update(prior_model, acquisition_function, beta):
     paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
-    paf.update(model=prior_model, eta=2)
+    paf.update(model=prior_model, eta=2, num_data=10)
     assert paf._eta == 2
     assert paf._acquisition_function._eta == 2
-    assert paf._iteration_number == 1
+    assert paf._iteration_number == 0
 
 
 def test_prior_compute_prior_Nx1(prior_model, hyperparameter_dict, acquisition_function, beta):
     prior_model.update_prior(hyperparameter_dict)
     paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
-    paf.update(model=prior_model, eta=1)
+    paf.update(model=prior_model, eta=1, num_data=1)
 
     X = np.array([0, 0.5, 1]).reshape(3, 1)
     prior_values = paf._compute_prior(X)
@@ -321,7 +321,7 @@ def test_prior_compute_prior_Nx1(prior_model, hyperparameter_dict, acquisition_f
 def test_prior_compute_prior_NxD(prior_model, hyperparameter_dict, acquisition_function, beta):
     prior_model.update_prior(hyperparameter_dict)
     paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
-    paf.update(model=prior_model, eta=1)
+    paf.update(model=prior_model, eta=1, num_data=1)
 
     X = np.array([[0, 0], [0, 1], [1, 1]])
     prior_values = paf._compute_prior(X)
@@ -339,7 +339,7 @@ def test_prior_compute_prior_1xD(prior_model, acquisition_function, beta):
 
     prior_model.update_prior(hyperparameter_dict)
     paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
-    paf.update(model=prior_model, eta=1)
+    paf.update(model=prior_model, eta=1, num_data=1)
 
     X = np.array([[0.5, 0.5]])
     prior_values = paf._compute_prior(X)
@@ -351,7 +351,7 @@ def test_prior_compute_prior_1xD(prior_model, acquisition_function, beta):
 def test_prior_compute_prior_1x1(prior_model, hyperparameter_dict, acquisition_function, beta):
     prior_model.update_prior(hyperparameter_dict)
     paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
-    paf.update(model=prior_model, eta=1)
+    paf.update(model=prior_model, eta=1, num_data=1)
 
     X = np.array([0.5]).reshape(1, 1)
     prior_values = paf._compute_prior(X)
@@ -378,7 +378,7 @@ def hp_dict3(x0_prior, x1_prior, x2_prior):
 def test_prior_1xD(hp_dict3, prior_model, acquisition_function, beta, prior_floor):
     prior_model.update_prior(hp_dict3)
     paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta, prior_floor=prior_floor)
-    paf.update(model=prior_model, eta=1.0)
+    paf.update(model=prior_model, eta=1.0, num_data=1)
     configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
     acq = paf(configurations)
     assert acq.shape == (1, 1)
@@ -391,7 +391,7 @@ def test_prior_1xD(hp_dict3, prior_model, acquisition_function, beta, prior_floo
 def test_prior_NxD(hp_dict3, prior_model, acquisition_function, beta, prior_floor):
     prior_model.update_prior(hp_dict3)
     paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta, prior_floor=prior_floor)
-    paf.update(model=prior_model, eta=1.0)
+    paf.update(model=prior_model, eta=1.0, num_data=1)
 
     # These are the exact same numbers as in the EI tests below
     configurations = [
@@ -449,7 +449,7 @@ def test_prior_NxD_TS(prior_model, hp_dict3, acq_ts, beta, prior_floor):
 def test_prior_decay(hp_dict3, prior_model, acquisition_function, beta, prior_floor):
     prior_model.update_prior(hp_dict3)
     paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta, prior_floor=prior_floor)
-    paf.update(model=prior_model, eta=1.0)
+    paf.update(model=prior_model, eta=1.0, num_data=0)
     configurations = [ConfigurationMock([0.1, 0.1, 0.1])]
 
     for i in range(1, 6):
@@ -457,7 +457,7 @@ def test_prior_decay(hp_dict3, prior_model, acquisition_function, beta, prior_fl
         acq = paf(configurations)
         print(acq, 0.90020601136712231 * prior_factor)
         assert np.isclose(acq[0][0], 0.90020601136712231 * prior_factor)
-        paf.update(model=prior_model, eta=1.0)  # increase iteration number
+        paf.update(model=prior_model, eta=1.0, num_data = i)  # increase iteration number
 
 
 def test_prior_discretize_pdf(prior_model, acquisition_function, beta, prior_floor):
@@ -467,7 +467,7 @@ def test_prior_discretize_pdf(prior_model, acquisition_function, beta, prior_flo
     paf = PriorAcquisitionFunction(
         acquisition_function=acquisition_function, decay_beta=beta, prior_floor=prior_floor, discretize=True
     )
-    paf.update(model=prior_model, eta=1)
+    paf.update(model=prior_model, eta=1, num_data=1)
 
     number_of_bins_1 = 13
     number_of_bins_2 = 27521

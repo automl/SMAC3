@@ -72,6 +72,9 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             acquisition_type = self._acquisition_function
 
         self._rescale = isinstance(acquisition_type, (LCB, TS))
+
+        # Variables needed to adapt the weighting of the prior
+        self._initial_design_size = None
         self._iteration_number = 0
 
     @property
@@ -116,7 +119,12 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             Current incumbent value.
         """
         assert "eta" in kwargs
-        self._iteration_number += 1
+
+        # Compute intiial design size
+        if self._initial_design_size is None:
+            self._initial_design_size = kwargs["num_data"]
+
+        self._iteration_number = kwargs["num_data"] - self._initial_design_size
         self._eta = kwargs["eta"]
 
         assert self.model is not None
@@ -146,8 +154,10 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         for parameter, X_col in zip(self._hyperparameters.values(), X.T):
             if self._discretize and isinstance(parameter, FloatHyperparameter):
                 assert self._discrete_bins_factor is not None
-                number_of_bins = int(np.ceil(self._discrete_bins_factor * self._decay_beta / self._iteration_number))
-                prior_values *= self._compute_discretized_pdf(parameter, X_col, number_of_bins) + self._prior_floor
+                number_of_bins = int(
+                    np.ceil(self._discrete_bins_factor * self._decay_beta / (self._iteration_number + 1))
+                )
+                prior_values *= self._compute_discretized_pdf(parameter, X_col, number_of_bins)
             else:
                 prior_values *= parameter._pdf(X_col[:, np.newaxis])
 
@@ -178,6 +188,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             The user prior over the optimum for the parameter at hand.
         """
         # Evaluates the actual pdf on all the relevant points
+        # Replace deprecated method
         pdf_values = hyperparameter._pdf(X_col[:, np.newaxis])
 
         # Retrieves the largest value of the pdf in the domain
@@ -221,6 +232,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             acq_values = self._acquisition_function._compute(X)
 
         prior_values = self._compute_prior(X) + self._prior_floor
-        decayed_prior_values = np.power(prior_values, self._decay_beta / self._iteration_number)
+        decayed_prior_values = np.power(prior_values, self._decay_beta / (self._iteration_number + 1))
 
         return acq_values * decayed_prior_values
