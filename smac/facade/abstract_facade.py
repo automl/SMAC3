@@ -420,9 +420,43 @@ class AbstractFacade:
         *,
         retrain_after: int = 8,
         retries: int = 16,
+        min_trials: int = 1,
+        batch_sampling_estimation_strategy: str = "no_estimation",
     ) -> ConfigSelector:
-        """Returns the default configuration selector."""
-        return ConfigSelector(scenario, retrain_after=retrain_after, retries=retries)
+        """Returns the default configuration selector.
+
+        Parameters
+        ----------
+        retrain_after : int, defaults to 8
+            How many configurations should be returned before the surrogate model is retrained.
+        retries : int, defaults to 16
+            How often to retry receiving a new configuration before giving up.
+        min_trials: int, defaults to 1
+            How many samples are required to train the surrogate model. If budgets are involved,
+            the highest budgets are checked first. For example, if min_trials is three, but we find only
+            two trials in the runhistory for the highest budget, we will use trials of a lower budget
+            instead.
+        batch_sampling_estimation_strategy: str, defaults to no_estimation
+            Batch sample setting, this is applied for parallel setting. During batch sampling, ConfigSelectors might
+            need to suggest new samples while some configurations are still running. This argument determines if we want
+            to make use of this information and fantasize the new estimations. If no_estimate is applied, we do not use
+            the information from the running configurations. If the strategy is kriging_believer, we use the predicted
+            mean from our surrogate model as the estimations for the new samples. If the strategy is CL_min/mean/max, we
+            use the min/mean/max from the existing evaluations as the estimations for the new samples. If the strategy
+            is sample, we use our surrogate model (in this case, only GP is allowed) to sample new configurations.
+
+        Returns
+        -------
+        ConfigSelector
+            The instantiated configuration selector proposing new configurations (optimize acquisition function).
+        """
+        return ConfigSelector(
+            scenario,
+            retrain_after=retrain_after,
+            retries=retries,
+            min_trials=min_trials,
+            batch_sampling_estimation_strategy=batch_sampling_estimation_strategy,
+        )
 
     def _get_optimizer(self) -> SMBO:
         """Fills the SMBO with all the pre-initialized components."""
