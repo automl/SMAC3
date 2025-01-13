@@ -144,4 +144,4 @@ If you use SMAC in one of your research projects, please cite our
 }
 ```
 
-Copyright (C) 2016-2022  [AutoML Group](http://www.automl.org).
+Copyright (c) 2025, [automl.org](https://www.automl.org/)
