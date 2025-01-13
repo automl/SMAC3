@@ -25,11 +25,10 @@ from sklearn.utils.parallel import Parallel, delayed
 from sklearn.ensemble._base import _partition_estimators
 
 
-def estimator_predict(predict, X, results, lock, col_idx):
+def estimator_predict(predict, X, results, col_idx):
     """Collect predictions from a single estimator."""
     prediction = predict(X, check_input=False)
-    with lock:
-        results[:, col_idx] = prediction  # Populate the corresponding column
+    results[:, col_idx] = prediction  # Populate the corresponding column
 
 
 class EPMRandomForest(ForestRegressor):
@@ -429,17 +428,16 @@ class EPMRandomForest(ForestRegressor):
             preds = np.zeros((X.shape[0], self.n_estimators), dtype=np.float64)
 
         # Parallel loop
-        lock = threading.Lock()
         Parallel(n_jobs=n_jobs, verbose=self.verbose, require="sharedmem")(
-            delayed(estimator_predict)(e.predict, X, preds, lock, idx)
+            delayed(estimator_predict)(e.predict, X, preds, idx)
             for idx, e in enumerate(self.estimators_)
         )
         # This should be equivalent to the following implementation
 
-        # preds_ = np.zeros([len(X), self.n_estimators])
-        # for i, tree in enumerate(self.estimators_):
-        #     preds_[:, i] = tree.predict(X)
-        # assert np.allclose(preds, preds_)
+        #preds_ = np.zeros([len(X), self.n_estimators])
+        #for i, tree in enumerate(self.estimators_):
+        #    preds_[:, i] = tree.predict(X)
+        #assert np.allclose(preds, preds_)
 
         return preds
 
