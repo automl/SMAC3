@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Mapping, Iterable
+from typing import Any, Iterable, Mapping
 
 import numpy as np
 
@@ -189,16 +189,27 @@ class AbstractRunHistoryEncoder:
         return trials
 
     def _get_running_trials(
-            self,
-            budget_subset: list | None = None,
+        self,
+        budget_subset: list | None = None,
     ) -> dict[TrialKey, TrialValue]:
-        """Returns all trials that are still running."""
+        """Returns all trials that are still running.
+
+        Parameters
+        ----------
+        budget_subset : list | None
+            If None, retrieve all running trials. Otherwise, retrieve only running
+            trials with budgets in budget_subset.
+
+        Returns
+        -------
+        trials : dict[TrialKey, TrialValue]
+            A dictionary containing the running trials.
+        """
         if budget_subset is not None:
             trials = {
                 trial: self.runhistory[trial]
                 for trial in self.runhistory
-                if self.runhistory[trial].status == StatusType.RUNNING
-                and trial.budget in budget_subset
+                if self.runhistory[trial].status == StatusType.RUNNING and trial.budget in budget_subset
             }
         else:
             trials = {
@@ -213,7 +224,19 @@ class AbstractRunHistoryEncoder:
         self,
         budget_subset: list | None = None,
     ) -> dict[TrialKey, TrialValue]:
-        """Returns all trials that did have a timeout."""
+        """Returns all trials that did have a timeout.
+
+        Parameters
+        ----------
+        budget_subset : list | None
+            If None, retrieve all timeout trials. Otherwise, retrieve only timeout
+            trials with budgets in budget_subset.
+
+        Returns
+        -------
+        trials : dict[TrialKey, TrialValue]
+            A dictionary containing the timeout trials.
+        """
         if budget_subset is not None:
             trials = {
                 trial: self.runhistory[trial]
@@ -232,19 +255,18 @@ class AbstractRunHistoryEncoder:
 
         return trials
 
-    def _convert_config_ids_to_array(self,
-                                     config_ids: Iterable[int]) -> np.ndarray:
-        """extract the configurations from runhistory with their ids and transform them into np array
+    def _convert_config_ids_to_array(self, config_ids: Iterable[int]) -> np.ndarray:
+        """Extract the configurations from runhistory from their ids and transform them into np.ndarray.
 
         Parameters
         ----------
         config_ids : Iterable[int]
-            a collections of configuration ids
+            A collections of configuration ids.
 
         Returns
         -------
         configs_array : np.ndarray
-            the corresponding configuration arrays
+            The corresponding configuration arrays.
 
         """
         configurations = [self.runhistory._ids_config[config_id] for config_id in config_ids]
@@ -281,8 +303,8 @@ class AbstractRunHistoryEncoder:
         return configs_array
 
     def get_running_configurations(
-            self,
-            budget_subset: list | None = None,
+        self,
+        budget_subset: list | None = None,
     ) -> np.ndarray:
         """Returns vector representation of the configurations that are still running.
 
@@ -343,10 +365,21 @@ class AbstractRunHistoryEncoder:
         return X, Y
 
     def transform_running_configs(
-            self,
-            budget_subset: list | None = None,
+        self,
+        budget_subset: list | None = None,
     ) -> np.ndarray:
-        """Return the running configurations"""
+        """Transform the running configurations.
+
+        Parameters
+        ----------
+        budget_subset : list | None, defaults to none
+            List of budgets to consider.
+
+        Returns
+        -------
+        X : np.ndarray
+            Configuration vector and instance features.
+        """
         logger.debug("Transforming Running Configurations into X format...")
         running_trials = self._get_running_trials(budget_subset)
         # Y is not required for running configurations
