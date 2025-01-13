@@ -7,6 +7,7 @@
 
 ## Bugfixes
 - Fix kwargs for DifferentialEvolution (#1187)
+- Fix PiBo implementation (#1076)
 
 # 2.2.1
 
