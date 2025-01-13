@@ -44,7 +44,11 @@ def determine_HB(min_budget: float, max_budget: float, eta: int = 3) -> dict:
         _max_iterations[i] = max_iter + 1
 
     total_trials = np.sum([np.sum(v) for v in _n_configs_in_stage.values()])
-    total_budget = np.sum([np.sum(v) for v in _budgets_in_stage.values()])
+
+    total_budget = 0
+    for stage in _n_configs_in_stage.keys():
+        for b, c in zip(_budgets_in_stage[stage], _n_configs_in_stage[stage]):
+            total_budget += b * c
 
     return {
         "max_iterations": _max_iterations,
