@@ -96,23 +96,21 @@ The runhistory.json in split into four parts. `stats`, `data`, `configs`, and `c
   },
 ```
 
-`data` contains a list of entries, one for each configuration where the keys are the one-based `config_id`.
+`data` contains a list of entries, one for each configuration.
 ```json
   "data": {
-    "1": {
+      "config_id": 1,
       "instance": null,
-      "seed": 398764591,
-      "budget": null,
-      "cost": 16916.0,
-      "time": 4.0531158447265625e-06,
-      "cpu_time": 3.000000006636583e-06,
-      "status": 1,
-      "starttime": 1733155597.639732,
-      "endtime": 1733155597.64017,
+      "seed": 209652396,
+      "budget": 2.7777777777777777,
+      "cost": 2147483647.0,
+      "time": 0.0,
+      "cpu_time": 0.0,
+      "status": 0,
+      "starttime": 0.0,
+      "endtime": 0.0,
       "additional_info": {}
     },
-    ...
-  }
 ```
 
 `configs` is a human-readable dictionary of configurations, where the keys are the one-based `config_id`. It is important to note that in `runhistory.json`, the indexing is zero-based.
