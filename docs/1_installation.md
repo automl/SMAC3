@@ -1,5 +1,4 @@
 # Installation
-TODO UPDATE THIS TO INCLUDE MIN_TRIALS. DO NOT ACCEPT A PUSH WITH THIS
 ## Requirements
 
 SMAC is written in python3 and therefore requires an environment with python>=3.8.
