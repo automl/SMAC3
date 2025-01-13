@@ -123,7 +123,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         # Compute intiial design size
         if self._initial_design_size is None:
             self._initial_design_size = kwargs["num_data"]
-        
+
         self._iteration_number = kwargs["num_data"] - self._initial_design_size
         self._eta = kwargs["eta"]
 
@@ -154,7 +154,9 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         for parameter, X_col in zip(self._hyperparameters.values(), X.T):
             if self._discretize and isinstance(parameter, FloatHyperparameter):
                 assert self._discrete_bins_factor is not None
-                number_of_bins = int(np.ceil(self._discrete_bins_factor * self._decay_beta / (self._iteration_number + 1)))
+                number_of_bins = int(
+                    np.ceil(self._discrete_bins_factor * self._decay_beta / (self._iteration_number + 1))
+                )
                 prior_values *= self._compute_discretized_pdf(parameter, X_col, number_of_bins)
             else:
                 prior_values *= parameter._pdf(X_col[:, np.newaxis])
