@@ -421,7 +421,7 @@ class AbstractFacade:
         retrain_after: int = 8,
         retries: int = 16,
         min_trials: int = 1,
-        batch_sampling_estimation_strategy: str = "no_estimation",
+        batch_sampling_estimation_strategy: str = "no_estimate",
     ) -> ConfigSelector:
         """Returns the default configuration selector.
 
@@ -436,7 +436,11 @@ class AbstractFacade:
             the highest budgets are checked first. For example, if min_trials is three, but we find only
             two trials in the runhistory for the highest budget, we will use trials of a lower budget
             instead.
-        batch_sampling_estimation_strategy: str, defaults to no_estimation
+        batch_sampling_estimation_strategy: str, defaults to no_estimate
+
+            Warning: This is intended to work in the black box optimization setting with a Gaussian Process and
+            only works sensibly for non-multifidelity.
+
             Batch sample setting, this is applied for parallel setting. During batch sampling, ConfigSelectors might
             need to suggest new samples while some configurations are still running. This argument determines if we want
             to make use of this information and fantasize the new estimations. If no_estimate is applied, we do not use
