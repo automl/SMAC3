@@ -21,6 +21,9 @@
 # Examples
 - Add warmstarting example (#1120)
 
+# Bugfix
+- Fix wrong attr query in the target function runner (crash cost) (#1176)
+
 # 2.2.0
 
 ## Examples
