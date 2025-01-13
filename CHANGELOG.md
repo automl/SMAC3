@@ -8,6 +8,9 @@
 - Correct intensifier for Algorithm Configuration Facade (#1162, #1165)
 - Migrate sphinx docs to mkdocs (#1155)
 
+## Bugfixes
+- Fix kwargs for DifferentialEvolution (#1187)
+
 # 2.2.1
 
 ## Improvements
@@ -18,8 +21,14 @@
 ## Dependencies
 - Allow numpy >= 2.x (#1146)
 
+## Bugfixes
+- Fix bug in differential evolution acquisition maximizer in case the search space contains categorical hyperparameters (#1150)
+
 # Examples
 - Add warmstarting example (#1120)
+
+# Bugfix
+- Fix wrong attr query in the target function runner (crash cost) (#1176)
 
 # 2.2.0
 
