@@ -1,5 +1,8 @@
 # 2.3.0
 
+## Improvements
+- Adapt RunHistory to be human readable (# 1174)
+
 ## Documentation
 - Update windows install guide (#952)
 - Correct intensifier for Algorithm Configuration Facade (#1162, #1165)

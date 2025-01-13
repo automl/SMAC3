@@ -14,7 +14,14 @@ __license__ = "3-clause BSD"
 
 
 class MultiFidelityFacade(HyperparameterOptimizationFacade):
-    """This facade configures SMAC in a multi-fidelity setting."""
+    """This facade configures SMAC in a multi-fidelity setting.
+
+    !!! warning
+        ``smac.main.config_selector.ConfigSelector`` contains the ``min_trials`` parameter. This parameter determines
+        how many samples are required to train the surrogate model. If budgets are involved, the highest budgets
+        are checked first. For example, if min_trials is three, but we find only two trials in the runhistory for
+        the highest budget, we will use trials of a lower budget instead.
+    """
 
     @staticmethod
     def get_intensifier(  # type: ignore
