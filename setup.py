@@ -74,7 +74,7 @@ setuptools.setup(
     python_requires=">=3.8",
     install_requires=[
         "numpy",
-        "scipy>=1.9.2",
+        "scipy>=1.15.1",
         "psutil",
         "pynisher>=1.0.0",
         "ConfigSpace>=1.0.0",
