@@ -17,6 +17,7 @@ from smac.callback.callback import Callback
 from smac.initial_design import AbstractInitialDesign
 from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process import GaussianProcess
+from smac.model.random_forest import RandomForest
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
@@ -377,7 +378,12 @@ class ConfigSelector:
         elif estimation_strategy == "kriging_believer":
             # kriging believer, we apply the predicted means of the surrogate model to estimate the running X
             # Check whether model has been trained already
-            if isinstance(self._model, GaussianProcess) and not self._model._is_trained:
+            if (
+                isinstance(self._model, GaussianProcess)
+                and not self._model._is_trained
+                or isinstance(self._model, RandomForest)
+                and self._model._rf is None
+            ):
                 logger.debug(
                     "Model has not been trained yet. Skip estimation and use constant liar mean "
                     "(mean of all samples)."
