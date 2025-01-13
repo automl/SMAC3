@@ -17,7 +17,6 @@ from smac.acquisition.function.thompson import TS
 from smac.model.abstract_model import AbstractModel
 from smac.model.random_forest.abstract_random_forest import AbstractRandomForest
 from smac.utils.logging import get_logger
-from ConfigSpace import ConfigurationSpace
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -50,7 +49,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self,
         acquisition_function: AbstractAcquisitionFunction,
         decay_beta: float,
-        prior_configspace: ConfigurationSpace,
         prior_floor: float = 1e-12,
         discretize: bool = False,
         discrete_bins_factor: float = 10.0,
@@ -60,9 +58,8 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self._functions: list[AbstractAcquisitionFunction] = []
         self._eta: float | None = None
 
+        self._hyperparameters: dict[Any, Configuration] | None = None
         self._decay_beta = decay_beta
-        self._prior_configspace = prior_configspace
-        self._hyperparameters: dict[Any, Configuration] | None = dict(self._prior_configspace)
         self._prior_floor = prior_floor
         self._discretize = discretize
         self._discrete_bins_factor = discrete_bins_factor
@@ -77,10 +74,8 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self._rescale = isinstance(acquisition_type, (LCB, TS))
 
         # Variables needed to adapt the weighting of the prior
-        self._initial_design_size = (
-            None  # The amount of datapoints in the initial design
-        )
-        self._iteration_number = 1  # The amount of configurations the prior was used in the selection of configurations. It starts at 1
+        self._initial_design_size = None
+        self._iteration_number = 0
 
     @property
     def name(self) -> str:  # noqa: D102
@@ -108,6 +103,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     @model.setter
     def model(self, model: AbstractModel) -> None:
         self._model = model
+        self._hyperparameters = model._configspace.get_hyperparameters_dict()
 
         if isinstance(model, AbstractRandomForest):
             if not self._discretize:
@@ -124,11 +120,11 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         """
         assert "eta" in kwargs
 
-        # TODO this is an imperfect fix, but it is better than previously.
-        # We need to decide how to handle the values sampled initially
+        # Compute intiial design size
         if self._initial_design_size is None:
             self._initial_design_size = kwargs["num_data"]
-        self._iteration_number = kwargs["num_data"] - self._initial_design_size + 1
+        
+        self._iteration_number = kwargs["num_data"] - self._initial_design_size
         self._eta = kwargs["eta"]
 
         assert self.model is not None
@@ -158,7 +154,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         for parameter, X_col in zip(self._hyperparameters.values(), X.T):
             if self._discretize and isinstance(parameter, FloatHyperparameter):
                 assert self._discrete_bins_factor is not None
-                number_of_bins = int(np.ceil(self._discrete_bins_factor * self._decay_beta / self._iteration_number))
+                number_of_bins = int(np.ceil(self._discrete_bins_factor * self._decay_beta / (self._iteration_number + 1)))
                 prior_values *= self._compute_discretized_pdf(parameter, X_col, number_of_bins)
             else:
                 prior_values *= parameter._pdf(X_col[:, np.newaxis])
@@ -234,6 +230,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             acq_values = self._acquisition_function._compute(X)
 
         prior_values = self._compute_prior(X) + self._prior_floor
-        decayed_prior_values = np.power(prior_values, self._decay_beta / self._iteration_number)
+        decayed_prior_values = np.power(prior_values, self._decay_beta / (self._iteration_number + 1))
 
         return acq_values * decayed_prior_values
