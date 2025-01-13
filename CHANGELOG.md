@@ -5,6 +5,9 @@
 - Correct intensifier for Algorithm Configuration Facade (#1162, #1165)
 - Migrate sphinx docs to mkdocs (#1155)
 
+## Bugfixes
+- Fix bug with HyperBand setup given a total budget (#1179)
+
 # 2.2.1
 
 ## Improvements
