@@ -5,6 +5,9 @@
 - Correct intensifier for Algorithm Configuration Facade (#1162, #1165)
 - Migrate sphinx docs to mkdocs (#1155)
 
+## Bugfixes
+- Fix kwargs for DifferentialEvolution (#1187)
+
 # 2.2.1
 
 ## Improvements
