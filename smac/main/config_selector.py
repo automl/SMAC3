@@ -52,7 +52,7 @@ class ConfigSelector:
         information from the running configurations. If the strategy is kriging_believer, we use the predicted mean from
         our surrogate model as the estimations for the new samples. If the strategy is CL_min/mean/max, we use the
         min/mean/max from the existing evaluations as the estimations for the new samples. If the strategy is sample,
-        we use our surrogate model (in this case, only GP is allowed) to sample new configurations
+        we use our surrogate model (in this case, only GP is allowed) to sample new configurations.
     """
 
     def __init__(
@@ -376,14 +376,22 @@ class ConfigSelector:
             return np.repeat(Y_estimated, n_running_points, 0)
         elif estimation_strategy == "kriging_believer":
             # kriging believer, we apply the predicted means of the surrogate model to estimate the running X
+            # Check whether model has been trained already
+            if isinstance(self._model, GaussianProcess) and not self._model._is_trained:
+                logger.debug(
+                    "Model has not been trained yet. Skip estimation and use constant liar mean "
+                    "(mean of all samples)."
+                )
+                Y_estimated = np.nanmean(Y_evaluated, axis=0, keepdims=True)
+                return np.repeat(Y_estimated, n_running_points, 0)
             return self._model.predict_marginalized(X_running)[0]  # type: ignore[union-attr]
         elif estimation_strategy == "sample":
             # https://papers.nips.cc/paper_files/paper/2012/file/05311655a15b75fab86956663e1819cd-Paper.pdf
             # since this requires a multi-variant gaussian distribution for the candidates, we need to restrict the
             # model to be a gaussian process
-            assert isinstance(self._model, GaussianProcess), (
-                "Sample based estimate strategy only allows " "GP as surrogate model!"
-            )
+            assert isinstance(
+                self._model, GaussianProcess
+            ), "Sample based estimate strategy only allows GP as surrogate model!"
             return self._model.sample_functions(X_test=X_running, n_funcs=1)
         else:
             raise ValueError(f"Unknown estimating strategy: {estimation_strategy}")
