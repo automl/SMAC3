@@ -14,9 +14,22 @@ from smac.model.random_forest import AbstractRandomForest
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
+import threading
+
 import numpy as np
 from sklearn.ensemble._forest import ForestRegressor
 from sklearn.tree import DecisionTreeRegressor
+
+import itertools
+from sklearn.utils.parallel import Parallel, delayed
+from sklearn.ensemble._base import _partition_estimators
+
+
+def estimator_predict(predict, X, results, lock, col_idx):
+    """Collect predictions from a single estimator."""
+    prediction = predict(X, check_input=False)
+    with lock:
+        results[:, col_idx] = prediction  # Populate the corresponding column
 
 
 class EPMRandomForest(ForestRegressor):
@@ -386,16 +399,82 @@ class EPMRandomForest(ForestRegressor):
                 for k in np.unique(preds):
                     tree.tree_.value[k, 0, 0] = np.log(np.exp(curY[preds == k]).mean())
 
+    def all_trees_pred(self, X: np.ndarray) -> np.ndarray:
+        """
+        This function is used to parally predict the target X values. It is based on rf regressor from sklearn 1.6.1:
+        https://github.com/scikit-learn/scikit-learn/blob/99bf3d8e4eed5ba5db19a1869482a238b6223ffd/sklearn/ensemble/_forest.py#L1045
+
+        Parameters
+        ----------
+        X: np.ndarray
+
+        Returns
+        -------
+
+        """
+        #check_is_fitted(self)
+        # Check data
+        X = self._validate_X_predict(X)
+
+        if X.ndim == 1:
+            X = X[None, :]
+
+        # Assign chunk of trees to jobs
+        n_jobs, _, _ = _partition_estimators(self.n_estimators, self.n_jobs)
+
+        # avoid storing the output of every estimator by summing them here
+        if self.n_outputs_ > 1:
+            preds = np.zeros((X.shape[0], self.n_estimators, self.n_outputs_), dtype=np.float64)
+        else:
+            preds = np.zeros((X.shape[0], self.n_estimators), dtype=np.float64)
+
+        # Parallel loop
+        lock = threading.Lock()
+        Parallel(n_jobs=n_jobs, verbose=self.verbose, require="sharedmem")(
+            delayed(estimator_predict)(e.predict, X, preds, lock, idx)
+            for idx, e in enumerate(self.estimators_)
+        )
+        # This should be equivalent to the following implementation
+
+        # preds_ = np.zeros([len(X), self.n_estimators])
+        # for i, tree in enumerate(self.estimators_):
+        #     preds_[:, i] = tree.predict(X)
+        # assert np.allclose(preds, preds_)
+
+        return preds
+
     def predict(self, X):
-        preds = []
-        for tree, samples_idx in zip(self.estimators_, self.estimators_samples_):
-            preds.append(tree.predict(X))
-        preds = np.array(preds).T
+        preds = self.all_trees_pred(X)
 
         means = preds.mean(axis=1)
         vars = preds.var(axis=1)
 
         return means.reshape(-1, 1), vars.reshape(-1, 1)
+
+    def predict_marginalized_over_instances_batch(self, X: np.ndarray, X_feat: np.ndarray, log_y: bool):
+        """
+        Collects the predictions for each tree in the forest for multiple configurations over a set of instances.
+        Each configuration vector is combined with all the instance feature vectors. Based on the response values over
+        all these feature vectors the mean is computed. In the case of log transformation the response values are
+        decompressed before averaging.
+
+        Parameters
+        ----------
+        X: np.ndarray [#samples, #hyperparameter + #features]
+            Input data points.
+        X_feat: np.ndarray,
+            Features (np.ndarray) of the instances (str). The features are incorporated into the X data,
+            on which the model is trained on.
+        log_y: bool,
+            if log_y is applied to the predictions
+
+        Returns
+        -------
+
+        """
+        # TODO this should work with instance features. However, we need to check how to concatnate X and X_feat
+        #  correctly ...
+        raise NotImplementedError
 
 
 class RandomForest(AbstractRandomForest):
@@ -442,7 +521,7 @@ class RandomForest(AbstractRandomForest):
         instance_features: dict[str, list[int | float]] | None = None,
         pca_components: int | None = 7,
         seed: int = 0,
-        n_estimators: int = N_TREES,  # TODO: HP: 100 is default in sklearn, here it's 10
+        n_trees: int = N_TREES,  # TODO: HP: 100 is default in sklearn, here it's 10
         cross_trees_variance=False,
         criterion="squared_error",
         splitter="random",  # Should not be changed
@@ -453,7 +532,7 @@ class RandomForest(AbstractRandomForest):
         # max_features=1.0,  # Set by ratio_features
         max_leaf_nodes: int = 2**20,  # TODO: HP: None is default in sklearn, here it's 2**20
         min_impurity_decrease=0.0,
-        bootstrap: bool = True,  # TODO HP: False is default in sklearn, here it's True
+        bootstrapping: bool = True,  # TODO HP: False is default in sklearn, here it's True
         oob_score: bool = False,
         n_jobs=None,
         # random_state=None,  # Set by seed
@@ -477,7 +556,7 @@ class RandomForest(AbstractRandomForest):
 
         self._log_y = log_y
         self._rf_opts = {
-            "n_estimators": n_estimators,
+            "n_estimators": n_trees,
             "cross_trees_variance": cross_trees_variance,
             "criterion": criterion,
             "splitter": splitter,
@@ -487,7 +566,7 @@ class RandomForest(AbstractRandomForest):
             "min_weight_fraction_leaf": min_weight_fraction_leaf,
             "max_leaf_nodes": max_leaf_nodes,
             "min_impurity_decrease": min_impurity_decrease,
-            "bootstrap": bootstrap,
+            "bootstrap": bootstrapping,
             "oob_score": oob_score,
             "n_jobs": n_jobs,
             "verbose": verbose,
@@ -517,35 +596,6 @@ class RandomForest(AbstractRandomForest):
 
         return self
 
-    def _init_data_container(self, X: np.ndarray, y: np.ndarray) -> DataContainer:
-        """Fills a pyrfr default data container s.t. the forest knows categoricals and bounds for continous data.
-
-        Parameters
-        ----------
-        X : np.ndarray [#samples, #hyperparameter + #features]
-            Input data points.
-        Y : np.ndarray [#samples, #objectives]
-            The corresponding target values.
-
-        Returns
-        -------
-        data : DataContainer
-            The filled data container that pyrfr can interpret.
-        """
-        # Retrieve the types and the bounds from the ConfigSpace
-        data = regression.default_data_container(X.shape[1])
-
-        for i, (mn, mx) in enumerate(self._bounds):
-            if np.isnan(mx):
-                data.set_type_of_feature(i, mn)
-            else:
-                data.set_bounds_of_feature(i, mn, mx)
-
-        for row_X, row_y in zip(X, y):
-            data.add_data_point(row_X, row_y)
-
-        return data
-
     def _predict(
         self,
         X: np.ndarray,
@@ -562,8 +612,10 @@ class RandomForest(AbstractRandomForest):
 
         assert self._rf is not None
         X = self._impute_inactive(X)
-
+        means, vars_ = self._rf.predict(X)
+        """
         if self._log_y:
+        # TODO check if the two implementations are equivalent given that log_y is transformed within fit function
             all_preds = []
             third_dimension = 0
 
@@ -575,7 +627,7 @@ class RandomForest(AbstractRandomForest):
                 third_dimension = max(max_num_leaf_data, third_dimension)
 
             # Transform list of 2d arrays into a 3d array
-            preds_as_array = np.zeros((X.shape[0], self._rf_opts.num_trees, third_dimension)) * np.nan
+            preds_as_array = np.zeros((X.shape[0], self._rf_opts['n_estimators'], third_dimension)) * np.nan
             for i, preds_per_tree in enumerate(all_preds):
                 for j, pred in enumerate(preds_per_tree):
                     preds_as_array[i, j, : len(pred)] = pred
@@ -587,14 +639,10 @@ class RandomForest(AbstractRandomForest):
             means = preds_as_array.mean(axis=1)
             vars_ = preds_as_array.var(axis=1)
         else:
-            means, vars_ = [], []
-            for row_X in X:
-                mean_, var = self._rf.predict(row_X)
-                means.append(mean_)
-                vars_.append(var)
+            means, vars_ = self._rf.predict(X)
+        """
 
-        # means, vars = self._rf.predict(X)
-        return means.reshape((-1, 1)), vars.reshape((-1, 1))
+        return means.reshape((-1, 1)), vars_.reshape((-1, 1))
 
     def predict_marginalized(self, X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """Predicts mean and variance marginalized over all instances.
@@ -643,7 +691,7 @@ class RandomForest(AbstractRandomForest):
         assert self._rf is not None
         X = self._impute_inactive(X)
 
-        X_feat = list(self._instance_features.values())
+        X_feat = np.asarray(list(self._instance_features.values()))
         dat_ = self._rf.predict_marginalized_over_instances_batch(X, X_feat, self._log_y)
         dat_ = np.array(dat_)
 
