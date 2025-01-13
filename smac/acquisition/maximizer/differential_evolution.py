@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import inspect
+
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from scipy.optimize._differentialevolution import DifferentialEvolutionSolver
@@ -12,6 +14,30 @@ from smac.utils.configspace import transform_continuous_designs
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
+
+
+def check_kwarg(cls: type, kwarg_name: str) -> bool:
+    """
+    Checks if a given class accepts a specific keyword argument in its __init__ method.
+
+    Parameters
+    ----------
+        cls (type): The class to inspect.
+        kwarg_name (str): The name of the keyword argument to check.
+
+    Returns
+    -------
+        bool: True if the class's __init__ method accepts the keyword argument,
+              otherwise False.
+    """
+    # Get the signature of the class's __init__ method
+    init_signature = inspect.signature(cls.__init__)  # type: ignore[misc]
+
+    # Check if the kwarg_name is present in the signature as a parameter
+    for param in init_signature.parameters.values():
+        if param.name == kwarg_name and param.default != inspect.Parameter.empty:
+            return True  # It accepts the kwarg
+    return False  # It does not accept the kwarg
 
 
 class DifferentialEvolution(AbstractAcquisitionMaximizer):
@@ -92,6 +118,11 @@ class DifferentialEvolution(AbstractAcquisitionMaximizer):
                 transform_continuous_designs(design=x.T, origin="Diffrential Evolution", configspace=self._configspace)
             )
 
+        accepts_seed = check_kwarg(DifferentialEvolutionSolver, "seed")
+        if accepts_seed:
+            kwargs = {"seed": self._rng.randint(1000)}
+        else:
+            kwargs = {"rng": self._rng.randint(1000)}
         ds = DifferentialEvolutionSolver(
             func,
             bounds=[[0, 1] for _ in range(len(self._configspace))],
@@ -102,13 +133,13 @@ class DifferentialEvolution(AbstractAcquisitionMaximizer):
             tol=0.01,
             mutation=self.mutation,
             recombination=self.recombination,
-            rng=self._rng.randint(1000),
             polish=self.polish,
             callback=None,
             disp=False,
             init="latinhypercube",
             atol=0,
             vectorized=True,
+            **kwargs,
         )
 
         _ = ds.solve()
