@@ -51,7 +51,7 @@ class ConfigSelector:
         use of this information and fantasize the new estimations. If no_estimate is applied, we do not use the
         information from the running configurations. If the strategy is kriging_believer, we use the predicted mean from
         our surrogate model as the estimations for the new samples. If the strategy is CL_min/mean/max, we use the
-        min/mean/max from the existing evaluations as the estimations for the new samples. if the strategy is sample,
+        min/mean/max from the existing evaluations as the estimations for the new samples. If the strategy is sample,
         we use our surrogate model (in this case, only GP is allowed) to sample new configurations
     """
 
@@ -302,7 +302,7 @@ class ConfigSelector:
                 # Therefore, there is no need to check the number of workers in this case
 
                 X_running = self._runhistory_encoder.transform_running_configs(budget_subset=[b])
-                if self._batch_sampling_estimation_strategy != 'no_estimate':
+                if self._batch_sampling_estimation_strategy != "no_estimate":
                     Y_estimated = self.estimate_running_config_costs(
                         X_running, Y, self._batch_sampling_estimation_strategy
                     )
@@ -332,10 +332,8 @@ class ConfigSelector:
         return self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)
 
     def estimate_running_config_costs(
-            self,
-            X_running: np.ndarray,
-            Y_evaluated: np.ndarray,
-            estimation_strategy: str = 'CL_max'):
+        self, X_running: np.ndarray, Y_evaluated: np.ndarray, estimation_strategy: str = "CL_max"
+    ) -> np.ndarray:
         """This function is implemented to estimate the still pending/ running configurations
 
         Parameters
@@ -364,30 +362,31 @@ class ConfigSelector:
         n_running_points = len(X_running)
         if n_running_points == 0:
             return None
-        if estimation_strategy == 'CL_max':
+        if estimation_strategy == "CL_max":
             # constant liar max, we take the maximal values of all the evaluated Y and apply them to the running X
             Y_estimated = np.nanmax(Y_evaluated, axis=0, keepdims=True)
             return np.repeat(Y_estimated, n_running_points, 0)
-        elif estimation_strategy == 'CL_min':
+        elif estimation_strategy == "CL_min":
             # constant liar min, we take the minimal values of all the evaluated Y and apply them to the running X
             Y_estimated = np.nanmin(Y_evaluated, axis=0, keepdims=True)
             return np.repeat(Y_estimated, n_running_points, 0)
-        elif estimation_strategy == 'CL_mean':
+        elif estimation_strategy == "CL_mean":
             # constant liar mean, we take the mean values of all the evaluated Y and apply them to the running X
             Y_estimated = np.nanmean(Y_evaluated, axis=0, keepdims=True)
             return np.repeat(Y_estimated, n_running_points, 0)
-        elif estimation_strategy == 'kriging_believer':
+        elif estimation_strategy == "kriging_believer":
             # kriging believer, we apply the predicted means of the surrogate model to estimate the running X
-            return self._model.predict_marginalized(X_running)[0]
-        elif estimation_strategy == 'sample':
+            return self._model.predict_marginalized(X_running)[0]  # type: ignore[union-attr]
+        elif estimation_strategy == "sample":
             # https://papers.nips.cc/paper_files/paper/2012/file/05311655a15b75fab86956663e1819cd-Paper.pdf
             # since this requires a multi-variant gaussian distribution for the candidates, we need to restrict the
             # model to be a gaussian process
-            assert isinstance(self._model, GaussianProcess), 'Sample based estimate strategy only allows ' \
-                                                             'GP as surrogate model!'
+            assert isinstance(self._model, GaussianProcess), (
+                "Sample based estimate strategy only allows " "GP as surrogate model!"
+            )
             return self._model.sample_functions(X_test=X_running, n_funcs=1)
         else:
-            raise ValueError(f'Unknown estimating strategy: {estimation_strategy}')
+            raise ValueError(f"Unknown estimating strategy: {estimation_strategy}")
 
     def _get_x_best(self, X: np.ndarray) -> tuple[np.ndarray, float]:
         """Get value, configuration, and array representation of the *best* configuration.
