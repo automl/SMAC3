@@ -7,6 +7,7 @@
 
 ## Bugfixes
 - Fix bug with HyperBand setup given a total budget (#1179)
+- Fix kwargs for DifferentialEvolution (#1187)
 
 # 2.2.1
 
