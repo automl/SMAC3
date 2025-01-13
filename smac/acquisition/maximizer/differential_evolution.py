@@ -102,7 +102,7 @@ class DifferentialEvolution(AbstractAcquisitionMaximizer):
             tol=0.01,
             mutation=self.mutation,
             recombination=self.recombination,
-            seed=self._rng.randint(1000),
+            rng=self._rng.randint(1000),
             polish=self.polish,
             callback=None,
             disp=False,
