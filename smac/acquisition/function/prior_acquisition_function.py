@@ -159,7 +159,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             if self._discretize and isinstance(parameter, FloatHyperparameter):
                 assert self._discrete_bins_factor is not None
                 number_of_bins = int(np.ceil(self._discrete_bins_factor * self._decay_beta / self._iteration_number))
-                prior_values *= self._compute_discretized_pdf(parameter, X_col, number_of_bins) + self._prior_floor
+                prior_values *= self._compute_discretized_pdf(parameter, X_col, number_of_bins)
             else:
                 prior_values *= parameter._pdf(X_col[:, np.newaxis])
 
