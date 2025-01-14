@@ -144,4 +144,4 @@ If you use SMAC in one of your research projects, please cite our
 }
 ```
 
-Copyright (c) 2025, [automl.org](https://www.automl.org/)
+Copyright (c) 2025, [Leibniz University Hannover - Institute of AI](https://www.ai.uni-hannover.de/)
