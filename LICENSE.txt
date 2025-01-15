@@ -4,7 +4,7 @@ SMAC License
 
 BSD 3-Clause License
 
-Copyright (c) 2025, automl.org (https://www.automl.org/)
+Copyright (c) 2025, Leibniz University Hannover - Institute of AI (https://www.ai.uni-hannover.de/)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
