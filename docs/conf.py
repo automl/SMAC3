@@ -12,6 +12,7 @@ options = {
     "version": version,
     "versions": {
         f"v{version}": "#",
+        "v2.3.0": "https://automl.github.io/SMAC3/v2.3.0/",
         "v2.2.0": "https://automl.github.io/SMAC3/v2.2.0/",
         "v2.1.0": "https://automl.github.io/SMAC3/v2.1.0/",
         "v2.0.1": "https://automl.github.io/SMAC3/v2.0.1/",
