@@ -10,6 +10,7 @@
 - Fix wrong attr query in the target function runner (crash cost) (#1176)
 - Fix kwargs for DifferentialEvolution (#1187)
 - Fix PiBo implementation (#1076)
+- Add fix for local search running forever (#1194)
 
 ## Improvements
 - Add logger information on handling of stopIteration error (#960)
