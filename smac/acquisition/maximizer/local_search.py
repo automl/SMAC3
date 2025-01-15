@@ -336,6 +336,11 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
         num_iters = 0
         while np.any(active):
+
+            # If the maximum number of steps is reached, stop the local search
+            if num_iters == self._max_steps:
+                break
+
             num_iters += 1
             # Whether the i-th local search improved. When a new neighborhood is generated, this is used to determine
             # whether a step was made (improvement) or not (iterator exhausted)
