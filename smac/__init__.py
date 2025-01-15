@@ -16,10 +16,10 @@ project_urls = {
     "Source Code": "https://github.com/automl/SMAC3",
 }
 copyright = f"""
-    Copyright {datetime.date.today().strftime('%Y')}, Marius Lindauer, Katharina Eggensperger,
-    Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
-    and Frank Hutter"""
-version = "2.2.0"
+Copyright {datetime.date.today().strftime('%Y')}, Marius Lindauer, Katharina Eggensperger, 
+Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
+and Frank Hutter"""
+version = "2.3.0"
 
 
 try:
