@@ -338,7 +338,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         while np.any(active):
 
             # If the maximum number of steps is reached, stop the local search
-            if num_iters == self._max_steps:
+            if num_iters is not None and num_iters == self._max_steps:
                 break
 
             num_iters += 1
