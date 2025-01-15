@@ -8,7 +8,7 @@ from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

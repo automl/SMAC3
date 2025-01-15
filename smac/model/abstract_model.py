@@ -16,7 +16,7 @@ from smac.constants import VERY_SMALL_NUMBER
 from smac.utils.configspace import get_types
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

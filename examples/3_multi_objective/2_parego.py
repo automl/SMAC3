@@ -34,7 +34,7 @@ from smac import Scenario
 from smac.facade.abstract_facade import AbstractFacade
 from smac.multi_objective.parego import ParEGO
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

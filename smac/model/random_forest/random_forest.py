@@ -11,7 +11,7 @@ from pyrfr.regression import default_data_container as DataContainer
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
 from smac.model.random_forest import AbstractRandomForest
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

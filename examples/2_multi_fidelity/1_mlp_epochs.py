@@ -42,7 +42,7 @@ from smac.facade import AbstractFacade
 from smac.intensifier.hyperband import Hyperband
 from smac.intensifier.successive_halving import SuccessiveHalving
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

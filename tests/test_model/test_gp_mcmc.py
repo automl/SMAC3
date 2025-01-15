@@ -9,7 +9,7 @@ from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
 from smac.model.gaussian_process.priors import HorseshoePrior, LogNormalPrior
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

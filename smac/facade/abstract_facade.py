@@ -39,7 +39,7 @@ from smac.utils.logging import get_logger, setup_logging
 
 logger = get_logger(__name__)
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

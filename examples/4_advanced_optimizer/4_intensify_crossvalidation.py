@@ -12,7 +12,7 @@ is found to be worse than the incumbent configuration. This is especially useful
 of a configuration is expensive, e.g., if we have to train a neural network or if we have to
 evaluate the configuration on a large dataset.
 """
-__copyright__ = "Copyright 2023, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 N_FOLDS = 10  # Global variable that determines the number of folds

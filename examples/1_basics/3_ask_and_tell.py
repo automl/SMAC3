@@ -10,7 +10,7 @@ from ConfigSpace import Configuration, ConfigurationSpace, Float
 from smac import HyperparameterOptimizationFacade, Scenario
 from smac.runhistory.dataclasses import TrialValue
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

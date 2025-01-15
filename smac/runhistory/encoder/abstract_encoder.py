@@ -12,7 +12,7 @@ from smac.scenario import Scenario
 from smac.utils.configspace import convert_configurations_to_array
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
