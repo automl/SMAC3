@@ -26,7 +26,7 @@ from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
 from smac.utils.numpyencoder import NumpyEncoder
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)

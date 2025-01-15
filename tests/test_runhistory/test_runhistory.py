@@ -9,7 +9,7 @@ import pytest
 from smac.runhistory.runhistory import RunHistory, TrialKey
 from smac.runner.abstract_runner import StatusType
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
