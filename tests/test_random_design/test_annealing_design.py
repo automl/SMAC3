@@ -2,7 +2,7 @@ import numpy as np
 
 from smac.random_design.annealing_design import CosineAnnealingRandomDesign
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
