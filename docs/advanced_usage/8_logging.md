@@ -38,7 +38,7 @@ Scenario(
     ...
 )
 ```
-Notably, if an output already exists at `./some_directory/experiment_name/seed`, the behavior is determined by the overwrite parameter in the [facade's][smac/facade/abstract_facade] settings. This parameter specifies whether to continue the previous run (default) or start a new run.
+Notably, if an output already exists at `./some_directory/experiment_name/seed`, the behavior is determined by the overwrite parameter in the [facade's][smac.facade.abstract_facade] settings. This parameter specifies whether to continue the previous run (default) or start a new run.
 
 The output is split into four different log files, and a copy of the utilized [Configuration Space of the ConfigSpace library](https://automl.github.io/ConfigSpace/latest/).
 
