@@ -11,7 +11,7 @@ from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -232,6 +232,10 @@ class Intensifier(AbstractIntensifier):
                     fails = -1
                 except StopIteration:
                     # We stop if we don't find any configuration anymore
+                    logger.warning(
+                        "If you assume your configspace was not yet exhausted, try to "
+                        "increase the number of retries in the config selector."
+                    )
                     return
             else:
                 logger.debug("Start finding a new challenger in the queue:")

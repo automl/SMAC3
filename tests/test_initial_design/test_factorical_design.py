@@ -9,7 +9,7 @@ from ConfigSpace import (
 
 from smac.initial_design.factorial_design import FactorialInitialDesign
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -39,7 +39,7 @@ def test_factorial(make_scenario):
         for i in range(n_dim):
             for j, get_param in enumerate(get_params):
                 param_name = f"x{i+1}_{j}"
-                cs.add_hyperparameter(get_param(param_name))
+                cs.add(get_param(param_name))
 
         design = FactorialInitialDesign(
             make_scenario(configspace=cs),

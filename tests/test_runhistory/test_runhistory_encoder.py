@@ -52,12 +52,12 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     # upperbounded by 1.
     upper_bounds = {
         hp.name: (hp.size - 1) if isinstance(hp, CategoricalHyperparameter) else 1.0
-        for hp in configspace_small.get_hyperparameters()
+        for hp in list(configspace_small.values())
     }
     # Need to ensure they match the order in the Configuration vectorized form
     sorted_by_indices = sorted(
         upper_bounds.items(),
-        key=lambda x: configspace_small._hyperparameter_idx[x[0]],
+        key=lambda x: configspace_small.index_of[x[0]],
     )
     upper = np.array([upper_bound for _, upper_bound in sorted_by_indices])
     lower = 0.0
@@ -103,7 +103,6 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
-
 
 def test_transform_conditionals(runhistory, make_scenario, configspace_large):
     scenario = make_scenario(configspace_large)

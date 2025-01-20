@@ -9,7 +9,7 @@ from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.model.gaussian_process.mcmc_gaussian_process import MCMCGaussianProcess
 from smac.model.gaussian_process.priors import HorseshoePrior, LogNormalPrior
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -47,7 +47,7 @@ def get_gp(n_dimensions, seed, noise=1e-3, normalize_y=True, average_samples=Fal
 
     configspace = ConfigurationSpace()
     for i in range(n_dimensions):
-        configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
+        configspace.add(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
     rs = np.random.RandomState(seed)
     model = MCMCGaussianProcess(

@@ -13,7 +13,7 @@ from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runner.abstract_runner import AbstractRunner
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -163,7 +163,7 @@ class DaskParallelRunner(AbstractRunner):
         budget: float | None = None,
         seed: int | None = None,
         **dask_data_to_scatter: dict[str, Any],
-    ) -> tuple[StatusType, float | list[float], float, dict]:  # noqa: D102
+    ) -> tuple[StatusType, float | list[float], float, float, dict]:  # noqa: D102
         return self._single_worker.run(
             config=config, instance=instance, seed=seed, budget=budget, **dask_data_to_scatter
         )

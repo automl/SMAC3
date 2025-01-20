@@ -16,7 +16,7 @@ from smac.model.gaussian_process.gaussian_process import GaussianProcess
 from smac.model.gaussian_process.priors import HorseshoePrior, LogNormalPrior
 from smac.utils.configspace import convert_configurations_to_array
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -49,7 +49,7 @@ def get_gp(n_dimensions, seed, noise=1e-3, normalize_y=True) -> GaussianProcess:
 
     configspace = ConfigurationSpace()
     for i in range(n_dimensions):
-        configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
+        configspace.add(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
     rs = np.random.RandomState(seed)
 
@@ -122,9 +122,9 @@ def get_mixed_gp(cat_dims, cont_dims, seed, noise=1e-3, normalize_y=True):
 
     cs = ConfigurationSpace()
     for c in cont_dims:
-        cs.add_hyperparameter(UniformFloatHyperparameter("X%d" % c, 0, 1))
+        cs.add(UniformFloatHyperparameter("X%d" % c, 0, 1))
     for c in cat_dims:
-        cs.add_hyperparameter(CategoricalHyperparameter("X%d" % c, [0, 1, 2, 3]))
+        cs.add(CategoricalHyperparameter("X%d" % c, [0, 1, 2, 3]))
 
     rs = np.random.RandomState(seed)
 
@@ -416,11 +416,11 @@ def test_normalization():
 """
 def test_impute_inactive_hyperparameters():
     cs = ConfigurationSpace()
-    a = cs.add_hyperparameter(CategoricalHyperparameter("a", [0, 1]))
-    b = cs.add_hyperparameter(CategoricalHyperparameter("b", [0, 1]))
-    c = cs.add_hyperparameter(UniformFloatHyperparameter("c", 0, 1))
-    cs.add_condition(EqualsCondition(b, a, 1))
-    cs.add_condition(EqualsCondition(c, a, 0))
+    a = CategoricalHyperparameter("a", [0, 1])
+    b = CategoricalHyperparameter("b", [0, 1])
+    c = UniformFloatHyperparameter("c", 0, 1)
+    cs.add([a, b, c])
+    cs.add([EqualsCondition(b, a, 1), EqualsCondition(c, a, 0)])
     cs.seed(1)
 
     configs = cs.sample_configuration(size=100)

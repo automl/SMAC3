@@ -1,6 +1,5 @@
-"""
-Custom Callback
-^^^^^^^^^^^^^^^
+"""Custom Callback
+# Flags: doc-Runnable
 
 Using callbacks is the easieast way to integrate custom code inside the Bayesian optimization loop.
 In this example, we disable SMAC's default logging option and use the custom callback to log the evaluated trials.
@@ -17,7 +16,7 @@ from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import Scenario
 from smac.runhistory import TrialInfo, TrialValue
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

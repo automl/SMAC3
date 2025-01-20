@@ -26,7 +26,7 @@ from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
 from smac.utils.numpyencoder import NumpyEncoder
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -81,6 +81,7 @@ class SMBO:
         # Stats variables
         self._start_time: float | None = None
         self._used_target_function_walltime = 0.0
+        self._used_target_function_cputime = 0.0
 
         # Set walltime used method for intensifier
         self._intensifier.used_walltime = lambda: self.used_walltime  # type: ignore
@@ -108,7 +109,7 @@ class SMBO:
     @property
     def remaining_cputime(self) -> float:
         """Subtracts the target function running budget with the used time."""
-        return self._scenario.cputime_limit - self._used_target_function_walltime
+        return self._scenario.cputime_limit - self._used_target_function_cputime
 
     @property
     def remaining_trials(self) -> int:
@@ -136,6 +137,11 @@ class SMBO:
     def used_target_function_walltime(self) -> float:
         """Returns how much walltime the target function spend so far."""
         return self._used_target_function_walltime
+
+    @property
+    def used_target_function_cputime(self) -> float:
+        """Returns how much time the target function spend on the hardware so far."""
+        return self._used_target_function_cputime
 
     def ask(self) -> TrialInfo:
         """Asks the intensifier for the next trial.
@@ -204,6 +210,7 @@ class SMBO:
             config=info.config,
             cost=value.cost,
             time=value.time,
+            cpu_time=value.cpu_time,
             status=value.status,
             instance=info.instance,
             seed=info.seed,
@@ -355,6 +362,7 @@ class SMBO:
     def reset(self) -> None:
         """Resets the internal variables of the optimizer, intensifier, and runhistory."""
         self._used_target_function_walltime = 0
+        self._used_target_function_cputime = 0
         self._finished = False
 
         # We also reset runhistory and intensifier here
@@ -398,6 +406,7 @@ class SMBO:
             self._intensifier.load(intensifier_fn)
 
             self._used_target_function_walltime = data["used_target_function_walltime"]
+            self._used_target_function_cputime = data["used_target_function_cputime"]
             self._finished = data["finished"]
             self._start_time = time.time() - data["used_walltime"]
 
@@ -409,6 +418,7 @@ class SMBO:
             data = {
                 "used_walltime": self.used_walltime,
                 "used_target_function_walltime": self.used_target_function_walltime,
+                "used_target_function_cputime": self.used_target_function_cputime,
                 "last_update": time.time(),
                 "finished": self._finished,
             }
@@ -442,6 +452,7 @@ class SMBO:
 
             # Update SMAC stats
             self._used_target_function_walltime += float(trial_value.time)
+            self._used_target_function_cputime += float(trial_value.cpu_time)
 
             # Gracefully end optimization if termination cost is reached
             if self._scenario.termination_cost_threshold != np.inf:
@@ -582,7 +593,7 @@ class SMBO:
 
             # TODO: Use submit run for faster evaluation
             # self._runner.submit_trial(trial_info=trial)
-            _, cost, _, _ = self._runner.run(config, **kwargs)
+            _, cost, _, _, _ = self._runner.run(config, **kwargs)
             costs += [cost]
 
         np_costs = np.array(costs)
@@ -600,5 +611,7 @@ class SMBO:
             f"--- Used wallclock time: {round(self.used_walltime)} / {self._scenario.walltime_limit} sec\n"
             "--- Used target function runtime: "
             f"{round(self.used_target_function_walltime, 2)} / {self._scenario.cputime_limit} sec\n"
+            "--- Used target function CPU time: "
+            f"{round(self.used_target_function_cputime, 2)} / {self._scenario.cputime_limit} sec\n"
             f"----------------------------------------------------"
         )

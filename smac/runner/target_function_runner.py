@@ -18,7 +18,7 @@ from smac.runner.abstract_serial_runner import AbstractSerialRunner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -112,7 +112,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         budget: float | None = None,
         seed: int | None = None,
         **dask_data_to_scatter: dict[str, Any],
-    ) -> tuple[StatusType, float | list[float], float, dict]:
+    ) -> tuple[StatusType, float | list[float], float, float, dict]:
         """Calls the target function with pynisher if algorithm wall time limit or memory limit is
         set. Otherwise, the function is called directly.
 
@@ -143,6 +143,8 @@ class TargetFunctionRunner(AbstractSerialRunner):
             Resulting cost(s) of the trial.
         runtime : float
             The time the target function took to run.
+        cpu_time : float
+            The time the target function took on the hardware to run.
         additional_info : dict
             All further additional trial information.
         """
@@ -162,6 +164,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         # Presetting
         cost: float | list[float] = self._crash_cost
         runtime = 0.0
+        cpu_time = runtime
         additional_info = {}
         status = StatusType.CRASHED
 
@@ -183,7 +186,9 @@ class TargetFunctionRunner(AbstractSerialRunner):
         # Call target function
         try:
             start_time = time.time()
+            cpu_time = time.process_time()
             rval = self(config_copy, target_function, kwargs)
+            cpu_time = time.process_time() - cpu_time
             runtime = time.time() - start_time
             status = StatusType.SUCCESS
         except WallTimeoutException:
@@ -199,7 +204,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
             status = StatusType.CRASHED
 
         if status != StatusType.SUCCESS:
-            return status, cost, runtime, additional_info
+            return status, cost, runtime, cpu_time, additional_info
 
         if isinstance(rval, tuple):
             result, additional_info = rval
@@ -217,7 +222,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
             ordered_cost: list[float] = []
             for name in self._objectives:
                 if name not in result:
-                    raise RuntimeError(f"Objective {name} was not found in the returned costs.")
+                    raise RuntimeError(f"Objective {name} was not found in the returned costs.")  # noqa: E713
 
                 ordered_cost.append(result[name])
 
@@ -235,12 +240,12 @@ class TargetFunctionRunner(AbstractSerialRunner):
 
         if cost is None:
             status = StatusType.CRASHED
-            cost = self.crash_cost
+            cost = self._crash_cost
 
         # We want to get either a float or a list of floats.
         cost = np.asarray(cost).squeeze().tolist()
 
-        return status, cost, runtime, additional_info
+        return status, cost, runtime, cpu_time, additional_info
 
     def __call__(
         self,

@@ -1,9 +1,8 @@
-"""
-Speeding up Cross-Validation with Intensification
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Speeding up Cross-Validation with Intensification
+# Flags: doc-Runnable
 
 An example of optimizing a simple support vector machine on the digits dataset. In contrast to the
-[simple example](examples/1_basics/2_svm_cv.py), in which all cross-validation folds are executed
+[simple example](../../1_basics/2_svm_cv), in which all cross-validation folds are executed
 at once, we use the intensification mechanism described in the original 
 [SMAC paper](https://link.springer.com/chapter/10.1007/978-3-642-25566-3_40) as also demonstrated
 by [Auto-WEKA](https://dl.acm.org/doi/10.1145/2487575.2487629). This mechanism allows us to
@@ -12,7 +11,7 @@ is found to be worse than the incumbent configuration. This is especially useful
 of a configuration is expensive, e.g., if we have to train a neural network or if we have to
 evaluate the configuration on a large dataset.
 """
-__copyright__ = "Copyright 2023, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 N_FOLDS = 10  # Global variable that determines the number of folds

@@ -10,7 +10,7 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.exceptions import ForbiddenValueError
 
 from smac.acquisition.function import AbstractAcquisitionFunction
-from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
+from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.utils.configspace import (
@@ -19,7 +19,7 @@ from smac.utils.configspace import (
 )
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -153,7 +153,10 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         init_points = []
         n_init_points = n_points
         if len(previous_configs) < n_points:
-            sampled_points = self._configspace.sample_configuration(size=n_points - len(previous_configs))
+            if n_points - len(previous_configs) == 1:
+                sampled_points = [self._configspace.sample_configuration()]
+            else:
+                sampled_points = self._configspace.sample_configuration(size=n_points - len(previous_configs))
             n_init_points = len(previous_configs)
             if not isinstance(sampled_points, list):
                 sampled_points = [sampled_points]
@@ -333,6 +336,11 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
         num_iters = 0
         while np.any(active):
+
+            # If the maximum number of steps is reached, stop the local search
+            if num_iters is not None and num_iters == self._max_steps:
+                break
+
             num_iters += 1
             # Whether the i-th local search improved. When a new neighborhood is generated, this is used to determine
             # whether a step was made (improvement) or not (iterator exhausted)

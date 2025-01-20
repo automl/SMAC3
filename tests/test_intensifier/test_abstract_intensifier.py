@@ -19,7 +19,7 @@ def test_setting_runhistory(make_scenario, configspace_small, make_config_select
     intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
 
     config = configspace_small.get_default_configuration()
-    config2 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration()
 
     # Add some entries to the runhistory
     runhistory.add(
@@ -55,7 +55,7 @@ def test_incumbent_selection_single_objective(make_scenario, configspace_small, 
     intensifier.runhistory = runhistory
 
     config = configspace_small.get_default_configuration()
-    config2 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration()
 
     runhistory.add(config=config, cost=50, time=0.0, instance=scenario.instances[0], seed=999)
     intensifier.update_incumbents(config)
@@ -88,7 +88,7 @@ def test_incumbent_selection_multi_objective(make_scenario, configspace_small, m
     intensifier.runhistory = runhistory
 
     config = configspace_small.get_default_configuration()
-    config2 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration()
 
     runhistory.add(config=config, cost=[50, 10], time=0.0, instance=scenario.instances[0], seed=999)
     intensifier.update_incumbents(config)
@@ -182,8 +182,8 @@ def test_pareto_front1(make_scenario, configspace_small):
     runhistory = RunHistory()
     intensifier = AbstractIntensifier(scenario=scenario, max_config_calls=3, seed=0)
     intensifier.runhistory = runhistory
-    config1 = configspace_small.sample_configuration(1)
-    config2 = configspace_small.sample_configuration(1)
+    config1 = configspace_small.sample_configuration()
+    config2 = configspace_small.sample_configuration()
 
     runhistory.add(
         config=config1,
@@ -211,8 +211,8 @@ def test_pareto_front2(make_scenario, configspace_small):
     runhistory = RunHistory()
     intensifier = AbstractIntensifier(scenario=scenario, max_config_calls=3, seed=0)
     intensifier.runhistory = runhistory
-    config1 = configspace_small.sample_configuration(1)
-    config2 = configspace_small.sample_configuration(1)
+    config1 = configspace_small.sample_configuration()
+    config2 = configspace_small.sample_configuration()
 
     runhistory.add(
         config=config1,
@@ -240,9 +240,9 @@ def test_pareto_front3(make_scenario, configspace_small):
     runhistory = RunHistory()
     intensifier = AbstractIntensifier(scenario=scenario, max_config_calls=3, seed=0)
     intensifier.runhistory = runhistory
-    config1 = configspace_small.sample_configuration(1)
-    config2 = configspace_small.sample_configuration(1)
-    config3 = configspace_small.sample_configuration(1)
+    config1 = configspace_small.sample_configuration()
+    config2 = configspace_small.sample_configuration()
+    config3 = configspace_small.sample_configuration()
 
     runhistory.add(
         config=config1,

@@ -14,7 +14,7 @@ from ConfigSpace.util import deactivate_inactive_hyperparameters
 
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -22,7 +22,7 @@ class FactorialInitialDesign(AbstractInitialDesign):
     """Factorial initial design to select corner and middle configurations."""
 
     def _select_configurations(self) -> list[Configuration]:
-        params = self._configspace.get_hyperparameters()
+        params = list(self._configspace.values())
 
         values = []
         mid = []

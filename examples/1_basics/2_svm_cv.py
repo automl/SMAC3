@@ -1,6 +1,5 @@
-"""
-Support Vector Machine with Cross-Validation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Support Vector Machine with Cross-Validation
+# Flags: doc-Runnable
 
 An example of optimizing a simple support vector machine on the IRIS dataset. We use the
 hyperparameter optimization facade, which uses a random forest as its surrogate model. It is able to
@@ -16,7 +15,7 @@ from sklearn.model_selection import cross_val_score
 
 from smac import HyperparameterOptimizationFacade, Scenario
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

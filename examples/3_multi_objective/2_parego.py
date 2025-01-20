@@ -1,6 +1,5 @@
-"""
-ParEGO
-^^^^^^
+"""ParEGO
+# Flags: doc-Runnable
 
 An example of how to use multi-objective optimization with ParEGO. Both accuracy and run-time are going to be
 optimized on the digits dataset using an MLP, and the configurations are shown in a plot, highlighting the best ones in 
@@ -34,7 +33,7 @@ from smac import Scenario
 from smac.facade.abstract_facade import AbstractFacade
 from smac.multi_objective.parego import ParEGO
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

@@ -21,7 +21,7 @@ from smac.scenario import Scenario
 
 FACADES = [BBFacade, HPOFacade, MFFacade, RFacade, HBFacade, ACFacade]
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -49,7 +49,7 @@ def tae(cfg, seed=0):
 @pytest.fixture
 def configspace():
     cs = ConfigurationSpace()
-    cs.add_hyperparameter(Float("x", (MIN_X, MAX_X), default=MIN_X))
+    cs.add(Float("x", (MIN_X, MAX_X), default=MIN_X))
 
     return cs
 

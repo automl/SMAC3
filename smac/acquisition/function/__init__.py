@@ -6,7 +6,9 @@ from smac.acquisition.function.expected_improvement import EI, EIPS
 from smac.acquisition.function.integrated_acquisition_function import (
     IntegratedAcquisitionFunction,
 )
-from smac.acquisition.function.prior_acqusition_function import PriorAcquisitionFunction
+from smac.acquisition.function.prior_acquisition_function import (
+    PriorAcquisitionFunction,
+)
 from smac.acquisition.function.probability_improvement import PI
 from smac.acquisition.function.thompson import TS
 

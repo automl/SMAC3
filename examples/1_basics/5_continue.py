@@ -1,16 +1,15 @@
-"""
-Continue an Optimization
-^^^^^^^^^^^^^^^^^^^^^^^^
+"""Continue an Optimization
+# Flags: doc-Runnable
 
 SMAC can also be continued from a previous run. To do so, it reads in old files (derived from scenario's name,
 output_directory and seed) and sets the corresponding components. In this example, an optimization of a simple quadratic
 function is continued.
 
-First, after creating a scenario with 50 trials, we run SMAC with overwrite=True. This will
+First, after creating a scenario with 50 trials, we run SMAC with `overwrite=True`. This will
 overwrite any previous runs (in case the example was called before). We use a custom callback to artificially stop
 this first optimization after 10 trials.
 
-Second, we again run the SMAC optimization using the same scenario, but this time with overwrite=False. As
+Second, we again run the SMAC optimization using the same scenario, but this time with `overwrite=False`. As
 there already is a previous run with the same meta data, this run will be continued until the 50 trials are reached.
 """
 
@@ -24,7 +23,7 @@ from smac import Scenario
 from smac.main.smbo import SMBO
 from smac.runhistory import TrialInfo, TrialValue
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

@@ -1,10 +1,37 @@
-# 2.2.0
+# 2.3.0
 
-## Features
-- Add example to specify total budget (fidelity units) instead of n_trials for multi-fidelity/Hyperband (#1121)
+## Documentation
+- Update windows install guide (#952)
+- Correct intensifier for Algorithm Configuration Facade (#1162, #1165)
+- Migrate sphinx docs to mkdocs (#1155)
+
+## Bugfixes
+- Fix bug in differential evolution acquisition maximizer in case the search space contains categorical hyperparameters (#1150)
+- Fix wrong attr query in the target function runner (crash cost) (#1176)
+- Fix kwargs for DifferentialEvolution (#1187)
+- Fix PiBo implementation (#1076)
+- Add fix for local search running forever (#1194)
+
+## Improvements
+- Add logger information on handling of stopIteration error (#960)
+- Replace deprecated ConfigSpace methods (#1139)
+- Separated Wallclock time measurements from CPU time measurements and storing them under new 'cpu_time' variable (#1173)
+- Adapt RunHistory to be human readable (# 1174)
 
 ## Dependencies
-- Update numpy NaN (#1122) and restrict numpy version
+- Allow numpy >= 2.x (#1146)
+
+# Examples
+- Add warmstarting example (#1120)
+
+# 2.2.0
+
+## Examples
+- Add example to specify total budget (fidelity units) instead of n_trials for multi-fidelity/Hyperband (#1121)
+- Add example for warmstarting (#1120)
+
+## Dependencies
+- Update numpy NaN (#1122) and restrict numpy
 - Upgrade to ConfigSpace 1.x.x (#1124)
 
 # 2.1.0
@@ -675,7 +702,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
   conditions when starting multiple runs on a cluster.
 * MAINT #209: adds the seed or a pseudo-seed to the output directory name for
   better identifiability of the output directories.
-* FIX #216: replace broken call to in EIPS acqusition function.
+* FIX #216: replace broken call to in EIPS acquisition function.
 * MAINT: use codecov.io instead of coveralls.io.
 * MAINT: increase minimal required version of the ConfigSpace package to 0.3.2.
 

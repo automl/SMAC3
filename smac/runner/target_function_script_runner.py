@@ -12,7 +12,7 @@ from smac.runner.abstract_serial_runner import AbstractSerialRunner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -83,7 +83,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         instance: str | None = None,
         budget: float | None = None,
         seed: int | None = None,
-    ) -> tuple[StatusType, float | list[float], float, dict]:
+    ) -> tuple[StatusType, float | list[float], float, float, dict]:
         """Calls the target function.
 
         Parameters
@@ -105,6 +105,8 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
             Resulting cost(s) of the trial.
         runtime : float
             The time the target function took to run.
+        cpu_time : float
+            The time the target function took on the hardware to run.
         additional_info : dict
             All further additional trial information.
         """
@@ -128,18 +130,21 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         # Presetting
         cost: float | list[float] = self._crash_cost
         runtime = 0.0
+        cpu_time = runtime
         additional_info = {}
         status = StatusType.SUCCESS
 
         # Add config arguments to the kwargs
-        for k, v in config.get_dictionary().items():
+        for k, v in dict(config).items():
             if k in kwargs:
                 raise RuntimeError(f"The key {k} is already in use. Please use a different one.")
             kwargs[k] = v
 
         # Call target function
         start_time = time.time()
+        cpu_time = time.process_time()
         output, error = self(kwargs)
+        cpu_time = time.process_time() - cpu_time
         runtime = time.time() - start_time
 
         # Now we have to parse the std output
@@ -181,6 +186,10 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         if "runtime" in outputs:
             runtime = float(outputs["runtime"])
 
+        # Overwrite CPU time
+        if "cpu_time" in outputs:
+            cpu_time = float(outputs["cpu_time"])
+
         # Add additional info
         if "additional_info" in outputs:
             additional_info["additional_info"] = outputs["additional_info"]
@@ -194,7 +203,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
                     "The target function crashed but returned a cost. The cost is ignored and replaced by crash cost."
                 )
 
-        return status, cost, runtime, additional_info
+        return status, cost, runtime, cpu_time, additional_info
 
     def __call__(
         self,

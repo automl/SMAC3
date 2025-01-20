@@ -10,7 +10,7 @@ from smac.model.abstract_model import AbstractModel
 from smac.utils.configspace import convert_configurations_to_array
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -50,7 +50,7 @@ class AbstractAcquisitionFunction:
 
         This method will be called after fitting the model, but before maximizing the acquisition
         function. As an examples, EI uses it to update the current fmin. The default implementation only updates the
-        attributes of the acqusition function which are already present.
+        attributes of the acquisition function which are already present.
 
         Calls `_update` to update the acquisition function attributes.
 

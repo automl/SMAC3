@@ -12,7 +12,7 @@ from smac.scenario import Scenario
 from smac.utils.configspace import convert_configurations_to_array
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -68,7 +68,7 @@ class AbstractRunHistoryEncoder:
         self._instances = scenario.instances
         self._instance_features = scenario.instance_features
         self._n_features = scenario.count_instance_features()
-        self._n_params = len(scenario.configspace.get_hyperparameters())
+        self._n_params = len(list(scenario.configspace.values()))
 
         if self._instances is not None and self._n_features == 0:
             logger.warning(

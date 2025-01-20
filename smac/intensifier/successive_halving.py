@@ -19,7 +19,7 @@ from smac.utils.data_structures import batch
 from smac.utils.logging import get_logger
 from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -210,7 +210,7 @@ class SuccessiveHalving(AbstractIntensifier):
             for seed, configs in self._tracker[key]:
                 # We have to make key serializable
                 new_key = f"{key[0]},{key[1]}"
-                tracker[new_key].append((seed, [config.get_dictionary() for config in configs]))
+                tracker[new_key].append((seed, [dict(config) for config in configs]))
 
         return {"tracker": tracker}
 
@@ -448,6 +448,10 @@ class SuccessiveHalving(AbstractIntensifier):
                     configs.append(config)
                 except StopIteration:
                     # We stop if we don't find any configuration anymore
+                    logger.warning(
+                        "If you assume your configspace was not yet exhausted, try to "
+                        "increase the number of retries in the config selector."
+                    )
                     return
 
             # We keep track of the seed so we always evaluate on the same instances

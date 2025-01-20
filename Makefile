@@ -5,7 +5,7 @@ SHELL := /bin/bash
 
 NAME := SMAC3
 PACKAGE_NAME := smac
-VERSION := 2.2.0
+VERSION := 2.3.0
 
 DIR := "${CURDIR}"
 SOURCE_DIR := ${PACKAGE_NAME}
@@ -86,26 +86,36 @@ format: format-black format-isort
 tests:
 	$(PYTEST) ${TESTS_DIR}
 
-docs:
-	$(MAKE) -C ${DOCDIR} docs
-	@echo
-	@echo "View docs at:"
-	@echo ${INDEX_HTML}
+# Launch the docs, executing code blocks and examples
+docs-full:
+	$(PYTHON) -m webbrowser -t "http://127.0.0.1:8000/"
+	SMAC_DOC_RENDER_EXAMPLES=all \
+		SMAC_DOCS_OFFLINE=true \
+		SMAC_EXEC_DOCS=true \
+		mkdocs serve --watch-theme
 
-examples:
-	$(MAKE) -C ${DOCDIR} examples
-	@echo
-	@echo "View docs at:"
-	@echo ${INDEX_HTML}
+# Launch the docs and execute code blocks
+docs-code:
+	$(PYTHON) -m webbrowser -t "http://127.0.0.1:8000/"
+	SMAC_DOCS_OFFLINE=true \
+		SMAC_EXEC_DOCS=true \
+		SMAC_DOC_RENDER_EXAMPLES=false \
+		mkdocs serve --watch-theme
+
+# Launch the docs but dont run code examples
+docs:
+	$(PYTHON) -m webbrowser -t "http://127.0.0.1:8000/"
+	SMAC_DOCS_OFFLINE=true \
+		SMAC_EXEC_DOCS=false \
+		SMAC_DOC_RENDER_EXAMPLES=false \
+		mkdocs serve --watch-theme
+	# https://github.com/pawamoy/markdown-exec/issues/19
 
 # Build a distribution in ./dist
 build:
 	$(PYTHON) setup.py sdist
 
 clean: clean-build clean-docs clean-data
-
-clean-docs:
-	$(MAKE) -C ${DOCDIR} clean
 
 clean-build:
 	$(PYTHON) setup.py clean

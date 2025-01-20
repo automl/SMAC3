@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
+from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -41,7 +41,7 @@ class RandomSearch(AbstractAcquisitionMaximizer):
         if n_points > 1:
             rand_configs = self._configspace.sample_configuration(size=n_points)
         else:
-            rand_configs = [self._configspace.sample_configuration(size=1)]
+            rand_configs = [self._configspace.sample_configuration()]
 
         if _sorted:
             for i in range(len(rand_configs)):

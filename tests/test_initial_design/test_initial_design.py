@@ -3,7 +3,7 @@ import pytest
 from smac.initial_design import AbstractInitialDesign
 from smac.initial_design.default_design import DefaultInitialDesign
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -45,7 +45,7 @@ def test_config_numbers(make_scenario, configspace_small):
     scenario = make_scenario(configspace_small)
     configs = configspace_small.sample_configuration(n_configs)
 
-    n_hps = len(configspace_small.get_hyperparameters())
+    n_hps = len(list(configspace_small.values()))
 
     dc = AbstractInitialDesign(
         scenario=scenario,
