@@ -12,7 +12,7 @@ SMAC offers a robust and flexible framework for Bayesian Optimization to support
 hyperparameter configurations for their (Machine Learning) algorithms, datasets and applications at hand. The main core 
 consists of Bayesian Optimization in combination with an aggressive racing mechanism to efficiently decide which of two configurations performs better.
 
-SMAC3 is written in Python3 and continuously tested with Python 3.8, 3.9, and 3.10. Its Random
+SMAC3 is written in Python3 and continuously tested with Python 3.8, 3.9, and 3.10 (and works with newer python versions). Its Random
 Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
 
 > [Documentation](https://automl.github.io/SMAC3)
