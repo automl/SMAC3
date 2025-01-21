@@ -4,7 +4,7 @@ import pytest
 from smac.model.abstract_model import AbstractModel
 from smac.utils.configspace import convert_configurations_to_array
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

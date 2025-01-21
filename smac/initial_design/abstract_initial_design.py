@@ -6,20 +6,12 @@ from typing import Any
 from collections import OrderedDict
 
 import numpy as np
-from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
-from ConfigSpace.hyperparameters import (
-    CategoricalHyperparameter,
-    Constant,
-    IntegerHyperparameter,
-    NumericalHyperparameter,
-    OrdinalHyperparameter,
-)
-from ConfigSpace.util import ForbiddenValueError, deactivate_inactive_hyperparameters
+from ConfigSpace.configuration_space import Configuration
 
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -155,57 +147,3 @@ class AbstractInitialDesign:
     def _select_configurations(self) -> list[Configuration]:
         """Selects the initial configurations, depending on the implementation of the initial design."""
         raise NotImplementedError
-
-    def _transform_continuous_designs(
-        self, design: np.ndarray, origin: str, configspace: ConfigurationSpace
-    ) -> list[Configuration]:
-        """Transforms the continuous designs into a discrete list of configurations.
-
-        Parameters
-        ----------
-        design : np.ndarray
-            Array of hyperparameters originating from the initial design strategy.
-        origin : str | None, defaults to None
-            Label for a configuration where it originated from.
-        configspace : ConfigurationSpace
-
-        Returns
-        -------
-        configs : list[Configuration]
-            Continuous transformed configs.
-        """
-        params = list(configspace.values())
-        for idx, param in enumerate(params):
-            if isinstance(param, IntegerHyperparameter):
-                design[:, idx] = param.to_vector(param.to_value(design[:, idx]))
-            elif isinstance(param, NumericalHyperparameter):
-                continue
-            elif isinstance(param, Constant):
-                design_ = np.zeros(np.array(design.shape) + np.array((0, 1)))
-                design_[:, :idx] = design[:, :idx]
-                design_[:, idx + 1 :] = design[:, idx:]
-                design = design_
-            elif isinstance(param, CategoricalHyperparameter):
-                v_design = design[:, idx]
-                v_design[v_design == 1] = 1 - 10**-10
-                design[:, idx] = np.array(v_design * len(param.choices), dtype=int)
-            elif isinstance(param, OrdinalHyperparameter):
-                v_design = design[:, idx]
-                v_design[v_design == 1] = 1 - 10**-10
-                design[:, idx] = np.array(v_design * len(param.sequence), dtype=int)
-            else:
-                raise ValueError("Hyperparameter not supported when transforming a continuous design.")
-
-        configs = []
-        for vector in design:
-            try:
-                conf = deactivate_inactive_hyperparameters(
-                    configuration=None, configuration_space=configspace, vector=vector
-                )
-            except ForbiddenValueError:
-                continue
-
-            conf.origin = origin
-            configs.append(conf)
-
-        return configs

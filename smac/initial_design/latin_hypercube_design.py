@@ -5,8 +5,9 @@ from ConfigSpace.hyperparameters import Constant
 from scipy.stats.qmc import LatinHypercube
 
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
+from smac.utils.configspace import transform_continuous_designs
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -25,6 +26,6 @@ class LatinHypercubeInitialDesign(AbstractInitialDesign):
 
         lhd = LatinHypercube(d=len(params) - constants, seed=self._rng.randint(0, 1000000)).random(n=self._n_configs)
 
-        return self._transform_continuous_designs(
+        return transform_continuous_designs(
             design=lhd, origin="Initial Design: Latin Hypercube", configspace=self._configspace
         )
