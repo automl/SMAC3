@@ -1,0 +1,44 @@
+smac.model.gaussian\_process.priors
+===================================
+
+.. automodule:: smac.model.gaussian_process.priors
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   abstract_prior
+   gamma_prior
+   horseshoe_prior
+   log_normal_prior
+   tophat_prior
+

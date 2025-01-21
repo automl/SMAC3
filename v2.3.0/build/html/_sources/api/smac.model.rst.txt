@@ -1,0 +1,44 @@
+﻿smac.model
+==========
+
+.. automodule:: smac.model
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   abstract_model
+   gaussian_process
+   multi_objective_model
+   random_forest
+   random_model
+
