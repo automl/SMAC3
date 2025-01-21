@@ -1,0 +1,41 @@
+﻿smac.callback
+=============
+
+.. automodule:: smac.callback
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   callback
+   metadata_callback
+

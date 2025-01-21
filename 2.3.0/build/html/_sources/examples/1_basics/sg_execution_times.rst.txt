@@ -1,0 +1,55 @@
+
+:orphan:
+
+.. _sphx_glr_examples_1_basics_sg_execution_times:
+
+
+Computation times
+=================
+**03:01.609** total execution time for 7 files **from examples/1_basics**:
+
+.. container::
+
+  .. raw:: html
+
+    <style scoped>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" class="init">
+    $(document).ready( function () {
+        $('table.sg-datatable').DataTable({order: [[1, 'desc']]});
+    } );
+    </script>
+
+  .. list-table::
+   :header-rows: 1
+   :class: table table-striped sg-datatable
+
+   * - Example
+     - Time
+     - Mem (MB)
+   * - :ref:`sphx_glr_examples_1_basics_6_priors.py` (``6_priors.py``)
+     - 02:45.446
+     - 0.0
+   * - :ref:`sphx_glr_examples_1_basics_1_quadratic_function.py` (``1_quadratic_function.py``)
+     - 00:05.143
+     - 0.0
+   * - :ref:`sphx_glr_examples_1_basics_3_ask_and_tell.py` (``3_ask_and_tell.py``)
+     - 00:04.832
+     - 0.0
+   * - :ref:`sphx_glr_examples_1_basics_5_continue.py` (``5_continue.py``)
+     - 00:02.309
+     - 0.0
+   * - :ref:`sphx_glr_examples_1_basics_2_svm_cv.py` (``2_svm_cv.py``)
+     - 00:01.926
+     - 0.0
+   * - :ref:`sphx_glr_examples_1_basics_8_warmstart.py` (``8_warmstart.py``)
+     - 00:01.748
+     - 0.0
+   * - :ref:`sphx_glr_examples_1_basics_4_callback.py` (``4_callback.py``)
+     - 00:00.206
+     - 0.0
