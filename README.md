@@ -15,7 +15,7 @@ consists of Bayesian Optimization in combination with an aggressive racing mecha
 SMAC3 is written in Python3 and continuously tested with Python 3.8, 3.9, and 3.10. Its Random
 Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
 
-> [Documentation](https://automl.github.io/SMAC3)
+> [Documentation](automl.github.io/SMAC3/latest/)
 
 > [Roadmap](https://github.com/orgs/automl/projects/5/views/2)
 
