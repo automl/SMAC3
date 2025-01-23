@@ -15,7 +15,7 @@ consists of Bayesian Optimization in combination with an aggressive racing mecha
 SMAC3 is written in Python3 and continuously tested with Python 3.8, 3.9, and 3.10 (and works with newer python versions). Its Random
 Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
 
-> [Documentation](https://automl.github.io/SMAC3)
+> [Documentation](https://automl.github.io/SMAC3/latest/)
 
 > [Roadmap](https://github.com/orgs/automl/projects/5/views/2)
 
@@ -36,7 +36,7 @@ We hope you enjoy this new user experience as much as we do. 🚀
 
 ## Installation
 
-This instruction is for the installation on a Linux system, for Windows and Mac and further information see the [documentation](https://automl.github.io/SMAC3/main/1_installation.html).
+This instruction is for the installation on a Linux system, for Windows and Mac and further information see the [documentation](https://automl.github.io/SMAC3/latest/1_installation/).
 
 Create a new environment with python 3.10 and make sure swig is installed either on your system or
 inside the environment. We demonstrate the installation via anaconda in the following:
@@ -94,7 +94,7 @@ smac = HyperparameterOptimizationFacade(scenario, train)
 incumbent = smac.optimize()
 ```
 
-More examples can be found in the [documentation](https://automl.github.io/SMAC3/main/examples/).
+More examples can be found in the [documentation](https://automl.github.io/SMAC3/latest/examples/1%20Basics/1_quadratic_function/).
 
 ## Visualization via DeepCAVE
 

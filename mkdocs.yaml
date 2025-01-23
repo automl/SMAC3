@@ -19,7 +19,7 @@ repo_name: automl/SMAC3
 theme:
   name: material
   logo: images/logo.png
-  favicon: images/logo.png
+  favicon: images/smac_icon.png
   icon:
     repo: fontawesome/brands/github
   features:
