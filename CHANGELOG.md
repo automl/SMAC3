@@ -1,3 +1,9 @@
+# 2.3.1
+
+## Misc
+- New SMAC logo
+- Fix doc link in README
+
 # 2.3.0
 
 ## Documentation
