@@ -36,7 +36,7 @@ We hope you enjoy this new user experience as much as we do. 🚀
 
 ## Installation
 
-This instruction is for the installation on a Linux system, for Windows and Mac and further information see the [documentation](https://automl.github.io/SMAC3/main/1_installation.html).
+This instruction is for the installation on a Linux system, for Windows and Mac and further information see the [documentation](https://automl.github.io/SMAC3/latest/1_installation/).
 
 Create a new environment with python 3.10 and make sure swig is installed either on your system or
 inside the environment. We demonstrate the installation via anaconda in the following:
