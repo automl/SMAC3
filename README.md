@@ -123,7 +123,7 @@ For all other inquiries, please write an email to smac[at]ai[dot]uni[dash]hannov
 ## Miscellaneous
 
 SMAC3 is developed by the [AutoML Groups of the Universities of Hannover and
-Freiburg](http://www.automl.org/).
+Freiburg](http://www.automl.org/). It is a featured optimizer on [AutoML Space](https://automl.space/automl-tools/).
 
 If you have found a bug, please report to [issues](https://github.com/automl/SMAC3/issues). Moreover, we are 
 appreciating any kind of help. Find our guidelines for contributing to this package 
