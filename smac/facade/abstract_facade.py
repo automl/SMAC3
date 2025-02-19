@@ -39,7 +39,7 @@ from smac.utils.logging import get_logger, setup_logging
 
 logger = get_logger(__name__)
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -200,7 +200,10 @@ class AbstractFacade:
             else:
                 available_workers = joblib.cpu_count()
                 if n_workers > available_workers:
-                    logger.info(f"Workers are reduced to {n_workers}.")
+                    logger.info(
+                        f"Configured {n_workers} workers is reduced to the number of available workers "
+                        f"{available_workers}."
+                    )
                     n_workers = available_workers
 
             # We use a dask runner for parallelization

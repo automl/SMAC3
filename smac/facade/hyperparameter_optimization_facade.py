@@ -15,7 +15,7 @@ from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.runhistory.encoder.log_scaled_encoder import RunHistoryLogScaledEncoder
 from smac.scenario import Scenario
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

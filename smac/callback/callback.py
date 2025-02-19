@@ -5,7 +5,7 @@ from ConfigSpace import Configuration
 import smac
 from smac.runhistory import TrialInfo, TrialValue
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

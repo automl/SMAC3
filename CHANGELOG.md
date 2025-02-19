@@ -1,3 +1,9 @@
+# 2.3.1
+
+## Misc
+- New SMAC logo
+- Fix doc link in README
+
 # 2.3.0
 
 ## Documentation
@@ -6,27 +12,23 @@
 - Migrate sphinx docs to mkdocs (#1155)
 
 ## Bugfixes
-- Fix bug with HyperBand setup given a total budget (#1179)
+- Fix bug in differential evolution acquisition maximizer in case the search space contains categorical hyperparameters (#1150)
+- Fix wrong attr query in the target function runner (crash cost) (#1176)
 - Fix kwargs for DifferentialEvolution (#1187)
-
-# 2.2.1
+- Fix PiBo implementation (#1076)
+- Add fix for local search running forever (#1194)
 
 ## Improvements
 - Add logger information on handling of stopIteration error (#960)
 - Replace deprecated ConfigSpace methods (#1139)
 - Separated Wallclock time measurements from CPU time measurements and storing them under new 'cpu_time' variable (#1173)
+- Adapt RunHistory to be human readable (# 1174)
 
 ## Dependencies
 - Allow numpy >= 2.x (#1146)
 
-## Bugfixes
-- Fix bug in differential evolution acquisition maximizer in case the search space contains categorical hyperparameters (#1150)
-
 # Examples
 - Add warmstarting example (#1120)
-
-# Bugfix
-- Fix wrong attr query in the target function runner (crash cost) (#1176)
 
 # 2.2.0
 

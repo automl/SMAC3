@@ -7,7 +7,7 @@ from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.model.multi_objective_model import MultiObjectiveModel
 from smac.model.random_forest.random_forest import RandomForest
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

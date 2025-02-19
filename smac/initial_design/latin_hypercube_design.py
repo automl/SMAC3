@@ -7,7 +7,7 @@ from scipy.stats.qmc import LatinHypercube
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.utils.configspace import transform_continuous_designs
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
