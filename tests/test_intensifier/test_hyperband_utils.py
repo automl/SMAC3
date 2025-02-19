@@ -31,7 +31,7 @@ def test_determine_HB():
         4: [81],
     }
     expected_trials_used = 206
-    expected_budget_used = 547
+    expected_budget_used = 1902
     expected_number_of_brackets = 5
 
     assert result["max_iterations"] == expected_max_iterations
@@ -52,7 +52,7 @@ def test_determine_hyperband_for_multifidelity():
         total_budget=total_budget, min_budget=min_budget, max_budget=max_budget, eta=eta
     )
 
-    expected_n_trials = 206 + 137  # 206 trials for one full round, and additional trials for the remaining budget
+    expected_n_trials = 188  # Budget not enough for one full round (would nee 1902 as total budget)
 
     assert result["n_trials"] == expected_n_trials
     assert result["total_budget"] == total_budget
@@ -71,4 +71,9 @@ def test_get_n_trials_for_hyperband_multifidelity():
         total_budget=total_budget, min_budget=min_budget, max_budget=max_budget, eta=eta
     )
 
-    assert n_trials == (206 + 137)
+    assert n_trials == 188
+
+if __name__=="__main__":
+    test_determine_HB()
+    test_determine_hyperband_for_multifidelity()
+    test_get_n_trials_for_hyperband_multifidelity()
