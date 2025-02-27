@@ -8,7 +8,6 @@ This example extends the quadratic function example at examples/1_basics/1_quadr
 
 from functools import partial
 
-import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace, Float
 from matplotlib import pyplot as plt
 
@@ -52,21 +51,20 @@ class PartialFunctionClass:
         x = config["x"]
         return x**2 + bias
 
-def plot(runhistory: RunHistory, incumbent: Configuration, incumbent_cost:float, model: AdditionalArgumentsClass | PartialFunctionClass) -> None:
+def plot(runhistory: RunHistory, incumbent: Configuration, incumbent_cost:float, bias: int, incumbent_color:str, color:str) -> None:
+    # Get all configurations and costs
+    configs = [config["x"] for config in runhistory.get_configs()]
+    costs = [config.cost for config in runhistory.values()]
+
     # Plot all trials
-    for k, v in runhistory.items():
-        config = runhistory.get_config(k.config_id)
-        x = config["x"]
-        y = v.cost  # type: ignore
-        color = "blue" if isinstance(model, AdditionalArgumentsClass) else "green"
-        plt.scatter(x, y, c=color, alpha=0.4, zorder=9999, marker="o")
+    plt.scatter(configs, costs, c=color, alpha=0.4, zorder=9999, marker="o", label=f"Model with bias {bias}")
 
     # Plot incumbent
-    plt.scatter(incumbent["x"], incumbent_cost, c="red", zorder=10000, marker="x")
+    plt.scatter(incumbent["x"], incumbent_cost, c=incumbent_color,s = 100, zorder=10000, marker="x", label=f"Incumbent with bias {bias}")
 
 
 if __name__ == "__main__":
-    for model in [AdditionalArgumentsClass(bias=2), PartialFunctionClass()]:
+    for model, bias, color, incumbent_color in [(AdditionalArgumentsClass(bias=2), 2, "green", "red"), (PartialFunctionClass(), -2, "blue", "orange")]:
         # Scenario object specifying the optimization "environment"
         seed = 0 if isinstance(model, AdditionalArgumentsClass) else 1
         scenario = Scenario(model.configspace, deterministic=True, n_trials=100, seed=seed)
@@ -92,5 +90,6 @@ if __name__ == "__main__":
         print(f"Incumbent cost: {incumbent_cost}")
 
         # Let's plot it too
-        plot(smac.runhistory, incumbent_config, incumbent_cost, model=model)
+        plot(smac.runhistory, incumbent_config, incumbent_cost, bias=bias, color=color, incumbent_color=incumbent_color)
+    plt.legend()
     plt.show()
