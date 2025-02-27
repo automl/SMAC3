@@ -154,9 +154,8 @@ class AbstractFacade:
             config_selector = self.get_config_selector(scenario)
 
         # Initialize empty stats and runhistory object
-        runhistory = RunHistory(
-            multi_objective_algorithm=multi_objective_algorithm, n_objectives=len(scenario.objectives)
-        )
+        n_objectives = len(scenario.objectives) if isinstance(scenario.objectives, list) else 1
+        runhistory = RunHistory(multi_objective_algorithm=multi_objective_algorithm, n_objectives=n_objectives)
 
         # Set the seed for configuration space
         scenario.configspace.seed(scenario.seed)
