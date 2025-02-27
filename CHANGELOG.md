@@ -4,6 +4,9 @@
 - New SMAC logo
 - Fix doc link in README
 
+## Improvements
+- `target_function` becomes optional in Facade when using ask and tell exclusively (#946)
+
 # 2.3.0
 
 ## Documentation
