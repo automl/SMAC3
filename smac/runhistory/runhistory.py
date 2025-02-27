@@ -60,7 +60,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         overwrite_existing_trials: bool = False,
-        n_objectives: int = 1,
+        n_objectives: int = -1,
     ) -> None:
         self._multi_objective_algorithm = multi_objective_algorithm
         self._overwrite_existing_trials = overwrite_existing_trials
@@ -230,7 +230,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         config.config_id = config_id
 
         if status != StatusType.RUNNING:
-            if self._n_objectives != n_objectives:
+            if self._n_objectives == -1:
+                self._n_objectives = n_objectives
+            elif self._n_objectives != n_objectives:
                 raise ValueError(
                     f"Cost is not of the same length ({n_objectives}) as the number of "
                     f"objectives ({self._n_objectives})."
@@ -332,7 +334,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         """
         self.add(
             config=trial.config,
-            cost=float(MAXINT) if self._n_objectives == 1 else [float(MAXINT)] * self._n_objectives,
+            cost=float(MAXINT) if self._n_objectives <= 1 else [float(MAXINT)] * self._n_objectives,
             time=0.0,
             cpu_time=0.0,
             status=StatusType.RUNNING,
@@ -855,6 +857,12 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # Important to use add method to use all data structure correctly
         # NOTE: These hardcoded indices can easily lead to trouble
         for entry in data["data"]:
+            if self._n_objectives == -1:
+                if isinstance(entry["cost"], (float, int)):
+                    self._n_objectives = 1
+                else:
+                    self._n_objectives = len(entry["cost"])
+
             cost: list[float] | float
             if self._n_objectives == 1:
                 cost = float(entry["cost"])
