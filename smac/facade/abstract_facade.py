@@ -425,7 +425,7 @@ class AbstractFacade:
         retries: int = 16,
     ) -> ConfigSelector:
         """Returns the default configuration selector."""
-        return ConfigSelector(scenario, retrain_after=retrain_after, retries=retries)
+        return ConfigSelector(scenario, retrain_after=retrain_after, max_new_config_tries=retries)
 
     def _get_optimizer(self) -> SMBO:
         """Fills the SMBO with all the pre-initialized components."""
