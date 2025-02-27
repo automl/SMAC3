@@ -238,7 +238,9 @@ class ConfigSelector:
 
                     # We exit the loop if we have tried to add the same configuration too often
                     if failed_counter == self._max_new_config_tries:
-                        logger.warning(f"Could not return a new configuration after {self._max_new_config_tries} retries." "")
+                        logger.warning(
+                            f"Could not return a new configuration after {self._max_new_config_tries} retries." ""
+                        )
                         return
 
     def _call_callbacks_on_start(self) -> None:
