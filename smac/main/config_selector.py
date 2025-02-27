@@ -37,7 +37,7 @@ class ConfigSelector:
     ----------
     retrain_after : int, defaults to 8
         How many configurations should be returned before the surrogate model is retrained.
-    max_config_selection_tries : int, defaults to 8
+    max_new_config_tries : int, defaults to 8
         How often to retry receiving a new configuration before giving up.
     min_trials: int, defaults to 1
         How many samples are required to train the surrogate model. If budgets are involved,
@@ -51,7 +51,7 @@ class ConfigSelector:
         scenario: Scenario,
         *,
         retrain_after: int = 8,
-        max_config_selection_tries: int = 16,
+        max_new_config_tries: int = 16,
         min_trials: int = 1,
     ) -> None:
         # Those are the configs sampled from the passed initial design
@@ -77,7 +77,7 @@ class ConfigSelector:
 
         # How often to retry receiving a new configuration
         # (counter increases if the received config was already returned before)
-        self._max_config_selection_tries = max_config_selection_tries
+        self._max_new_config_tries = max_new_config_tries
 
         # Processed configurations should be stored here; this is important to not return the same configuration twice
         self._processed_configs: list[Configuration] = []
@@ -111,7 +111,7 @@ class ConfigSelector:
         return {
             "name": self.__class__.__name__,
             "retrain_after": self._retrain_after,
-            "retries": self._max_config_selection_tries,
+            "retries": self._max_new_config_tries,
             "min_trials": self._min_trials,
         }
 
@@ -144,7 +144,7 @@ class ConfigSelector:
         self._processed_configs = self._runhistory.get_configs()
 
         # We add more retries because there could be a case in which the processed configs are sampled again
-        self._max_config_selection_tries += len(self._processed_configs)
+        self._max_new_config_tries += len(self._processed_configs)
 
         logger.debug("Search for the next configuration...")
         self._call_callbacks_on_start()
@@ -237,8 +237,8 @@ class ConfigSelector:
                     failed_counter += 1
 
                     # We exit the loop if we have tried to add the same configuration too often
-                    if failed_counter == self._max_config_selection_tries:
-                        logger.warning(f"Could not return a new configuration after {self._max_config_selection_tries} retries." "")
+                    if failed_counter == self._max_new_config_tries:
+                        logger.warning(f"Could not return a new configuration after {self._max_new_config_tries} retries." "")
                         return
 
     def _call_callbacks_on_start(self) -> None:
