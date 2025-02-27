@@ -5,6 +5,9 @@
 - Fix doc link in README
 - Rename retries to max_new_config_tries in ConfigSelector (#1207)
 
+## Improvements
+- `target_function` becomes optional in Facade when using ask and tell exclusively (#946)
+
 # 2.3.0
 
 ## Documentation
