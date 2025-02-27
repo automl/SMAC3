@@ -1,34 +1,46 @@
 from __future__ import annotations
 
+from itertools import product
+import threading
 from typing import Any
 
-import numpy as np
 from ConfigSpace import ConfigurationSpace
-from pyrfr import regression
-from pyrfr.regression import binary_rss_forest as BinaryForest
-from pyrfr.regression import default_data_container as DataContainer
+import numpy as np
+from scipy.sparse import issparse
+from sklearn.ensemble._forest import ForestRegressor
+from sklearn.ensemble._base import _partition_estimators
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.tree._tree import DTYPE
+from sklearn.utils.parallel import Parallel, delayed
+from sklearn.utils.validation import check_is_fitted, validate_data
 
-from smac.constants import N_TREES, VERY_SMALL_NUMBER
+
+from smac.constants import N_TREES
 from smac.model.random_forest import AbstractRandomForest
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
-
-import threading
-
-import numpy as np
-from sklearn.ensemble._forest import ForestRegressor
-from sklearn.tree import DecisionTreeRegressor
-
-import itertools
-from sklearn.utils.parallel import Parallel, delayed
-from sklearn.ensemble._base import _partition_estimators
 
 
 def estimator_predict(predict, X, results, col_idx):
     """Collect predictions from a single estimator."""
     prediction = predict(X, check_input=False)
     results[:, col_idx] = prediction  # Populate the corresponding column
+
+
+def accumulate_predict_over_instances(predict, X, X_instance_feat, results, tree_idx, n_instances, lock):
+    """Collect predictions from a single estimator. However, we sum the results from all instances"""
+    X_instance_feat_ = np.tile(X_instance_feat[None, :], (len(X), 1))
+    prediction = predict(np.concatenate([X, X_instance_feat_], axis=1), check_input=False)
+    with lock:
+        results[:, tree_idx, ] += prediction / n_instances
+        """
+        if len(results) == 1:
+            results[0, tree_idx, :] += prediction[0]
+        else:
+            for i in range(len(results)):
+                results[i, tree_idx, :] += prediction[i] / n_instances
+        """
 
 
 class EPMRandomForest(ForestRegressor):
@@ -405,10 +417,13 @@ class EPMRandomForest(ForestRegressor):
 
         Parameters
         ----------
-        X: np.ndarray
+        X: np.ndarray [#samples, #features]
+            input feature X
 
         Returns
         -------
+        preds: np.ndarray [#samples, #estimators,#output]
+            Predictions from all trees
 
         """
         #check_is_fitted(self)
@@ -429,8 +444,8 @@ class EPMRandomForest(ForestRegressor):
 
         # Parallel loop
         Parallel(n_jobs=n_jobs, verbose=self.verbose, require="sharedmem")(
-            delayed(estimator_predict)(e.predict, X, preds, idx)
-            for idx, e in enumerate(self.estimators_)
+            delayed(estimator_predict)(e.predict, X, preds, tree_idx)
+            for tree_idx, e in enumerate(self.estimators_)
         )
         # This should be equivalent to the following implementation
 
@@ -458,21 +473,81 @@ class EPMRandomForest(ForestRegressor):
 
         Parameters
         ----------
-        X: np.ndarray [#samples, #hyperparameter + #features]
+        X: np.ndarray [#samples, #hyperparameter]
             Input data points.
-        X_feat: np.ndarray,
+        X_feat: np.ndarray [#instance, #features],
             Features (np.ndarray) of the instances (str). The features are incorporated into the X data,
             on which the model is trained on.
         log_y: bool,
-            if log_y is applied to the predictions
+            if log_y is applied to the predictions.
 
         Returns
         -------
+        preds: np.ndarray [#samples, #estimators]
+            predictions for each samples and trees. Each element in preds corresponds to the mean response values for
+            the target estimator and configuration acorss all the instances.
 
         """
-        # TODO this should work with instance features. However, we need to check how to concatnate X and X_feat
-        #  correctly ...
-        raise NotImplementedError
+        X = self._validate_X_predict(X, ensure_2d=False)
+        X_feat = self._validate_X_predict(X_feat, ensure_2d=False)
+        assert X.shape[-1] + X_feat.shape[-1] == self.n_features_in_
+
+        n_instances = len(X_feat)
+
+        if X.ndim == 1:
+            X = X[None, :]
+
+        # Assign chunk of trees to jobs
+        n_jobs, _, _ = _partition_estimators(self.n_estimators * n_instances, self.n_jobs)
+
+        # avoid storing the output of every estimator by summing them here
+        if self.n_outputs_ > 1:
+            preds = np.zeros((X.shape[0], self.n_estimators, self.n_outputs_), dtype=np.float64)
+        else:
+            preds = np.zeros((X.shape[0], self.n_estimators), dtype=np.float64)
+        lock = threading.Lock()
+        # Parallel loop
+        Parallel(n_jobs=n_jobs, verbose=self.verbose, require="sharedmem")(
+            delayed(accumulate_predict_over_instances)(e.predict, X, x_feat, preds, tree_idx, n_instances, lock)
+            for (tree_idx, e), x_feat in product(enumerate(self.estimators_), X_feat)
+        )
+
+        return preds
+
+    def _validate_X_predict(self, X, ensure_2d: bool = True):
+        """
+        Validate X whenever one tries to predict, apply, predict_proba.
+        It is based on rf regressor from sklearn 1.6.1:
+         https://github.com/scikit-learn/scikit-learn/blob/99bf3d8e4eed5ba5db19a1869482a238b6223ffd/sklearn/ensemble/_forest.py#L629
+         However, we add another parameter to allow the model to ignore feature checking (this is done after
+         calling this function for predict_marginalized_over_instances_batch)
+
+        Parameters
+        ----------
+        X: np.ndarray
+            input features to be validated
+        ensure_2d: bool
+            if we check if the X's size match the fitted estimators' features
+
+        """
+        check_is_fitted(self)
+        if self.estimators_[0]._support_missing_values(X):
+            ensure_all_finite = "allow-nan"
+        else:
+            ensure_all_finite = True
+
+        X = validate_data(
+            self,
+            X,
+            dtype=DTYPE,
+            accept_sparse="csr",
+            reset=False,
+            ensure_all_finite=ensure_all_finite,
+            ensure_2d=ensure_2d,
+        )
+        if issparse(X) and (X.indices.dtype != np.intc or X.indptr.dtype != np.intc):
+            raise ValueError("No support for np.int64 index based sparse matrices")
+        return X
 
 
 class RandomForest(AbstractRandomForest):

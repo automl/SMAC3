@@ -125,6 +125,24 @@ def test_predict_marginalized():
     assert means.shape == (20, 1)
     assert variances.shape == (20, 1)
 
+    # now we need tp ensure that the prediction results is the same as we do that prediction individually
+    n_estimators = model._rf_opts["n_estimators"]
+    n_features = len(F)
+    n_data = len(X)
+
+    all_features = np.asarray(list(F.values()))
+    all_preds = np.empty(
+        [n_data, n_estimators, n_features]
+    )
+    for i_tree in range(n_estimators):
+        for i_feat in range(n_features):
+            for i_data in range(n_data):
+                x_input = np.concatenate([X[i_data], all_features[i_feat]])[None, :]
+                all_preds[[i_data], i_tree, i_feat] = model._rf.estimators_[i_tree].predict(x_input)
+    pred_marginalized_over_instance = np.mean(all_preds, -1)
+    assert np.allclose(np.mean(pred_marginalized_over_instance, axis=-1, keepdims=True), means)
+    assert np.allclose(np.var(pred_marginalized_over_instance, axis=-1, keepdims=True), variances)
+
 
 def test_predict_marginalized_mocked():
     rs = np.random.RandomState(1)
