@@ -20,7 +20,7 @@ class CustomConfigSelector(ConfigSelector):
         super().__init__(
             scenario,
             retrain_after=retrain_after,
-            retries=retries,
+            max_new_config_tries=retries,
         )
 
         initial_design = RandomInitialDesign(scenario, n_configs=n_initial_configs)

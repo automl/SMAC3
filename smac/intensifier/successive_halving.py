@@ -19,7 +19,7 @@ from smac.utils.data_structures import batch
 from smac.utils.logging import get_logger
 from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -450,7 +450,7 @@ class SuccessiveHalving(AbstractIntensifier):
                     # We stop if we don't find any configuration anymore
                     logger.warning(
                         "If you assume your configspace was not yet exhausted, try to "
-                        "increase the number of retries in the config selector."
+                        "increase the number of max_new_config_tries in the config selector."
                     )
                     return
 

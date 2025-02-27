@@ -16,12 +16,10 @@ site_name: "SMAC3"
 repo_url: https://github.com/automl/SMAC3/
 repo_name: automl/SMAC3
 
-site_dir: docs/site
-
 theme:
   name: material
   logo: images/logo.png
-  favicon: images/logo.png
+  favicon: images/smac_icon.png
   icon:
     repo: fontawesome/brands/github
   features:

@@ -26,7 +26,7 @@ from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
 from smac.utils.numpyencoder import NumpyEncoder
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -768,25 +768,25 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         ----------
         filename : str | Path, defaults to "runhistory.json"
         """
-        data = []
+        data = list()
         for k, v in self._data.items():
-            data += [
-                (
-                    int(k.config_id),
-                    str(k.instance) if k.instance is not None else None,
-                    int(k.seed) if k.seed is not None else None,
-                    float(k.budget) if k.budget is not None else None,
-                    v.cost,
-                    v.time,
-                    v.cpu_time,
-                    v.status,
-                    v.starttime,
-                    v.endtime,
-                    v.additional_info,
-                )
-            ]
+            data.append(
+                {
+                    "config_id": int(k.config_id),
+                    "instance": str(k.instance) if k.instance is not None else None,
+                    "seed": int(k.seed) if k.seed is not None else None,
+                    "budget": float(k.budget) if k.budget is not None else None,
+                    "cost": v.cost,
+                    "time": v.time,
+                    "cpu_time": v.cpu_time,
+                    "status": v.status,
+                    "starttime": v.starttime,
+                    "endtime": v.endtime,
+                    "additional_info": v.additional_info,
+                }
+            )
 
-        config_ids_to_serialize = set([entry[0] for entry in data])
+        config_ids_to_serialize = set([entry["config_id"] for entry in data])
         configs = {}
         config_origins = {}
         for id_, config in self._ids_config.items():
@@ -858,31 +858,29 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # Important to use add method to use all data structure correctly
         # NOTE: These hardcoded indices can easily lead to trouble
         for entry in data["data"]:
-            # Set n_objectives first
             if self._n_objectives == -1:
-                if isinstance(entry[4], (float, int)):
+                if isinstance(entry["cost"], (float, int)):
                     self._n_objectives = 1
                 else:
-                    self._n_objectives = len(entry[4])
+                    self._n_objectives = len(entry["cost"])
 
             cost: list[float] | float
             if self._n_objectives == 1:
-                cost = float(entry[4])
+                cost = float(entry["cost"])
             else:
-                cost = [float(x) for x in entry[4]]
-
+                cost = [float(x) for x in entry["cost"]]
             self.add(
-                config=self._ids_config[int(entry[0])],
+                config=self._ids_config[int(entry["config_id"])],
                 cost=cost,
-                time=float(entry[5]),
-                cpu_time=float(entry[6]),
-                status=StatusType(entry[7]),
-                instance=entry[1],
-                seed=entry[2],
-                budget=entry[3],
-                starttime=entry[8],
-                endtime=entry[9],
-                additional_info=entry[10],
+                time=entry["time"],
+                cpu_time=entry["cpu_time"],
+                status=StatusType(entry["status"]),
+                instance=entry["instance"],
+                seed=entry["seed"],
+                budget=entry["budget"],
+                starttime=entry["starttime"],
+                endtime=entry["endtime"],
+                additional_info=entry["additional_info"],
             )
 
         # Although adding trials should give us the same stats, the trajectory might be different
