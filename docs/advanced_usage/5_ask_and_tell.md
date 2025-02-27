@@ -16,6 +16,6 @@ and report the results of the trial.
     into the intensification process.
 
 Notice: if you are exclusively using the ask-and-tell interface and do not use `smac.optimize()`, then smac no longer
-is responsible for the evaluation of the trials and therefor the Facade no longer will require a specified `target_algorithm` argument.
+is responsible for the evaluation of the trials and therefore the Facade no longer will require a specified `target_algorithm` argument.
 
 Please have a look at our [ask-and-tell example](../examples/1%20Basics/3_ask_and_tell.md).
