@@ -82,7 +82,11 @@ class AbstractInitialDesign:
             )
 
         # If the number of configurations is too large, we reduce it
-        _n_configs = int(max(1, min(self._n_configs, (max_ratio * scenario.n_trials))))
+        if self._n_configs > 1:
+            _n_configs = int(max(1, min(self._n_configs, (max_ratio * scenario.n_trials))))
+        else:
+            _n_configs = self._n_configs
+
         if self._n_configs != _n_configs:
             logger.info(
                 f"Reducing the number of initial configurations from {self._n_configs} to "
