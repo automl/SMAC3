@@ -3,6 +3,7 @@
 ## Misc
 - New SMAC logo
 - Fix doc link in README
+- Rename retries to max_new_config_tries in ConfigSelector (#1207)
 
 # 2.3.0
 
