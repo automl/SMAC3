@@ -103,7 +103,8 @@ class ConfigSelector:
 
         self._initial_design_configs = initial_design.select_configurations()
         if len(self._initial_design_configs) == 0:
-            raise RuntimeError("SMAC needs initial configurations to work.")
+            # raise RuntimeError("SMAC needs initial configurations to work.")
+            logger.warning("No initial configurations were sampled.")
 
     @property
     def meta(self) -> dict[str, Any]:
