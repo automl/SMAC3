@@ -58,9 +58,12 @@ class AbstractFacade:
     ----------
     scenario : Scenario
         The scenario object, holding all environmental information.
-    target_function : Callable | str | AbstractRunner
+    target_function : Callable | str | AbstractRunner | None, defaults to None
         This function is called internally to judge a trial's performance. If a string is passed,
         it is assumed to be a script. In this case, ``TargetFunctionScriptRunner`` is used to run the script.
+        In the rare case that only ``ask`` and ``tell`` and not ``optimize`` is used to optimize
+        the hyperparameters, the target_function argument can be None, because SMAC no longer is
+        charge of the evaluation of the configuration and thus does not need to know about it.
     model : AbstractModel | None, defaults to None
         The surrogate model.
     acquisition_function : AbstractAcquisitionFunction | None, defaults to None
@@ -105,8 +108,8 @@ class AbstractFacade:
     def __init__(
         self,
         scenario: Scenario,
-        target_function: Callable | str | AbstractRunner,
         *,
+        target_function: Callable | str | AbstractRunner | None = None,
         model: AbstractModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
         acquisition_maximizer: AbstractAcquisitionMaximizer | None = None,
@@ -175,8 +178,10 @@ class AbstractFacade:
         self._overwrite = overwrite
 
         # Prepare the algorithm executer
-        runner: AbstractRunner
-        if isinstance(target_function, AbstractRunner):
+        runner: AbstractRunner | None
+        if isinstance(target_function, AbstractRunner) or target_function is None:
+            # in case the target_function is None (e.g. we purely use ask & tell)
+            # we let smbo.optimize raise an error
             runner = target_function
         elif isinstance(target_function, str):
             runner = TargetFunctionScriptRunner(
@@ -192,7 +197,7 @@ class AbstractFacade:
             )
 
         # In case of multiple jobs, we need to wrap the runner again using DaskParallelRunner
-        if (n_workers := scenario.n_workers) > 1 or dask_client is not None:
+        if ((n_workers := scenario.n_workers) > 1 or dask_client is not None) and runner is not None:
             if dask_client is not None and n_workers > 1:
                 logger.warning(
                     "Provided `dask_client`. Ignore `scenario.n_workers`, directly set `n_workers` in `dask_client`."
@@ -261,7 +266,7 @@ class AbstractFacade:
 
         meta = {
             "facade": {"name": self.__class__.__name__},
-            "runner": self._runner.meta,
+            "runner": self._runner.meta if self._runner is not None else None,
             "model": self._model.meta,
             "acquisition_maximizer": self._acquisition_maximizer.meta,
             "acquisition_function": self._acquisition_function.meta,

@@ -40,8 +40,10 @@ class SMBO:
     ----------
     scenario : Scenario
         The scenario object, holding all environmental information.
-    runner : AbstractRunner
+    runner : AbstractRunner | None
         The runner (containing the target function) is called internally to judge a trial's performance.
+        In the rare case that ``optimize`` is never called and SMBO is operated with ``ask`` and ``tell`` only,
+        the runner is allowed to be None
     runhistory : Runhistory
         The runhistory stores all trials.
     intensifier : AbstractIntensifier
@@ -60,7 +62,7 @@ class SMBO:
     def __init__(
         self,
         scenario: Scenario,
-        runner: AbstractRunner,
+        runner: AbstractRunner | None,
         runhistory: RunHistory,
         intensifier: AbstractIntensifier,
         overwrite: bool = False,
@@ -290,6 +292,11 @@ class SMBO:
             callback.on_start(self)
 
         dask_data_to_scatter = {}
+        if self._runner is None:
+            raise ValueError(
+                "Runner is not set in SMBO. Likely issue is that the target_function was not set in the Facade."
+            )
+
         if isinstance(self._runner, DaskParallelRunner) and data_to_scatter is not None:
             dask_data_to_scatter = dict(data_to_scatter=self._runner._client.scatter(data_to_scatter, broadcast=True))
         elif data_to_scatter is not None:
@@ -435,6 +442,12 @@ class SMBO:
         """Adds results from the runner to the runhistory. Although most of the functionality could be written
         in the tell method, we separate it here to make it accessible for the automatic optimization procedure only.
         """
+        if self._runner is None:
+            raise ValueError(
+                "Runner is not set in SMBO. Likely issue is that the target_function was not set "
+                "in the Facade. So we cannot query the runner for results."
+            )
+
         # Check if there is any result
         for trial_info, trial_value in self._runner.iter_results():
             # Add the results of the run to the run history
@@ -578,6 +591,11 @@ class SMBO:
             The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
             averaged.
         """
+        if self._runner is None:
+            raise ValueError(
+                "Runner is not set in SMBO. Likely issue is that the target_function was not set in the Facade."
+            )
+
         if seed is None:
             seed = self._scenario.seed
 
