@@ -5,6 +5,10 @@
 - Fix doc link in README
 - Rename retries to max_new_config_tries in ConfigSelector (#1207)
 
+## Examples
+- Add target function with additional arguments (#1134)
+
+
 # 2.3.0
 
 ## Documentation
