@@ -185,17 +185,17 @@ class ClosestIncumbentComparison(DebugComparison):
             compare=True)
 
         logger.debug(
-            f"Perform intermediate comparions of config {config_hash} with incumbents to see if it is worse"
+            f"Perform intermediate comparisons of config {config_hash} with incumbents to see if it is worse"
         )
+
+        # Ensure that the config is not part of the incumbent
+        if config in incumbents:
+            return True
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
             logger.debug(
                 "Config ran on other isb_keys than the incumbents. Should not happen.")
-            return True
-
-        # Ensure that the config is not part of the incumbent
-        if config in incumbents:
             return True
 
         # Only compare domination between one incumbent (as relaxation measure)

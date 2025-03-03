@@ -544,7 +544,6 @@ class AbstractIntensifier:
         isb_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
         all_incumbent_isb_keys = [isb_keys for _ in range(len(incumbents))]
 
-
         # We compare the incumbents now and only return the ones on the Pareto front
         # _calculate_pareto_front returns only non-dominated points
         new_incumbents = self._calculate_pareto_front(rh, incumbents, all_incumbent_isb_keys)

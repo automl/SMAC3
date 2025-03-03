@@ -128,6 +128,18 @@ class DoublingNComparison():
         return (nkeys+1) & nkeys == 0  # checks if nkeys+1 is a power of 2 (complies with the sequence (2**n)-1)
 
 
+class Always():
+
+    def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
+        return True
+
+
+class Never():
+
+    def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
+        return False
+
+
 class DoublingNComparisonFour():
 
     def _check_for_intermediate_comparison(self, config: Configuration) -> bool:

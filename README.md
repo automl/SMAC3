@@ -20,7 +20,6 @@ Clone this repository and install locally:
 cd SMAC3K
 pip install -e .[dev]
 ```
-K
 
 ## Minimal Example
 To use MO-SMAC, there is a multi-objective facade that provides all the functionalities for MO-AAC. The example below shows how this facade can be accessed and used. 

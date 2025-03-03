@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from typing import Any, Iterator
 
 from ConfigSpace import Configuration
@@ -51,10 +52,15 @@ class Intensifier(AbstractIntensifier):
         max_config_calls: int = 3,
         max_incumbents: int = 10,
         retries: int = 16,
+        min_config_calls: int = 1,
         seed: int | None = None,
     ):
         super().__init__(scenario=scenario, max_config_calls=max_config_calls, max_incumbents=max_incumbents, seed=seed)
         self._retries = retries
+        self._min_config_calls = min_config_calls
+
+        if max_config_calls < min_config_calls:
+            raise ValueError("min_config_calls must be smaller or equal than max_config_calls")
 
     def reset(self) -> None:
         """Resets the internal variables of the intensifier including the queue."""
@@ -108,6 +114,12 @@ class Intensifier(AbstractIntensifier):
         rh = self.runhistory
         assert self._max_config_calls is not None
 
+        is_keys = self.get_instance_seed_keys_of_interest()
+        if len(is_keys) < self._min_config_calls:
+            logger.debug(f"There are less instance, seed pairs of interest than the requested minimum trails per "
+                         f"configuration. Changing min_config_calls from {self._min_config_calls} to {len(is_keys)}")
+            self._min_config_calls = len(is_keys)
+
         # What if there are already trials in the runhistory? Should we queue them up?
         # Because they are part of the runhistory, they might be selected as incumbents. However, they are not
         # intensified because they are not part of the queue. We could add them here to incorporate them in the
@@ -119,7 +131,7 @@ class Intensifier(AbstractIntensifier):
         if len(self._queue) == 0:
             for config in rh.get_configs():
                 hash = get_config_hash(config)
-                self._queue.append((config, 1))
+                self._queue.append((config, self._min_config_calls))
                 logger.info(f"Added config {hash} from runhistory to the intensifier queue.")
 
         fails = -1
@@ -139,7 +151,7 @@ class Intensifier(AbstractIntensifier):
             # Also, incorporate ``get_incumbent_instance_seed_budget_keys`` here because challengers are only allowed to
             # sample from the incumbent's instances
             incumbents = self.get_incumbents(sort_by="num_trials")
-            incumbent_isb_keys = self.get_incumbent_instance_seed_budget_keys() # Intersection
+            incumbent_isb_keys = self.get_incumbent_instance_seed_budget_keys()  # Intersection
 
             # Check if configs in queue are still running
             all_configs_running = True
@@ -148,7 +160,7 @@ class Intensifier(AbstractIntensifier):
                     all_configs_running = False
                     break
 
-            if len(self._queue) == 0 or all_configs_running: # Incumbents
+            if len(self._queue) == 0 or all_configs_running:  # Incumbents
                 if len(self._queue) == 0:
                     logger.debug("Queue is empty:")
                 else:
@@ -205,6 +217,7 @@ class Intensifier(AbstractIntensifier):
                             f"{self._max_config_calls} from incumbent {incumbent_hash}..."
                         )
                         yield trials[0]
+
                         logger.debug(f"--- Finished yielding for config {incumbent_hash}.")
 
                         # We break here because we only want to intensify one more trial of one incumbent
@@ -223,7 +236,7 @@ class Intensifier(AbstractIntensifier):
                 try:
                     config = next(self.config_generator)
                     config_hash = get_config_hash(config)
-                    self._queue.append((config, 1))
+                    self._queue.append((config, self._min_config_calls))
                     logger.debug(f"--- Added a new config {config_hash} to the queue.")
 
                     # If we added a new config, then we did something in this iteration
@@ -271,6 +284,10 @@ class Intensifier(AbstractIntensifier):
                     else:
                         logger.debug(f"--- Yielding {len(trials)} trials to evaluate config {config_hash}...")
                         for trial in trials:
+                            # We need to check if the configuration has been rejected!
+                            if config in self.get_rejected_configs():
+                                logger.debug(f"--- {config_hash} was rejected so we do not run any more trials")
+                                break
                             fails = -1
                             yield trial
 
@@ -280,9 +297,10 @@ class Intensifier(AbstractIntensifier):
                         self._queue.remove((config, N))
                         logger.debug(f"--- Removed config {config_hash} with N={N} from queue.")
 
+
                         # Finally, we add the same config to the queue with a higher N
                         # If the config was rejected by the runhistory, then it's been removed in the next iteration
-                        if N < self._max_config_calls:
+                        if N < self._max_config_calls and config not in self.get_rejected_configs():
                             new_pair = (config, N * 2)
                             if new_pair not in self._queue:
                                 logger.debug(
