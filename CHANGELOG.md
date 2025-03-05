@@ -9,6 +9,12 @@
 - Add target function with additional arguments (#1134)
 
 
+## Documentation
+- Ask and tell without initial design and warmstarting
+
+## Bugfixes 
+- Ask and tell without initial design may still return a config from the initial design.  
+
 # 2.3.0
 
 ## Documentation
