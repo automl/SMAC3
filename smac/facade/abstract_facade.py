@@ -108,8 +108,8 @@ class AbstractFacade:
     def __init__(
         self,
         scenario: Scenario,
-        *,
         target_function: Callable | str | AbstractRunner | None = None,
+        *,
         model: AbstractModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
         acquisition_maximizer: AbstractAcquisitionMaximizer | None = None,
