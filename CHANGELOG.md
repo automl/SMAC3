@@ -11,6 +11,9 @@
 
 # 2.3.0
 
+## Features
+- Improved batch sampling: Fantasize points in batch/parallel mode (#1154).
+
 ## Documentation
 - Update windows install guide (#952)
 - Correct intensifier for Algorithm Configuration Facade (#1162, #1165)
