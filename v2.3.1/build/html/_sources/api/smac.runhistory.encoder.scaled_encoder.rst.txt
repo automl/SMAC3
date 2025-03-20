@@ -1,0 +1,37 @@
+smac.runhistory.encoder.scaled\_encoder
+=======================================
+
+.. automodule:: smac.runhistory.encoder.scaled_encoder
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      RunHistoryScaledEncoder
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

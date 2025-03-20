@@ -1,0 +1,38 @@
+smac.runner.exceptions
+======================
+
+.. automodule:: smac.runner.exceptions
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Exceptions
+   ^^^^^^^^^^
+
+   .. autosummary::
+   
+      FirstRunCrashedException
+      TargetAlgorithmAbortException
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

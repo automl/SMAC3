@@ -1,0 +1,43 @@
+﻿smac.random\_design
+===================
+
+.. automodule:: smac.random_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   abstract_random_design
+   annealing_design
+   modulus_design
+   probability_design
+

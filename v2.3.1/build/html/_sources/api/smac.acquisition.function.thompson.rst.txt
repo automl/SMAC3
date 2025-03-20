@@ -1,0 +1,37 @@
+smac.acquisition.function.thompson
+==================================
+
+.. automodule:: smac.acquisition.function.thompson
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      TS
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

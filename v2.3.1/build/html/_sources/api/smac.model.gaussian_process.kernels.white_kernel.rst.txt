@@ -1,0 +1,37 @@
+smac.model.gaussian\_process.kernels.white\_kernel
+==================================================
+
+.. automodule:: smac.model.gaussian_process.kernels.white_kernel
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      WhiteKernel
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

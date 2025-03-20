@@ -1,0 +1,40 @@
+smac.model.gaussian\_process.kernels.base\_kernels
+==================================================
+
+.. automodule:: smac.model.gaussian_process.kernels.base_kernels
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      AbstractKernel
+      ConstantKernel
+      ProductKernel
+      SumKernel
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

@@ -1,0 +1,37 @@
+smac.initial\_design.factorial\_design
+======================================
+
+.. automodule:: smac.initial_design.factorial_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      FactorialInitialDesign
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

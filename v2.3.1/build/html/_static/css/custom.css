@@ -1,0 +1,254 @@
+h1,
+h2,
+h3,
+h4 {
+    overflow-wrap: break-word !important;
+}
+
+
+.bd-search {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.bd-search .icon {
+    left: 10px;
+}
+
+#navbar-main {
+    padding: 1em 0px;
+}
+
+#navbar-collapsible {
+    padding: 0;
+}
+
+#navbar-icon-links {
+    margin-right: 1em !important;
+}
+
+.navbar-nav {
+    flex-direction: row;
+}
+
+.navbar-light .navbar-nav li a.nav-link {
+    padding: 0 5px 0 0;
+}
+
+#navbar-start {
+    height: 42px;
+}
+
+.navbar-brand {
+    height: 42px;
+    padding: 0px;
+}
+
+#navbar-icon-links i.fa,
+#navbar-icon-links i.fab,
+#navbar-icon-links i.far,
+#navbar-icon-links i.fas {
+    line-height: normal !important;
+}
+
+@media (max-width:959.98px) {
+
+    .navbar-expand-lg>.container,
+    .navbar-expand-lg>.container-fluid,
+    .navbar-expand-lg>.container-lg,
+    .navbar-expand-lg>.container-md,
+    .navbar-expand-lg>.container-sm,
+    .navbar-expand-lg>.container-xl {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .navbar-expand-lg .navbar-end-item {
+        margin-top: 0.5em;
+    }
+
+    .navbar-expand-lg #navbar-icon-links {
+        margin-top: 1em;
+    }
+}
+
+.bd-sidebar {
+    margin-top: 0;
+}
+
+nav#bd-docs-nav a.internal {
+    padding: 5px 15px !important;
+}
+
+nav#bd-docs-nav ul ul {
+    padding-left: 15px;
+}
+
+
+p.sphx-glr-signature,
+p.sphx-glr-timing,
+.sphx-glr-download,
+.sphx-glr-download-link-note {
+    display: none;
+}
+
+
+.sphx-glr-thumbcontainer::before {
+    display: none !important;
+}
+
+.sphx-glr-thumbcontainer {
+    margin: 1px 0 !important;
+    background-color: gray;
+    min-height: auto !important;
+    padding: 0 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    border: 1px solid rgba(220, 220, 220, 1.0) !important;
+    text-align: center;
+}
+
+.sphx-glr-thumbcontainer:hover {
+    box-shadow: none !important;
+    border: 1px solid rgba(190, 190, 190, 1.0) !important;
+}
+
+.sphx-glr-thumbcontainer figcaption {
+    padding: 0 !important;
+}
+
+.sphx-glr-thumbcontainer a.headerlink {
+    display: none;
+}
+
+.sphx-glr-thumbcontainer p {
+    margin: 0 !important;
+}
+
+.sphx-glr-thumbcontainer .figure,
+.sphx-glr-thumbcontainer figure {
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+}
+
+.sphx-glr-thumbcontainer .figure p.caption {
+    padding: 0 !important;
+}
+
+.sphx-glr-thumbcontainer .figure p.caption:hover {
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+}
+
+.sphx-glr-thumbcontainer img {
+    display: none !important;
+}
+
+.sphx-glr-thumbcontainer .figure img {
+    display: none !important;
+}
+
+.sphx-glr-thumbcontainer a.internal {
+    position: relative !important;
+    padding: .75rem !important;
+    border: 0 !important;
+    text-align: center;
+}
+
+.sphx-glr-thumbcontainer a.internal:hover {
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    text-decoration: none;
+}
+
+/* For version 5.0 */
+.sphx-glr-thumbcontainer .sphx-glr-thumbnail-title {
+    padding: .75rem !important;
+}
+
+
+/* Disable tooltip */
+.sphx-glr-thumbcontainer::after {
+    display: none !important;
+}
+
+.sphx-glr-thumbcontainer[tooltip]::before,
+.sphx-glr-thumbcontainer[tooltip]::after,
+.sphx-glr-thumbcontainer[tooltip]:hover::before,
+.sphx-glr-thumbcontainer[tooltip]:hover::after {
+    display: none;
+}
+
+dt:target,
+span.highlighted {
+    background-color: #ffff0020;
+}
+
+.section {
+    margin-bottom: 1.5rem;
+}
+
+
+/* TABLE */
+
+
+/* Make it scrollable */
+table.table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* API DOC */
+
+p.rubric {
+    margin: 2rem 0 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+}
+
+table.autosummary {
+    display: table !important;
+    white-space: normal !important;
+}
+
+table.autosummary td,
+table.autosummary th {
+    border: 0px;
+    border-bottom: 1px solid rgba(220, 220, 220, 1.0);
+}
+
+dl.py {
+    margin-top: 2rem;
+}
+
+dl.field-list>dt {
+    padding-left: 0;
+}
+
+p.sphx-glr-script-out {
+    display: none;
+}
+
+/* SEARCH */
+
+#search-input {
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    border-radius: .25rem;
+
+    cursor: text;
+    text-align: left;
+}
+
+#navbar-main .bd-search {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#navbar-main .bd-search .icon {
+    top: 10px;
+}

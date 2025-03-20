@@ -1,0 +1,37 @@
+smac.runhistory.enumerations
+============================
+
+.. automodule:: smac.runhistory.enumerations
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      StatusType
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

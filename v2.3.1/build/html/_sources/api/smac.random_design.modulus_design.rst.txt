@@ -1,0 +1,38 @@
+smac.random\_design.modulus\_design
+===================================
+
+.. automodule:: smac.random_design.modulus_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      DynamicModulusRandomDesign
+      ModulusRandomDesign
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

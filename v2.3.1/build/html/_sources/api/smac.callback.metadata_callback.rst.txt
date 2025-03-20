@@ -1,0 +1,37 @@
+smac.callback.metadata\_callback
+================================
+
+.. automodule:: smac.callback.metadata_callback
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      MetadataCallback
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

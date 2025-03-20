@@ -1,0 +1,46 @@
+﻿smac.facade
+===========
+
+.. automodule:: smac.facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   abstract_facade
+   algorithm_configuration_facade
+   blackbox_facade
+   hyperband_facade
+   hyperparameter_optimization_facade
+   multi_fidelity_facade
+   random_facade
+

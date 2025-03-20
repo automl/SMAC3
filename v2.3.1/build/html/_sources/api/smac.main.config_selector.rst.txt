@@ -1,0 +1,37 @@
+smac.main.config\_selector
+==========================
+
+.. automodule:: smac.main.config_selector
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      ConfigSelector
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

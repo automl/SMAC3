@@ -1,0 +1,5 @@
+6_references.rst:20: [redirected permanently] https://arxiv.org/pdf/0912.3995.pdf to http://arxiv.org/pdf/0912.3995
+6_references.rst:10: [redirected permanently] https://arxiv.org/pdf/2204.11051.pdf to http://arxiv.org/pdf/2204.11051
+index.rst:55: [redirected permanently] https://automl.org to https://www.automl.org/
+8_faq.rst:6: [redirected permanently] http://www.cs.ubc.ca/labs/beta/Projects/SMAC/ to https://www.cs.ubc.ca/labs/algorithms/Projects/SMAC/
+9_license.rst:4: [redirected permanently] https://opensource.org/licenses/BSD-3-Clause to https://opensource.org/license/BSD-3-Clause

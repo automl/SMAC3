@@ -1,0 +1,37 @@
+smac.intensifier.intensifier
+============================
+
+.. automodule:: smac.intensifier.intensifier
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      Intensifier
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

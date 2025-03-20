@@ -1,0 +1,37 @@
+smac.initial\_design.abstract\_initial\_design
+==============================================
+
+.. automodule:: smac.initial_design.abstract_initial_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      AbstractInitialDesign
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
