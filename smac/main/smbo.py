@@ -591,11 +591,8 @@ class SMBO:
             if trial.instance is not None:
                 kwargs["instance"] = trial.instance
 
-            # TODO: Use submit run for faster evaluation
-            # self._runner.submit_trial(trial_info=trial)
-            _, cost, _, _, _ = self._runner.run(config, **kwargs)
-            costs += [cost]
-
+            self._runner.submit_trial(trial_info=trial)
+        costs = [trial_value.cost for _, trial_value in self._runner.iter_results()]
         np_costs = np.array(costs)
         return np.mean(np_costs, axis=0)
 
