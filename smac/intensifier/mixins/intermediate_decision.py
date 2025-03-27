@@ -39,8 +39,8 @@ logger = get_logger(__name__)
 
 def _dominates(a, b) -> bool:
     # Checks if a dominates b
-    a = np.array(a)
-    b = np.array(b)
+    a = np.atleast_1d(a)
+    b = np.atleast_1d(b)
     return np.count_nonzero(a <= b) >= len(a) and np.count_nonzero(a < b) >= 1
 
 class NewCostDominatesOldCost():

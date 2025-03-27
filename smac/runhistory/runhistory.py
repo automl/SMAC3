@@ -493,7 +493,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 # [[100, 200], [0, 0]] -> [50, 100]
                 averaged_costs = np.mean(costs, axis=0).tolist()
 
-                if normalize: #only normalize also does aggregation. This needs to be disentangled
+                if normalize:
                     averaged_costs = normalize_costs(averaged_costs, self._objective_bounds)
 
                 if run_multi_objective_algorithm:

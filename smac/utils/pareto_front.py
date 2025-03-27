@@ -41,7 +41,7 @@ def _get_costs(
         # configuration
         # However, we only want to consider the config trials
         # Average cost is a list of floats (one for each objective)
-        average_cost = runhistory.average_cost(config, isb_keys, normalize=normalize)
+        average_cost = runhistory.average_cost(config, isb_keys, normalize=normalize, run_multi_objective_algorithm=normalize)
         average_costs += [average_cost]
 
     # Let's work with a numpy array for efficiency
