@@ -8,6 +8,8 @@
 ## Examples
 - Add target function with additional arguments (#1134)
 
+## Improvements
+- Submit trials to runners in SMBO instead of running configs directly (#937)
 
 # 2.3.0
 
