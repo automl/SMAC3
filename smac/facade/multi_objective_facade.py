@@ -3,7 +3,7 @@ from __future__ import annotations
 from ConfigSpace import Configuration
 
 from smac.acquisition.function.expected_improvement import EI
-from smac.acquisition.function.expected_hypervolume import EHVI, PHVI
+from smac.acquisition.function.expected_hypervolume import PHVI
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensifier.intensifier import Intensifier
@@ -124,7 +124,7 @@ class MultiObjectiveFacade(AbstractFacade):
             Controls the balance between exploration and exploitation of the
             acquisition function.
         """
-        return EHVI()
+        return PHVI()
 
     @staticmethod
     def get_acquisition_maximizer(  # type: ignore
