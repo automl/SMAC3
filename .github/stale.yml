@@ -13,6 +13,9 @@ exemptLabels:
   - feature
   - test
   - example
+  - discussion
+  - duplicate
+  - question
 
 # Label to use when marking an issue as stale
 staleLabel: stale

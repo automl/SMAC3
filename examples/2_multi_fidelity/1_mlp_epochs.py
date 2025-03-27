@@ -84,9 +84,9 @@ class MLP:
         # For deactivated parameters (by virtue of the conditions),
         # the configuration stores None-values.
         # This is not accepted by the MLP, so we replace them with placeholder values.
-        lr = config["learning_rate"] if config["learning_rate"] else "constant"
-        lr_init = config["learning_rate_init"] if config["learning_rate_init"] else 0.001
-        batch_size = config["batch_size"] if config["batch_size"] else 200
+        lr = config.get("learning_rate", "constant")
+        lr_init = config.get("learning_rate_init", 0.001)
+        batch_size = config.get("batch_size", 200)
 
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore")

@@ -7,6 +7,8 @@ from pathlib import Path
 
 import joblib
 from ConfigSpace import Configuration
+from dask.distributed import Client
+from typing_extensions import Literal
 
 import smac
 from smac.acquisition.function.abstract_acquisition_function import (
@@ -15,7 +17,7 @@ from smac.acquisition.function.abstract_acquisition_function import (
 from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.main.config_selector import ConfigSelector
@@ -81,15 +83,23 @@ class AbstractFacade:
         Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
         is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
         can be log transformed.
-    logging_level: int | Path | None
+    logging_level: int | Path | Literal[False] | None
         The level of logging (the lowest level 0 indicates the debug level). If a path is passed, a yaml file is
         expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.
+        If False is passed, SMAC will not do any customization of the logging setup and the responsibility is left
+        to the user.
     callbacks: list[Callback], defaults to []
         Callbacks, which are incorporated into the optimization loop.
     overwrite: bool, defaults to False
         When True, overwrites the run results if a previous run is found that is
-        inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked
-        for the exact behaviour (overwrite completely, save old run, or use old results).
+        consistent in the meta data with the current setup. When False and a previous run is found that is
+        consistent in the meta data, the run is continued. When False and a previous run is found that is
+        not consistent in the meta data, the the user is asked for the exact behaviour (overwrite completely
+        or rename old run first).
+    dask_client: Client | None, defaults to None
+        User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not
+        be closed automatically and will have to be closed manually if provided explicitly. If none is provided
+        (default), a local one will be created for you and closed upon completion.
     """
 
     def __init__(
@@ -106,9 +116,10 @@ class AbstractFacade:
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
-        logging_level: int | Path | None = None,
+        logging_level: int | Path | Literal[False] | None = None,
         callbacks: list[Callback] = [],
         overwrite: bool = False,
+        dask_client: Client | None = None,
     ):
         setup_logging(logging_level)
 
@@ -178,14 +189,19 @@ class AbstractFacade:
             )
 
         # In case of multiple jobs, we need to wrap the runner again using DaskParallelRunner
-        if (n_workers := scenario.n_workers) > 1:
-            available_workers = joblib.cpu_count()
-            if n_workers > available_workers:
-                logger.info(f"Workers are reduced to {n_workers}.")
-                n_workers = available_workers
+        if (n_workers := scenario.n_workers) > 1 or dask_client is not None:
+            if dask_client is not None:
+                logger.warning(
+                    "Provided `dask_client`. Ignore `scenario.n_workers`, directly set `n_workers` in `dask_client`."
+                )
+            else:
+                available_workers = joblib.cpu_count()
+                if n_workers > available_workers:
+                    logger.info(f"Workers are reduced to {n_workers}.")
+                    n_workers = available_workers
 
             # We use a dask runner for parallelization
-            runner = DaskParallelRunner(single_worker=runner)
+            runner = DaskParallelRunner(single_worker=runner, dask_client=dask_client)
 
         # Set the runner to access it globally
         self._runner = runner
@@ -205,11 +221,11 @@ class AbstractFacade:
 
         # Register callbacks here
         for callback in callbacks:
-            self._optimizer._register_callback(callback)
+            self._optimizer.register_callback(callback)
 
         # Additionally, we register the runhistory callback from the intensifier to efficiently update our incumbent
         # every time new information are available
-        self._optimizer._register_callback(self._intensifier.get_callback())
+        self._optimizer.register_callback(self._intensifier.get_callback(), index=0)
 
     @property
     def scenario(self) -> Scenario:
@@ -275,9 +291,20 @@ class AbstractFacade:
         """
         return self._optimizer.tell(info, value, save=save)
 
-    def optimize(self) -> Configuration | list[Configuration]:
+    def optimize(self, *, data_to_scatter: dict[str, Any] | None = None) -> Configuration | list[Configuration]:
         """
         Optimizes the configuration of the algorithm.
+
+        Parameters
+        ----------
+        data_to_scatter: dict[str, Any] | None
+            We first note that this argument is valid only dask_runner!
+            When a user scatters data from their local process to the distributed network,
+            this data is distributed in a round-robin fashion grouping by number of cores.
+            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data
+            every time we would like to execute a target function with a big dataset.
+            For example, when your target function has a big dataset shared across all the target function,
+            this argument is very useful.
 
         Returns
         -------
@@ -285,8 +312,11 @@ class AbstractFacade:
             Best found configuration.
         """
         incumbents = None
+        if isinstance(data_to_scatter, dict) and len(data_to_scatter) == 0:
+            raise ValueError("data_to_scatter must be None or dict with some elements, but got an empty dict.")
+
         try:
-            incumbents = self._optimizer.optimize()
+            incumbents = self._optimizer.optimize(data_to_scatter=data_to_scatter)
         finally:
             self._optimizer.save()
 
@@ -433,6 +463,18 @@ class AbstractFacade:
         """Checks if the composition is correct if there are dependencies."""
         # Make sure the same acquisition function is used
         assert self._acquisition_function == self._acquisition_maximizer._acquisition_function
+
+        if isinstance(self._runner, DaskParallelRunner) and (
+            self.scenario.trial_walltime_limit is not None or self.scenario.trial_memory_limit is not None
+        ):
+            # This is probably due to pickling dask jobs
+            raise ValueError(
+                "Parallelization via Dask cannot be used in combination with limiting "
+                "the resources "
+                "of the target function via `scenario.trial_walltime_limit` or "
+                "`scenario.trial_memory_limit`. Set those to `None` if you want "
+                "parallelization. "
+            )
 
     def _get_signature_arguments(self) -> list[str]:
         """Returns signature arguments, which are required by the intensifier."""

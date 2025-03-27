@@ -30,10 +30,10 @@ def test_initialization(make_scenario, configspace_small):
     assert intensifier._max_iterations[4] == 1
 
     assert intensifier._n_configs_in_stage[0] == [81, 27, 9, 3, 1]
-    assert intensifier._n_configs_in_stage[1] == [27, 9, 3, 1]
-    assert intensifier._n_configs_in_stage[2] == [9, 3, 1]
-    assert intensifier._n_configs_in_stage[3] == [3, 1]  # in the paper it's 6 and 2 which is false
-    assert intensifier._n_configs_in_stage[4] == [1]  # in the paper it's 5 which is false?
+    assert intensifier._n_configs_in_stage[1] == [34, 11, 3, 1]
+    assert intensifier._n_configs_in_stage[2] == [15, 5, 1]
+    assert intensifier._n_configs_in_stage[3] == [8, 2]
+    assert intensifier._n_configs_in_stage[4] == [5]
 
     assert intensifier._budgets_in_stage[0] == [1, 3, 9, 27, 81]
     assert intensifier._budgets_in_stage[1] == [3, 9, 27, 81]
@@ -75,7 +75,7 @@ def test_state(make_scenario, configspace_small, make_config_selector):
     gen = iter(intensifier)
 
     # Add some configs to the tracker
-    for _ in range(10):
+    for _ in range(12):
         trial = next(gen)
         runhistory.add_running_trial(trial)  # We have to mark it as running manually
         intensifier.update_incumbents(trial.config)

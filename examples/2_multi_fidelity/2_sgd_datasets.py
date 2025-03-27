@@ -89,7 +89,7 @@ class SGD:
 
             # SGD classifier using given configuration
             clf = SGDClassifier(
-                loss="log",
+                loss="log_loss",
                 penalty="elasticnet",
                 alpha=config["alpha"],
                 l1_ratio=config["l1_ratio"],

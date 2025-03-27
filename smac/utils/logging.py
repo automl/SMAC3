@@ -5,6 +5,7 @@ import logging.config
 from pathlib import Path
 
 import yaml
+from typing_extensions import Literal
 
 import smac
 
@@ -12,14 +13,20 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-def setup_logging(level: int | Path | None = None) -> None:
+def setup_logging(
+    level: int | Path | Literal[False] | None = False,
+) -> None:
     """Sets up the logging configuration for all modules.
 
     Parameters
     ----------
-    level : int | Path | None, defaults to None
+    level : int | Path | Literal[False] | None, defaults to None
         An integer representing the logging level. An custom logging configuration can be used when passing a path.
+        If False, no logging setup is performed.
     """
+    if level is False:
+        return
+
     if isinstance(level, Path):
         log_filename = level
     else:

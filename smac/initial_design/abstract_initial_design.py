@@ -51,7 +51,7 @@ class AbstractInitialDesign:
         n_configs: int | None = None,
         n_configs_per_hyperparameter: int | None = 10,
         max_ratio: float = 0.25,
-        additional_configs: list[Configuration] = [],
+        additional_configs: list[Configuration] = None,
         seed: int | None = None,
     ):
         self._configspace = scenario.configspace
@@ -59,9 +59,22 @@ class AbstractInitialDesign:
         if seed is None:
             seed = scenario.seed
 
+        self.use_default_config = scenario.use_default_config
+
         self._seed = seed
         self._rng = np.random.RandomState(seed)
         self._n_configs_per_hyperparameter = n_configs_per_hyperparameter
+
+        # make sure that additional configs is not a mutable default value
+        # this avoids issues
+        if additional_configs is None:
+            additional_configs = []
+
+        if self.use_default_config:
+            default_config = self._configspace.get_default_configuration()
+            default_config.origin = "Initial Design: Default configuration"
+            additional_configs.append(default_config)
+
         self._additional_configs = additional_configs
 
         n_params = len(self._configspace.get_hyperparameters())

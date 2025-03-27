@@ -1,4 +1,16 @@
-# MO-SMAC
+# SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization
+
+
+[![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
+[![Documentation](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
+[![codecov
+Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
+
+<img src="docs/images/logo.png" style="width: 50%;" />
+
+SMAC offers a robust and flexible framework for Bayesian Optimization to support users in determining well-performing 
+hyperparameter configurations for their (Machine Learning) algorithms, datasets and applications at hand. The main core 
+consists of Bayesian Optimization in combination with an aggressive racing mechanism to efficiently decide which of two configurations performs better.
 
 MO-SMAC is implemented directly into SMAC3. This repository is forked from the [SMAC3 repository](https://github.com/automl/SMAC3) and therefore contains references and copyright information to those authors. 
 These do not align with the authors of MO-SMAC and, therefore, the anonymity for this repository remains intact.
@@ -8,15 +20,24 @@ These do not align with the authors of MO-SMAC and, therefore, the anonymity for
 Create a new environment with Python 3.10 and make sure swig is installed either on your system or
 inside the environment. We demonstrate the installation via anaconda in the following:
 
-Create and activate environment after which you install `swig`:
+Create and activate environment:
 ```
 conda create -n SMAC python=3.10
 conda activate SMAC
+```
+
+Install swig:
+```
 conda install gxx_linux-64 gcc_linux-64 swig
 ```
 
 Clone this repository and install locally:
 ```
+
+If you want to contribute to SMAC, use the following steps instead:
+```
+git clone https://github.com/automl/SMAC3.git && cd SMAC3
+make install-dev
 cd SMAC3K
 pip install -e .[dev]
 ```

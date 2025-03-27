@@ -1,7 +1,7 @@
 name: tests
 
 on:
-  # Allow to manually trigger through github API
+  # Allow to manually trigger through GitHub API
   workflow_dispatch:
 
   # Triggers with push to main
@@ -12,6 +12,11 @@ on:
 
   # Triggers with push to a pr aimed at main
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
     branches:
       - main
       - development
@@ -34,6 +39,7 @@ jobs:
   # General unit tests
   source-test:
     name: ${{ matrix.python-version }}-${{ matrix.os }}
+    if: ${{ !github.event.pull_request.draft }}
 
     runs-on: ${{ matrix.os }}
     defaults:
@@ -44,7 +50,6 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
-        # python-version: ["3.8"]
         os: ["ubuntu-latest"]
 
     steps:
@@ -70,10 +75,10 @@ jobs:
 
     - name: Tests
       run: |
-        pytest ${{ env.pytest-args }} ${{ env.test-dir }}
-
-        # Post-hoc clean-up
-        make clean
+          echo "Running all tests..."
+          pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+          # Post-hoc clean-up
+          make clean
 
     - name: Check for files left behind by test
       run: |
@@ -89,6 +94,7 @@ jobs:
 # Testing with conda
   conda-tests:
     name: conda-${{ matrix.python-version }}-${{ matrix.os }}
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -98,7 +104,6 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
-        # python-version: ["3.8"]
         os: ["ubuntu-latest"]
 
     steps:
@@ -120,11 +125,15 @@ jobs:
 
     - name: Tests
       run: |
-          pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+        echo "Running all tests..."
+        pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+
+
 
   # Testing a dist install
   dist-test:
     name: dist-${{ matrix.python-version }}-${{ matrix.os }}
+    if: ${{ !github.event.pull_request.draft }}
 
     runs-on: ${{ matrix.os }}
     defaults:
@@ -135,7 +144,6 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
-        # python-version: ["3.8"]
         os: ["ubuntu-latest"]
 
     steps:
@@ -161,4 +169,5 @@ jobs:
 
     - name: Tests
       run: |
+        echo "Running all tests..."
         pytest ${{ env.pytest-args }} ${{ env.test-dir }}
