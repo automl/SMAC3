@@ -142,7 +142,7 @@ smac = HBFacade(scenario=scenario, target_function=train)
 ```
 
 ## SMBO
-Each `Facade` creates a Sequential [Model Based Optimization (SMBO)][smac.main.smbo] object for you. In addition to starting the optimization with
+Each `Facade` creates a [Sequential Model Based Optimization (SMBO)][smac.main.smbo] object for you. In addition to starting the optimization with
 ```python
 incumbent = smbo.optimize()
 ```
