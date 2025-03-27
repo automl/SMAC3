@@ -118,7 +118,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         # Sort according to acq value
         configs_acq.sort(reverse=True, key=lambda x: x[0])
         for a, inc in configs_acq:
-            inc.origin = "Local Search"
+            inc.origin = "Acquisition Function Maximizer: Local Search"
 
         return configs_acq
 

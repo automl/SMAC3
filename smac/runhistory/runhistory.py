@@ -463,6 +463,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         config: Configuration,
         instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
+        run_multi_objective_algorithm: bool = False,
     ) -> float | list[float]:
         """Return the average cost of a configuration. This is the mean of costs of all instance-
         seed pairs.
@@ -492,11 +493,12 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 # [[100, 200], [0, 0]] -> [50, 100]
                 averaged_costs = np.mean(costs, axis=0).tolist()
 
-                if normalize:
-                    assert self.multi_objective_algorithm is not None
-                    normalized_costs = normalize_costs(averaged_costs, self._objective_bounds)
+                if normalize: #only normalize also does aggregation. This needs to be disentangled
+                    averaged_costs = normalize_costs(averaged_costs, self._objective_bounds)
 
-                    return self.multi_objective_algorithm(normalized_costs)
+                if run_multi_objective_algorithm:
+                    assert self.multi_objective_algorithm is not None
+                    return self.multi_objective_algorithm(averaged_costs)
                 else:
                     return averaged_costs
 
