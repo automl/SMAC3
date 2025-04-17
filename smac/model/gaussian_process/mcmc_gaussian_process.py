@@ -287,7 +287,10 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
                 model.mean_y_ = self.mean_y_
                 model.std_y_ = self.std_y_
 
-        self._is_trained = all(model.is_trained for model in self._models)
+        if not self._models:
+            self._is_trained = False
+        else:
+            self._is_trained = all(model.is_trained for model in self._models)
         return self
 
     def _get_gaussian_process(self) -> GaussianProcessRegressor:
