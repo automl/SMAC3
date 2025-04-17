@@ -57,6 +57,7 @@ class AbstractModel:
         self._rng = np.random.RandomState(self._seed)
         self._instance_features = instance_features
         self._pca_components = pca_components
+        self._is_trained = False
 
         n_features = 0
         if self._instance_features is not None:
@@ -91,6 +92,11 @@ class AbstractModel:
             "bounds": self._bounds,
             "pca_components": self._pca_components,
         }
+
+    @property
+    def is_trained(self) -> bool:
+        """Returns True if the model is trained, False otherwise."""
+        return self._is_trained
 
     def train(self: Self, X: np.ndarray, Y: np.ndarray) -> Self:
         """Trains the random forest on X and Y. Internally, calls the method `_train`.

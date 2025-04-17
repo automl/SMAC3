@@ -54,6 +54,11 @@ class MultiObjectiveModel(AbstractModel):
         )
 
     @property
+    def is_trained(self) -> bool:
+        """Whether the model is trained or not."""
+        return self._is_trained
+
+    @property
     def models(self) -> list[AbstractModel]:
         """The internally used surrogate models."""
         return self._models
@@ -75,6 +80,8 @@ class MultiObjectiveModel(AbstractModel):
 
         for i, model in enumerate(self._models):
             model.train(X, Y[:, i])
+
+        self._is_trained = all(model.is_trained for model in self._models)
 
         return self
 

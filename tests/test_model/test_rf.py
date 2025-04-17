@@ -49,7 +49,9 @@ def test_predict():
     X = rs.rand(20, 10)
     Y = rs.rand(10, 1)
     model = RandomForest(configspace=_get_cs(10))
+    assert not model.is_trained
     model.train(X[:10], Y[:10])
+    assert model.is_trained
     m_hat, v_hat = model.predict(X[10:])
     assert m_hat.shape == (10, 1)
     assert v_hat.shape == (10, 1)

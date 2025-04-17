@@ -153,6 +153,8 @@ class RandomForest(AbstractRandomForest):
         data = self._init_data_container(X, y)
         self._rf.fit(data, rng=self._rng)
 
+        self._is_trained = True
+
         return self
 
     def _init_data_container(self, X: np.ndarray, y: np.ndarray) -> DataContainer:
