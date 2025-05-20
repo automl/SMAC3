@@ -77,8 +77,6 @@ if __name__ == "__main__":
         address=cluster,
     )
     client.wait_for_workers(n_workers)
-    # Instead, you can also do
-    # client = cluster.get_client()
 
     # Now we use SMAC to find the best hyperparameters
     smac = BlackBoxFacade(

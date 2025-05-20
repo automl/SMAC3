@@ -1,7 +1,7 @@
 # Parallelism
 
 To facilitate fast execution, SMAC supports executing multiple workers simultaneously via [Dask](https://www.dask.org/). Using this functionality, splits SMAC into a main, and executor jobs.
-The main job handles the Optimization Process, and coordination. The executors are queried with the target function and hyperparameter configurations, execute them, and return their result. 
+The main job handles the optimization process, and coordinates the executor jobs. The executors are queried with the target function and hyperparameter configurations, execute them, and return their result. 
 
 !!! note
     
@@ -21,14 +21,14 @@ Scenario(model.configspace, n_workers=5)
 ``` 
 
 
-## Parallelizing on a HPC (with SLURM)
+## Parallelizing on SLURM
 
-To utilize this split of main and execution jobs on a [SLURM](https://slurm.schedmd.com/), ``SMAC`` supports manually specifying a [Dask](https://www.dask.org/) client.
-For example, this allows using independent jobs for execution, not necessarily running on the same machine/with identical hardware requirements as the main job.
+To utilize this split of main and execution jobs on a [SLURM cluster](https://slurm.schedmd.com/), SMAC supports manually specifying a [Dask](https://www.dask.org/) client.
+This allows executing the target function on dedicated SLURM jobs that are necessarily configured with the same hardware requirements,.
 
 !!! note
 
-    While most ``SLURM`` clusters behave similarly, the example ``DASK`` client, might not work for every cluster. For example, some clusters only allow spawning new jobs 
+    While most SLURM clusters behave similarly, the example DASK client, might not work for every cluster. For example, some clusters only allow spawning new jobs 
     from the login node.
 
 To configure SMAC properly for each cluster, you need to know the ports which allow communication between main and worker jobs. The dask client is then created as follows:
