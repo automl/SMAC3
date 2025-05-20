@@ -23,6 +23,16 @@ def get_X_y(cs, n_samples, n_instance_features):
 def _train(X, Y):
     return None
 
+class MyAbstractModel(AbstractModel):
+    # dummy class to ensure that the required methods are implemented
+    @property
+    def is_trained(self):
+        return self._is_trained
+
+    def _train(self, X, Y):
+        self._is_trained = True
+        return self
+
 
 def test_no_pca(configspace_small, make_scenario):
     n_instances = 100
@@ -35,7 +45,7 @@ def test_no_pca(configspace_small, make_scenario):
         n_instances=n_instances,
         n_instance_features=n_instance_features,
     )
-    model = AbstractModel(configspace_small, scenario.instance_features, pca_components=7)
+    model = MyAbstractModel(configspace_small, scenario.instance_features, pca_components=7)
     # We just overwrite the function as mock here
     model._train = _train
 
@@ -68,7 +78,7 @@ def test_pca(configspace_small, make_scenario):
         n_instances=n_instances,
         n_instance_features=n_instance_features,
     )
-    model = AbstractModel(configspace_small, scenario.instance_features, pca_components=7)
+    model = MyAbstractModel(configspace_small, scenario.instance_features, pca_components=7)
     # We just overwrite the function as mock here
     model._train = _train
 
