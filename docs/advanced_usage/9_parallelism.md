@@ -50,8 +50,8 @@ cluster = SLURMCluster(
         "--worker-port",                    # Worker port range 
         "60010:60100"],                     # Worker port range 
     scheduler_options={
-    "port": 60001,                          # Main Job Port
-},
+        "port": 60001,                      # Main Job Port
+    },
 )
 cluster.scale(jobs=n_workers)
 
