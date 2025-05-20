@@ -133,8 +133,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# SMAC Logs
 *smac3-output_*
 *smac3_output*
+
+# Dask Logs
+tmp/smac_dask_slurm
 
 # macOS files
 .DS_Store
@@ -151,3 +155,4 @@ src
 
 projects
 _api
+branin.pkl
