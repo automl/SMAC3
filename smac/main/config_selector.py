@@ -261,7 +261,7 @@ class ConfigSelector:
                     else:
                         random_configs_retries += 1
 
-                    if random_configs_retries < self._max_new_config_tries:
+                    if random_configs_retries == self._max_new_config_tries:
                         logger.warning(f"Could not return a new configuration after {random_configs_retries} retries.")
                         raise ConfigurationSpaceExhaustedException()
 
