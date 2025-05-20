@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import Any, TypeVar
 
 import copy
@@ -19,14 +19,12 @@ from smac.utils.logging import get_logger
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
-
 logger = get_logger(__name__)
-
 
 Self = TypeVar("Self", bound="AbstractModel")
 
 
-class AbstractModel:
+class AbstractModel(ABC):
     """Abstract implementation of the surrogate model.
 
     Note
@@ -94,9 +92,10 @@ class AbstractModel:
         }
 
     @property
+    @abstractmethod
     def is_trained(self) -> bool:
         """Returns True if the model is trained, False otherwise."""
-        return self._is_trained
+        raise NotImplementedError()  # make use of `self._is_trained` in subclasses
 
     def train(self: Self, X: np.ndarray, Y: np.ndarray) -> Self:
         """Trains the random forest on X and Y. Internally, calls the method `_train`.

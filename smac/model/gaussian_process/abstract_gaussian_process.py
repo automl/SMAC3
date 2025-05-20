@@ -58,6 +58,11 @@ class AbstractGaussianProcess(AbstractModel):
 
         return meta
 
+    @property
+    def is_trained(self) -> bool:
+        """Returns whether the model is trained or not."""
+        return self._is_trained
+
     @abstractmethod
     def _get_gaussian_process(self) -> GaussianProcessRegressor:
         """Generates a Gaussian process."""
