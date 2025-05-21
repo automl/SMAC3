@@ -100,34 +100,14 @@ def test_pca(configspace_small, make_scenario):
         model.predict_marginalized(X_test)
 
 def test_abstract_model_raises_without_istrained(configspace_small):
-    from dataclasses import dataclass
-    from ConfigSpace import ConfigurationSpace, Constant
-
-    @dataclass
-    class A:
-        a: int
-
-    def f() -> None:
-        return None
-
     class DummyModel(AbstractModel):
         def _train(self, X: np.ndarray, Y: np.ndarray):
             self._is_trained = True
             return self
 
-        @property
-        def is_trained(self) -> bool:
-            return getattr(self, "_is_trained", False)
+        # @property  # -> because this code is missing, it should raise
+        # def is_trained(self) -> bool:
+        #     return self._is_trained
 
-    @pytest.fixture
-    def configspace():
-        return ConfigurationSpace({
-            "cat": [True, False, None],
-            "othercat": [A(1), f],
-            "constant": Constant("constant", (24, 25)),
-        })
-    try:
+    with pytest.raises(TypeError, match="Can't instantiate abstract class DummyModel with abstract method is_trained"):
         model = DummyModel(configspace_small)
-
-    except TypeError as e:
-        return
