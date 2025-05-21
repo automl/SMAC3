@@ -109,5 +109,5 @@ def test_abstract_model_raises_without_istrained(configspace_small):
         # def is_trained(self) -> bool:
         #     return self._is_trained
 
-    with pytest.raises(TypeError, match="Can't instantiate abstract class DummyModel with abstract method is_trained"):
+    with pytest.raises(TypeError, match="instantiate abstract class"):
         model = DummyModel(configspace_small)

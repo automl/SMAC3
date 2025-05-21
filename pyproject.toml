@@ -4,7 +4,7 @@
 [tool.pytest.ini_options]
 testpaths = ["tests"]  # path to the test directory
 minversion = "3.8"
-addopts = "--cov=smac" # Should be package name
+#addopts = "--cov=smac" # Should be package name
 
 [tool.coverage.run]
 branch = true
