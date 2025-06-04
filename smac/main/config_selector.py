@@ -13,6 +13,7 @@ from smac.acquisition.function.abstract_acquisition_function import (
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
+from smac.acquisition.maximizer.random_search import RandomSearch
 from smac.callback.callback import Callback
 from smac.initial_design import AbstractInitialDesign
 from smac.model.abstract_model import AbstractModel
@@ -225,10 +226,17 @@ class ConfigSelector:
             self._previous_entries = Y.shape[0]
 
             # Now we maximize the acquisition function
-            challengers = self._acquisition_maximizer.maximize(
-                previous_configs,
-                random_design=self._random_design,
-            )
+            if self._batch_sampling_estimation_strategy == "q_ei":
+                # sets the number of configurations tor eturn to the number of workers and expects random search as
+                # maximizer with sorted values, so that the acquistion function is called
+                assert isinstance(
+                    self._acquisition_maximizer, RandomSearch
+                ), "qExpectedImprovement estimation requires RandomSearch as acquisition maximizer."
+                challengers = self._acquisition_maximizer.maximize(
+                    previous_configs, random_design=self._random_design, n_points=self._scenario.n_workers, _sorted=True
+                )
+            else:
+                challengers = self._acquisition_maximizer.maximize(previous_configs, random_design=self._random_design)
 
             counter = 0
             failed_counter = 0
@@ -356,6 +364,7 @@ class ConfigSelector:
              values
             sample: estimations for X are sampled from the surrogate models. Since the samples need to be sampled from a
               joint distribution for all X, we only allow sample strategy with GP as surrogate models.
+            q_ei: uses the Q-EI acquisition function to estimate Y.
 
         Returns
         -------
@@ -401,6 +410,18 @@ class ConfigSelector:
                 self._model, GaussianProcess
             ), "Sample based estimate strategy only allows GP as surrogate model!"
             return self._model.sample_functions(X_test=X_running, n_funcs=1)
+        elif estimation_strategy == "q_ei":
+            assert isinstance(
+                self._model, GaussianProcess
+            ), "qExpectedImprovement estimation requires GaussianProcess as surrogate model."
+            if not self._model._is_trained:
+                logger.debug("Model not trained. Falling back to mean of evaluated Y.")
+                Y_estimated = np.nanmean(Y_evaluated, axis=0, keepdims=True)
+                return np.repeat(Y_estimated, n_running_points, 0)
+            assert (
+                self._acquisition_function is not None
+            ), "qExpectedImprovement estimation requires qExpectedImprovement as acquisition function."
+            return self._acquisition_function._compute(X_running)
         else:
             raise ValueError(f"Unknown estimating strategy: {estimation_strategy}")
 

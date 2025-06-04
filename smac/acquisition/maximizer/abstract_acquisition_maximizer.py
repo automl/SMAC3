@@ -74,6 +74,7 @@ class AbstractAcquisitionMaximizer:
         previous_configs: list[Configuration],
         n_points: int | None = None,
         random_design: AbstractRandomDesign | None = None,
+        **kwargs: Any,
     ) -> Iterator[Configuration]:
         """Maximize acquisition function using `_maximize`, implemented by a subclass.
 
