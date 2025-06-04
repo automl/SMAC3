@@ -286,3 +286,99 @@ class EIPS(EI):
             raise ValueError("Expected Improvement per Second is smaller than 0 " "for at least one sample.")
 
         return f.reshape((-1, 1))
+
+
+class QExpectedImprovement(EI):
+    r"""
+    Monte Carlo approximation of q-Expected Improvement.
+    Approximates joint distribution with independent normals.
+
+    :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,
+    with :math:`f(X^+)` as the best location.
+
+    Reference for q-EI
+
+
+    Parameters
+    ----------
+    xi : float, defaults to 0.0
+        Controls the balance between exploration and exploitation of the
+        acquisition function.
+    log : bool, defaults to False
+        Whether the function values are in log-space.
+
+
+    Attributes
+    ----------
+    _xi : float
+        Exploration-exloitation trade-off parameter.
+    _log: bool
+        Function values in log-space or not.
+    _eta : float
+        Current incumbent function value (best value observed so far).
+
+    """
+
+    def __init__(self, xi: float = 0.0, n_samples: int = 128) -> None:
+        super(QExpectedImprovement, self).__init__(xi=xi)
+        self.n_samples = n_samples
+
+    @property
+    def name(self) -> str:  # noqa: D102
+        return "Batch Expected Improvement"
+
+    def _compute(self, X: np.ndarray) -> np.ndarray:
+        """
+        Compute q-EI acquisition value using Monte Carlo approximation.
+
+        Parameters
+        ----------
+        X : np.ndarray [N, D]
+            The batch of input points to evaluate.
+
+        Returns
+        -------
+        np.ndarray [1, 1]
+            The q-EI value for the batch as a whole.
+        """
+        assert self._model is not None
+        assert self._xi is not None
+
+        if self._eta is None:
+            raise ValueError(
+                "No current best specified. Call update(eta=<float>) to inform the acquisition function "
+                "about the current best value."
+            )
+
+        if len(X.shape) == 1:
+            X = X[np.newaxis, :]
+
+        m, var = self._model.predict_marginalized(X)
+        std = np.sqrt(var)
+
+        if np.any(std == 0.0):
+            logger.warning("Predicted std is 0.0 for at least one sample.")
+            std_copy = np.copy(std)
+            std[std_copy == 0.0] = 1.0  # prevent division by zero
+
+        # Monte Carlo sampling from log-normal distribution
+        normal_samples = np.random.normal(loc=m.T, scale=std.T, size=(self.n_samples, X.shape[0]))
+
+        if not self._log:
+            f_samples = normal_samples  # in original (normal) space
+            f_min_sample = np.min(f_samples, axis=1)
+            improvement = np.maximum(self._eta - self._xi - f_min_sample, 0.0)
+        else:
+            # In log-space, the *actual values* are exp(samples)
+            f_samples = np.exp(normal_samples)
+            f_min_sample = np.min(f_samples, axis=1)
+
+            # eta is already in log-space, so we compare to exp(eta - xi)
+            improvement = np.maximum(np.exp(self._eta - self._xi) - f_min_sample, 0.0)
+
+        qei = np.mean(improvement)
+
+        if qei < 0:
+            raise ValueError("q-Expected Improvement is smaller than 0. Should not happen.")
+
+        return np.array([[qei]])
