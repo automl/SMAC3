@@ -16,6 +16,7 @@ from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
 from smac.acquisition.maximizer.random_search import RandomSearch
 from smac.callback.callback import Callback
 from smac.initial_design import AbstractInitialDesign
+from smac.main.exceptions import ConfigurationSpaceExhaustedException
 from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process import GaussianProcess
 from smac.model.random_forest import RandomForest
@@ -118,7 +119,8 @@ class ConfigSelector:
 
         self._initial_design_configs = initial_design.select_configurations()
         if len(self._initial_design_configs) == 0:
-            raise RuntimeError("SMAC needs initial configurations to work.")
+            # raise RuntimeError("SMAC needs initial configurations to work.")
+            logger.warning("No initial configurations were sampled.")
 
     @property
     def meta(self) -> dict[str, Any]:
@@ -126,7 +128,7 @@ class ConfigSelector:
         return {
             "name": self.__class__.__name__,
             "retrain_after": self._retrain_after,
-            "retries": self._max_new_config_tries,
+            "max_new_config_tries": self._max_new_config_tries,
             "min_trials": self._min_trials,
         }
 
@@ -260,10 +262,31 @@ class ConfigSelector:
 
                     # We exit the loop if we have tried to add the same configuration too often
                     if failed_counter == self._max_new_config_tries:
-                        logger.warning(
-                            f"Could not return a new configuration after {self._max_new_config_tries} retries." ""
-                        )
-                        return
+                        logger.warning(f"Could not return a new configuration after {failed_counter} retries.")
+                        break
+
+            # if we don't have enough configurations, we want to sample random configurations
+            if not retrain:
+                logger.warning(
+                    "Did not find enough configuration from the acquisition function. Sampling random configurations."
+                )
+                random_configs_retries = 0
+                while counter < self._retrain_after and random_configs_retries < self._max_new_config_tries:
+                    config = self._scenario.configspace.sample_configuration()
+                    if config not in self._processed_configs:
+                        counter += 1
+                        config.origin = "Random Search (max retries, no candidates)"
+                        self._processed_configs.append(config)
+                        self._call_callbacks_on_end(config)
+                        yield config
+                        retrain = counter == self._retrain_after
+                        self._call_callbacks_on_start()
+                    else:
+                        random_configs_retries += 1
+
+                    if random_configs_retries == self._max_new_config_tries:
+                        logger.warning(f"Could not return a new configuration after {random_configs_retries} retries.")
+                        raise ConfigurationSpaceExhaustedException()
 
     def _call_callbacks_on_start(self) -> None:
         for callback in self._callbacks:

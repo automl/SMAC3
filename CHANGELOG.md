@@ -1,5 +1,8 @@
 # 2.3.1
 
+## Bugfixes
+- Addressing situations where the acquisition function suggests configurations that have already been sampled in prior iterations (#1216)
+
 ## Misc
 - New SMAC logo
 - Fix doc link in README
@@ -10,6 +13,15 @@
 
 ## Improvements
 - Submit trials to runners in SMBO instead of running configs directly (#937)
+
+## Improvements
+- `target_function` becomes optional in Facade when using ask and tell exclusively (#946)
+
+## Documentation
+- Ask and tell without initial design and warmstarting
+
+## Bugfixes 
+- Ask and tell without initial design may no longer return a config from the initial design - if it is not "removed".  
 
 # 2.3.0
 
