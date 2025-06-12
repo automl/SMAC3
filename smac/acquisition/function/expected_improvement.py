@@ -8,6 +8,7 @@ from scipy.stats import norm
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.model.gaussian_process import GaussianProcess
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -362,7 +363,10 @@ class QExpectedImprovement(EI):
             std[std_copy == 0.0] = 1.0  # prevent division by zero
 
         # Monte Carlo sampling from log-normal distribution
-        normal_samples = np.random.normal(loc=m.T, scale=std.T, size=(self.n_samples, X.shape[0]))
+        if isinstance(self.model, GaussianProcess):
+            normal_samples = self.model.sample_functions(X, n_funcs=self.n_samples)
+        else:
+            normal_samples = np.random.normal(loc=m.T, scale=std.T, size=(self.n_samples, X.shape[0]))
 
         if not self._log:
             f_samples = normal_samples  # in original (normal) space
