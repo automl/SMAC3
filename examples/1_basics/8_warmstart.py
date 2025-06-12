@@ -56,15 +56,19 @@ if __name__ == "__main__":
     intensifier = HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=1)
     smac = HyperparameterOptimizationFacade(
         scenario,
-        task.evaluate,
+        target_function=task.evaluate,
         intensifier=intensifier,
         overwrite=True,
 
         # Modify the initial design to use our custom initial design
         initial_design=HyperparameterOptimizationFacade.get_initial_design(
             scenario, 
-            n_configs=0,  # Do not use the default initial design
-            additional_configs=configurations  # Use the configurations previously evaluated as initial design
+            n_configs=0,  # Do not use the default initial design at all
+
+            # You can pass the configurations as additional_configs, which will specify their
+            # origin to be the initial design. However, this is not necessary and we can just
+            # smac.tell the configurations.
+            # additional_configs=configurations  # Use the configurations previously evaluated as initial design
                                                # This only passes the configurations but not the cost!
                                                # So in order to actually use the custom, pre-evaluated initial design
                                                # we need to tell those trials, like below.
@@ -80,4 +84,6 @@ if __name__ == "__main__":
         smac.tell(info, value)
 
     # Optimize as usual
+    # Notice, that since we added three configurations, n_trials for the remaining optimization
+    # is effectively 27 in optimize().
     smac.optimize()
