@@ -367,6 +367,7 @@ class QExpectedImprovement(EI):
             normal_samples = self.model.sample_functions(X, n_funcs=self.n_samples)
         else:
             normal_samples = np.random.normal(loc=m.T, scale=std.T, size=(self.n_samples, X.shape[0]))
+            normal_samples = normal_samples.T
 
         if not self._log:
             f_samples = normal_samples  # in original (normal) space
