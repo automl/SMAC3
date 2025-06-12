@@ -89,6 +89,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         previous_configs: list[Configuration],
         n_points: int,
         additional_start_points: list[tuple[float, Configuration]] | None = None,
+        **kwargs: Any,
     ) -> list[tuple[float, Configuration]]:
         """Start a local search from the given start points. Iteratively collect neighbours
         using Configspace.utils.get_one_exchange_neighbourhood and evaluate them.

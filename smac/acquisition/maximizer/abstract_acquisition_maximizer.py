@@ -103,7 +103,7 @@ class AbstractAcquisitionMaximizer:
             # since maximize returns a tuple of acquisition value and configuration,
             # and we only need the configuration, we return the second element of the tuple
             # for each element in the list
-            return [t[1] for t in self._maximize(previous_configs, n_points)]
+            return [t[1] for t in self._maximize(previous_configs, n_points, **kwargs)]
 
         challengers = ChallengerList(
             self._configspace,
@@ -121,6 +121,7 @@ class AbstractAcquisitionMaximizer:
         self,
         previous_configs: list[Configuration],
         n_points: int,
+        **kwargs: Any,
     ) -> list[tuple[float, Configuration]]:
         """Implement acquisition function maximization.
 
