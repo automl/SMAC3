@@ -2,7 +2,11 @@ from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.acquisition.function.confidence_bound import LCB
-from smac.acquisition.function.expected_improvement import EI, EIPS
+from smac.acquisition.function.expected_improvement import (
+    EI,
+    EIPS,
+    QExpectedImprovement,
+)
 from smac.acquisition.function.integrated_acquisition_function import (
     IntegratedAcquisitionFunction,
 )
@@ -18,6 +22,7 @@ __all__ = [
     "PI",
     "EI",
     "EIPS",
+    "QExpectedImprovement",
     "TS",
     "PriorAcquisitionFunction",
     "IntegratedAcquisitionFunction",

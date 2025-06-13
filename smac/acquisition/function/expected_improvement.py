@@ -294,12 +294,6 @@ class QExpectedImprovement(EI):
     Monte Carlo approximation of q-Expected Improvement.
     Approximates joint distribution with independent normals.
 
-    :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,
-    with :math:`f(X^+)` as the best location.
-
-    Reference for q-EI
-
-
     Parameters
     ----------
     xi : float, defaults to 0.0
