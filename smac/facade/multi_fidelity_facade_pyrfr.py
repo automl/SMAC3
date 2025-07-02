@@ -13,7 +13,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class MultiFidelityFacade(HyperparameterOptimizationRFRFacade):
+class MultiFidelityRFRFacade(HyperparameterOptimizationRFRFacade):
     """This facade configures SMAC in a multi-fidelity setting with rf from ."""
 
     @staticmethod
