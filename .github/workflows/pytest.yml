@@ -28,21 +28,7 @@ on:
 env:
   package-name: smac
   test-dir: tests
-  extra-requires: #"[gpytorch,dev,tabpfn]"
-  - name: Debug show extras requires
-    run: echo "EXTRA REQUIRES = .${{ env.extra-requires }}"
-
-  - name: Show directory
-    run: ls -la
-
-  - name: Show setup.py
-    run: cat setup.py
-
-  - name: Dry-run pip install
-    run: |
-      echo "RUNNING pip install -e \".${{ env.extra-requires }}\""
-      pip install -v -e ".${{ env.extra-requires }}"
-
+  extra-requires: "[gpytorch,dev,tabpfn]"
 
   # Arguments used for pytest
   pytest-args: >-
