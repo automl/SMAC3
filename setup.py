@@ -55,6 +55,7 @@ extras_require = {
         "pytest",
         "pytest-coverage",
         "pytest-cases",
+        "tabpfn"
     ],
 }
 
