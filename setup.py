@@ -87,6 +87,7 @@ setuptools.setup(
         "emcee>=3.0.0",
         "regex",
         "pyyaml",
+        "tabpfn"
     ],
     extras_require=extras_require,
     test_suite="pytest",
