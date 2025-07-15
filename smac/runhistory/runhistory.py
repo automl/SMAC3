@@ -180,10 +180,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             Configuration
                 Config with only pure python types.
         """
-        config_values = list(dict(config).values())
-        config_values = json.loads(json.dumps(config_values, cls=NumpyEncoder))
-        config_keys = list(dict(config).keys())
-        config = Configuration(configuration_space=config.config_space, values=dict(zip(config_keys, config_values)))
+        config_dict = dict(config)
+        config_dict = json.loads(json.dumps(config_dict, cls=NumpyEncoder))
+        config = Configuration(configuration_space=config.config_space, values=config_dict)
         return config
 
     def add(
