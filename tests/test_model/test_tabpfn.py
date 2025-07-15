@@ -1,5 +1,10 @@
 import numpy as np
+import sys
 import pytest
+pytestmark = pytest.mark.skipif(
+    sys.version_info < (3, 9),
+    reason="tabpfn requires Python >=3.9"
+)
 from ConfigSpace import (
     CategoricalHyperparameter,
     ConfigurationSpace,
