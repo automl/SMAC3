@@ -54,9 +54,9 @@ extras_require = {
         "black",                # This allows mkdocstrings to format signatures in the docs
         "pytest",
         "pytest-coverage",
-        "pytest-cases",
-        "tabpfn"
+        "pytest-cases"
     ],
+    "tabpfn":["tabpfn"]
 }
 
 setuptools.setup(
@@ -86,8 +86,7 @@ setuptools.setup(
         "dask_jobqueue>=0.8.2",
         "emcee>=3.0.0",
         "regex",
-        "pyyaml",
-        "tabpfn"
+        "pyyaml"
     ],
     extras_require=extras_require,
     test_suite="pytest",
