@@ -167,6 +167,25 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         """
         return len(self._data) == 0
 
+    def _convert_config_to_pure_python(self, config: Configuration) -> Configuration:
+        """Convert config values from possibly numpy types to python built ins.
+
+        Background: The configs are perceived as different when they have a np.int type instead of int.
+
+        Args:
+            config (Configuration): Config to convert to pure python.
+
+        Returns
+        -------
+            Configuration
+                Config with only pure python types.
+        """
+        config_values = list(dict(config).values())
+        config_values = json.loads(json.dumps(config_values, cls=NumpyEncoder))
+        config_keys = list(dict(config).keys())
+        config = Configuration(configuration_space=config.config_space, values=dict(zip(config_keys, config_values)))
+        return config
+
     def add(
         self,
         config: Configuration,
@@ -210,6 +229,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             raise TypeError("Configuration is not of type Configuration, but %s." % type(config))
         if additional_info is None:
             additional_info = {}
+
+        config = self._convert_config_to_pure_python(config)
 
         # Squeeze is important to reduce arrays with one element
         # to scalars.
