@@ -1,10 +1,7 @@
 import numpy as np
 import sys
 import pytest
-pytestmark = pytest.mark.skipif(
-    sys.version_info < (3, 9),
-    reason="tabpfn requires Python >=3.9"
-)
+
 from ConfigSpace import (
     CategoricalHyperparameter,
     ConfigurationSpace,
@@ -13,7 +10,15 @@ from ConfigSpace import (
     UniformIntegerHyperparameter,
 )
 
-from smac.model.tabPFNv2 import TabPFNModel
+try:
+    from smac.model.tabPFNv2 import TabPFNModel
+except ImportError:
+    pass
+
+pytestmark = pytest.mark.skipif(
+    sys.version_info < (3, 9),
+    reason="tabpfn requires Python >=3.9"
+)
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
