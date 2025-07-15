@@ -36,6 +36,7 @@ from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.runner.target_function_script_runner import TargetFunctionScriptRunner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger, setup_logging
+import functools
 
 logger = get_logger(__name__)
 
@@ -146,9 +147,16 @@ class AbstractFacade:
 
         if multi_objective_algorithm is None and scenario.count_objectives() > 1:
             multi_objective_algorithm = self.get_multi_objective_algorithm(scenario=scenario)
-
+        
         if runhistory_encoder is None:
             runhistory_encoder = self.get_runhistory_encoder(scenario)
+
+        # Falls der Encoder ein functools.partial ist, jetzt mit scenario instanziieren
+        if isinstance(runhistory_encoder, functools.partial):
+            runhistory_encoder = runhistory_encoder(scenario=scenario)
+
+        self._runhistory_encoder = runhistory_encoder
+
 
         if config_selector is None:
             config_selector = self.get_config_selector(scenario)
