@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.facade.hyperparameter_optimization_facade_pyrfr import (
+from smac.facade.old.hyperparameter_optimization_facade_pyrfr import (
     HyperparameterOptimizationRFRFacade,
 )
 from smac.initial_design.random_design import RandomInitialDesign

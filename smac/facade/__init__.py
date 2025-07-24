@@ -5,9 +5,6 @@ from smac.facade.hyperband_facade import HyperbandFacade
 from smac.facade.hyperparameter_optimization_facade import (
     HyperparameterOptimizationFacade,
 )
-from smac.facade.hyperparameter_optimization_facade_pyrfr import (
-    HyperparameterOptimizationRFRFacade,
-)
 from smac.facade.multi_fidelity_facade import MultiFidelityFacade
 from smac.facade.random_facade import RandomFacade
 
@@ -16,7 +13,6 @@ __all__ = [
     "AlgorithmConfigurationFacade",
     "BlackBoxFacade",
     "HyperparameterOptimizationFacade",
-    "HyperparameterOptimizationRFRFacade",
     "MultiFidelityFacade",
     "HyperbandFacade",
     "RandomFacade",

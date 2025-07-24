@@ -1,3 +1,7 @@
+# 2.4.0
+## Improvements
+- Replace random forest from pyrfr with random forest from sklearn
+
 # 2.3.0
 
 ## Documentation

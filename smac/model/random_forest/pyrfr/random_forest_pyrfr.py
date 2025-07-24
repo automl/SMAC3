@@ -4,9 +4,18 @@ from typing import Any
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace
-from pyrfr import regression
-from pyrfr.regression import binary_rss_forest as BinaryForest
-from pyrfr.regression import default_data_container as DataContainer
+try:
+    from pyrfr import regression
+    from pyrfr.regression import binary_rss_forest as BinaryForest
+    from pyrfr.regression import default_data_container as DataContainer
+except ImportError:
+    import warnings
+    warnings.warn("You are using SMAC RandomForest with pyrfr."
+                  "However, the pyrfr package is not installed. "
+                  "Please install pyrfr with the following commands:"
+                  "conda install gxx_linux-64 gcc_linux-64 swig"
+                  "pip install pyrfr>=0.9.0")
+
 
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
 from smac.model.random_forest import AbstractRandomForest
@@ -15,7 +24,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
-class RandomForest(AbstractRandomForest):
+class PyrfrRandomForest(AbstractRandomForest):
     """Random forest that takes instance features into account.
 
     Parameters
@@ -135,7 +144,7 @@ class RandomForest(AbstractRandomForest):
 
         return meta
 
-    def _train(self, X: np.ndarray, y: np.ndarray) -> RandomForest:
+    def _train(self, X: np.ndarray, y: np.ndarray) -> PyrfrRandomForest:
         X = self._impute_inactive(X)
         y = y.flatten()
 
