@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from itertools import product
 import threading
-from typing import Any
+from typing import Any, Callable, Iterable, Tuple
 
 from ConfigSpace import ConfigurationSpace
 import numpy as np
@@ -13,12 +13,12 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.tree._tree import DTYPE
 from sklearn.utils.parallel import Parallel, delayed
 from sklearn.utils.validation import check_is_fitted
+
 try:
     # This is only implemented after sklearn 1.6.0, earlier python version might not be compataible with this
     from sklearn.utils.validation import validate_data
 except ImportError:
     validate_data = None
-
 
 from smac.constants import N_TREES
 from smac.model.random_forest import AbstractRandomForest
@@ -27,52 +27,51 @@ __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
-def estimator_predict(predict, X, results, col_idx):
+def estimator_predict(predict: Callable, X: np.ndarray, results: np.ndarray, col_idx: int) -> None:
     """Collect predictions from a single estimator."""
     prediction = predict(X, check_input=False)
     results[:, col_idx] = prediction  # Populate the corresponding column
 
 
-def accumulate_predict_over_instances(predict, X, X_instance_feat, results, tree_idx, n_instances, lock):
+def accumulate_predict_over_instances(predict: Callable,
+                                      X: np.ndarray,
+                                      X_instance_feat: np.ndarray,
+                                      results: np.ndarray,
+                                      tree_idx: int,
+                                      n_instances: int,
+                                      lock: threading.Lock) -> None:
     """Collect predictions from a single estimator. However, we sum the results from all instances"""
     X_instance_feat_ = np.tile(X_instance_feat[None, :], (len(X), 1))
     prediction = predict(np.concatenate([X, X_instance_feat_], axis=1), check_input=False)
     with lock:
         results[:, tree_idx, ] += prediction / n_instances
-        """
-        if len(results) == 1:
-            results[0, tree_idx, :] += prediction[0]
-        else:
-            for i in range(len(results)):
-                results[i, tree_idx, :] += prediction[i] / n_instances
-        """
 
 
 class EPMRandomForest(ForestRegressor):
     def __init__(
-        self,
-        n_estimators: int = 100,
-        *,
-        log_y=False,
-        cross_trees_variance=False,
-        criterion="squared_error",
-        splitter="random",
-        max_depth=None,
-        min_samples_split=2,
-        min_samples_leaf=1,
-        min_weight_fraction_leaf=0.0,
-        max_features=1.0,
-        max_leaf_nodes=None,
-        min_impurity_decrease=0.0,
-        bootstrap: bool = False,
-        oob_score: bool = False,
-        n_jobs=None,
-        random_state=None,
-        verbose: int = 0,
-        warm_start: bool = False,
-        ccp_alpha=0.0,
-        max_samples=None,
-        monotonic_cst=None,
+            self,
+            n_estimators: int = 100,
+            *,
+            log_y: bool = False,
+            cross_trees_variance: bool = False,
+            criterion: str = "squared_error",
+            splitter: str = "random",
+            max_depth: int | None = None,
+            min_samples_split: int = 2,
+            min_samples_leaf: int = 1,
+            min_weight_fraction_leaf: float = 0.0,
+            max_features: float = 1.0,
+            max_leaf_nodes: int | None = None,
+            min_impurity_decrease: float = 0.0,
+            bootstrap: bool = False,
+            oob_score: bool = False,
+            n_jobs: int | None = None,
+            random_state: int | None = None,
+            verbose: int = 0,
+            warm_start: bool = False,
+            ccp_alpha: float = 0.0,
+            max_samples: int | float | None = None,
+            monotonic_cst: Iterable | None = None,
     ) -> None:
         """A decision tree regressor.
 
@@ -401,7 +400,7 @@ class EPMRandomForest(ForestRegressor):
         self.log_y = log_y
         self.cross_trees_variance = cross_trees_variance
 
-    def fit(self, X, y, sample_weight=None):
+    def fit(self, X: np.ndarray, y: np.ndarray, sample_weight=None) -> None:  # type: ignore
         assert sample_weight is None, "Sample weights are not supported"
         super().fit(X=X, y=y, sample_weight=sample_weight)
 
@@ -431,7 +430,7 @@ class EPMRandomForest(ForestRegressor):
             Predictions from all trees
 
         """
-        #check_is_fitted(self)
+        # check_is_fitted(self)
         # Check data
         X = self._validate_X_predict(X)
 
@@ -454,14 +453,14 @@ class EPMRandomForest(ForestRegressor):
         )
         # This should be equivalent to the following implementation
 
-        #preds_ = np.zeros([len(X), self.n_estimators])
-        #for i, tree in enumerate(self.estimators_):
+        # preds_ = np.zeros([len(X), self.n_estimators])
+        # for i, tree in enumerate(self.estimators_):
         #    preds_[:, i] = tree.predict(X)
-        #assert np.allclose(preds, preds_)
+        # assert np.allclose(preds, preds_)
 
         return preds
 
-    def predict(self, X):
+    def predict(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         preds = self.all_trees_pred(X)
 
         means = preds.mean(axis=1)
@@ -469,7 +468,7 @@ class EPMRandomForest(ForestRegressor):
 
         return means.reshape(-1, 1), vars.reshape(-1, 1)
 
-    def predict_marginalized_over_instances_batch(self, X: np.ndarray, X_feat: np.ndarray, log_y: bool):
+    def predict_marginalized_over_instances_batch(self, X: np.ndarray, X_feat: np.ndarray, log_y: bool) -> np.ndarray:
         """
         Collects the predictions for each tree in the forest for multiple configurations over a set of instances.
         Each configuration vector is combined with all the instance feature vectors. Based on the response values over
@@ -519,7 +518,7 @@ class EPMRandomForest(ForestRegressor):
 
         return preds
 
-    def _validate_X_predict(self, X, ensure_2d: bool = True):
+    def _validate_X_predict(self, X: np.ndarray, ensure_2d: bool = True) -> np.ndarray:
         """
         Validate X whenever one tries to predict, apply, predict_proba.
         It is based on rf regressor from sklearn 1.6.1:
@@ -539,7 +538,7 @@ class EPMRandomForest(ForestRegressor):
         if self.estimators_[0]._support_missing_values(X):
             ensure_all_finite = "allow-nan"
         else:
-            ensure_all_finite = True
+            ensure_all_finite = True  # type: ignore
         if validate_data is None:
             # only applied for sklearn < 1.6 (python 3.8)
             X = self._validate_data(X, dtype=DTYPE, accept_sparse="csr", reset=False)
@@ -553,7 +552,7 @@ class EPMRandomForest(ForestRegressor):
                 ensure_all_finite=ensure_all_finite,
                 ensure_2d=ensure_2d,
             )
-        if issparse(X) and (X.indices.dtype != np.intc or X.indptr.dtype != np.intc):
+        if issparse(X) and (X.indices.dtype != np.intc or X.indptr.dtype != np.intc):  # type: ignore
             raise ValueError("No support for np.int64 index based sparse matrices")
         return X
 
@@ -593,35 +592,35 @@ class RandomForest(AbstractRandomForest):
     """
 
     def __init__(
-        self,
-        configspace: ConfigurationSpace,
-        n_points_per_tree: int = -1,
-        ratio_features: float = 5.0 / 6.0,
-        eps_purity: float = 1e-8,
-        log_y: bool = False,
-        instance_features: dict[str, list[int | float]] | None = None,
-        pca_components: int | None = 7,
-        seed: int = 0,
-        n_trees: int = N_TREES,  # TODO: HP: 100 is default in sklearn, here it's 10
-        cross_trees_variance=False,
-        criterion="squared_error",
-        splitter="random",  # Should not be changed
-        max_depth: int = 2**20,  # TODO: HP: None is default in sklearn, here it's 2**20
-        min_samples_split: int = 3,  # TODO: HP: 2 is default in sklearn, here it's 3
-        min_samples_leaf: int = 3,  # TODO: HP: 1 is default in sklearn, here it's 3
-        min_weight_fraction_leaf=0.0,
-        # max_features=1.0,  # Set by ratio_features
-        max_leaf_nodes: int = 2**20,  # TODO: HP: None is default in sklearn, here it's 2**20
-        min_impurity_decrease=0.0,
-        bootstrapping: bool = True,  # TODO HP: False is default in sklearn, here it's True
-        oob_score: bool = False,
-        n_jobs=-1,
-        # random_state=None,  # Set by seed
-        verbose: int = 0,
-        warm_start: bool = False,
-        ccp_alpha=0.0,
-        max_samples=None,
-        monotonic_cst=None,
+            self,
+            configspace: ConfigurationSpace,
+            n_points_per_tree: int = -1,
+            ratio_features: float = 5.0 / 6.0,
+            eps_purity: float = 1e-8,
+            log_y: bool = False,
+            instance_features: dict[str, list[int | float]] | None = None,
+            pca_components: int | None = 7,
+            seed: int = 0,
+            n_trees: int = N_TREES,  # TODO: HP: 100 is default in sklearn, here it's 10
+            cross_trees_variance: bool = False,
+            criterion: str = "squared_error",
+            splitter: str = "random",  # Should not be changed
+            max_depth: int = 2 ** 20,  # TODO: HP: None is default in sklearn, here it's 2**20
+            min_samples_split: int = 3,  # TODO: HP: 2 is default in sklearn, here it's 3
+            min_samples_leaf: int = 3,  # TODO: HP: 1 is default in sklearn, here it's 3
+            min_weight_fraction_leaf: float = 0.0,
+            # max_features=1.0,  # Set by ratio_features
+            max_leaf_nodes: int = 2 ** 20,  # TODO: HP: None is default in sklearn, here it's 2**20
+            min_impurity_decrease: float = 0.0,
+            bootstrapping: bool = True,  # TODO HP: False is default in sklearn, here it's True
+            oob_score: bool = False,
+            n_jobs: int | None = -1,
+            # random_state=None,  # Set by seed
+            verbose: int = 0,
+            warm_start: bool = False,
+            ccp_alpha: float = 0.0,
+            max_samples: int | float | None = None,
+            monotonic_cst: Iterable | None = None,
     ) -> None:
         super().__init__(
             configspace=configspace,
@@ -633,7 +632,7 @@ class RandomForest(AbstractRandomForest):
         max_features = 0 if ratio_features > 1.0 else max(1, int(len(self._types) * ratio_features))
 
         self._rf: EPMRandomForest | None = None
-        self._rng = np.random.default_rng(seed=seed)
+        self._rng = np.random.default_rng(seed=seed)  # type: ignore
 
         self._log_y = log_y
 
@@ -672,16 +671,16 @@ class RandomForest(AbstractRandomForest):
         X = self._impute_inactive(X)
         y = y.flatten()
 
-        self._rf = EPMRandomForest(**self._rf_opts)
+        self._rf = EPMRandomForest(**self._rf_opts)  # type: ignore
 
         self._rf.fit(X, y)
 
         return self
 
     def _predict(
-        self,
-        X: np.ndarray,
-        covariance_type: str | None = "diagonal",
+            self,
+            X: np.ndarray,
+            covariance_type: str | None = "diagonal",
     ) -> tuple[np.ndarray, np.ndarray | None]:
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
