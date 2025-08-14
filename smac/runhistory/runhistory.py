@@ -261,7 +261,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         # Construct keys and values for the data dictionary
         for key, value in (
-            ("config", config.get_dictionary()),
+            ("config", dict(config)),
             ("config_id", config_id),
             ("instance", instance),
             ("seed", seed),

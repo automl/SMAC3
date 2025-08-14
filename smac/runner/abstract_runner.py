@@ -5,7 +5,7 @@ __license__ = "3-clause BSD"
 
 
 from abc import ABC, abstractmethod
-from typing import Any, Iterator
+from typing import Any, Iterator, Optional
 
 import time
 import traceback
@@ -105,13 +105,13 @@ class AbstractRunner(ABC):
             Contains information about the status/performance of config.
         """
         start = time.time()
-
         try:
             status, cost, runtime, additional_info = self.run(
                 config=trial_info.config,
                 instance=trial_info.instance,
                 budget=trial_info.budget,
                 seed=trial_info.seed,
+                additional_info=trial_info.additional_info,
                 **dask_data_to_scatter,
             )
         except Exception as e:
@@ -182,10 +182,11 @@ class AbstractRunner(ABC):
     def run(
         self,
         config: Configuration,
-        instance: str | None = None,
-        budget: float | None = None,
-        seed: int | None = None,
-    ) -> tuple[StatusType, float | list[float], float, dict]:
+        instance: Optional[str] = None,
+        budget: Optional[float] = None,
+        seed: Optional[int] = None,
+        additional_info: Optional[dict[str, Any]] = None,
+    ) -> tuple[StatusType, float | list[float], float, dict[str, Any]]:
         """Runs the target function with a configuration on a single instance-budget-seed
         combination (aka trial).
 
@@ -199,6 +200,9 @@ class AbstractRunner(ABC):
             A positive, real-valued number representing an arbitrary limit to the target function
             handled by the target function internally.
         seed : int, defaults to None
+            Seed for the random number generator.
+        additional_info : dict
+            Further additional trial information.
 
         Returns
         -------
@@ -208,8 +212,8 @@ class AbstractRunner(ABC):
             Resulting cost(s) of the trial.
         runtime : float
             The time the target function took to run.
-        additional_info : dict
-            All further additional trial information.
+        val_additional_info : dict
+            All further additional trial value information.
         """
         raise NotImplementedError
 

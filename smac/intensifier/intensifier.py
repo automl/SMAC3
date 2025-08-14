@@ -1,21 +1,16 @@
 from __future__ import annotations
 
-from typing import Any, Iterator, Tuple
+from typing import Any, Iterator
 
 import warnings
 from collections import defaultdict
 
 from ConfigSpace import Configuration
+from sphinx.writers.latex import UnsupportedError
 
-from smac.callback.callback import Callback
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import TrialInfo
-from smac.runhistory.dataclasses import (
-    InstanceSeedBudgetKey,
-    InstanceSeedKey,
-    TrialKey,
-    TrialValue,
-)
+from smac.runhistory.dataclasses import InstanceSeedBudgetKey, InstanceSeedKey, TrialKey
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
@@ -61,23 +56,15 @@ class Intensifier(AbstractIntensifier):
     """
 
     def __init__(
-            self,
-            scenario: Scenario,
-            max_config_calls: int = 3,
-            max_incumbents: int = 10,
-            retries: int = 16,
-            seed: int | None = None,
-            runtime_cutoff: int | None = None,
-            adaptive_capping_slackfactor: float | None = None,
+        self,
+        scenario: Scenario,
+        max_config_calls: int = 3,
+        max_incumbents: int = 10,
+        retries: int = 16,
+        seed: int | None = None,
     ):
-        super().__init__(scenario=scenario, max_config_calls=max_config_calls,
-                         max_incumbents=max_incumbents, seed=seed)
+        super().__init__(scenario=scenario, max_config_calls=max_config_calls, max_incumbents=max_incumbents, seed=seed)
         self._retries = retries
-
-        self.runtime_cutoff = runtime_cutoff
-        if adaptive_capping_slackfactor is not None and runtime_cutoff is None:
-            raise ValueError("If adaptive_capping_slackfactor is set, then runtime_cutoff must be set as well.")
-        self.adaptive_capping_slackfactor = adaptive_capping_slackfactor
 
     def reset(self) -> None:
         """Resets the internal variables of the intensifier including the queue."""
@@ -93,18 +80,17 @@ class Intensifier(AbstractIntensifier):
 
     @property
     def uses_budgets(self) -> bool:  # noqa: D102
-        if self.runtime_cutoff is not None:
-            # we will communicate the runtime budget using the budget argument in
-            # tae.train(config, instance, seed, budget)
-            return True
-        else:
-            return False
+        return False
+
+    @property
+    def uses_cutoffs(self) -> bool:
+        """If the intensifier needs to make use of cutoffs."""
+        return self._scenario.runtime_cutoff is not None or self._scenario.adaptive_capping
 
     @property
     def uses_instances(self) -> bool:  # noqa: D102
         if self._scenario.instances is None:
             return False
-
         return True
 
     def get_state(self) -> dict[str, Any]:  # noqa: D102
@@ -291,6 +277,7 @@ class Intensifier(AbstractIntensifier):
 
                     # TODO: What to do if there are no incumbent instances? (Use-case: call multiple asks)
 
+                    logger.debug(f"Get next trials for config {config_hash} and budget {N} from keys {isk_keys}")
                     trials = self._get_next_trials(config, N=N, from_keys=isk_keys)
                     logger.debug(f"--- Yielding {len(trials)} trials to evaluate config {config_hash}...")
                     for trial in trials:
@@ -396,41 +383,17 @@ class Intensifier(AbstractIntensifier):
         for is_key in is_keys:
             trials.append(TrialInfo(config=config, instance=is_key.instance, seed=is_key.seed))
 
-        if self.runtime_cutoff is not None and bool(trials):
+        if self.uses_cutoffs and bool(trials):
             # We need to adapt the budget to the runtime cutoff
-            budgets = [self._get_adaptivecapping_budget(t.config, on_keys=is_keys) for t in trials]
+            cutoffs = [self._get_adaptivecapping_budget(t.config, on_keys=is_keys) for t in trials]
 
             # convert existing trials to new trials with adapted budget
             trials = [
-                TrialInfo(config=t.config, instance=t.instance, seed=t.seed, budget=b) for b, t in zip(budgets, trials)
+                TrialInfo(config=t.config, instance=t.instance, seed=t.seed, additional_info={"cutoff": b})
+                for b, t in zip(cutoffs, trials)
             ]
 
         return trials
-
-    def get_callback(self) -> Callback:
-        """The intensifier makes use of a callback to efficiently update the incumbent based on the runhistory
-        (every time new information is available). Moreover, incorporating the callback here allows developers
-        more options in the future.
-        """
-
-        class RunHistoryCallback(Callback):
-            def __init__(self, intensifier: AbstractIntensifier):
-                self.intensifier = intensifier
-
-            def on_tell_start(self, smbo, info, value) -> Tuple[bool, TrialInfo, TrialValue]:
-                """For Adaptive capping to work with the update_incumbents, despite overloading
-                the budget key to communicate the runtime to the target algorithm, we need to
-                set the budget to 0 (because it is not a fidelity, but a runtime and therefor
-                messes with the isb keys during their comparison)"""
-                if smbo.intensifier.runtime_cutoff is not None:
-                    info = TrialInfo(config=info.config, instance=info.instance, seed=info.seed, budget=0.0)
-
-                return True, info, value  # To continue optimization
-
-            def on_tell_end(self, smbo, info: TrialInfo, value: TrialValue) -> None:
-                self.intensifier.update_incumbents(info.config)
-
-        return RunHistoryCallback(self)
 
     def _get_adaptivecapping_budget(
         self,
@@ -463,21 +426,16 @@ class Intensifier(AbstractIntensifier):
         cutoff: float
             Adapted cutoff
         """
-
         # cost used by challenger for going over all its runs
         # should be subset of runs of incumbent (not checked for efficiency
         # reasons)
         incumbents = self.get_incumbents(sort_by="num_trials")
         if len(incumbents) == 0:
-            return float(self.runtime_cutoff)
+            return float(self._scenario.runtime_cutoff) if self._scenario.runtime_cutoff is not None else float("inf")
 
         if len(incumbents) > 1:
             warnings.warn("Adaptive capping is only supported for single incumbent scenarios")
 
-        inc_sum_cost = self.runhistory.sum_cost(
-            config=incumbents[0],
-            normalize=False,
-        )
         # original logic for get_runs_for_config:
         # https://github.com/automl/SMAC3/blob/f1d2aa2ea3b6ad4075550af69e3300f19411a5ea/smac/runhistory/runhistory.py#L772
         if incumbents[0] == challenger:
@@ -485,7 +443,17 @@ class Intensifier(AbstractIntensifier):
             # initially when the queue is empty, the incumbent is intensified, then the cutoff
             # must be the runtime minus the already spent budget on the incumbent across
             # instances.
-            cutoff = self.runtime_cutoff - inc_sum_cost
+            if self._scenario.runtime_cutoff is not None:
+                inc_sum_cost = self.runhistory.sum_cost(
+                    config=incumbents[0],
+                    normalize=False,
+                )
+                if isinstance(inc_sum_cost, list):
+                    raise UnsupportedError()
+
+                cutoff = self._scenario.runtime_cutoff - inc_sum_cost
+            else:
+                cutoff = float("inf")
             if cutoff < 0:
                 warnings.warn(f"Proposed cutoff for the incumbent is negative: {cutoff}. " f"Setting cutoff to 0.")
                 cutoff = 0
@@ -536,6 +504,16 @@ class Intensifier(AbstractIntensifier):
                 instance_seed_budget_keys=chall_inst_seeds,
             )
             assert type(chal_sum_cost) == float
-            cutoff = min(self.runtime_cutoff, inc_sum_cost * self.adaptive_capping_slackfactor - chal_sum_cost)
+
+            if self._scenario.runtime_cutoff is not None:
+                if self._scenario.adaptive_capping_slackfactor is not None:
+                    cutoff = min(
+                        self._scenario.runtime_cutoff,
+                        inc_sum_cost * self._scenario.adaptive_capping_slackfactor - chal_sum_cost,
+                    )
+                else:
+                    cutoff = min(self._scenario.runtime_cutoff, inc_sum_cost - chal_sum_cost)
+            else:
+                cutoff = inc_sum_cost - chal_sum_cost
 
         return cutoff

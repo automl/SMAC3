@@ -122,12 +122,14 @@ class TrialInfo:
     instance : str | None, defaults to None
     seed : int | None, defaults to None
     budget : float | None, defaults to None
+    additional_info: dict[str, Any], defaults to {}
     """
 
     config: Configuration
     instance: str | None = None
     seed: int | None = None
     budget: float | None = None
+    additional_info: dict[str, Any] = field(default_factory=dict)
 
     def get_instance_seed_key(self) -> InstanceSeedKey:
         """Instantiates and returns an InstanceSeedKey object"""

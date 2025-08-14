@@ -162,10 +162,16 @@ class DaskParallelRunner(AbstractRunner):
         instance: str | None = None,
         budget: float | None = None,
         seed: int | None = None,
+        additional_info: dict[str, Any] | None = None,
         **dask_data_to_scatter: dict[str, Any],
     ) -> tuple[StatusType, float | list[float], float, dict]:  # noqa: D102
         return self._single_worker.run(
-            config=config, instance=instance, seed=seed, budget=budget, **dask_data_to_scatter
+            config=config,
+            instance=instance,
+            seed=seed,
+            budget=budget,
+            additional_info=additional_info,
+            **dask_data_to_scatter,
         )
 
     def count_available_workers(self) -> int:

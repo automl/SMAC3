@@ -116,6 +116,7 @@ class AbstractFacade:
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
+        runtime_cutoff: int | None = None,
         logging_level: int | Path | Literal[False] | None = None,
         callbacks: list[Callback] = None,
         overwrite: bool = False,
@@ -171,6 +172,7 @@ class AbstractFacade:
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
         self._config_selector = config_selector
+        self._runtime_cutoff = runtime_cutoff
         self._callbacks = callbacks
         self._overwrite = overwrite
 
@@ -487,5 +489,8 @@ class AbstractFacade:
 
         if self._intensifier.uses_instances:
             arguments += ["instance"]
+
+        if self._intensifier.uses_cutoffs:
+            arguments += ["cutoff"]
 
         return arguments
