@@ -4,17 +4,21 @@ from typing import Any
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace
+
 try:
     from pyrfr import regression
     from pyrfr.regression import binary_rss_forest as BinaryForest
     from pyrfr.regression import default_data_container as DataContainer
 except ImportError:
     import warnings
-    warnings.warn("You are using SMAC RandomForest with pyrfr."
-                  "However, the pyrfr package is not installed. "
-                  "Please install pyrfr with the following commands:"
-                  "conda install gxx_linux-64 gcc_linux-64 swig"
-                  "pip install pyrfr>=0.9.0")
+
+    warnings.warn(
+        "You are using SMAC RandomForest with pyrfr."
+        "However, the pyrfr package is not installed. "
+        "Please install pyrfr with the following commands:"
+        "conda install gxx_linux-64 gcc_linux-64 swig"
+        "pip install pyrfr>=0.9.0"
+    )
 
 
 from smac.constants import N_TREES, VERY_SMALL_NUMBER

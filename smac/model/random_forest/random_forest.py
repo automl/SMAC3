@@ -1,14 +1,15 @@
 from __future__ import annotations
 
-from itertools import product
-import threading
 from typing import Any, Callable, Iterable, Tuple
 
-from ConfigSpace import ConfigurationSpace
+import threading
+from itertools import product
+
 import numpy as np
+from ConfigSpace import ConfigurationSpace
 from scipy.sparse import issparse
-from sklearn.ensemble._forest import ForestRegressor
 from sklearn.ensemble._base import _partition_estimators
+from sklearn.ensemble._forest import ForestRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.tree._tree import DTYPE
 from sklearn.utils.parallel import Parallel, delayed
@@ -33,13 +34,15 @@ def estimator_predict(predict: Callable, X: np.ndarray, results: np.ndarray, col
     results[:, col_idx] = prediction  # Populate the corresponding column
 
 
-def accumulate_predict_over_instances(predict: Callable,
-                                      X: np.ndarray,
-                                      X_instance_feat: np.ndarray,
-                                      results: np.ndarray,
-                                      tree_idx: int,
-                                      n_instances: int,
-                                      lock: threading.Lock) -> None:
+def accumulate_predict_over_instances(
+        predict: Callable,
+        X: np.ndarray,
+        X_instance_feat: np.ndarray,
+        results: np.ndarray,
+        tree_idx: int,
+        n_instances: int,
+        lock: threading.Lock,
+) -> None:
     """Collect predictions from a single estimator. However, we sum the results from all instances"""
     X_instance_feat_ = np.tile(X_instance_feat[None, :], (len(X), 1))
     prediction = predict(np.concatenate([X, X_instance_feat_], axis=1), check_input=False)
@@ -476,8 +479,7 @@ class EPMRandomForest(ForestRegressor):
 
         # Parallel loop
         Parallel(n_jobs=n_jobs, verbose=self.verbose, require="sharedmem")(
-            delayed(estimator_predict)(e.predict, X, preds, tree_idx)
-            for tree_idx, e in enumerate(self.estimators_)
+            delayed(estimator_predict)(e.predict, X, preds, tree_idx) for tree_idx, e in enumerate(self.estimators_)
         )
         # This should be equivalent to the following implementation
 
