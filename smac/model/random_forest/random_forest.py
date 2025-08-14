@@ -401,6 +401,34 @@ class EPMRandomForest(ForestRegressor):
         self.cross_trees_variance = cross_trees_variance
 
     def fit(self, X: np.ndarray, y: np.ndarray, sample_weight=None) -> None:  # type: ignore
+        """
+        Build a forest of trees from the training set (X, y). In additional to the vanilla RF fitting process, we also
+        need to edit the estimators' parameters after the fitting process when self.log_y is True. This ensures that the
+        model performance consistently compared to the pyrfr version.
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix} of shape (n_samples, n_features)
+            The training input samples. Internally, its dtype will be converted
+            to ``dtype=np.float32``. If a sparse matrix is provided, it will be
+            converted into a sparse ``csc_matrix``.
+
+        y : array-like of shape (n_samples,) or (n_samples, n_outputs)
+            The target values (class labels in classification, real numbers in
+            regression).
+
+        sample_weight : array-like of shape (n_samples,), default=None
+            Sample weights. If None, then samples are equally weighted. Splits
+            that would create child nodes with net zero or negative weight are
+            ignored while searching for a split in each node. In the case of
+            classification, splits are also ignored if they would result in any
+            single class carrying a negative weight in either child node.
+
+        Returns
+        -------
+        self : object
+            Fitted estimator.
+        """
         assert sample_weight is None, "Sample weights are not supported"
         super().fit(X=X, y=y, sample_weight=sample_weight)
 
@@ -461,6 +489,23 @@ class EPMRandomForest(ForestRegressor):
         return preds
 
     def predict(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Predict the mean and variance of X. Here mean and variances are the empirical mean and variance values from the
+        prediction results of the other trees.
+
+        Parameters
+        ----------
+        X: np.ndarray [#samples, #hyperparameter]
+            Input data points to be testsed.
+
+        Returns
+        -------
+            means: np.ndarray [#samples, 1]
+                predicted mean.
+            vars: np.ndarray [#samples, 1]
+                predicted variance.
+
+        """
         preds = self.all_trees_pred(X)
 
         means = preds.mean(axis=1)
