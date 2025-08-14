@@ -1,21 +1,23 @@
 from __future__ import annotations
 
-from smac.scenario import Scenario
+from smac.facade.hyperparameter_optimization_facade import (
+    HyperparameterOptimizationFacade,
+)
 from smac.model.random_forest.pyrfr.random_forest_pyrfr import PyrfrRandomForest
-from smac.facade.hyperparameter_optimization_facade import HyperparameterOptimizationFacade
+from smac.scenario import Scenario
 
 
 class HyperparameterOptimizationRFRFacade(HyperparameterOptimizationFacade):
     @staticmethod
     def get_model(  # type: ignore
-            scenario: Scenario,
-            *,
-            n_trees: int = 10,
-            ratio_features: float = 1.0,
-            min_samples_split: int = 2,
-            min_samples_leaf: int = 1,
-            max_depth: int = 2 ** 20,
-            bootstrapping: bool = True,
+        scenario: Scenario,
+        *,
+        n_trees: int = 10,
+        ratio_features: float = 1.0,
+        min_samples_split: int = 2,
+        min_samples_leaf: int = 1,
+        max_depth: int = 2**20,
+        bootstrapping: bool = True,
     ) -> PyrfrRandomForest:
         """Returns a random forest as surrogate model.
 
