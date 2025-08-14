@@ -12,7 +12,7 @@ from smac.acquisition.maximizer.local_search import LocalSearch
 from smac.acquisition.maximizer.random_search import RandomSearch
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)

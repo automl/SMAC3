@@ -9,7 +9,7 @@ from ConfigSpace import (
 
 from smac.initial_design.factorial_design import FactorialInitialDesign
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

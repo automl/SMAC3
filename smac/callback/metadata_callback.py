@@ -9,7 +9,7 @@ from smac.callback.callback import Callback
 from smac.main.smbo import SMBO
 from smac.utils.numpyencoder import NumpyEncoder
 
-__copyright__ = "Copyright 2023, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

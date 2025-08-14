@@ -2,6 +2,31 @@
 ## Improvements
 - Replace random forest from pyrfr with random forest from sklearn
 
+# 2.3.1
+
+## Bugfixes
+- Addressing situations where the acquisition function suggests configurations that have already been sampled in prior iterations (#1216)
+
+## Misc
+- New SMAC logo
+- Fix doc link in README
+- Rename retries to max_new_config_tries in ConfigSelector (#1207)
+
+## Examples
+- Add target function with additional arguments (#1134)
+
+## Improvements
+- Submit trials to runners in SMBO instead of running configs directly (#937)
+
+## Improvements
+- `target_function` becomes optional in Facade when using ask and tell exclusively (#946)
+
+## Documentation
+- Ask and tell without initial design and warmstarting
+
+## Bugfixes 
+- Ask and tell without initial design may no longer return a config from the initial design - if it is not "removed".  
+
 # 2.3.0
 
 ## Documentation
@@ -9,12 +34,18 @@
 - Correct intensifier for Algorithm Configuration Facade (#1162, #1165)
 - Migrate sphinx docs to mkdocs (#1155)
 
-# 2.2.1
+## Bugfixes
+- Fix bug in differential evolution acquisition maximizer in case the search space contains categorical hyperparameters (#1150)
+- Fix wrong attr query in the target function runner (crash cost) (#1176)
+- Fix kwargs for DifferentialEvolution (#1187)
+- Fix PiBo implementation (#1076)
+- Add fix for local search running forever (#1194)
 
 ## Improvements
 - Add logger information on handling of stopIteration error (#960)
 - Replace deprecated ConfigSpace methods (#1139)
 - Separated Wallclock time measurements from CPU time measurements and storing them under new 'cpu_time' variable (#1173)
+- Adapt RunHistory to be human readable (# 1174)
 
 ## Dependencies
 - Allow numpy >= 2.x (#1146)

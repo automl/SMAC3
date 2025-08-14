@@ -20,6 +20,7 @@ from ConfigSpace import (
     ConfigurationSpace,
     NormalFloatHyperparameter,
     UniformIntegerHyperparameter,
+    UniformFloatHyperparameter,
 )
 from sklearn.datasets import load_digits
 from sklearn.exceptions import ConvergenceWarning
@@ -29,7 +30,7 @@ from sklearn.neural_network import MLPClassifier
 from smac import HyperparameterOptimizationFacade, Scenario
 from smac.acquisition.function import PriorAcquisitionFunction
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -38,7 +39,7 @@ digits = load_digits()
 
 class MLP:
     @property
-    def configspace(self) -> ConfigurationSpace:
+    def prior_configspace(self) -> ConfigurationSpace:
         # Build Configuration Space which defines all parameters and their ranges.
         # To illustrate different parameter types,
         # we use continuous, integer and categorical parameters.
@@ -100,7 +101,67 @@ class MLP:
         )
 
         # Add all hyperparameters at once:
-        cs.add([n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init])
+        cs.add(
+            [n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init]
+        )
+
+        return cs
+
+    @property
+    def configspace(self) -> ConfigurationSpace:
+        # Build Configuration Space which defines all parameters and their ranges.
+        # To illustrate different parameter types,
+        # we use continuous, integer and categorical parameters.
+        cs = ConfigurationSpace()
+
+        # We do not have an educated belief on the number of layers beforehand
+        n_layer = UniformIntegerHyperparameter(
+            "n_layer",
+            lower=1,
+            upper=5,
+        )
+
+        # Define network width without a specific prior
+        n_neurons = UniformIntegerHyperparameter(
+            "n_neurons",
+            lower=8,
+            upper=256,
+        )
+
+        # Define activation functions without specific weights
+        activation = CategoricalHyperparameter(
+            "activation",
+            ["logistic", "tanh", "relu"],
+            default_value="relu",
+        )
+
+        # Define optimizer without specific weights
+        optimizer = CategoricalHyperparameter(
+            "optimizer",
+            ["sgd", "adam"],
+            default_value="adam",
+        )
+
+        # Define batch size without specific distribution
+        batch_size = UniformIntegerHyperparameter(
+            "batch_size",
+            16,
+            512,
+            default_value=128,
+        )
+
+        # Define learning rate range without log-normal prior
+        learning_rate_init = UniformFloatHyperparameter(
+            "learning_rate_init",
+            lower=1e-5,
+            upper=1.0,
+            default_value=1e-3,
+        )
+
+        # Add all hyperparameters at once:
+        cs.add(
+            [n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init]
+        )
 
         return cs
 
@@ -119,8 +180,12 @@ class MLP:
             )
 
             # Returns the 5-fold cross validation accuracy
-            cv = StratifiedKFold(n_splits=5, random_state=seed, shuffle=True)  # to make CV splits consistent
-            score = cross_val_score(classifier, digits.data, digits.target, cv=cv, error_score="raise")
+            cv = StratifiedKFold(
+                n_splits=5, random_state=seed, shuffle=True
+            )  # to make CV splits consistent
+            score = cross_val_score(
+                classifier, digits.data, digits.target, cv=cv, error_score="raise"
+            )
 
         return 1 - np.mean(score)
 
@@ -140,7 +205,9 @@ if __name__ == "__main__":
 
     # We define the prior acquisition function, which conduct the optimization using priors over the optimum
     acquisition_function = PriorAcquisitionFunction(
-        acquisition_function=HyperparameterOptimizationFacade.get_acquisition_function(scenario),
+        acquisition_function=HyperparameterOptimizationFacade.get_acquisition_function(
+            scenario
+        ),
         decay_beta=scenario.n_trials / 10,  # Proven solid value
     )
 

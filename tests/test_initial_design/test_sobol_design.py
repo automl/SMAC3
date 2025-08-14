@@ -3,7 +3,7 @@ from ConfigSpace import ConfigurationSpace, Float
 
 from smac.initial_design.sobol_design import SobolInitialDesign
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

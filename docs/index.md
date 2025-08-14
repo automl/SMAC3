@@ -1,6 +1,8 @@
 Home
 # SMAC3 Documentation
 
+<img src="images/smac_icon.png" alt="SMAC3 Logo" width="150"/>
+
 ## Introduction
 
 SMAC is a tool for algorithm configuration to optimize the parameters of arbitrary algorithms, including hyperparameter optimization of Machine Learning algorithms. The main core consists of Bayesian Optimization in combination with an aggressive racing mechanism to efficiently decide which of two configurations performs better.

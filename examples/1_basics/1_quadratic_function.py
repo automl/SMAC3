@@ -16,7 +16,7 @@ from matplotlib import pyplot as plt
 from smac.facade.hyperparameter_optimization_facade import HyperparameterOptimizationFacade as HPOFacade
 from smac import RunHistory, Scenario
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

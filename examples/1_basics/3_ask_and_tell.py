@@ -2,6 +2,10 @@
 # Flags: doc-Runnable
 
 This examples show how to use the Ask-and-Tell interface.
+
+Notice, that the ask-and-tell interface will still use the initial design specified in the facade.
+Should you wish to add your own evaluated configurations instead or deactivate the initial
+design all together, please refer to the warmstarting example in conjunction with this one.
 """
 
 from ConfigSpace import Configuration, ConfigurationSpace, Float
@@ -9,7 +13,7 @@ from ConfigSpace import Configuration, ConfigurationSpace, Float
 from smac import HyperparameterOptimizationFacade, Scenario
 from smac.runhistory.dataclasses import TrialValue
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -52,7 +56,7 @@ if __name__ == "__main__":
     # Now we use SMAC to find the best hyperparameters
     smac = HyperparameterOptimizationFacade(
         scenario,
-        model.train,
+        target_function=model.train,
         intensifier=intensifier,
         overwrite=True,
     )
@@ -68,7 +72,14 @@ if __name__ == "__main__":
         smac.tell(info, value)
 
     # After calling ask+tell, we can still optimize
-    # Note: SMAC will optimize the next 90 trials because 10 trials already have been evaluated
+    # Note: SMAC will optimize the next 90 trials because 10 trials already have been evaluated.
+    # If we however choose not to call optimize; e.g. because we want to manage heavy
+    # computation of model.train completely outside smac, but still use it to suggest new
+    # configurations, then n_trials will only be relevant for the initial design in combination
+    # with initial design max_ratio! In fact in an only ask+tell case, we could even set
+    # target_function=None in the constructor, because smac wouldn't even need to know
+    # what the target function is. But that will prevent us from calling optimize and validate later
+    # on.
     incumbent = smac.optimize()
 
     # Get cost of default configuration

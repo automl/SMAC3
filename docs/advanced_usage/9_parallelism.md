@@ -23,7 +23,7 @@ SMAC supports multiple workers natively via Dask. Just specify ``n_workers`` in 
 ## Running on a Cluster
 
 You can also pass a custom dask client, e.g. to run on a slurm cluster.
-See our [parallelism example](../examples/1%20Basics/7_parallelization_cluster.html).
+See our [parallelism example](../examples/1%20Basics/7_parallelization_cluster.md).
 
 !!! warning
 

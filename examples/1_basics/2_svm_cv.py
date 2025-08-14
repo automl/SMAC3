@@ -15,7 +15,7 @@ from sklearn.model_selection import cross_val_score
 
 from smac import HyperparameterOptimizationFacade, Scenario
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -53,8 +53,8 @@ class SVM:
     def train(self, config: Configuration, seed: int = 0) -> float:
         """Creates a SVM based on a configuration and evaluates it on the
         iris-dataset using cross-validation."""
-        config_dict = config.get_dictionary()
-        if "gamma" in config:
+        config_dict = dict(config)
+        if "gamma" in config_dict:
             config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
             config_dict.pop("gamma_value", None)
 

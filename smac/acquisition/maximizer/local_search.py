@@ -19,7 +19,7 @@ from smac.utils.configspace import (
 )
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -237,17 +237,13 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         else:
             additional_start_points = []
 
-        init_points = []
-        init_points_as_set: set[Configuration] = set()
-        for cand in itertools.chain(
-            previous_configs_sorted_by_cost,
-            additional_start_points,
-        ):
-            if cand not in init_points_as_set:
-                init_points.append(cand)
-                init_points_as_set.add(cand)
-
-        return init_points
+        init_points_as_set: set[Configuration] = set(
+            itertools.chain(
+                previous_configs_sorted_by_cost,
+                additional_start_points,
+            )
+        )
+        return list(init_points_as_set)
 
     def _search(
         self,
@@ -336,6 +332,11 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
         num_iters = 0
         while np.any(active):
+
+            # If the maximum number of steps is reached, stop the local search
+            if num_iters is not None and num_iters == self._max_steps:
+                break
+
             num_iters += 1
             # Whether the i-th local search improved. When a new neighborhood is generated, this is used to determine
             # whether a step was made (improvement) or not (iterator exhausted)

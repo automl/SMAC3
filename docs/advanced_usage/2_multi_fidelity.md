@@ -13,5 +13,11 @@ target function but ``min_budget`` and ``max_budget`` are used internally to det
 each stage. That's also the reason why ``min_budget`` and ``max_budget`` are *not required* when using instances: 
 The ``max_budget`` is simply the max number of instances, whereas the ``min_budget`` is simply 1.
 
+!!! warning
+    ``smac.main.config_selector.ConfigSelector`` contains the ``min_trials`` parameter. This parameter determines
+    how many samples are required to train the surrogate model. If budgets are involved, the highest budgets 
+    are checked first. For example, if min_trials is three, but we find only two trials in the runhistory for
+    the highest budget, we will use trials of a lower budget instead.
+
 Please have a look into our [multi-fidelity examples](Multi-Fidelity and Multi-Instances) to see how to use
 multi-fidelity optimization in real-world applications.

@@ -9,12 +9,19 @@ from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensifier.hyperband import Hyperband
 from smac.scenario import Scenario
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
 class MultiFidelityFacade(HyperparameterOptimizationFacade):
-    """This facade configures SMAC in a multi-fidelity setting."""
+    """This facade configures SMAC in a multi-fidelity setting.
+
+    !!! warning
+        ``smac.main.config_selector.ConfigSelector`` contains the ``min_trials`` parameter. This parameter determines
+        how many samples are required to train the surrogate model. If budgets are involved, the highest budgets
+        are checked first. For example, if min_trials is three, but we find only two trials in the runhistory for
+        the highest budget, we will use trials of a lower budget instead.
+    """
 
     @staticmethod
     def get_intensifier(  # type: ignore

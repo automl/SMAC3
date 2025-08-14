@@ -5,7 +5,7 @@ from typing import Any
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)

@@ -18,7 +18,7 @@ from sklearn.utils.validation import check_is_fitted, validate_data
 from smac.constants import N_TREES
 from smac.model.random_forest import AbstractRandomForest
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -628,6 +628,7 @@ class RandomForest(AbstractRandomForest):
         self._rng = np.random.default_rng(seed=seed)
 
         self._log_y = log_y
+
         self._rf_opts = {
             "n_estimators": n_trees,
             "cross_trees_variance": cross_trees_variance,
@@ -686,35 +687,6 @@ class RandomForest(AbstractRandomForest):
         assert self._rf is not None
         X = self._impute_inactive(X)
         means, vars_ = self._rf.predict(X)
-        """
-        if self._log_y:
-        # TODO check if the two implementations are equivalent given that log_y is transformed within fit function
-            all_preds = []
-            third_dimension = 0
-
-            # Gather data in a list of 2d arrays and get statistics about the required size of the 3d array
-            for row_X in X:
-                preds_per_tree = self._rf.all_leaf_values(row_X)
-                all_preds.append(preds_per_tree)
-                max_num_leaf_data = max(map(len, preds_per_tree))
-                third_dimension = max(max_num_leaf_data, third_dimension)
-
-            # Transform list of 2d arrays into a 3d array
-            preds_as_array = np.zeros((X.shape[0], self._rf_opts['n_estimators'], third_dimension)) * np.nan
-            for i, preds_per_tree in enumerate(all_preds):
-                for j, pred in enumerate(preds_per_tree):
-                    preds_as_array[i, j, : len(pred)] = pred
-
-            # Do all necessary computation with vectorized functions
-            preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
-
-            # Compute the mean and the variance across the different trees
-            means = preds_as_array.mean(axis=1)
-            vars_ = preds_as_array.var(axis=1)
-        else:
-            means, vars_ = self._rf.predict(X)
-        """
-
         return means.reshape((-1, 1)), vars_.reshape((-1, 1))
 
     def predict_marginalized(self, X: np.ndarray) -> tuple[np.ndarray, np.ndarray]:

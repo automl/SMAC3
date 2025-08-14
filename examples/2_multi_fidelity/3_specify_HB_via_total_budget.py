@@ -20,7 +20,7 @@ from matplotlib import pyplot as plt
 from smac import MultiFidelityFacade, RunHistory, Scenario
 from smac.intensifier.hyperband_utils import get_n_trials_for_hyperband_multifidelity
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
