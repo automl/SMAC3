@@ -9,6 +9,7 @@ from ConfigSpace import (
     UniformIntegerHyperparameter,
 )
 
+from smac import constants
 from smac.model.random_forest.random_forest import RandomForest
 from smac.utils.configspace import convert_configurations_to_array
 
@@ -306,3 +307,72 @@ def test_impute_inactive_hyperparameters():
         elif line[0] == 2:
             assert line[1] == 2
             assert line[2] == -1
+
+
+def test_rf_with_log_y():
+    X = np.array(
+        [
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 1.0, 1.0],
+            [1.0, 0.0, 0.0],
+            [1.0, 0.0, 1.0],
+            [1.0, 1.0, 0.0],
+            [1.0, 1.0, 1.0],
+        ],
+        dtype=np.float64,
+    )
+    y = np.array([[0.1], [0.2], [9], [9.2], [100.0], [100.2], [109.0], [109.2]], dtype=np.float64)
+    model1 = RandomForest(
+        configspace=_get_cs(3),
+        instance_features=None,
+        seed=12345,
+        ratio_features=1.0,
+        log_y=True
+    )
+    model1.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
+    X_test = np.random.rand(10, 3)
+
+    mean1, var1 = model1.predict(X_test)
+    #for y_i, y_hat_i in zip(y.reshape((1, -1)).flatten(), y_hat.reshape((1, -1)).flatten()):
+    #    assert pytest.approx(y_i, 0.1) == y_hat_i
+
+    # The following should be equivalent to the log_y version
+
+    model2 = RandomForest(
+        configspace=_get_cs(3),
+        instance_features=None,
+        seed=12345,
+        ratio_features=1.0,
+        log_y=False
+    )
+    all_preds = []
+    third_dimension = 0
+
+    model2.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
+
+    # Gather data in a list of 2d arrays and get statistics about the required size of the 3d array
+    for row_X in X_test:
+        preds_per_tree = [estimator.predict(row_X[None, :]) for estimator in model2._rf.estimators_]
+        #preds_per_tree = model_no_logy._rf.all_leaf_values(row_X)
+        all_preds.append(preds_per_tree)
+        max_num_leaf_data = max(map(len, preds_per_tree))
+        third_dimension = max(max_num_leaf_data, third_dimension)
+
+    # Transform list of 2d arrays into a 3d array
+    preds_as_array = np.zeros((X_test.shape[0], model2._rf_opts['n_estimators'], third_dimension)) * np.nan
+    for i, preds_per_tree in enumerate(all_preds):
+        for j, pred in enumerate(preds_per_tree):
+            preds_as_array[i, j, : len(pred)] = pred
+
+    # Do all necessary computation with vectorized functions
+    preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + constants.VERY_SMALL_NUMBER)
+
+    # Compute the mean and the variance across the different trees
+    mean2 = preds_as_array.mean(axis=1, keepdims=True)
+    var2 = preds_as_array.var(axis=1, keepdims=True)
+
+    assert np.allclose(mean1, mean2)
+    assert np.allclose(var1, var2)
+
