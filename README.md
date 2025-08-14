@@ -59,9 +59,9 @@ make install-dev
 ```
 
 ## Running SMAC with pyrfr
-starting from 2.4.0, SMAC implements random forest from [sklearn](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html)
+starting from 2.4.0, SMAC uses random forest from [sklearn](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html)
 instead of random forest from [pyrfr](https://pypi.org/project/pyrfr/) as the default surrogate model for HPO tasks.
-However, you could still use the old pyrfr surrogate model by using the `smac.facade.old.HyperparameterOptimizationRFRFacade`
+However, you could still use the old pyrfr surrogate model by calling `smac.facade.old.HyperparameterOptimizationRFRFacade`
 and `smac.facade.old.MultiFidelityRFRFacade`
 
 To work with pyrfr, you need to first install gcc, gxx, and swig:
