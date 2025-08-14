@@ -1,89 +1,27 @@
+# This workflow is just to test that the docs build successfully.
 name: docs
-
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 on:
-  # Manual trigger option in GitHub
-  # This won't push to GitHub pages where docs are hosted due
-  # to the guarded if statement in those steps
   workflow_dispatch:
-
-  # Trigger on push to these branches
   push:
     branches:
       - main
-      - development
-
-  # Trigger on open/push to a PR targeting one of these branches
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
     branches:
       - main
-      - development
-
-env:
-  name: SMAC3
-
+permissions:
+  contents: write
 jobs:
-  build-and-deploy:
-    if: ${{ !github.event.pull_request.draft }}
+  build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.10"
-
-    - name: Install dependencies
-      id: install
-      run: |
-        pip install ".[gpytorch,dev]"
-
-        # Getting the version
-        SMAC_VERSION=$(python -c "import smac; print('v' + str(smac.version));")
-
-        # Make it a global variable
-        echo "SMAC_VERSION=$SMAC_VERSION" >> $GITHUB_ENV
-
-    - name: Make docs
-      run: |
-        make clean
-        make docs
-
-    - name: Pull latest gh-pages
-      if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
-      run: |
-        cd ..
-        git clone https://github.com/${{ github.repository }}.git --branch gh-pages --single-branch gh-pages
-
-    - name: Copy new docs into gh-pages
-      if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
-      run: |
-        branch_name=${GITHUB_REF##*/}
-        cd ../gh-pages
-        rm -rf $branch_name
-        cp -r ../${{ env.name }}/docs/build/html $branch_name
-
-        # we also copy the current SMAC_VERSION
-        rm -rf $SMAC_VERSION
-        cp -r ../${{ env.name }}/docs/build/html $SMAC_VERSION
-
-
-    - name: Push to gh-pages
-      if: (contains(github.ref, 'develop') || contains(github.ref, 'main')) && github.event_name == 'push'
-      run: |
-        last_commit=$(git log --pretty=format:"%an: %s")
-        cd ../gh-pages
-        branch_name=${GITHUB_REF##*/}
-        git add $branch_name/
-        git add $SMAC_VERSION/
-        git config --global user.name 'Github Actions'
-        git config --global user.email 'not@mail.com'
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-        git commit -am "$last_commit"
-        git push
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: "Install dependancies"
+        run: python -m pip install -e ".[dev]"
+      - name: "Build Docs"
+        run: mkdocs build --clean --strict

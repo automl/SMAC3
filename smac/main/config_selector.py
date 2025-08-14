@@ -10,11 +10,12 @@ from ConfigSpace import Configuration
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
+from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.callback.callback import Callback
 from smac.initial_design import AbstractInitialDesign
+from smac.main.exceptions import ConfigurationSpaceExhaustedException
 from smac.model.abstract_model import AbstractModel
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
@@ -22,7 +23,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -37,7 +38,7 @@ class ConfigSelector:
     ----------
     retrain_after : int, defaults to 8
         How many configurations should be returned before the surrogate model is retrained.
-    retries : int, defaults to 8
+    max_new_config_tries : int, defaults to 8
         How often to retry receiving a new configuration before giving up.
     min_trials: int, defaults to 1
         How many samples are required to train the surrogate model. If budgets are involved,
@@ -51,7 +52,7 @@ class ConfigSelector:
         scenario: Scenario,
         *,
         retrain_after: int = 8,
-        retries: int = 16,
+        max_new_config_tries: int = 16,
         min_trials: int = 1,
     ) -> None:
         # Those are the configs sampled from the passed initial design
@@ -77,7 +78,7 @@ class ConfigSelector:
 
         # How often to retry receiving a new configuration
         # (counter increases if the received config was already returned before)
-        self._retries = retries
+        self._max_new_config_tries = max_new_config_tries
 
         # Processed configurations should be stored here; this is important to not return the same configuration twice
         self._processed_configs: list[Configuration] = []
@@ -103,7 +104,8 @@ class ConfigSelector:
 
         self._initial_design_configs = initial_design.select_configurations()
         if len(self._initial_design_configs) == 0:
-            raise RuntimeError("SMAC needs initial configurations to work.")
+            # raise RuntimeError("SMAC needs initial configurations to work.")
+            logger.warning("No initial configurations were sampled.")
 
     @property
     def meta(self) -> dict[str, Any]:
@@ -111,7 +113,7 @@ class ConfigSelector:
         return {
             "name": self.__class__.__name__,
             "retrain_after": self._retrain_after,
-            "retries": self._retries,
+            "max_new_config_tries": self._max_new_config_tries,
             "min_trials": self._min_trials,
         }
 
@@ -144,7 +146,7 @@ class ConfigSelector:
         self._processed_configs = self._runhistory.get_configs()
 
         # We add more retries because there could be a case in which the processed configs are sampled again
-        self._retries += len(self._processed_configs)
+        self._max_new_config_tries += len(self._processed_configs)
 
         logger.debug("Search for the next configuration...")
         self._call_callbacks_on_start()
@@ -177,7 +179,7 @@ class ConfigSelector:
                 # the configspace.
                 logger.debug("No data available to train the model. Sample a random configuration.")
 
-                config = self._scenario.configspace.sample_configuration(1)
+                config = self._scenario.configspace.sample_configuration()
                 self._call_callbacks_on_end(config)
                 yield config
                 self._call_callbacks_on_start()
@@ -237,9 +239,32 @@ class ConfigSelector:
                     failed_counter += 1
 
                     # We exit the loop if we have tried to add the same configuration too often
-                    if failed_counter == self._retries:
-                        logger.warning(f"Could not return a new configuration after {self._retries} retries." "")
-                        return
+                    if failed_counter == self._max_new_config_tries:
+                        logger.warning(f"Could not return a new configuration after {failed_counter} retries.")
+                        break
+
+            # if we don't have enough configurations, we want to sample random configurations
+            if not retrain:
+                logger.warning(
+                    "Did not find enough configuration from the acquisition function. Sampling random configurations."
+                )
+                random_configs_retries = 0
+                while counter < self._retrain_after and random_configs_retries < self._max_new_config_tries:
+                    config = self._scenario.configspace.sample_configuration()
+                    if config not in self._processed_configs:
+                        counter += 1
+                        config.origin = "Random Search (max retries, no candidates)"
+                        self._processed_configs.append(config)
+                        self._call_callbacks_on_end(config)
+                        yield config
+                        retrain = counter == self._retrain_after
+                        self._call_callbacks_on_start()
+                    else:
+                        random_configs_retries += 1
+
+                    if random_configs_retries == self._max_new_config_tries:
+                        logger.warning(f"Could not return a new configuration after {random_configs_retries} retries.")
+                        raise ConfigurationSpaceExhaustedException()
 
     def _call_callbacks_on_start(self) -> None:
         for callback in self._callbacks:

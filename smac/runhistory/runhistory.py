@@ -24,8 +24,9 @@ from smac.runhistory.enumerations import StatusType
 from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
+from smac.utils.numpyencoder import NumpyEncoder
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -59,9 +60,11 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         overwrite_existing_trials: bool = False,
+        n_objectives: int = -1,
     ) -> None:
         self._multi_objective_algorithm = multi_objective_algorithm
         self._overwrite_existing_trials = overwrite_existing_trials
+        self._n_objectives = n_objectives
         self.reset()
 
     @property
@@ -132,9 +135,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         # and is necessary for computing the moving average.
         self._num_trials_per_config: dict[int, int] = {}
 
-        # Store whether a datapoint is "external", which means it was read from
-        # a JSON file. Can be chosen to not be written to disk.
-        self._n_objectives: int = -1
         self._objective_bounds: list[tuple[float, float]] = []
 
     def __contains__(self, k: object) -> bool:
@@ -172,6 +172,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         config: Configuration,
         cost: int | float | list[int | float],
         time: float = 0.0,
+        cpu_time: float = 0.0,
         status: StatusType = StatusType.SUCCESS,
         instance: str | None = None,
         seed: int | None = None,
@@ -190,6 +191,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             Cost of the evaluated trial. Might be a list in case of multi-objective.
         time : float
             How much time was needed to evaluate the trial.
+        cpu_time : float
+            How much time was needed on the hardware to evaluate the trial.
         status : StatusType, defaults to StatusType.SUCCESS
             The status of the trial.
         instance : str | None, defaults to none
@@ -253,6 +256,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         v = TrialValue(
             cost=c,
             time=time,
+            cpu_time=cpu_time,
             status=status,
             starttime=starttime,
             endtime=endtime,
@@ -268,6 +272,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             ("budget", budget),
             ("cost", c),
             ("time", time),
+            ("cpu_time", cpu_time),
             ("status", status),
             ("starttime", starttime),
             ("endtime", endtime),
@@ -309,6 +314,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             config=info.config,
             cost=value.cost,
             time=value.time,
+            cpu_time=value.cpu_time,
             status=value.status,
             instance=info.instance,
             seed=info.seed,
@@ -328,8 +334,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         """
         self.add(
             config=trial.config,
-            cost=float(MAXINT),
+            cost=float(MAXINT) if self._n_objectives <= 1 else [float(MAXINT)] * self._n_objectives,
             time=0.0,
+            cpu_time=0.0,
             status=StatusType.RUNNING,
             instance=trial.instance,
             seed=trial.seed,
@@ -760,29 +767,30 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         ----------
         filename : str | Path, defaults to "runhistory.json"
         """
-        data = []
+        data = list()
         for k, v in self._data.items():
-            data += [
-                (
-                    int(k.config_id),
-                    str(k.instance) if k.instance is not None else None,
-                    int(k.seed) if k.seed is not None else None,
-                    float(k.budget) if k.budget is not None else None,
-                    v.cost,
-                    v.time,
-                    v.status,
-                    v.starttime,
-                    v.endtime,
-                    v.additional_info,
-                )
-            ]
+            data.append(
+                {
+                    "config_id": int(k.config_id),
+                    "instance": str(k.instance) if k.instance is not None else None,
+                    "seed": int(k.seed) if k.seed is not None else None,
+                    "budget": float(k.budget) if k.budget is not None else None,
+                    "cost": v.cost,
+                    "time": v.time,
+                    "cpu_time": v.cpu_time,
+                    "status": v.status,
+                    "starttime": v.starttime,
+                    "endtime": v.endtime,
+                    "additional_info": v.additional_info,
+                }
+            )
 
-        config_ids_to_serialize = set([entry[0] for entry in data])
+        config_ids_to_serialize = set([entry["config_id"] for entry in data])
         configs = {}
         config_origins = {}
         for id_, config in self._ids_config.items():
             if id_ in config_ids_to_serialize:
-                configs[id_] = config.get_dictionary()
+                configs[id_] = dict(config)
 
             config_origins[id_] = config.origin
 
@@ -803,6 +811,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 },
                 fp,
                 indent=2,
+                cls=NumpyEncoder,
             )
 
     def load(self, filename: str | Path, configspace: ConfigurationSpace) -> None:
@@ -846,31 +855,31 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self._n_id = len(self._config_ids)
 
         # Important to use add method to use all data structure correctly
+        # NOTE: These hardcoded indices can easily lead to trouble
         for entry in data["data"]:
-            # Set n_objectives first
             if self._n_objectives == -1:
-                if isinstance(entry[4], (float, int)):
+                if isinstance(entry["cost"], (float, int)):
                     self._n_objectives = 1
                 else:
-                    self._n_objectives = len(entry[4])
+                    self._n_objectives = len(entry["cost"])
 
             cost: list[float] | float
             if self._n_objectives == 1:
-                cost = float(entry[4])
+                cost = float(entry["cost"])
             else:
-                cost = [float(x) for x in entry[4]]
-
+                cost = [float(x) for x in entry["cost"]]
             self.add(
-                config=self._ids_config[int(entry[0])],
+                config=self._ids_config[int(entry["config_id"])],
                 cost=cost,
-                time=float(entry[5]),
-                status=StatusType(entry[6]),
-                instance=entry[1],
-                seed=entry[2],
-                budget=entry[3],
-                starttime=entry[7],
-                endtime=entry[8],
-                additional_info=entry[9],
+                time=entry["time"],
+                cpu_time=entry["cpu_time"],
+                status=StatusType(entry["status"]),
+                instance=entry["instance"],
+                seed=entry["seed"],
+                budget=entry["budget"],
+                starttime=entry["starttime"],
+                endtime=entry["endtime"],
+                additional_info=entry["additional_info"],
             )
 
         # Although adding trials should give us the same stats, the trajectory might be different
@@ -914,6 +923,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 config=config,
                 cost=value.cost,
                 time=value.time,
+                cpu_time=value.cpu_time,
                 status=value.status,
                 instance=key.instance,
                 starttime=value.starttime,
@@ -955,7 +965,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         trial_value: TrialValue,
     ) -> None:
         try:
-            json.dumps(obj)
+            json.dumps(obj, cls=NumpyEncoder)
         except Exception as e:
             raise ValueError(
                 "Cannot add %s: %s of type %s to runhistory because it raises an error during JSON encoding, "

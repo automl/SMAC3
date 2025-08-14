@@ -13,7 +13,7 @@ from ConfigSpace import (
 
 from smac.model.abstract_model import AbstractModel
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -28,9 +28,9 @@ class AbstractRandomForest(AbstractModel):
 
     def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
         X = X.copy()
-        for idx, hp in enumerate(self._configspace.get_hyperparameters()):
+        for idx, hp in enumerate(list(self._configspace.values())):
             if idx not in self._conditional:
-                parents = self._configspace.get_parents_of(hp.name)
+                parents = self._configspace.parents_of[hp.name]
                 if len(parents) == 0:
                     self._conditional[idx] = False
                 else:

@@ -7,7 +7,7 @@ from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runner.abstract_runner import StatusType
 from smac.scenario import Scenario
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

@@ -38,7 +38,7 @@ from smac.model.random_forest.random_forest import RandomForest
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import StatusType
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -54,8 +54,8 @@ class ConfigurationMock(object):
 def configspace_branin() -> ConfigurationSpace:
     """Returns the branin configspace."""
     cs = ConfigurationSpace()
-    cs.add_hyperparameter(Float("x", (-5, 10)))
-    cs.add_hyperparameter(Float("y", (0, 15)))
+    cs.add(Float("x", (-5, 10)))
+    cs.add(Float("y", (0, 15)))
     return cs
 
 
@@ -195,7 +195,21 @@ def configspace() -> ConfigurationSpace:
     c = Float("c", (0, 1), default=0.5)
 
     # Add all hyperparameters at once:
-    cs.add_hyperparameters([a, b, c])
+    cs.add([a, b, c])
+
+    return cs
+
+
+@pytest.fixture
+def configspace_categorical() -> ConfigurationSpace:
+    cs = ConfigurationSpace(seed=0)
+
+    a = Categorical("a", ["c1", "c2", "c3"])
+    b = Categorical("b", ["c1", "c2", "c3", "c4"])
+    c = Float("c", (0, 1), default=0.5)
+
+    # Add all hyperparameters at once:
+    cs.add([a, b, c])
 
     return cs
 
@@ -205,8 +219,8 @@ def model(configspace: ConfigurationSpace):
     model = RandomForest(configspace)
 
     np.random.seed(0)
-    X = np.random.rand(100, len(configspace.get_hyperparameters()))
-    y = 1 - (np.sum(X, axis=1) / len(configspace.get_hyperparameters()))
+    X = np.random.rand(100, len(list(configspace.values())))
+    y = 1 - (np.sum(X, axis=1) / len(list(configspace.values())))
     model.train(X, y)
 
     return model
@@ -256,13 +270,19 @@ def test_local_search_2(configspace, acquisition_function):
     assert values[0][0] >= values[1][0]
 
 
+def test_local_search_categorical(configspace_categorical, acquisition_function):
+    start_points = configspace_categorical.sample_configuration(100)
+    ls = LocalSearch(configspace_categorical, acquisition_function, max_steps=100)
+
+    values = ls._maximize(start_points, 1)
+
+
 def test_get_initial_points_moo(configspace):
     class Model:
         def predict_marginalized(self, X):
             return X, X
 
     class AcquisitionFunction:
-
         model = Model()
 
         def __call__(self, X):
@@ -303,6 +323,13 @@ def test_random_search(configspace, acquisition_function):
     assert all([v[0] == 0 for v in values])
 
 
+def test_random_search_categorical(configspace_categorical, acquisition_function):
+    start_points = configspace_categorical.sample_configuration(100)
+    rs = RandomSearch(configspace_categorical, acquisition_function)
+
+    values = rs._maximize(start_points, 1)
+
+
 def test_random_search_sorted(configspace, acquisition_function):
     start_points = configspace.sample_configuration(100)
     rs = RandomSearch(configspace, acquisition_function, challengers=1000)
@@ -316,6 +343,13 @@ def test_random_search_sorted(configspace, acquisition_function):
     # Check if they are higher than 0 (because we sorted them)
     values = rs._maximize(start_points, 100, _sorted=True)
     assert all([v[0] > 0 for v in values])
+
+
+def test_sorted_random_search_categorical(configspace_categorical, acquisition_function):
+    start_points = configspace_categorical.sample_configuration(100)
+    rs = RandomSearch(configspace_categorical, acquisition_function)
+
+    values = rs._maximize(start_points, 1, _sorted=True)
 
 
 # --------------------------------------------------------------
@@ -333,7 +367,7 @@ def test_local_and_random_search(configspace, acquisition_function):
     values = rs._maximize(start_points, 100)
     config_origins = []
     v_old = np.inf
-    for (v, config) in values:
+    for v, config in values:
         config_origins += [config.origin]
         if isinstance(v, np.ndarray):
             v = float(v[0])
@@ -342,6 +376,13 @@ def test_local_and_random_search(configspace, acquisition_function):
         v_old = v
 
     assert "Acquisition Function Maximizer: Local Search" in config_origins
+
+
+def test_local_and_random_search_categorical(configspace_categorical, acquisition_function):
+    start_points = configspace_categorical.sample_configuration(100)
+    rs = LocalAndSortedRandomSearch(configspace_categorical, acquisition_function, max_steps=100)
+
+    values = rs._maximize(start_points, 1)
 
 
 # --------------------------------------------------------------
@@ -357,7 +398,7 @@ def configspace_rosenbrock():
     x2 = UniformIntegerHyperparameter("x2", -5, 5, default_value=5)
     x3 = CategoricalHyperparameter("x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5)
     x4 = UniformIntegerHyperparameter("x4", -5, 5, default_value=5)
-    uniform_cs.add_hyperparameters([x1, x2, x3, x4])
+    uniform_cs.add([x1, x2, x3, x4])
 
     return uniform_cs
 
@@ -373,7 +414,7 @@ def configspace_prior():
         "x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5, weights=[999, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     )
     x4 = UniformIntegerHyperparameter("x4", lower=-5, upper=5, default_value=5)
-    prior_cs.add_hyperparameters([x1, x2, x3, x4])
+    prior_cs.add([x1, x2, x3, x4])
 
     return prior_cs
 
@@ -424,7 +465,14 @@ def test_sampling_fractions(configspace_rosenbrock, configspace_prior):
 
 def test_differential_evolution(configspace, acquisition_function):
     start_points = configspace.sample_configuration(100)
-    rs = DifferentialEvolution(configspace, acquisition_function, challengers=1000)
+    de = DifferentialEvolution(configspace, acquisition_function, challengers=1000)
 
-    values = rs._maximize(start_points, 1)
+    values = de._maximize(start_points, 1)
     values[0][1].origin == "Acquisition Function Maximizer: Differential Evolution"
+
+
+def test_differential_evolution_categorical(configspace_categorical, acquisition_function):
+    start_points = configspace_categorical.sample_configuration(100)
+    de = DifferentialEvolution(configspace_categorical, acquisition_function)
+
+    values = de._maximize(start_points, 1)

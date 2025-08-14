@@ -12,7 +12,7 @@ from ConfigSpace.hyperparameters import (
 
 from smac.model.utils import check_subspace_points, get_types
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

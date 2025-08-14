@@ -7,14 +7,14 @@ from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.model.multi_objective_model import MultiObjectiveModel
 from smac.model.random_forest.random_forest import RandomForest
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
 def _get_cs(n_dimensions):
     configspace = ConfigurationSpace()
     for i in range(n_dimensions):
-        configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
+        configspace.add(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
     return configspace
 

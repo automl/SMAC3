@@ -18,7 +18,7 @@ from smac.model.gaussian_process.abstract_gaussian_process import (
 from smac.model.gaussian_process.gaussian_process import GaussianProcess
 from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -247,7 +247,6 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
 
         assert self._samples is not None
         for sample in self._samples:
-
             if (sample < -50).any():
                 sample[sample < -50] = -50
             if (sample > 50).any():

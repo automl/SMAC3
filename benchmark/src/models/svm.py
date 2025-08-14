@@ -34,8 +34,8 @@ class SVMModel(Model):
         use_gamma_value = InCondition(child=gamma_value, parent=gamma, values=["value"])
 
         # Add hyperparameters and conditions to our configspace
-        cs.add_hyperparameters([kernel, C, shrinking, degree, coef, gamma, gamma_value])
-        cs.add_conditions([use_degree, use_coef, use_gamma, use_gamma_value])
+        cs.add([kernel, C, shrinking, degree, coef, gamma, gamma_value])
+        cs.add([use_degree, use_coef, use_gamma, use_gamma_value])
 
         return cs
 
