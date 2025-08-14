@@ -607,7 +607,7 @@ class RandomForest(AbstractRandomForest):
         min_impurity_decrease=0.0,
         bootstrapping: bool = True,  # TODO HP: False is default in sklearn, here it's True
         oob_score: bool = False,
-        n_jobs=None,
+        n_jobs=-1,
         # random_state=None,  # Set by seed
         verbose: int = 0,
         warm_start: bool = False,
