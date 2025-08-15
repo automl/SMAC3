@@ -5,7 +5,7 @@ __license__ = "3-clause BSD"
 
 
 from abc import ABC, abstractmethod
-from typing import Any, Iterator, Optional
+from typing import Any, Iterator, Optional, Union
 
 import time
 import traceback
@@ -189,7 +189,7 @@ class AbstractRunner(ABC):
         budget: Optional[float] = None,
         seed: Optional[int] = None,
         additional_info: Optional[dict[str, Any]] = None,
-    ) -> tuple[StatusType, float | list[float], float, dict[str, Any]]:
+    ) -> tuple[StatusType, Union[float, list[float]], float, float, dict[str, Any]]:  # noqa: D102
         """Runs the target function with a configuration on a single instance-budget-seed
         combination (aka trial).
 

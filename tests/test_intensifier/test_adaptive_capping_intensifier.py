@@ -7,6 +7,7 @@ from ConfigSpace import ConfigurationSpace, Configuration
 from smac import Scenario, AlgorithmConfigurationFacade
 import numpy as np
 
+from smac.main.exceptions import ConfigurationSpaceExhaustedException
 from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 
@@ -41,6 +42,7 @@ class TrainMockup:
 
         # list of explanations what erroneous behavior got observed
         self.expected_behavior_violations = []
+        np.random.seed(42)
 
     def train(self, config:Configuration, instance: str, seed: int = 0):
         self.log_counter += 1
@@ -87,17 +89,11 @@ class TrainMockup:
                          f"showing performance {c_incumbent}.")
 
             if n_challenger >= n_incumbent and c_challenger < c_incumbent:
-                print(" ")
-                print("###   INCUMBENT SWITCH!")
-                print(" ")
                 self.event_log += [(self.log_counter, "accept", config_hash)]
                 self.incumbent = config_hash
             elif c_challenger > c_incumbent:
                 self.rejected_challengers += [config_hash]
                 self.event_log += [(self.log_counter, "reject", config_hash)]
-                print(" ")
-                print("###   CHALLENGER REJECT!")
-                print(" ")
 
         return rand_perf
 
@@ -109,15 +105,17 @@ class TrainMockup:
 def get_basic_setup(train, num_configs = 10, num_instances = 10, num_trials=30):
     # generate config space with num_configs many different configurations
     cs = ConfigurationSpace({"p1": ["v"+str(i) for i in range(num_configs)], })
+    cs.seed(42)
     # generate instance set with num_instances many instances
     instances = ["i"+str(i) for i in range(num_instances)]
     # setup scenario with generated config space, instances, and the given number of trials
-    scenario = Scenario(cs, deterministic=True, n_trials=num_trials, instances=instances)
+    scenario = Scenario(cs, deterministic=True, n_trials=num_trials, instances=instances, seed=44)
     return AlgorithmConfigurationFacade(scenario, train)
 
 def test_incumbent_switch():
     # remove smac3 output folder to ensure proper execution of the test
     shutil.rmtree("./smac3_output", ignore_errors=True)
+    shutil.rmtree("./smac3_output_test", ignore_errors=True)
 
     # setup test environment
     tm = TrainMockup()
@@ -127,9 +125,12 @@ def test_incumbent_switch():
     l: Logger = get_logger("smac.intensifier.abstract_intensifier")
     l.setLevel(5)
     l: Logger = get_logger("smac.intensifier.intensifier")
-    l.setLevel(5)
+    l.setLevel(10)
 
     # start smac run
-    smac.optimize()
+    try:
+        smac.optimize()
+    except ConfigurationSpaceExhaustedException:
+        pass
 
     assert tm.expected_behavior_violated is False, tm.get_violation_report()

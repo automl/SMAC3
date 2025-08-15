@@ -559,20 +559,12 @@ class AbstractIntensifier:
             # determine challenger costs
             challenger_costs = self.runhistory.average_cost(config, config_isb_comparison_keys)
 
-            if not isinstance(challenger_costs, list):
-                challenger_costs = [challenger_costs]
-            challenger_costs = np.array(challenger_costs)
-
             # check the list of incumbents whether any of the incumbents dominates the current challenger
             for inc in incumbents:
                 # determine incumbent costs
                 inc_costs = self.runhistory.average_cost(inc, config_isb_comparison_keys)
-                if not isinstance(inc_costs, list):
-                    inc_costs = [inc_costs]
-                inc_costs = np.array(inc_costs)
-
                 # check dominance
-                is_dominated = not np.any(challenger_costs < inc_costs)
+                is_dominated = not np.any(np.array([challenger_costs]) < np.array([inc_costs]))
 
                 # if challenger config is dominated by the incumbent, reject it
                 if is_dominated:

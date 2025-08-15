@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from typing import Any, Iterator
+from typing import Any, Iterator, Union
 
 import warnings
 from collections import defaultdict
 
+import numpy as np
 from ConfigSpace import Configuration
 from sphinx.writers.latex import UnsupportedError
 
@@ -402,9 +403,9 @@ class Intensifier(AbstractIntensifier):
     def _get_adaptivecapping_budget(
         self,
         challenger: Configuration,
-        on_keys: list[InstanceSeedKey] | None = None,
+        on_keys: list[InstanceSeedKey],
     ) -> float:
-        """Adaptive capping: Compute cutoff based on time so far used for incumbent and reduce
+        """Adaptive capping: Compute cutoff based on cost so far used for incumbent and reduce
         cutoff for next run of challenger accordingly.
 
         Warning:
@@ -413,6 +414,8 @@ class Intensifier(AbstractIntensifier):
         the runtime cost of the currently running instances of the same configuration.
 
         !Only applicable if self.run_obj_time
+
+        !Only applicable in single-objective scenarios where the only cost function is run_obj_time
 
         !runs on incumbent should be superset of the runs performed for the
          challenger
@@ -433,12 +436,22 @@ class Intensifier(AbstractIntensifier):
         # cost used by challenger for going over all its runs
         # should be subset of runs of incumbent (not checked for efficiency
         # reasons)
+
         incumbents = self.get_incumbents(sort_by="num_trials")
         if len(incumbents) == 0:
             return float(self._scenario.runtime_cutoff) if self._scenario.runtime_cutoff is not None else float("inf")
 
         if len(incumbents) > 1:
             warnings.warn("Adaptive capping is only supported for single incumbent scenarios")
+
+        inc_sum_cost_unchecked = self.runhistory.sum_cost(
+            config=incumbents[0],
+            normalize=False,
+        )
+        if isinstance(inc_sum_cost_unchecked, list):
+            raise UnsupportedError()
+        else:
+            inc_sum_cost: float = inc_sum_cost_unchecked
 
         # original logic for get_runs_for_config:
         # https://github.com/automl/SMAC3/blob/f1d2aa2ea3b6ad4075550af69e3300f19411a5ea/smac/runhistory/runhistory.py#L772
@@ -448,37 +461,26 @@ class Intensifier(AbstractIntensifier):
             # must be the runtime minus the already spent budget on the incumbent across
             # instances.
             if self._scenario.runtime_cutoff is not None:
-                inc_sum_cost = self.runhistory.sum_cost(
-                    config=incumbents[0],
-                    normalize=False,
-                )
-                if isinstance(inc_sum_cost, list):
-                    raise UnsupportedError()
-
                 cutoff = self._scenario.runtime_cutoff - inc_sum_cost
             else:
                 cutoff = float("inf")
             if cutoff < 0:
                 warnings.warn(f"Proposed cutoff for the incumbent is negative: {cutoff}. " f"Setting cutoff to 0.")
                 cutoff = 0
-
         else:
             # get all runs of the challenger
-            chall_inst_seeds = self.runhistory.get_instance_seed_budget_keys(
-                challenger, highest_observed_budget_only=True
-            )
+            chall_inst_seeds = self.runhistory.get_instance_seed_budget_keys(challenger)
 
             # filtered incumbent cost; i.e. only the runtime of the subset of those instance the
             # challenger will be racing on (before moving to the next subset of instances 2**N).
             inc_id = self.runhistory.get_config_id(incumbents[0])
-            inc_isb = self.runhistory.get_instance_seed_budget_keys(incumbents[0], highest_observed_budget_only=True)
+            inc_isb = self.runhistory.get_instance_seed_budget_keys(incumbents[0])
 
             # FIXME: on_keys will only have the current instance-seed pair not all of the
             #  ones of the instance subset, the current challenger is allowed to run on
+            combined_list: list[Union[InstanceSeedKey, InstanceSeedBudgetKey]] = [*on_keys, *chall_inst_seeds]
             current_inc_isb = [
-                key
-                for key in inc_isb
-                if any(k.instance == key.instance and k.seed == key.seed for k in [*on_keys, *chall_inst_seeds])
+                key for key in inc_isb if any(k.instance == key.instance and k.seed == key.seed for k in combined_list)
             ]
 
             # Instance grouped costs over seeds
@@ -495,8 +497,14 @@ class Intensifier(AbstractIntensifier):
                     "we would need to imagine it hadn't for calculating the used budget so far!"
                     "This is not supported yet."
                 )
-            # Calculate average cost for each instance across seeds
-            inc_sum_cost = sum(sum(costs) / len(costs) for costs in instance_costs.values())
+            # Calculate mean cost for each instance across seeds and sum them up to determine the total incumbent cost
+            inc_sum_cost = 0
+            for costs in instance_costs.values():
+                if not isinstance(costs[0], list):
+                    average_instance_cost = np.array(costs).sum() / len(costs)
+                    inc_sum_cost += average_instance_cost
+                else:
+                    raise UnsupportedError()
 
             # compute the already used runtime for the challenger across instances
             # FIXME: in the case of multiple seeds per instance, we need to imagine

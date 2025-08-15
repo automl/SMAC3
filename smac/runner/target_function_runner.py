@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, Union
 
 import copy
 import inspect
@@ -108,12 +108,12 @@ class TargetFunctionRunner(AbstractSerialRunner):
     def run(
         self,
         config: Configuration,
-        instance: str | None = None,
-        budget: float | None = None,
-        seed: int | None = None,
+        instance: Optional[str] = None,
+        budget: Optional[float] = None,
+        seed: Optional[int] = None,
         additional_info: Optional[dict[str, Any]] = None,
         **dask_data_to_scatter: dict[str, Any],
-    ) -> tuple[StatusType, float | list[float], float, float, dict]:
+    ) -> tuple[StatusType, Union[float, list[float]], float, float, dict[str, Any]]:
         """Calls the target function with pynisher if algorithm wall time limit or memory limit is
         set. Otherwise, the function is called directly.
 
@@ -148,7 +148,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
             The time the target function took to run.
         cpu_time : float
             The time the target function took on the hardware to run.
-        additional_info : dict
+        val_additional_info : dict
             All further additional trial information.
         """
         # The kwargs are passed to the target function.
@@ -171,7 +171,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         cost: float | list[float] = self._crash_cost
         runtime = 0.0
         cpu_time = runtime
-        value_additional_info = {}
+        val_additional_info = {}
         status = StatusType.CRASHED
 
         # If memory limit or walltime limit is set, we wanna use pynisher
@@ -203,19 +203,19 @@ class TargetFunctionRunner(AbstractSerialRunner):
             status = StatusType.MEMORYOUT
         except Exception as e:
             cost = np.asarray(cost).squeeze().tolist()
-            value_additional_info = {
+            val_additional_info = {
                 "traceback": traceback.format_exc(),
                 "error": repr(e),
             }
             status = StatusType.CRASHED
 
         if status != StatusType.SUCCESS:
-            return status, cost, runtime, cpu_time, value_additional_info
+            return status, cost, runtime, cpu_time, val_additional_info
 
         if isinstance(rval, tuple):
-            result, value_additional_info = rval
+            result, val_additional_info = rval
         else:
-            result, value_additional_info = rval, {}
+            result, val_additional_info = rval, {}
 
         # Do some sanity checking (for multi objective)
         error = f"Returned costs {result} does not match the number of objectives {self._objectives}."
@@ -251,7 +251,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         # We want to get either a float or a list of floats.
         cost = np.asarray(cost).squeeze().tolist()
 
-        return status, cost, runtime, cpu_time, value_additional_info
+        return status, cost, runtime, cpu_time, val_additional_info
 
     def __call__(
         self,
