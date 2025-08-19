@@ -1,3 +1,8 @@
+# 2.3.2
+
+## Bugfixes
+- Fix that config could be accidentally added twice to the runhistory (#1242)
+
 # 2.3.1
 
 ## Bugfixes

@@ -209,7 +209,7 @@ class SuccessiveHalving(AbstractIntensifier):
         for key in list(self._tracker.keys()):
             for seed, configs in self._tracker[key]:
                 # We have to make key serializable
-                new_key = f"{key[0]},{key[1]}"
+                new_key = f"{key[0]},{key[1]}"  # noqa: E231
                 tracker[new_key].append((seed, [dict(config) for config in configs]))
 
         return {"tracker": tracker}
@@ -260,7 +260,7 @@ class SuccessiveHalving(AbstractIntensifier):
                 messages.append(f"--- Bracket {bracket} / Stage {stage}: {counter} configs")
 
         if len(messages) > 0:
-            logger.debug(f"{self.__class__.__name__} statistics:")
+            logger.debug(f"{self.__class__.__name__} statistics:")  # noqa: E231
 
         for message in messages:
             logger.debug(message)
