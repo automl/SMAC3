@@ -82,7 +82,7 @@ setuptools.setup(
         "pynisher>=1.0.0",
         "ConfigSpace>=1.0.0",
         "joblib",
-        "scikit-learn>=1.1.2",
+        "scikit-learn>=1.6.1",
         "dask[distributed]",
         "dask_jobqueue>=0.8.2",
         "emcee>=3.0.0",

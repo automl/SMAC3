@@ -15,12 +15,6 @@ from sklearn.tree._tree import DTYPE
 from sklearn.utils.parallel import Parallel, delayed
 from sklearn.utils.validation import check_is_fitted
 
-try:
-    # This is only implemented after sklearn 1.6.0, earlier python version might not be compataible with this
-    from sklearn.utils.validation import validate_data
-except ImportError:
-    validate_data = None
-
 from smac.constants import N_TREES
 from smac.model.random_forest import AbstractRandomForest
 
@@ -591,19 +585,15 @@ class EPMRandomForest(ForestRegressor):
             ensure_all_finite = "allow-nan"
         else:
             ensure_all_finite = True  # type: ignore
-        if validate_data is None:
-            # only applied for sklearn < 1.6 (python 3.8)
-            X = self._validate_data(X, dtype=DTYPE, accept_sparse="csr", reset=False)
-        else:
-            X = validate_data(
-                self,
-                X,
-                dtype=DTYPE,
-                accept_sparse="csr",
-                reset=False,
-                ensure_all_finite=ensure_all_finite,
-                ensure_2d=ensure_2d,
-            )
+        X = validate_data(
+            self,
+            X,
+            dtype=DTYPE,
+            accept_sparse="csr",
+            reset=False,
+            ensure_all_finite=ensure_all_finite,
+            ensure_2d=ensure_2d,
+        )
         if issparse(X) and (X.indices.dtype != np.intc or X.indptr.dtype != np.intc):  # type: ignore
             raise ValueError("No support for np.int64 index based sparse matrices")
         return X
