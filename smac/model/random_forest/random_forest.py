@@ -13,7 +13,7 @@ from sklearn.ensemble._forest import ForestRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.tree._tree import DTYPE
 from sklearn.utils.parallel import Parallel, delayed
-from sklearn.utils.validation import check_is_fitted
+from sklearn.utils.validation import check_is_fitted, validate_data
 
 from smac.constants import N_TREES
 from smac.model.random_forest import AbstractRandomForest
