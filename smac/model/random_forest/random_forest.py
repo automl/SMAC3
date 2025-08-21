@@ -41,10 +41,7 @@ def accumulate_predict_over_instances(
     X_instance_feat_ = np.tile(X_instance_feat[None, :], (len(X), 1))
     prediction = predict(np.concatenate([X, X_instance_feat_], axis=1), check_input=False)
     with lock:
-        results[
-            :,
-            tree_idx,
-        ] += (
+        results[:, tree_idx,] += (
             prediction / n_instances
         )
 
