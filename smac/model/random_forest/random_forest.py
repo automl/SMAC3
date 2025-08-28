@@ -22,10 +22,23 @@ __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
-def estimator_predict(predict: Callable, X: np.ndarray, results: np.ndarray, col_idx: int) -> None:
-    """Collect predictions from a single estimator."""
+def estimator_predict(predict: Callable, X: np.ndarray, results: np.ndarray, tree_idx: int) -> None:
+    """
+    Collect predictions from a single estimator.
+
+    Parameters
+    ----------
+    predict: Callable
+        the prediction function, in this scenario, it is the prediction function of each tree
+    X: np.ndarray [#samples, #hyperparameter]
+        input features
+    results: np.ndarray [#samples, #estimators]
+        output values from all the predictors
+    tree_idx:
+        estimator index
+    """
     prediction = predict(X, check_input=False)
-    results[:, col_idx] = prediction  # Populate the corresponding column
+    results[:, tree_idx] = prediction  # Populate the corresponding column
 
 
 def accumulate_predict_over_instances(
@@ -37,11 +50,32 @@ def accumulate_predict_over_instances(
     n_instances: int,
     lock: threading.Lock,
 ) -> None:
-    """Collect predictions from a single estimator. However, we sum the results from all instances"""
+    """
+    Collect predictions from a single estimator. However, we sum the results from all instances
+
+    Parameters
+    ----------
+    predict: Callable
+        the prediction function, in this scenario, it is the prediction function of each tree
+    X: np.ndarray [#samples, #hyperparameter]
+        Input data points.
+    X_instance_feat: np.ndarray [#instance, #features],
+        Features (np.ndarray) of the instances (str). The features are incorporated into the X data,
+         on which the model is trained on.
+
+    results: np.ndarray [#samples, #estimators]
+        output values from all the predictors
+    tree_idx: int
+        tree index
+    n_instances: int
+        number of instance
+    lock: threading.Lock
+        threading lock
+    """
     X_instance_feat_ = np.tile(X_instance_feat[None, :], (len(X), 1))
     prediction = predict(np.concatenate([X, X_instance_feat_], axis=1), check_input=False)
     with lock:
-        results[:, tree_idx,] += (
+        results[:, tree_idx, ] += (
             prediction / n_instances
         )
 
@@ -403,7 +437,9 @@ class EPMRandomForest(ForestRegressor):
         """
         Build a forest of trees from the training set (X, y). In additional to the vanilla RF fitting process, we also
         need to edit the estimators' parameters after the fitting process when self.log_y is True. This ensures that the
-        model performance consistently compared to the pyrfr version.
+        model performance consistently compared to the pyrfr version. To compute the means of all the values, we first
+        need to recover the log scaled values stored in the leave nodes to their raw scale and then compute the mean
+        over those values. This mean value will then transformed back to the log scale.
 
         Parameters
         ----------
@@ -531,8 +567,8 @@ class EPMRandomForest(ForestRegressor):
         Returns
         -------
         preds: np.ndarray [#samples, #estimators]
-            predictions for each samples and trees. Each element in preds corresponds to the mean response values for
-            the target estimator and configuration acorss all the instances.
+            predictions for each sample and trees. Each element in preds corresponds to the mean response values for
+            the target estimator and configuration accross all the instances.
 
         """
         X = self._validate_X_predict(X, ensure_2d=False)
@@ -566,8 +602,11 @@ class EPMRandomForest(ForestRegressor):
         Validate X whenever one tries to predict, apply, predict_proba.
         It is based on rf regressor from sklearn 1.6.1:
          https://github.com/scikit-learn/scikit-learn/blob/99bf3d8e4eed5ba5db19a1869482a238b6223ffd/sklearn/ensemble/_forest.py#L629
-         However, we add another parameter to allow the model to ignore feature checking (this is done after
-         calling this function for predict_marginalized_over_instances_batch)
+         However, we add another parameter to allow the model to ignore feature checking.
+         This is applied for the cases where we have both hyperpameter features and instance features, the two features
+         will only be concatenated within each tree estimation functions. Hence, there is no need to check if their
+         individual number of features fit the number of features set in the RF model.
+         We will check if the number fo features fit the model afterwards for predict_marginalized_over_instances_batch
 
         Parameters
         ----------
@@ -603,8 +642,9 @@ class RandomForest(AbstractRandomForest):
     ----------
     n_trees : int, defaults to `N_TREES`
         The number of trees in the random forest.
-    n_points_per_tree : int, defaults to -1
-        Number of points per tree. If the value is smaller than 0, the number of samples will be used.
+    max_samples : int | float | None, defaults to None
+        Number of points per tree. If the value is None, the number of samples will be used. Otherwise, use
+        max_samples (if it is int) or max(round(n_samples * max_samples), 1) (if it is float value)
     ratio_features : float, defaults to 5.0 / 6.0
         The ratio of features that are considered for splitting.
     min_samples_split : int, defaults to 3
@@ -613,9 +653,7 @@ class RandomForest(AbstractRandomForest):
         The minimum number of data points in a leaf.
     max_depth : int, defaults to 2**20
         The maximum depth of a single tree.
-    eps_purity : float, defaults to 1e-8
-        The minimum difference between two target values to be considered.
-    max_nodes : int, defaults to 2**20
+    max_leaf_nodes : int, defaults to 2**20
         The maximum total number of nodes in a tree.
     bootstrapping : bool, defaults to True
         Enables bootstrapping.
@@ -633,32 +671,28 @@ class RandomForest(AbstractRandomForest):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        n_points_per_tree: int = -1,
+        max_samples: int | float | None = None,
         ratio_features: float = 5.0 / 6.0,
-        eps_purity: float = 1e-8,
         log_y: bool = False,
         instance_features: dict[str, list[int | float]] | None = None,
         pca_components: int | None = 7,
         seed: int = 0,
-        n_trees: int = N_TREES,  # TODO: HP: 100 is default in sklearn, here it's 10
+        n_trees: int = N_TREES,
         cross_trees_variance: bool = False,
         criterion: str = "squared_error",
-        splitter: str = "random",  # Should not be changed
-        max_depth: int = 2**20,  # TODO: HP: None is default in sklearn, here it's 2**20
-        min_samples_split: int = 3,  # TODO: HP: 2 is default in sklearn, here it's 3
-        min_samples_leaf: int = 3,  # TODO: HP: 1 is default in sklearn, here it's 3
+        splitter: str = "random",
+        max_depth: int = 2**20,
+        min_samples_split: int = 3,
+        min_samples_leaf: int = 3,
         min_weight_fraction_leaf: float = 0.0,
-        # max_features=1.0,  # Set by ratio_features
-        max_leaf_nodes: int = 2**20,  # TODO: HP: None is default in sklearn, here it's 2**20
-        min_impurity_decrease: float = 0.0,
-        bootstrapping: bool = True,  # TODO HP: False is default in sklearn, here it's True
+        max_leaf_nodes: int = 2**20,
+        min_impurity_decrease: float = 1e-8,
+        bootstrapping: bool = True,
         oob_score: bool = False,
         n_jobs: int | None = -1,
-        # random_state=None,  # Set by seed
         verbose: int = 0,
         warm_start: bool = False,
         ccp_alpha: float = 0.0,
-        max_samples: int | float | None = None,
         monotonic_cst: Iterable | None = None,
     ) -> None:
         super().__init__(
