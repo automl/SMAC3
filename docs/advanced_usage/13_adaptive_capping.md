@@ -1,13 +1,12 @@
-Adaptive Capping
-=================
+# Adaptive Capping
 
 Adaptive capping is a feature that can be used to speedup the evaluation of candidate configurations when the objective
 is to minimize runtime of an algorithm across a set of instances. The basic idea is to terminate unpromising candidates
 early and adapting the timeout for solving a single instance dynamically based on the incumbent's runtime and the.
 runtime already used by the challenging configuration.
 
-Theoretical Background
-----
+## Theoretical Background
+
 When comparing a challenger configuration with the current incumbent for a (sub-)set of instances, we already know how
 much cost (in terms of runtime) was incurred by the incumbent to solve the set of instances. As soon as the challenger
 configuration exceeds the cost of the incumbent, it is evident that the challenger will not become the new incumbent
@@ -30,15 +29,14 @@ incumbent configuration) are applied to. Furthermore, to increase the trust into
 regularly subject to intensification.
 
 
-Setting up Adaptive Capping
---------------------------
+## Setting up Adaptive Capping
 
 To achieve this, the user must take active care in the termination of their target function.
 The capped problem.train will receive a budget keyword argument, detailing the seconds allocated to the configuration.
 Below is an example of a capped problem that will return the used budget if the computation exceeds the budget.
 
 
-.. code-block:: python
+```python
 
     class TimeoutException(Exception):
         pass
@@ -76,36 +74,34 @@ Below is an example of a capped problem that will return the used budget if the 
             except TimeoutException as e:
                 print(f"Timeout for configuration {config} with runtime budget {budget}")
                 return budget # here the runtime is capped and we return the used budget.
+```
 
-
-In order to enable adaptive capping in smac, we need to create problem instances :doc:`../4_instances` to optimize over ( and specify a
+In order to enable adaptive capping in smac, we need to create [problem instances](4_instances.md) to optimize over and specify a
 global runtime cutoff in the intensifier. Then we optimize as usual.
 
 
- .. code-block:: python
+```python
+from smac.intensifier import Intensifier
+from smac.scenario.scenario import Scenario
 
-    from smac.intensifier import Intensifier
-    from smac.scenario.scenario import Scenario
+scenario = Scenario(
+    capped_problem.configspace,
+    ...
+    instances=['1', '2', '3'], # add problem instances we want to solve
+    instance_features={'1': [1], '2': [2], '3': [3]} # in the absence of actual features add dummy features for identification
+)
 
-    scenario = Scenario(
-        capped_problem.configspace,
-        ...
-        instances=['1', '2', '3'], # add problem instances we want to solve
-        instance_features={'1': [1], '2': [2], '3': [3]} # in the absence of actual features add dummy features for identification
-    )
+intensifier = Intensifier(
+scenario,
+runtime_cutoff=10 # specify an absolute runtime cutoff (sum over instances) never to be exceeded
+)
 
-    intensifier = Intensifier(
+smac = HyperparameterOptimizationFacade(
     scenario,
-    runtime_cutoff=10 # specify an absolute runtime cutoff (sum over instances) never to be exceeded
-    )
+    capped_problem.train,
+    intensifier=intensifier,
+    ...
+)
 
-    smac = HyperparameterOptimizationFacade(
-        scenario,
-        capped_problem.train,
-        intensifier=intensifier,
-        ...
-    )
-
-    incumbent = smac.optimize()
-
-
+incumbent = smac.optimize()
+```
