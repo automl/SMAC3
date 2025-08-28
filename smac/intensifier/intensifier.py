@@ -497,7 +497,7 @@ class Intensifier(AbstractIntensifier):
             inc_sum_cost = 0
             for costs in instance_costs.values():
                 if not isinstance(costs[0], list):
-                    average_instance_cost = np.array(costs).sum() / len(costs)
+                    average_instance_cost = np.array(costs).mean()
                     inc_sum_cost += average_instance_cost
                 else:
                     raise UnsupportedError()

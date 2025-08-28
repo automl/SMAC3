@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Iterator, Optional, Union
+from typing import Any, Iterator
 
 import time
 from pathlib import Path
@@ -159,12 +159,12 @@ class DaskParallelRunner(AbstractRunner):
     def run(
         self,
         config: Configuration,
-        instance: Optional[str] = None,
-        budget: Optional[float] = None,
-        seed: Optional[int] = None,
-        additional_info: Optional[dict[str, Any]] = None,
+        instance: str | None = None,
+        budget: float | None = None,
+        seed: int | None = None,
+        additional_info: dict[str, Any] | None = None,
         **dask_data_to_scatter: dict[str, Any],
-    ) -> tuple[StatusType, Union[float, list[float]], float, float, dict[str, Any]]:  # noqa: D102
+    ) -> tuple[StatusType, float | list[float], float, float, dict[str, Any]]:  # noqa: D102
         return self._single_worker.run(
             config=config,
             instance=instance,
