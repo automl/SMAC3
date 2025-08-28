@@ -9,7 +9,7 @@ try:
     from pyrfr import regression
     from pyrfr.regression import binary_rss_forest as BinaryForest
     from pyrfr.regression import default_data_container as DataContainer
-except ImportError:
+except ImportError as e:
     import warnings
 
     warnings.warn(
@@ -19,6 +19,7 @@ except ImportError:
         "conda install gxx_linux-64 gcc_linux-64 swig"
         "pip install pyrfr>=0.9.0"
     )
+    raise e
 
 
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
