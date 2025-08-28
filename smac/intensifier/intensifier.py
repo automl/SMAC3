@@ -39,6 +39,8 @@ class Intensifier(AbstractIntensifier):
 
     Parameters
     ----------
+    scenario : Scenario
+        The scenario defining the optimization problem.
     max_config_calls : int, defaults to 3
         Maximum number of configuration evaluations. Basically, how many instance-seed keys should be maxed evaluated
         for a configuration.
@@ -48,12 +50,6 @@ class Intensifier(AbstractIntensifier):
         How many more iterations should be done in case no new trial is found.
     seed : int, defaults to None
         Internal seed used for random events, like shuffle seeds.
-    runtime_cutoff : int, defaults to None: Initial runtime budget in seconds for
-        adaptive capping. A non-None value will trigger adaptive capping and require the
-        target algorithm to accept a budget argument that is the number of seconds to maximally
-        run the target algorithm.
-    adaptive_capping_slackfactor : float, defaults to None. Will need a runtime_cutoff to be set.
-        Slack factor for adaptive capping. The adaptive capping will be the runtime_cutoff * slackfactor.
     """
 
     def __init__(
