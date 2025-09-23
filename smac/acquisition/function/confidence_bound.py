@@ -104,7 +104,7 @@ class LCB(AbstractAcquisitionFunction):
         beta_t = 2 * np.log((X.shape[1] * self._num_data**2) / self._beta)
 
         return -(m - np.sqrt(beta_t) * std)
-    
+
 
 class UCB(AbstractAcquisitionFunction):
     r"""Computes the upper confidence bound for a given x over the best so far value as acquisition value.
