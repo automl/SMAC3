@@ -100,6 +100,7 @@ class RandomForest(AbstractRandomForest):
         self._eps_purity = eps_purity
         self._max_nodes = max_nodes
         self._bootstrapping = bootstrapping
+        self._rf = None
 
         # This list well be read out by save_iteration() in the solver
         # self._hypers = [

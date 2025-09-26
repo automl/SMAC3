@@ -11,7 +11,7 @@ from smac.scenario import Scenario
 
 
 class ParEGO(AbstractMultiObjectiveAlgorithm):
-    """ParEGO implementation based on https://www.cs.bham.ac.uk/~jdk/UKCI-2015.pdf.
+    """ParEGO implementation based on https://ieeexplore.ieee.org/abstract/document/1583627.
 
     Parameters
     ----------

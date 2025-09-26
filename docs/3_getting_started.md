@@ -2,7 +2,7 @@
 # Getting Started
 
 SMAC needs four core components (configuration space, target function, scenario and a facade) to run an
-optimization process, all of which are explained on this page.
+optimization process called Sequential Model Based Optimization (SMBO), all of which are explained on this page.
 
 They interact in the following way:
 
@@ -93,8 +93,8 @@ scenario = Scenario(
 !!! warn
     By default Facades will try to warmstart on preexisting logs. This behavior can be specified using the `overwrite` parameter.
 
-A [facade][smac.facade.abstract_facade] is the entry point to SMAC, which constructs a default optimization 
-pipeline for you. SMAC offers various facades, which satisfy many common use cases and are crucial to
+A [facade][smac.facade.abstract_facade] is the entry point to SMAC, which constructs a Sequential Model Based Optimization (`SMBO`) object for you.
+SMAC offers various facades, which satisfy many common use cases and are crucial to
 achieving peak performance. The idea behind the facades is to provide a simple interface to all of SMAC's components,
 which is easy to use and understand and without the need of deep diving into the material. However, experts are
 invited to change the components to their specific hyperparameter optimization needs. The following
@@ -140,3 +140,14 @@ smac = ACFacade(scenario=scenario, target_function=train)
 smac = RFacade(scenario=scenario, target_function=train)
 smac = HBFacade(scenario=scenario, target_function=train)
 ```
+
+## SMBO
+Each `Facade` creates a [Sequential Model Based Optimization (SMBO)][smac.main.smbo] object for you. In addition to starting the optimization with
+```python
+incumbent = smbo.optimize()
+```
+it supports access to e.g. the runhistory with
+````
+runhistory = smbo.runhistory()
+````
+For more information check out the [API][smac.main.smbo].
