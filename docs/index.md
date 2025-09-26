@@ -9,6 +9,20 @@ SMAC is a tool for algorithm configuration to optimize the parameters of arbitra
 
 SMAC3 is written in Python3 and continuously tested with Python 3.8, 3.9, and 3.10. Its Random Forest is written in C++. In the following, SMAC is representatively mentioned for SMAC3.
 
+## Features
+
+* Open source + active maintenance
+* Rich search space with floats, ordinals, categoricals and conditions
+* Ask-and-Tell Interface
+* Continue and Warmstart Optimization
+* Intensification mechanism to efficiently compare configurations
+* User priors
+* Parallelization, local and on a cluster with Dask
+* Multi-fidelity optimization, e.g. when we can evaluate our function with different resolutions
+* Multi-objective optimization with ParEGO
+* Optimization across many tasks (aka algorithm configuration)
+* Function to optimize can either be pythonic or called via a script
+* Easily extensible with callbacks
 
 ## Cite Us
 If you use SMAC, please cite our [JMLR paper](https://jmlr.org/papers/v23/21-0888.html):
