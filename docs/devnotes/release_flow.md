@@ -35,7 +35,7 @@ If you do not use `uv`, remove `uv` from the commands.
 
 1. Check `CHANGELOG.md` whether the version number is correct and the order is fine.
 1. Replace version numbers everywhere: in `CITATION.cff`, `__init__.py`.
-1. Create a PR to merge branch `v${VERSION}` into `main`.
+1. Create a PR to merge branch `v${VERSION}` into `main`. As description you can use the changelog notes.
 1. Test installation with a fresh environment, see `test_package.sh`.
 1. Merge PR if tests are fine and installation is fine.
 1. Create release, add notes from changelog.
