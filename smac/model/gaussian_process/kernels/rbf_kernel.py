@@ -9,7 +9,7 @@ import sklearn.gaussian_process.kernels as kernels
 from smac.model.gaussian_process.kernels.base_kernels import AbstractKernel
 from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -24,7 +24,6 @@ class RBFKernel(AbstractKernel, kernels.RBF):
         has_conditions: bool = False,
         prior: AbstractPrior | None = None,
     ) -> None:
-
         super().__init__(
             operate_on=operate_on,
             has_conditions=has_conditions,

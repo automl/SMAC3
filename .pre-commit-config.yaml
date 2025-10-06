@@ -43,3 +43,16 @@ repos:
         name: flake8 smac
         files: smac
         exclude: "scripts|tests"
+
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args:
+          [
+            "-rn", # Only display messages
+            "-sn", # Don't display the score
+          ]

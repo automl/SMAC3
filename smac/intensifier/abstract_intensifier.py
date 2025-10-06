@@ -27,9 +27,10 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash, print_config_changes
 from smac.utils.logging import get_logger
+from smac.utils.numpyencoder import NumpyEncoder
 from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -89,7 +90,7 @@ class AbstractIntensifier:
         self._instance_seed_keys_validation: list[InstanceSeedKey] | None = None
 
         # Incumbent variables
-        self.incumbents: list[Configuration] = []
+        self._incumbents: list[Configuration] = []
         self._incumbents_changed = 0
         self._rejected_config_ids: list[int] = []
         self._trajectory: list[TrajectoryItem] = []
@@ -109,6 +110,7 @@ class AbstractIntensifier:
         return {
             "name": self.__class__.__name__,
             "max_incumbents": self._max_incumbents,
+            "max_config_calls": self._max_config_calls,
             "seed": self._seed,
         }
 
@@ -429,9 +431,9 @@ class AbstractIntensifier:
                 return []
 
             # Compute the actual differences
-            intersection_isb_keys = set.intersection(*map(set, incumbent_isb_keys))
-            union_isb_keys = set.union(*map(set, incumbent_isb_keys))
-            incumbent_isb_keys_differences = list(union_isb_keys - intersection_isb_keys)
+            intersection_isb_keys = set.intersection(*map(set, incumbent_isb_keys)) # type: ignore
+            union_isb_keys = set.union(*map(set, incumbent_isb_keys)) # type: ignore
+            incumbent_isb_keys_differences = list(union_isb_keys - intersection_isb_keys) # type: ignore
             # incumbent_isb_keys = list(set.difference(*map(set, incumbent_isb_keys)))  # type: ignore
 
             if len(incumbent_isb_keys_differences) == 0:
@@ -789,16 +791,34 @@ class AbstractIntensifier:
     #     new_incumbents = self._calculate_pareto_front(rh, incumbents, all_incumbent_isb_keys)
     #     new_incumbent_ids = [rh.get_config_id(c) for c in new_incumbents]
     #
-    #     if len(previous_incumbents) == len(new_incumbents):
-    #         if previous_incumbents == new_incumbents:
-    #             # No changes in the incumbents
-    #             self._remove_rejected_config(config_id) # This means that the challenger is not rejected!!
-    #             return
-    #         else:
-    #             # In this case, we have to determine which config replaced which incumbent and reject it
-    #             # We will remove the oldest configuration (the one with the lowest id) because
-    #             # set orders the ids ascending.
-    #             self._remove_incumbent(config=config, previous_incumbent_ids=previous_incumbent_ids, new_incumbent_ids=new_incumbent_ids)
+    #     #TODO JG: merge 06-10-2025 updated
+    #             if len(previous_incumbents) == len(new_incumbents):
+    #             if previous_incumbents == new_incumbents:
+    #                 # No changes in the incumbents, we need this clause because we can't use set difference then
+    #                 if config_id in new_incumbent_ids:
+    #                     self._remove_rejected_config(config_id)
+    #                 else:
+    #                     # config worse than incumbents and thus rejected
+    #                     self._add_rejected_config(config_id)
+    #                 return
+    #             else:
+    #                 # In this case, we have to determine which config replaced which incumbent and reject it
+    #                 removed_incumbent_id = list(set(previous_incumbent_ids) - set(new_incumbent_ids))[0]
+    #                 removed_incumbent_hash = get_config_hash(rh.get_config(removed_incumbent_id))
+    #                 self._add_rejected_config(removed_incumbent_id)
+    #
+    #                 if removed_incumbent_id == config_id:
+    #                     logger.debug(
+    #                         f"Rejected config {config_hash} because it is not better than the incumbents on "
+    #                         f"{len(config_isb_keys)} instances."
+    #                     )
+    #                 else:
+    #                     self._remove_rejected_config(config_id)
+    #                     logger.info(
+    #                         f"Added config {config_hash} and rejected config {removed_incumbent_hash} as incumbent because "
+    #                         f"it is not better than the incumbents on {len(config_isb_keys)} instances: "
+    #                     )
+    #                     print_config_changes(rh.get_config(removed_incumbent_id), config, logger=logger)
     #     elif len(previous_incumbents) < len(new_incumbents):
     #         # Config becomes a new incumbent; nothing is rejected in this case
     #         self._remove_rejected_config(config_id)
@@ -956,7 +976,7 @@ class AbstractIntensifier:
         data = self.get_save_data()
 
         with open(filename, "w") as fp:
-            json.dump(data, fp, indent=2)
+            json.dump(data, fp, indent=2, cls=NumpyEncoder)
 
     def load(self, filename: str | Path) -> None:
         """Loads the latest state of the intensifier including the incumbents and trajectory."""

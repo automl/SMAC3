@@ -148,3 +148,6 @@ src
 # Pycharm
 .idea
 .vscode
+
+projects
+_api

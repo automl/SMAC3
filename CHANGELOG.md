@@ -1,9 +1,102 @@
+# 2.4.0
+## Improvements
+- Replace random forest from pyrfr with random forest from sklearn (#1246)
+
+# 2.3.1
+
+## Bugfixes
+- Addressing situations where the acquisition function suggests configurations that have already been sampled in prior iterations (#1216)
+
+## Misc
+- New SMAC logo
+- Fix doc link in README
+- Rename retries to max_new_config_tries in ConfigSelector (#1207)
+
+## Examples
+- Add target function with additional arguments (#1134)
+
+## Improvements
+- Submit trials to runners in SMBO instead of running configs directly (#937)
+
+## Improvements
+- `target_function` becomes optional in Facade when using ask and tell exclusively (#946)
+
+## Documentation
+- Ask and tell without initial design and warmstarting
+
+## Bugfixes 
+- Ask and tell without initial design may no longer return a config from the initial design - if it is not "removed".  
+
+# 2.3.0
+
+## Documentation
+- Update windows install guide (#952)
+- Correct intensifier for Algorithm Configuration Facade (#1162, #1165)
+- Migrate sphinx docs to mkdocs (#1155)
+
+## Bugfixes
+- Fix bug in differential evolution acquisition maximizer in case the search space contains categorical hyperparameters (#1150)
+- Fix wrong attr query in the target function runner (crash cost) (#1176)
+- Fix kwargs for DifferentialEvolution (#1187)
+- Fix PiBo implementation (#1076)
+- Add fix for local search running forever (#1194)
+
+## Improvements
+- Add logger information on handling of stopIteration error (#960)
+- Replace deprecated ConfigSpace methods (#1139)
+- Separated Wallclock time measurements from CPU time measurements and storing them under new 'cpu_time' variable (#1173)
+- Adapt RunHistory to be human readable (# 1174)
+
+## Dependencies
+- Allow numpy >= 2.x (#1146)
+
+# Examples
+- Add warmstarting example (#1120)
+
+# 2.2.0
+
+## Examples
+- Add example to specify total budget (fidelity units) instead of n_trials for multi-fidelity/Hyperband (#1121)
+- Add example for warmstarting (#1120)
+
+## Dependencies
+- Update numpy NaN (#1122) and restrict numpy
+- Upgrade to ConfigSpace 1.x.x (#1124)
+
+# 2.1.0
+
+## Improvements
+- Change the surrogate model to be retrained after every iteration by default in the case of blackbox optimization
+  (#1106).
+- Integrate `LocalAndSortedPriorRandomSearch` functionality into `LocalAndSortedRandomSearch` (#1106).
+- Change the way the `LocalAndSortedRandomSearch` works such that the incumbent always is a starting point and that
+      random configurations are sampled as the basis of the local search, not in addition (#1106).
+
+## Bugfixes
+- Fix path for dask scheduler file (#1055).
+- Add OrdinalHyperparameter for random forest imputer (#1065).
+- Don't use mutable default argument (#1067).
+- Propagate the Scenario random seed to `get_random_design` (#1066).
+- Configurations that fail to become incumbents will be added to the rejected lists (#1069).
+- SMAC RandomForest doesn't crash when `np.integer` used, i.e. as generated from a `np.random.RandomState` (#1084).
+- Fix the handling of n_points/ challengers in the acquisition maximizers, such that this number now functions as the
+     number of points that are sampled from the acquisition function to find the next challengers. Now also doesn't
+     restrict the config selector to n_retrain many points for finding the max, and instead uses the defaults that are
+     defined via facades/ scenarios (#1106).
+
+## Misc
+- ci: Update action version (#1072).
+
+## Minor
+- When a custom dask client is provided, emit the warning that the `n_workers` parameter is ignored only if it deviates from its default value, `1` ([#1071](https://github.com/automl/SMAC3/pull/1071)).
+
 # 2.0.2
 
 ## Improvements
-- Add an error when we get an empty dict data_to_scatter so that we can avoid an internal error caused in Dask precautiously
+- Add an error when we get an empty dict data_to_scatter so that we can avoid an internal error caused in Dask precautiously.
 - Add experimental instruction for installing SMAC in Windows via a WSL.
 - More detailed documentation regarding continuing runs.
+- Add a new example that demonstrates the use of intensification to speed up cross-validation for machine learning.
 
 ## Bugfixes
 - Fix bug in the incumbent selection in the case that multi-fidelity is combined with multi-objective (#1019).
@@ -638,7 +731,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
   conditions when starting multiple runs on a cluster.
 * MAINT #209: adds the seed or a pseudo-seed to the output directory name for
   better identifiability of the output directories.
-* FIX #216: replace broken call to in EIPS acqusition function.
+* FIX #216: replace broken call to in EIPS acquisition function.
 * MAINT: use codecov.io instead of coveralls.io.
 * MAINT: increase minimal required version of the ConfigSpace package to 0.3.2.
 

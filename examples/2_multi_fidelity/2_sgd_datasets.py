@@ -1,6 +1,5 @@
-"""
-Stochastic Gradient Descent On Multiple Datasets
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Stochastic Gradient Descent On Multiple Datasets
+# Flags: doc-Runnable
 
 Example for optimizing a Multi-Layer Perceptron (MLP) across multiple (dataset) instances.
 
@@ -28,7 +27,7 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 from smac import MultiFidelityFacade as MFFacade
 from smac import Scenario
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -76,7 +75,7 @@ class SGD:
         learning_rate = Categorical("learning_rate", ["constant", "invscaling", "adaptive"], default="constant")
         eta0 = Float("eta0", (0.00001, 1), default=0.1, log=True)
         # Add the parameters to configuration space
-        cs.add_hyperparameters([alpha, l1_ratio, learning_rate, eta0])
+        cs.add([alpha, l1_ratio, learning_rate, eta0])
 
         return cs
 

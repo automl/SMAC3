@@ -1,10 +1,11 @@
-"""
-Parallelization-on-Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Parallelization on Cluster
 
 An example of applying SMAC to optimize Branin using parallelization via Dask client on a 
 SLURM cluster. If you do not want to use a cluster but your local machine, set dask_client
 to `None` and pass `n_workers` to the `Scenario`.
+
+Sometimes, the submitted jobs by the slurm client might be cancelled once it starts. In that
+case, you could try to start your job from a computing node
 
 :warning: On some clusters you cannot spawn new jobs when running a SLURMCluster inside a
 job instead of on the login node. No obvious errors might be raised but it can hang silently.
@@ -19,7 +20,7 @@ cluster.job_cls.cancel_command = cancel_command
 
 Here we optimize the synthetic 2d function Branin.
 We use the black-box facade because it is designed for black-box function optimization.
-The black-box facade uses a :term:`Gaussian Process<GP>` as its surrogate model.
+The black-box facade uses a [Gaussian Process][GP] as its surrogate model.
 The facade works best on a numerical hyperparameter configuration space and should not
 be applied to problems with large evaluation budgets (up to 1000 evaluations).
 """
@@ -31,7 +32,7 @@ from dask_jobqueue import SLURMCluster
 
 from smac import BlackBoxFacade, Scenario
 
-__copyright__ = "Copyright 2023, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -41,7 +42,7 @@ class Branin(object):
         cs = ConfigurationSpace(seed=0)
         x0 = Float("x0", (-5, 10), default=-5, log=False)
         x1 = Float("x1", (0, 15), default=2, log=False)
-        cs.add_hyperparameters([x0, x1])
+        cs.add([x0, x1])
 
         return cs
 
@@ -77,7 +78,7 @@ if __name__ == "__main__":
     model = Branin()
 
     # Scenario object specifying the optimization "environment"
-    scenario = Scenario(model.configspace, deterministic=True, n_trials=100)
+    scenario = Scenario(model.configspace, deterministic=True, n_trials=100, trial_walltime_limit=100)
 
     # Create cluster
     n_workers = 4  # Use 4 workers on the cluster
@@ -97,6 +98,10 @@ if __name__ == "__main__":
         walltime="00:10:00",
         processes=1,
         log_directory="tmp/smac_dask_slurm",
+        # if you would like to limit the resources consumption of each function evaluation with pynisher, you need to
+        # set nanny as False
+        # Otherwise, an error `daemonic processes are not allowed to have children` will raise!
+        nanny=False,  # if you do not use pynisher to limit the memory/time usage, feel free to set this one as True
     )
     cluster.scale(jobs=n_workers)
 

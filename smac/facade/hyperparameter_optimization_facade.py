@@ -15,7 +15,7 @@ from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.runhistory.encoder.log_scaled_encoder import RunHistoryLogScaledEncoder
 from smac.scenario import Scenario
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -138,7 +138,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         n_configs: int | None = None,
         n_configs_per_hyperparamter: int = 10,
         max_ratio: float = 0.25,
-        additional_configs: list[Configuration] = [],
+        additional_configs: list[Configuration] | None = None,
     ) -> SobolInitialDesign:
         """Returns a Sobol design instance.
 
@@ -178,7 +178,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         probability : float, defaults to 0.2
             Probability that a configuration will be drawn at random.
         """
-        return ProbabilityRandomDesign(probability=probability)
+        return ProbabilityRandomDesign(probability=probability, seed=scenario.seed)
 
     @staticmethod
     def get_multi_objective_algorithm(  # type: ignore

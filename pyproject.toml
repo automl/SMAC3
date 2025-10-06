@@ -65,6 +65,11 @@ add-ignore = [ # http://www.pydocstyle.org/en/stable/error_codes.html
     "D415", # First line should end with a period, question mark, or exclamation point
 ]
 
+[tool.pylint."messages control"]
+# FIXME: This is to do a staged introduction of pylint checks for just a single class of problems initially (#1067).
+disable = ["all"]
+enable = ["dangerous-default-value"]
+
 [tool.mypy]
 python_version = "3.9"
 show_error_codes = true

@@ -21,6 +21,9 @@ def read_file(filepath: str) -> str:
 
 
 extras_require = {
+    "pyrfr": [
+        "pyrfr>=0.9.0",
+    ],
     "dev": [
         "setuptools",
         "types-setuptools",
@@ -38,6 +41,23 @@ extras_require = {
         "pydocstyle",
         "flake8",
         "pre-commit",
+        "pylint",
+        "mkdocs",
+        "mkdocs-material",
+        "mkdocs-autorefs",
+        "mkdocs-gen-files",
+        "mkdocs-literate-nav",
+        "mkdocs-glightbox",
+        "mkdocs-glossary-plugin",
+        "mkdocstrings[python]",
+        "markdown-exec[ansi]",
+        "mike",
+        "pillow",
+        "cairosvg",
+        "black",                # This allows mkdocstrings to format signatures in the docs
+        "pytest",
+        "pytest-coverage",
+        "pytest-cases",
     ],
 }
 
@@ -56,16 +76,15 @@ setuptools.setup(
     include_package_data=True,
     python_requires=">=3.8",
     install_requires=[
-        "numpy>=1.23.3",
+        "numpy",
         "scipy>=1.9.2",
         "psutil",
         "pynisher>=1.0.0",
-        "ConfigSpace>=0.6.1",
+        "ConfigSpace>=1.0.0",
         "joblib",
-        "scikit-learn>=1.1.2",
-        "pyrfr>=0.9.0",
+        "scikit-learn>=1.6.1",
         "dask[distributed]",
-        "dask_jobqueue",
+        "dask_jobqueue>=0.8.2",
         "emcee>=3.0.0",
         "regex",
         "pyyaml",

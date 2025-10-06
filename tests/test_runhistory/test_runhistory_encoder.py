@@ -1,5 +1,7 @@
 import numpy as np
 import pytest
+from ConfigSpace import Configuration
+from ConfigSpace.hyperparameters import CategoricalHyperparameter
 
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.encoder import (
@@ -41,62 +43,100 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     # Normal encoder
     encoder = RunHistoryEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
+
+    # TODO: Please replace with the more general solution once ConfigSpace 1.0
+    # upper = np.array([hp.upper_vectorized for hp in space.values()])
+    # lower = np.array([hp.lower_vectorized for hp in space.values()])
+    # -
+    # Categoricals are upperbounded by their size, rest of hyperparameters are
+    # upperbounded by 1.
+    upper_bounds = {
+        hp.name: (hp.size - 1) if isinstance(hp, CategoricalHyperparameter) else 1.0
+        for hp in list(configspace_small.values())
+    }
+    # Need to ensure they match the order in the Configuration vectorized form
+    sorted_by_indices = sorted(
+        upper_bounds.items(),
+        key=lambda x: configspace_small.index_of[x[0]],
+    )
+    upper = np.array([upper_bound for _, upper_bound in sorted_by_indices])
+    lower = 0.0
+
     X1, Y1 = encoder.transform()
 
     assert Y1.tolist() == [[1.0], [5.0]]
-    assert ((X1 <= 1.0) & (X1 >= 0.0)).all()
+    assert ((X1 <= upper) & (X1 >= lower)).all()
 
     # Log encoder
     encoder = RunHistoryLogEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryLogScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryInverseScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistorySqrtScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryEIPSEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
     assert Y.tolist() != Y1.tolist()
-    assert ((X <= 1.0) & (X >= 0.0)).all()
+    assert ((X <= upper) & (X >= lower)).all()
 
-
-def test_transform_conditionals(runhistory, make_scenario, configspace_large, configs):
-    configs = configspace_large.sample_configuration(20)
+def test_transform_conditionals(runhistory, make_scenario, configspace_large):
     scenario = make_scenario(configspace_large)
 
+    config_1 = Configuration(
+        configspace_large,
+        values={
+            "activation": "tanh",
+            "n_layer": 5,
+            "n_neurons": 27,
+            "solver": "lbfgs",
+        },
+    )
+    config_2 = Configuration(
+        configspace_large,
+        values={
+            "activation": "tanh",
+            "batch_size": 47,
+            "learning_rate": "adaptive",
+            "learning_rate_init": 0.6673206111956781,
+            "n_layer": 3,
+            "n_neurons": 88,
+            "solver": "sgd",
+        },
+    )
     runhistory.add(
-        config=configs[0],
+        config=config_1,
         cost=1,
         time=1,
         status=StatusType.SUCCESS,
     )
 
     runhistory.add(
-        config=configs[2],
+        config=config_2,
         cost=5,
         time=4,
         status=StatusType.SUCCESS,

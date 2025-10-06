@@ -5,7 +5,7 @@ from smac.random_design.modulus_design import (
 )
 from smac.random_design.probability_design import ProbabilityRandomDesign
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

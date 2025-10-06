@@ -9,17 +9,18 @@ from ConfigSpace import (
     UniformIntegerHyperparameter,
 )
 
+from smac import constants
 from smac.model.random_forest.random_forest import RandomForest
 from smac.utils.configspace import convert_configurations_to_array
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
 def _get_cs(n_dimensions):
     configspace = ConfigurationSpace(seed=0)
     for i in range(n_dimensions):
-        configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
+        configspace.add(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
     return configspace
 
@@ -125,9 +126,26 @@ def test_predict_marginalized():
     assert means.shape == (20, 1)
     assert variances.shape == (20, 1)
 
+    # now we need tp ensure that the prediction results is the same as we do that prediction individually
+    n_estimators = model._rf_opts["n_estimators"]
+    n_features = len(F)
+    n_data = len(X)
+
+    all_features = np.asarray(list(F.values()))
+    all_preds = np.empty(
+        [n_data, n_estimators, n_features]
+    )
+    for i_tree in range(n_estimators):
+        for i_feat in range(n_features):
+            for i_data in range(n_data):
+                x_input = np.concatenate([X[i_data], all_features[i_feat]])[None, :]
+                all_preds[[i_data], i_tree, i_feat] = model._rf.estimators_[i_tree].predict(x_input)
+    pred_marginalized_over_instance = np.mean(all_preds, -1)
+    assert np.allclose(np.mean(pred_marginalized_over_instance, axis=-1, keepdims=True), means)
+    assert np.allclose(np.var(pred_marginalized_over_instance, axis=-1, keepdims=True), variances)
+
 
 def test_predict_marginalized_mocked():
-
     rs = np.random.RandomState(1)
     F = {}
     for i in range(10):
@@ -179,10 +197,10 @@ def test_predict_with_actual_values():
 
 def test_with_ordinal():
     cs = ConfigurationSpace(seed=0)
-    _ = cs.add_hyperparameter(CategoricalHyperparameter("a", [0, 1], default_value=0))
-    _ = cs.add_hyperparameter(OrdinalHyperparameter("b", [0, 1], default_value=1))
-    _ = cs.add_hyperparameter(UniformFloatHyperparameter("c", lower=0.0, upper=1.0, default_value=1))
-    _ = cs.add_hyperparameter(UniformIntegerHyperparameter("d", lower=0, upper=10, default_value=1))
+    cs.add(CategoricalHyperparameter("a", [0, 1], default_value=0))
+    cs.add(OrdinalHyperparameter("b", [0, 1], default_value=1))
+    cs.add(UniformFloatHyperparameter("c", lower=0.0, upper=1.0, default_value=1))
+    cs.add(UniformIntegerHyperparameter("d", lower=0, upper=10, default_value=1))
 
     F = {}
     for i in range(1):
@@ -257,18 +275,24 @@ def test_with_ordinal():
 
 def test_impute_inactive_hyperparameters():
     cs = ConfigurationSpace(seed=0)
-    a = cs.add_hyperparameter(CategoricalHyperparameter("a", [0, 1]))
-    b = cs.add_hyperparameter(CategoricalHyperparameter("b", [0, 1]))
-    c = cs.add_hyperparameter(UniformFloatHyperparameter("c", 0, 1))
-    cs.add_condition(EqualsCondition(b, a, 1))
-    cs.add_condition(EqualsCondition(c, a, 0))
+    a = CategoricalHyperparameter("a", [0, 1, 2])
+    b = CategoricalHyperparameter("b", [0, 1])
+    c = UniformFloatHyperparameter("c", 0, 1)
+    d = OrdinalHyperparameter("d", [0, 1, 2])
+    cs.add([a, b, c, d])
+    cs.add([EqualsCondition(b, a, 1), EqualsCondition(c, a, 0), EqualsCondition(d, a, 2)])
 
     configs = cs.sample_configuration(size=100)
     config_array = convert_configurations_to_array(configs)
     for line in config_array:
         if line[0] == 0:
             assert np.isnan(line[1])
+            assert np.isnan(line[3])
         elif line[0] == 1:
+            assert np.isnan(line[2])
+            assert np.isnan(line[3])
+        elif line[0] == 2:
+            assert np.isnan(line[1])
             assert np.isnan(line[2])
 
     model = RandomForest(configspace=cs)
@@ -276,5 +300,79 @@ def test_impute_inactive_hyperparameters():
     for line in config_array:
         if line[0] == 0:
             assert line[1] == 2
+            assert line[3] == 3
         elif line[0] == 1:
             assert line[2] == -1
+            assert line[3] == 3
+        elif line[0] == 2:
+            assert line[1] == 2
+            assert line[2] == -1
+
+
+def test_rf_with_log_y():
+    X = np.array(
+        [
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 1.0, 1.0],
+            [1.0, 0.0, 0.0],
+            [1.0, 0.0, 1.0],
+            [1.0, 1.0, 0.0],
+            [1.0, 1.0, 1.0],
+        ],
+        dtype=np.float64,
+    )
+    y = np.array([[0.1], [0.2], [9], [9.2], [100.0], [100.2], [109.0], [109.2]], dtype=np.float64)
+    model1 = RandomForest(
+        configspace=_get_cs(3),
+        instance_features=None,
+        seed=12345,
+        ratio_features=1.0,
+        log_y=True
+    )
+    model1.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
+    X_test = np.random.rand(10, 3)
+
+    mean1, var1 = model1.predict(X_test)
+    #for y_i, y_hat_i in zip(y.reshape((1, -1)).flatten(), y_hat.reshape((1, -1)).flatten()):
+    #    assert pytest.approx(y_i, 0.1) == y_hat_i
+
+    # The following should be equivalent to the log_y version
+
+    model2 = RandomForest(
+        configspace=_get_cs(3),
+        instance_features=None,
+        seed=12345,
+        ratio_features=1.0,
+        log_y=False
+    )
+    all_preds = []
+    third_dimension = 0
+
+    model2.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
+
+    # Gather data in a list of 2d arrays and get statistics about the required size of the 3d array
+    for row_X in X_test:
+        preds_per_tree = [estimator.predict(row_X[None, :]) for estimator in model2._rf.estimators_]
+        #preds_per_tree = model_no_logy._rf.all_leaf_values(row_X)
+        all_preds.append(preds_per_tree)
+        max_num_leaf_data = max(map(len, preds_per_tree))
+        third_dimension = max(max_num_leaf_data, third_dimension)
+
+    # Transform list of 2d arrays into a 3d array
+    preds_as_array = np.zeros((X_test.shape[0], model2._rf_opts['n_estimators'], third_dimension)) * np.nan
+    for i, preds_per_tree in enumerate(all_preds):
+        for j, pred in enumerate(preds_per_tree):
+            preds_as_array[i, j, : len(pred)] = pred
+
+    # Do all necessary computation with vectorized functions
+    preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + constants.VERY_SMALL_NUMBER)
+
+    # Compute the mean and the variance across the different trees
+    mean2 = preds_as_array.mean(axis=1, keepdims=True)
+    var2 = preds_as_array.var(axis=1, keepdims=True)
+
+    assert np.allclose(mean1, mean2)
+    assert np.allclose(var1, var2)
+

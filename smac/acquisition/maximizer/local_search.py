@@ -10,7 +10,7 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.exceptions import ForbiddenValueError
 
 from smac.acquisition.function import AbstractAcquisitionFunction
-from smac.acquisition.maximizer.abstract_acqusition_maximizer import (
+from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.utils.configspace import (
@@ -19,7 +19,7 @@ from smac.utils.configspace import (
 )
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -90,10 +90,15 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         n_points: int,
         additional_start_points: list[tuple[float, Configuration]] | None = None,
     ) -> list[tuple[float, Configuration]]:
-        """Start a local search from the given startpoint.
+        """Start a local search from the given start points. Iteratively collect neighbours
+        using Configspace.utils.get_one_exchange_neighbourhood and evaluate them.
+        If the new config is better than the current best, the local search is continued from the
+        new config.
 
         Quit if either the max number of steps is reached or
-        no neighbor with an higher improvement was found.
+        no neighbor with a higher improvement was found or the number of local steps self._n_steps_plateau_walk
+        for each of the starting point is depleted.
+
 
         Parameters
         ----------
@@ -144,16 +149,25 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         list[Configuration]
             A list of initial points/configurations.
         """
-        if len(previous_configs) == 0:
-            init_points = self._configspace.sample_configuration(size=n_points)
-        else:
+        sampled_points = []
+        init_points = []
+        n_init_points = n_points
+        if len(previous_configs) < n_points:
+            if n_points - len(previous_configs) == 1:
+                sampled_points = [self._configspace.sample_configuration()]
+            else:
+                sampled_points = self._configspace.sample_configuration(size=n_points - len(previous_configs))
+            n_init_points = len(previous_configs)
+            if not isinstance(sampled_points, list):
+                sampled_points = [sampled_points]
+        if len(previous_configs) > 0:
             init_points = self._get_init_points_from_previous_configs(
                 previous_configs,
-                n_points,
+                n_init_points,
                 additional_start_points,
             )
 
-        return init_points
+        return sampled_points + init_points
 
     def _get_init_points_from_previous_configs(
         self,
@@ -182,7 +196,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         previous_configs: list[Configuration]
             Previous configuration (e.g., from the runhistory).
         n_points: int
-            Number of initial points to be generated.
+            Number of initial points to be generated; selected from previous configs (+ random configs if necessary).
         additional_start_points: list[tuple[float, Configuration]] | None
             Additional starting points.
 
@@ -192,10 +206,6 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             A list of initial points.
         """
         assert self._acquisition_function is not None
-
-        # configurations with the highest previous EI
-        configs_previous_runs_sorted = self._sort_by_acquisition_value(previous_configs)
-        configs_previous_runs_sorted = [conf[1] for conf in configs_previous_runs_sorted[:n_points]]
 
         # configurations with the lowest predictive cost, check for None to make unit tests work
         if self._acquisition_function.model is not None:
@@ -221,12 +231,12 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             previous_configs_sorted_by_cost = []
 
         if additional_start_points is not None:
-            additional_start_points = [asp[1] for asp in additional_start_points[:n_points]]
+            additional_start_points = [asp[1] for asp in additional_start_points]
         else:
             additional_start_points = []
 
         candidates = itertools.chain(
-            configs_previous_runs_sorted,
+            # configs_previous_runs_sorted,
             previous_configs_sorted_by_cost,
             additional_start_points,
         )
@@ -424,7 +434,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                             if acq_val[acq_index] > acq_val_candidates[i]:
                                 is_valid = False
                                 try:
-                                    neighbors[acq_index].is_valid_configuration()
+                                    neighbors[acq_index].check_valid_configuration()
                                     is_valid = True
                                 except (ValueError, ForbiddenValueError) as e:
                                     logger.debug("Local search %d: %s", i, e)

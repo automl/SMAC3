@@ -17,6 +17,8 @@ import socket  # noqa: E402
 from collections import defaultdict
 from pathlib import Path
 
+from smac.utils.numpyencoder import NumpyEncoder
+
 import pandas as pd
 from src.tasks import TASKS  # noqa: E402
 from src.utils.exceptions import NotSupportedError  # noqa: E402
@@ -79,7 +81,7 @@ class Benchmark:
         """Saves the internal data to the file."""
         print("Saving data...")
         with open(str(RAW_FILENAME), "w") as f:
-            json.dump(self._data, f, indent=4)
+            json.dump(self._data, f, indent=4, cls=NumpyEncoder)
 
     def _fill_keys(self) -> None:
         """Fill data with keys based on computer name, tasks, and selected version."""

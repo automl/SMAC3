@@ -19,7 +19,7 @@ class HimmelblauModel(Model):
         y = Float("y", (-5, 5))
 
         # Add hyperparameters and conditions to our configspace
-        cs.add_hyperparameters([x, y])
+        cs.add([x, y])
 
         return cs
 
