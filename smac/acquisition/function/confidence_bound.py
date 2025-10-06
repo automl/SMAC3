@@ -144,7 +144,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
         else:
             beta_t = self._beta
 
-        return sign * (m + sign * np.sqrt(self._nu * beta_t) * std)
+        return -(m + sign * np.sqrt(self._nu * beta_t) * std)
 
 
 # Order of parents is important (priorities). This way _bound_type is correctly overwritten by the Mixin
