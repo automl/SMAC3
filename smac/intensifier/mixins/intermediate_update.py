@@ -5,7 +5,9 @@ import itertools
 import numpy as np
 from ConfigSpace import Configuration
 from scipy.stats import binom
+from typing import Any
 
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 from smac.utils.pareto_front import _get_costs
@@ -15,9 +17,8 @@ __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
 
-
-class DebugComparison(object):
-    def _register_comparison(self, **kwargs):
+class DebugComparison(AbstractIntensifier):
+    def _register_comparison(self, **kwargs: Any) -> None:
         logger.debug(f"Made intermediate comparison with {kwargs['name']} comparison ")
         if not hasattr(self, "_intermediate_comparisons_log"):
             self._intermediate_comparisons_log = []

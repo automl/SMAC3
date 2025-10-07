@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 from ConfigSpace import Configuration
 
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -11,14 +12,14 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-def _dominates(a, b) -> bool:
+def _dominates(a: np.ndarray, b: np.ndarray) -> bool:
     # Checks if a dominates b
     a = np.atleast_1d(a)
     b = np.atleast_1d(b)
     return np.count_nonzero(a <= b) >= len(a) and np.count_nonzero(a < b) >= 1
 
 
-class NewCostDominatesOldCost:
+class NewCostDominatesOldCost(AbstractIntensifier):
     def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
         """
 
@@ -33,7 +34,7 @@ class NewCostDominatesOldCost:
         config_isb_keys = self.get_instance_seed_budget_keys(config)
 
         if not hasattr(self, "_old_config_cost"):
-            self._old_config_cost = {}  # TODO remove configuration when done
+            self._old_config_cost: dict[Configuration, np.ndarray] = {}  # TODO remove configuration when done
 
         new_cost = self.runhistory.average_cost(config, config_isb_keys)
         if config not in self._old_config_cost:
