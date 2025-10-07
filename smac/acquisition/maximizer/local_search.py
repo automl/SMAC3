@@ -405,7 +405,8 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     neighbors.extend(neighbors_for_i)
 
             logger.debug(
-                f"Iteration {num_iters} with {np.count_nonzero(active)} active searches and {len(neighbors)} aqcuisition function calls."
+                f"Iteration {num_iters} with {np.count_nonzero(active)} active searches and {len(neighbors)} "
+                "acquisition function calls."
             )
             if len(neighbors) != 0:
                 start_time = time.time()
@@ -481,7 +482,8 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                         n_no_plateau_walk[i] += 1
 
                     if n_no_plateau_walk[i] >= self._n_steps_plateau_walk or local_search_steps[i] >= self._max_steps:
-                        message = f"Local search {i}: Stop search after walking {n_no_plateau_walk[i]} plateaus after {neighbors_looked_at[i]}."
+                        message = f"Local search {i}: Stop search after walking {n_no_plateau_walk[i]} plateaus "
+                        message += f"after {neighbors_looked_at[i]}."
                         if local_search_steps[i] >= self._max_steps:
                             message += f" Reached max_steps ({self._max_steps}) of local search."
                         logger.debug(message)
@@ -496,8 +498,10 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         logger.debug(
             f"Local searches took {local_search_steps} steps and looked at {neighbors_looked_at} configurations."
             f"Computing the acquisition function for each search took {np.sum(times_per_iteration)/num_candidates}"
-            f"(prev {np.mean(times_per_iteration)}) seconds on average and each acquisition function call took {times_per_iteration/np.sum(neighbors_looked_at)} seconds on average."
-            f"In total the whole procedure took {np.sum(times_per_iteration)} seconds to look at {np.sum(neighbors_looked_at)} configurations."
+            f"(prev {np.mean(times_per_iteration)}) seconds on average and each acquisition function call "
+            f"took {times_per_iteration/np.sum(neighbors_looked_at)} seconds on average."
+            f"In total the whole procedure took {np.sum(times_per_iteration)} seconds to look at "
+            f"{np.sum(neighbors_looked_at)} configurations."
         )
 
         return [(a, i) for a, i in zip(acq_val_candidates, candidates)]

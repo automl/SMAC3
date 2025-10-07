@@ -1,3 +1,1 @@
-"""
-Mixin are used to overwrite single functions in the intensifier classes
-"""
+"""Mixin are used to overwrite single functions in the intensifier classes."""

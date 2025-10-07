@@ -1,13 +1,9 @@
 from __future__ import annotations
 
-from typing import Any
-
 import itertools
-import time
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
-from ConfigSpace.exceptions import ForbiddenValueError
 from pygmo import fast_non_dominated_sorting
 
 from smac.acquisition.function import AbstractAcquisitionFunction
@@ -15,10 +11,6 @@ from smac.acquisition.maximizer.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
 from smac.acquisition.maximizer.local_search import LocalSearch
-from smac.utils.configspace import (
-    convert_configurations_to_array,
-    get_one_exchange_neighbourhood,
-)
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"

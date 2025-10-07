@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Any, Iterator
 
-import time
-
 from ConfigSpace import Configuration
 
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
@@ -341,7 +339,6 @@ class Intensifier(AbstractIntensifier):
         A boolean which decides if the current configuration should be compared against the incumbent.
         """
         config_isb_keys = self.get_instance_seed_budget_keys(config)
-        config_id = self.runhistory.get_config_id(config)
         config_hash = get_config_hash(config)
 
         # Do not compare very early in the process

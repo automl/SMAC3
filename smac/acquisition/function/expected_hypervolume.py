@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Iterator
+from typing import Any
 
 import numpy as np
 import pygmo
@@ -9,13 +9,8 @@ from ConfigSpace import Configuration
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.intensifier.abstract_intensifier import AbstractIntensifier
-from smac.model.abstract_model import AbstractModel
-from smac.runhistory import RunHistory, TrialInfo
-from smac.runhistory.dataclasses import InstanceSeedBudgetKey
+from smac.runhistory import RunHistory
 from smac.runhistory.encoder import AbstractRunHistoryEncoder
-from smac.scenario import Scenario
-from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
 from smac.utils.multi_objective import normalize_costs
 
@@ -86,6 +81,7 @@ class AbstractHVI(AbstractAcquisitionFunction):
 
     @property
     def runhistory(self) -> RunHistory:
+        """Return the runhistory."""
         return self._runhistory
 
     @runhistory.setter
@@ -94,6 +90,7 @@ class AbstractHVI(AbstractAcquisitionFunction):
 
     @property
     def runhistory_encoder(self) -> AbstractRunHistoryEncoder:
+        """Return the runhistory encoder."""
         return self._runhistory_encoder
 
     @runhistory_encoder.setter
@@ -102,6 +99,7 @@ class AbstractHVI(AbstractAcquisitionFunction):
 
     @property
     def name(self) -> str:
+        """Return name of the acquisition function."""
         return "Abstract Hypervolume Improvement"
 
     def _update(self, **kwargs: Any) -> None:
@@ -109,10 +107,10 @@ class AbstractHVI(AbstractAcquisitionFunction):
 
         incumbents: list[Configuration] = kwargs.get("incumbents", None)
         if incumbents is None:
-            raise ValueError(f"Incumbents are not passed properly.")
+            raise ValueError("Incumbents are not passed properly.")
         if len(incumbents) == 0:
             raise ValueError(
-                f"No incumbents here. Did the intensifier properly " "update the incumbents in the runhistory?"
+                "No incumbents here. Did the intensifier properly update the incumbents in the runhistory?"
             )
 
         objective_bounds = np.array(self.runhistory.objective_bounds)
@@ -263,6 +261,7 @@ class PHVI(AbstractHVI):
 
     @property
     def name(self) -> str:
+        """Return name of the acquisition function."""
         return "Predicted Hypervolume Improvement"
 
     def _update(self, **kwargs: Any) -> None:

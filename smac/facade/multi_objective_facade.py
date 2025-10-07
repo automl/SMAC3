@@ -2,26 +2,20 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.acquisition.function.expected_hypervolume import PHVI
-from smac.acquisition.function.expected_improvement import EI
+from smac.acquisition.function.expected_hypervolume import EHVI, PHVI
 from smac.acquisition.maximizer.multi_objective_search import (
     MOLocalAndSortedRandomSearch,
 )
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensifier.intensifier import Intensifier
-from smac.intensifier.mixins import (
-    intermediate_decision,
-    intermediate_update,
-    update_incumbent,
-)
+from smac.intensifier.mixins import intermediate_decision, intermediate_update
 from smac.intensifier.multi_objective_intensifier import MOIntensifier
 from smac.model.multi_objective_model import MultiObjectiveModel
 from smac.model.random_forest.random_forest import RandomForest
 from smac.multi_objective.aggregation_strategy import NoAggregationStrategy
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
-from smac.runhistory.encoder.log_encoder import RunHistoryLogEncoder
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
@@ -64,7 +58,6 @@ class MultiObjectiveFacade(AbstractFacade):
         pca_components : float, defaults to 4
             Number of components to keep when using PCA to reduce dimensionality of instance features.
         """
-
         models = []
         for objective in scenario.objectives:
             models.append(

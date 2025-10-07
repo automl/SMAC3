@@ -1,39 +1,14 @@
 from __future__ import annotations
 
-from abc import abstractmethod
-from typing import Any, Callable, Iterator
-
-import copy
-import dataclasses
 import itertools
-import json
-from collections import defaultdict
-from pathlib import Path
 
 import numpy as np
 from ConfigSpace import Configuration
 from scipy.stats import binom
 
-import smac
-from smac.callback import Callback
-from smac.constants import MAXINT
-from smac.main.config_selector import ConfigSelector
-from smac.runhistory import TrialInfo
-from smac.runhistory.dataclasses import (
-    InstanceSeedBudgetKey,
-    InstanceSeedKey,
-    TrajectoryItem,
-    TrialValue,
-)
-from smac.runhistory.runhistory import RunHistory
-from smac.scenario import Scenario
-from smac.utils.configspace import get_config_hash, print_config_changes
+from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
-from smac.utils.pareto_front import (
-    _get_costs,
-    calculate_pareto_front,
-    sort_by_crowding_distance,
-)
+from smac.utils.pareto_front import _get_costs
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -228,7 +203,6 @@ class RandomComparison(DebugComparison):
         -------
         A boolean which indicates if we should continue with this configuration.
         """
-        config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
         incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
@@ -267,7 +241,6 @@ class NoComparison(DebugComparison):
         -------
         A boolean which indicates if we should continue with this configuration.
         """
-        config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
         incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
@@ -306,7 +279,6 @@ class BootstrapComparison(DebugComparison):
         -------
         A boolean which indicates if we should continue with this configuration.
         """
-        config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
         incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
@@ -371,8 +343,6 @@ class BootstrapSingleComparison(DebugComparison):
         -------
         A boolean which indicates if we should continue with this configuration.
         """
-
-        config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
         incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
@@ -437,8 +407,6 @@ class BootstrapClosestComparison(DebugComparison):
         -------
         A boolean which indicates if we should continue with this configuration.
         """
-
-        config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
         incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
@@ -524,7 +492,6 @@ class SRaceComparison(DebugComparison):
             b = np.array(b)
             return 1 if np.count_nonzero(a <= b) >= len(a) and np.count_nonzero(a < b) >= 1 else 0
 
-        config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
         incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)

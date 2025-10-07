@@ -1,39 +1,11 @@
 from __future__ import annotations
 
-from abc import abstractmethod
-from typing import Any, Callable, Iterator
-
-import copy
-import dataclasses
 import itertools
-import json
-from collections import defaultdict
-from pathlib import Path
 
 import numpy as np
 from ConfigSpace import Configuration
-from scipy.stats import binom
 
-import smac
-from smac.callback import Callback
-from smac.constants import MAXINT
-from smac.main.config_selector import ConfigSelector
-from smac.runhistory import TrialInfo
-from smac.runhistory.dataclasses import (
-    InstanceSeedBudgetKey,
-    InstanceSeedKey,
-    TrajectoryItem,
-    TrialValue,
-)
-from smac.runhistory.runhistory import RunHistory
-from smac.scenario import Scenario
-from smac.utils.configspace import get_config_hash, print_config_changes
 from smac.utils.logging import get_logger
-from smac.utils.pareto_front import (
-    _get_costs,
-    calculate_pareto_front,
-    sort_by_crowding_distance,
-)
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -58,6 +30,8 @@ class NonDominatedUpdate(DebugUpdate):
 
         Returns
         -------
+        list[Configuration]
+            New incumbents after update.
         """
         rh = self.runhistory
 
@@ -94,9 +68,9 @@ class BootstrapUpdate(DebugUpdate):
 
         Returns
         -------
+        list[Configuration]
+            New incumbents after update.
         """
-        rh = self.runhistory
-
         incumbents = self.get_incumbents()
 
         if config not in incumbents:

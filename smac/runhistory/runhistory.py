@@ -163,6 +163,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     @property
     def incumbents(self) -> list[Configuration]:
+        """Return the incumbents (points on the Pareto front) of the runhistory."""
         return self._incumbents
 
     @incumbents.setter

@@ -41,9 +41,11 @@ class ConfigSelector:
         How many configurations should be returned before the surrogate model is retrained.
     retrain_wallclock_ratio: float | None, default to None
         How much time of the total elapsed wallclock time should be spend on retraining the surrogate model
-        and the acquisition function look. Example ratio of 0.1 would result in that only 10% of the wallclock time is spend on retraining.
+        and the acquisition function look. Example ratio of 0.1 would result in that only 10% of the wallclock time is
+        spend on retraining.
     min_configurations: int, defaults to 2
-        The minimum number of configurations that need to yield before retraining can occur. Should be lower or equal to retrain_after.
+        The minimum number of configurations that need to yield before retraining can occur. Should be lower or equal to
+        retrain_after.
     max_new_config_tries : int, defaults to 8
         How often to retry receiving a new configuration before giving up.
     min_trials: int, defaults to 1
@@ -321,8 +323,10 @@ class ConfigSelector:
             # Retrain when more time has been spend
             if acquisition_training_time / elapsed_time < self._retrain_wallclock_ratio:
                 logger.debug(
-                    f"Less than {self._retrain_wallclock_ratio:.2%} ({acquisition_training_time / elapsed_time:.2f}) "
-                    f"of the elapsed wallclock time ({elapsed_time:.2f}s) has been spend on finding new configurations "
+                    f"Less than {self._retrain_wallclock_ratio:.2%} "  # noqa: E231
+                    f"({acquisition_training_time / elapsed_time:.2f}) "  # noqa: E231
+                    f"of the elapsed wallclock time ({elapsed_time:.2f}s) has "  # noqa: E231
+                    "been spend on finding new configurations "
                     f"with the surrogate model. Start new iteration and retrain surrogate model."
                 )
                 return True

@@ -3,18 +3,11 @@ from __future__ import annotations
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
-from abc import ABC, abstractmethod
-from typing import Any, Iterator
+from typing import Any
 
 import re
-import time
-import traceback
 from subprocess import PIPE, Popen
 
-import numpy as np
-from ConfigSpace import Configuration
-
-from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runner.target_function_script_runner import TargetFunctionScriptRunner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
@@ -36,6 +29,18 @@ class ACLibRunner(TargetFunctionScriptRunner):
         super().__init__(target_function, scenario, required_arguments)
 
     def __call__(self, algorithm_kwargs: dict[str, Any]) -> tuple[str, str]:
+        """Calls the target function with the given arguments.
+
+        Parameters
+        ----------
+        algorithm_kwargs: dict[str, Any]
+            The arguments to pass to the target function.
+
+        Returns
+        -------
+        tuple[str, str]
+            The output and error messages from the target function.
+        """
         # kwargs has "instance", "seed" and "budget" --> translate those
 
         cmd = self._target_function.split(" ")

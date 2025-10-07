@@ -97,6 +97,7 @@ class AbstractIntensifier:
 
     @property
     def incumbents(self) -> list[Configuration]:
+        """Return the incumbents (points on the Pareto front) of the runhistory."""
         return self._incumbents
 
     @incumbents.setter
@@ -478,7 +479,6 @@ class AbstractIntensifier:
         -------
         A boolean which decides if the current configuration should be compared against the incumbent.
         """
-
         return False
 
     def _intermediate_comparison(self, config: Configuration) -> bool:
@@ -531,6 +531,7 @@ class AbstractIntensifier:
 
         Returns
         -------
+        A list of configurations which are the new incumbents (Pareto front).
         """
         rh = self.runhistory
 
@@ -548,6 +549,17 @@ class AbstractIntensifier:
         return new_incumbents
 
     def update_incumbents(self, config: Configuration) -> None:
+        """Updates the incumbents.
+
+        This method is called everytime a trial is added to the runhistory. A configuration is only considered
+        incumbent if it has a trial on all instances/seeds/budgets the incumbent
+        has been evaluated on.
+
+        Parameters
+        ----------
+        config : Configuration
+            The configuration that was just evaluated.
+        """
         incumbents = self.get_incumbents()
         config_hash = get_config_hash(config)
 
@@ -578,7 +590,8 @@ class AbstractIntensifier:
         # Check if config isb is subset of incumbents
         # if not all([isb_key in incumbent_isb_keys for isb_key in config_isb_keys]):
         #     # If the config is part of the incumbents this could happen
-        #     logger.info(f"Config {config_hash} did run on more instances than the incumbent. Cannot make a proper comparison.")
+        #     logger.info(f"Config {config_hash} did run on more instances than the incumbent. "
+        #                   "Cannot make a proper comparison.")
         #     return
 
         # Config did not run on all isb keys of incumbent
@@ -722,7 +735,8 @@ class AbstractIntensifier:
     #     # will remove the budgets from the keys.
     #     config_isb_comparison_keys = self.get_instance_seed_budget_keys(config, compare=True)
     #     # Find the lowest intersection of instance-seed-budget keys for all incumbents.
-    #     config_incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)  # Intersection
+    #     # Intersection
+    #     config_incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
     #
     #     # Now we have to check if the new config has been evaluated on the same keys as the incumbents
     #     # TODO If the config is part of the incumbent then it should always be a subset of the intersection
@@ -813,8 +827,8 @@ class AbstractIntensifier:
     #                 else:
     #                     self._remove_rejected_config(config_id)
     #                     logger.info(
-    #                         f"Added config {config_hash} and rejected config {removed_incumbent_hash} as incumbent because "
-    #                         f"it is not better than the incumbents on {len(config_isb_keys)} instances: "
+    #                         f"Added config {config_hash} and rejected config {removed_incumbent_hash} as incumbent "
+    #                         f"becauseit is not better than the incumbents on {len(config_isb_keys)} instances: "
     #                     )
     #                     print_config_changes(rh.get_config(removed_incumbent_id), config, logger=logger)
     #     elif len(previous_incumbents) < len(new_incumbents):
@@ -897,7 +911,7 @@ class AbstractIntensifier:
             self._remove_rejected_config(config_id)
             logger.info(
                 f"Added config {config_hash} and rejected config {removed_incumbent_hash} as incumbent because "
-                f"it is not better than the incumbents on {len(config_isb_keys)} instances:"
+                f"it is not better than the incumbents on {len(config_isb_keys)} instances: "
             )
             print_config_changes(rh.get_config(removed_incumbent_id), config, logger=logger)
 
@@ -916,7 +930,8 @@ class AbstractIntensifier:
         configs : list[Configuration]
             The configurations from which the Pareto front should be computed.
         config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
-            The instance-seed budget keys for the configurations on the basis of which the Pareto front should be computed.
+            The instance-seed budget keys for the configurations on the basis of which the Pareto front should be
+            computed.
 
         Returns
         -------
@@ -946,13 +961,24 @@ class AbstractIntensifier:
         pass
 
     def get_save_data(self) -> dict:
+        """Returns the data that should be saved when calling ``save()``.
+
+        This includes the incumbents, trajectory,
+        rejected configurations, and the state of the intensifier.
+
+        Returns
+        -------
+        data : dict
+            The data that should be saved with keys ``incumbent_ids``, ``rejected_config_ids``,
+            ``incumbents_changed``, ``trajectory``, and ``state``.
+        """
         incumbent_ids = []
         for config in self.incumbents:
             try:
                 incumbent_ids.append(self.runhistory.get_config_id(config))
             except KeyError:
                 incumbent_ids.append(-1)  # Should not happen, but occurs sometimes with small-budget runs
-                logger.warning(f"{config} does not exist in runhistory, but is part of the incumbent!")
+                logger.warning(f"{config} does not exist in runhistory, but is part of the incumbent!")  # noqa: E713
 
         data = {
             "incumbent_ids": incumbent_ids,

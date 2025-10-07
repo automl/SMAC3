@@ -10,7 +10,7 @@ from ConfigSpace import Configuration
 
 from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
-from smac.runhistory import TrialInfo
+from smac.runhistory import RunHistory, TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey
 from smac.runhistory.errors import NotEvaluatedError
 from smac.scenario import Scenario
@@ -209,7 +209,7 @@ class SuccessiveHalving(AbstractIntensifier):
         for key in list(self._tracker.keys()):
             for seed, configs in self._tracker[key]:
                 # We have to make key serializable
-                new_key = f"{key[0]},{key[1]}"
+                new_key = f"{key[0]},{key[1]}"  # noqa: E231
                 tracker[new_key].append((seed, [dict(config) for config in configs]))
 
         return {"tracker": tracker}
@@ -260,7 +260,7 @@ class SuccessiveHalving(AbstractIntensifier):
                 messages.append(f"--- Bracket {bracket} / Stage {stage}: {counter} configs")
 
         if len(messages) > 0:
-            logger.debug(f"{self.__class__.__name__} statistics:")
+            logger.debug(f"{self.__class__.__name__} statistics:")  # noqa: E231
 
         for message in messages:
             logger.debug(message)
@@ -590,7 +590,9 @@ class SuccessiveHalving(AbstractIntensifier):
         configs: list[Configuration],
         config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]],
     ) -> list[Configuration]:
-        """Compares the passed configurations and returns only the ones on the pareto front. Needs to include the budget type
+        """Compares the passed configurations and returns only the ones on the pareto front.
+
+        Needs to include the budget type.
 
         Parameters
         ----------
@@ -599,14 +601,14 @@ class SuccessiveHalving(AbstractIntensifier):
         configs : list[Configuration]
             The configurations from which the Pareto front should be computed.
         config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
-            The instance-seed budget keys for the configurations on the basis of which the Pareto front should be computed.
+            The instance-seed budget keys for the configurations on the basis of which the Pareto front should be
+            computed.
 
         Returns
         -------
         pareto_front : list[Configuration]
             The pareto front computed from the given configurations.
         """
-
         # Add the budgets to the isb keys according to the set incumbent heuristic
         for i, (config, isb_keys) in enumerate(zip(configs, config_instance_seed_budget_keys)):
             existing_isb_keys = []

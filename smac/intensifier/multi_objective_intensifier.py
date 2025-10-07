@@ -3,35 +3,13 @@
 
 from __future__ import annotations
 
-from abc import abstractmethod
-from typing import Any, Callable, Iterator
-
-import dataclasses
-import json
-from collections import defaultdict
-from pathlib import Path
-
-import numpy as np
 from ConfigSpace import Configuration
 
-import smac
-from smac.callback import Callback
-from smac.constants import MAXINT
-from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.intensifier.hyperband import Hyperband
 from smac.intensifier.intensifier import Intensifier
 from smac.intensifier.successive_halving import SuccessiveHalving
-from smac.main.config_selector import ConfigSelector
-from smac.runhistory import TrialInfo
-from smac.runhistory.dataclasses import (
-    InstanceSeedBudgetKey,
-    InstanceSeedKey,
-    TrajectoryItem,
-    TrialValue,
-)
+from smac.runhistory.dataclasses import InstanceSeedBudgetKey
 from smac.runhistory.runhistory import RunHistory
-from smac.scenario import Scenario
-from smac.utils.configspace import get_config_hash, print_config_changes
 from smac.utils.logging import get_logger
 from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 
@@ -56,7 +34,8 @@ class MOIntensifierMixin(object):
             config_instance_seed_budget_keys=config_instance_seed_budget_keys,
         )
 
-    # def _remove_incumbent(self, config: Configuration, previous_incumbent_ids: list[int], new_incumbent_ids: list[int]) -> None:
+    # def _remove_incumbent(
+    #     self, config: Configuration, previous_incumbent_ids: list[int], new_incumbent_ids: list[int]) -> None:
     #     # TODO adjust
     #     raise NotImplementedError
 
