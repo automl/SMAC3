@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import time
 from typing import Any, Iterator
 
 import copy
+import time
 
 import numpy as np
 from ConfigSpace import Configuration
@@ -59,7 +59,7 @@ class ConfigSelector:
         *,
         retrain_after: int | None = 8,
         retrain_wallclock_ratio: float | None = None,
-        min_configurations: int = 2,
+        min_configurations: int = 1,
         max_new_config_tries: int = 16,
         min_trials: int = 1,
     ) -> None:
@@ -97,7 +97,7 @@ class ConfigSelector:
         # Processed configurations should be stored here; this is important to not return the same configuration twice
         self._processed_configs: list[Configuration] = []
 
-        #Check if there is at least one retrain condition
+        # Check if there is at least one retrain condition
         if self._retrain_after is None and self._retrain_wallclock_ratio is None:
             raise ValueError("No retrain condition specified!")
 
@@ -254,7 +254,6 @@ class ConfigSelector:
 
             self._acquisition_training_times.append(time.time() - start_time)
 
-
             failed_counter = 0
             for config in challengers:
                 if config not in self._processed_configs:
@@ -310,6 +309,7 @@ class ConfigSelector:
 
         if self._retrain_wallclock_ratio is not None:
             if self._counter < self._min_configurations:
+                # Force a minimum number of configurations to be yielded despite the ratio
                 return False
 
             # Total elapsed wallcock time
