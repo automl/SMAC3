@@ -24,7 +24,7 @@ def _get_costs(
     config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
         The instance-seed budget keys for the configs for which the costs should be returned.
     normalize: bool
-        If the costs should be normalised
+        If the costs should be normalized
 
     Returns
     -------
@@ -41,7 +41,9 @@ def _get_costs(
         # configuration
         # However, we only want to consider the config trials
         # Average cost is a list of floats (one for each objective)
-        average_cost = runhistory.average_cost(config, isb_keys, normalize=normalize, run_multi_objective_algorithm=normalize)
+        average_cost = runhistory.average_cost(
+            config, isb_keys, normalize=normalize, run_multi_objective_algorithm=normalize
+        )
         average_costs += [average_cost]
 
     # Let's work with a numpy array for efficiency
@@ -157,27 +159,28 @@ def sort_by_crowding_distance(
 
     return [c for c, _ in config_with_crowding]
 
+
 def sort_by_hypervolume_contribution(
     runhistory: RunHistory,
     configs: list[Configuration],
     config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]],
 ) -> list[Configuration]:
-    """ Sorts the passed configurations by their hypervolume contribution.
+    """Sorts the passed configurations by their hypervolume contribution.
 
-        Parameters
-        ----------
-        runhistory : RunHistory
-            The runhistory containing the given configurations.
-        configs : list[Configuration]
-            The configurations which should be sorted.
-        config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
-            The instance-seed budget keys for the configurations which should be sorted.
+    Parameters
+    ----------
+    runhistory : RunHistory
+        The runhistory containing the given configurations.
+    configs : list[Configuration]
+        The configurations which should be sorted.
+    config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
+        The instance-seed budget keys for the configurations which should be sorted.
 
-        Returns
-        -------
-        sorted_list : list[Configuration]
-            Configurations sorted by hypervolume contribution.
-        """
+    Returns
+    -------
+    sorted_list : list[Configuration]
+        Configurations sorted by hypervolume contribution.
+    """
 
     # Get the average costs per configuration
 
@@ -191,6 +194,7 @@ def sort_by_hypervolume_contribution(
 
     raise NotImplementedError
 
+
 def calculate_hypervolume(
     runhistory: RunHistory,
     configs: list[Configuration],
@@ -200,8 +204,8 @@ def calculate_hypervolume(
     if reference_point is None:
         reference_point = calculate_reference_point(runhistory)
 
-
     raise NotImplementedError
+
 
 def calculate_reference_point(
     runhistory: RunHistory,

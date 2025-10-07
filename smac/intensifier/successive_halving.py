@@ -27,7 +27,7 @@ logger = get_logger(__name__)
 
 class SuccessiveHalving(AbstractIntensifier):
     """
-    Implementation of Succesive Halving supporting multi-fidelity, multi-objective, and multi-processing.
+    Implementation of Successive Halving supporting multi-fidelity, multi-objective, and multi-processing.
     Internally, a tracker keeps track of configurations and their bracket and stage.
 
     The behaviour of this intensifier is as follows:
@@ -583,3 +583,40 @@ class SuccessiveHalving(AbstractIntensifier):
     def _get_next_bracket(self) -> int:
         """Successive Halving only uses one bracket. Therefore, we always return 0 here."""
         return 0
+
+    def _calculate_pareto_front(
+        self,
+        runhistory: RunHistory,
+        configs: list[Configuration],
+        config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]],
+    ) -> list[Configuration]:
+        """Compares the passed configurations and returns only the ones on the pareto front. Needs to include the budget type
+
+        Parameters
+        ----------
+        runhistory : RunHistory
+            The runhistory containing the given configurations.
+        configs : list[Configuration]
+            The configurations from which the Pareto front should be computed.
+        config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
+            The instance-seed budget keys for the configurations on the basis of which the Pareto front should be computed.
+
+        Returns
+        -------
+        pareto_front : list[Configuration]
+            The pareto front computed from the given configurations.
+        """
+
+        # Add the budgets to the isb keys according to the set incumbent heuristic
+        for i, (config, isb_keys) in enumerate(zip(configs, config_instance_seed_budget_keys)):
+            existing_isb_keys = []
+            for key in self.get_instance_seed_budget_keys(config, compare=False):
+                if InstanceSeedBudgetKey(instance=key.instance, seed=key.seed, budget=None) in isb_keys:
+                    existing_isb_keys.append(key)
+            config_instance_seed_budget_keys[i] = existing_isb_keys
+
+        return calculate_pareto_front(
+            runhistory=runhistory,
+            configs=configs,
+            config_instance_seed_budget_keys=config_instance_seed_budget_keys,
+        )
