@@ -24,6 +24,9 @@ extras_require = {
     "pyrfr": [
         "pyrfr>=0.9.0",
     ],
+    "mosmac": [
+        "pygmo"
+    ],
     "dev": [
         "setuptools",
         "types-setuptools",
