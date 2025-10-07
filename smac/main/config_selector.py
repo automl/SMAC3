@@ -282,15 +282,15 @@ class ConfigSelector:
                     "Did not find enough configuration from the acquisition function. Sampling random configurations."
                 )
                 random_configs_retries = 0
-                while counter < self._retrain_after and random_configs_retries < self._max_new_config_tries:
+                while not retrain and random_configs_retries < self._max_new_config_tries:
                     config = self._scenario.configspace.sample_configuration()
                     if config not in self._processed_configs:
-                        counter += 1
+                        self._counter += 1
                         config.origin = "Random Search (max retries, no candidates)"
                         self._processed_configs.append(config)
                         self._call_callbacks_on_end(config)
                         yield config
-                        retrain = counter == self._retrain_after
+                        retrain = self._check_for_retrain()
                         self._call_callbacks_on_start()
                     else:
                         random_configs_retries += 1
