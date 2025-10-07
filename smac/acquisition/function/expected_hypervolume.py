@@ -2,20 +2,21 @@ from __future__ import annotations
 
 from typing import Any, Iterator
 
+import numpy as np
+import pygmo
 from ConfigSpace import Configuration
 
-import pygmo
-import numpy as np
-
+from smac.acquisition.function.abstract_acquisition_function import (
+    AbstractAcquisitionFunction,
+)
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
-from smac.runhistory import TrialInfo, RunHistory
-from smac.runhistory.encoder import AbstractRunHistoryEncoder
+from smac.model.abstract_model import AbstractModel
+from smac.runhistory import RunHistory, TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey
+from smac.runhistory.encoder import AbstractRunHistoryEncoder
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
-from smac.acquisition.function.abstract_acquisition_function import AbstractAcquisitionFunction
-from smac.model.abstract_model import AbstractModel
 from smac.utils.multi_objective import normalize_costs
 
 # import torch
@@ -69,6 +70,7 @@ logger = get_logger(__name__)
 #
 #         return post
 
+
 class AbstractHVI(AbstractAcquisitionFunction):
     def __init__(self):
         """Computes for a given x the predicted hypervolume improvement as
@@ -109,12 +111,12 @@ class AbstractHVI(AbstractAcquisitionFunction):
         if incumbents is None:
             raise ValueError(f"Incumbents are not passed properly.")
         if len(incumbents) == 0:
-            raise ValueError(f"No incumbents here. Did the intensifier properly "
-                                "update the incumbents in the runhistory?")
+            raise ValueError(
+                f"No incumbents here. Did the intensifier properly " "update the incumbents in the runhistory?"
+            )
 
         objective_bounds = np.array(self.runhistory.objective_bounds)
-        self._objective_bounds = self.runhistory_encoder.transform_response_values(
-            objective_bounds)
+        self._objective_bounds = self.runhistory_encoder.transform_response_values(objective_bounds)
         self._reference_point = [1.1] * len(self._objective_bounds)
 
     def get_hypervolume(self, points: np.ndarray = None, reference_point: list = None) -> float:
@@ -162,8 +164,7 @@ class AbstractHVI(AbstractAcquisitionFunction):
         # all instances. Idea is this prevents optimizing for the initial instances which get it stuck in local optima
         # Option 2: Only on instances of population
         # Option 3: EVHI per instance and aggregate afterwards
-        mean, var_ = self.model.predict_marginalized(X) #Expected to be not normalized
-
+        mean, var_ = self.model.predict_marginalized(X)  # Expected to be not normalized
 
         phvi = np.zeros(len(X))
         for i, indiv in enumerate(mean):
@@ -178,6 +179,7 @@ class AbstractHVI(AbstractAcquisitionFunction):
         #     time.sleep(1.5)
 
         return phvi.reshape(-1, 1)
+
 
 # class EHVI(AbstractHVI):
 #     def __init__(self):
@@ -252,8 +254,8 @@ class AbstractHVI(AbstractAcquisitionFunction):
 #         #
 #         # return ehvi.reshape(-1, 1)
 
-class PHVI(AbstractHVI):
 
+class PHVI(AbstractHVI):
     def __init__(self):
         super(PHVI, self).__init__()
         self.population_hv = None
@@ -318,7 +320,7 @@ class PHVI(AbstractHVI):
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
-        mean, _ = self.model.predict_marginalized(X) #Expected to be not normalized
+        mean, _ = self.model.predict_marginalized(X)  # Expected to be not normalized
         phvi = np.zeros(len(X))
         for i, indiv in enumerate(mean):
             points = list(self.population_costs) + [indiv]

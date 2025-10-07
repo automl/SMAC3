@@ -46,8 +46,8 @@ class MeanAggregationStrategy(AbstractMultiObjectiveAlgorithm):
 
 class NoAggregationStrategy(AbstractMultiObjectiveAlgorithm):
     """
-        A class to not aggregate multi-objective losses into a single objective losses.
-        """
+    A class to not aggregate multi-objective losses into a single objective losses.
+    """
 
     def __call__(self, values: list[float]) -> list[float]:
         """

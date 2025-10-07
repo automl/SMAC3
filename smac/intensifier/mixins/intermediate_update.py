@@ -1,18 +1,18 @@
 from __future__ import annotations
 
-import copy
-import itertools
 from abc import abstractmethod
 from typing import Any, Callable, Iterator
-from scipy.stats import binom
 
+import copy
 import dataclasses
+import itertools
 import json
 from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
 from ConfigSpace import Configuration
+from scipy.stats import binom
 
 import smac
 from smac.callback import Callback
@@ -29,7 +29,11 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash, print_config_changes
 from smac.utils.logging import get_logger
-from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance, _get_costs
+from smac.utils.pareto_front import (
+    _get_costs,
+    calculate_pareto_front,
+    sort_by_crowding_distance,
+)
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -38,7 +42,6 @@ logger = get_logger(__name__)
 
 
 class DebugComparison(object):
-
     def _register_comparison(self, **kwargs):
         logger.debug(f"Made intermediate comparison with {kwargs['name']} comparison ")
         if not hasattr(self, "_intermediate_comparisons_log"):
@@ -57,7 +60,6 @@ class DebugComparison(object):
 
 
 class FullIncumbentComparison(DebugComparison):
-
     def _intermediate_comparison(self, config: Configuration) -> bool:
         """Compares the configuration against the incumbent
 
@@ -72,19 +74,15 @@ class FullIncumbentComparison(DebugComparison):
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(
-            compare=True)
+        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
-        logger.debug(
-            f"Perform intermediate comparions of config {config_hash} with incumbents to see if it is worse"
-        )
+        logger.debug(f"Perform intermediate comparions of config {config_hash} with incumbents to see if it is worse")
         # TODO perform comparison with incumbent on current instances.
         # Check if the config with these number of trials is part of the Pareto front
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
-            logger.debug(
-                "Config ran on other isb_keys than the incumbents. Should not happen.")
+            logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
             return True
 
         # Ensure that the config is not part of the incumbent
@@ -98,16 +96,17 @@ class FullIncumbentComparison(DebugComparison):
         # Only the trials of the challenger
         all_incumbent_isb_keys = [config_isb_keys for _ in incumbents]
 
-        new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents,
-                                                      all_incumbent_isb_keys)
+        new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
 
         verdict = config in new_incumbents
-        self._register_comparison(config=config,
-                                  incumbent=self.get_incumbents(),
-                                  isb_keys=len(config_isb_keys),
-                                  costs=self._get_costs_comp(config),
-                                  prediction=verdict,
-                                  name="FullInc")
+        self._register_comparison(
+            config=config,
+            incumbent=self.get_incumbents(),
+            isb_keys=len(config_isb_keys),
+            costs=self._get_costs_comp(config),
+            prediction=verdict,
+            name="FullInc",
+        )
 
         return config in new_incumbents
 
@@ -127,17 +126,13 @@ class SingleIncumbentComparison(DebugComparison):
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(
-            compare=True)
+        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
-        logger.debug(
-            f"Perform intermediate comparions of config {config_hash} with incumbents to see if it is worse"
-        )
+        logger.debug(f"Perform intermediate comparions of config {config_hash} with incumbents to see if it is worse")
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
-            logger.debug(
-                "Config ran on other isb_keys than the incumbents. Should not happen.")
+            logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
             return True
 
         # Ensure that the config is not part of the incumbent
@@ -151,17 +146,17 @@ class SingleIncumbentComparison(DebugComparison):
         # Only the trials of the challenger
         all_incumbent_isb_keys = [config_isb_keys for _ in incumbents]
 
-        new_incumbents = self._calculate_pareto_front(self.runhistory,
-                                                      incumbents,
-                                                      all_incumbent_isb_keys)
+        new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
 
         verdict = config in new_incumbents
-        self._register_comparison(config=config,
-                                  incumbent=self.get_incumbents(),
-                                  isb_keys=len(config_isb_keys),
-                                  costs=self._get_costs_comp(config),
-                                  prediction=verdict,
-                                  name="SingleInc")
+        self._register_comparison(
+            config=config,
+            incumbent=self.get_incumbents(),
+            isb_keys=len(config_isb_keys),
+            costs=self._get_costs_comp(config),
+            prediction=verdict,
+            name="SingleInc",
+        )
 
         return config in new_incumbents
 
@@ -181,12 +176,9 @@ class ClosestIncumbentComparison(DebugComparison):
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(
-            compare=True)
+        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
-        logger.debug(
-            f"Perform intermediate comparisons of config {config_hash} with incumbents to see if it is worse"
-        )
+        logger.debug(f"Perform intermediate comparisons of config {config_hash} with incumbents to see if it is worse")
 
         # Ensure that the config is not part of the incumbent
         if config in incumbents:
@@ -194,13 +186,12 @@ class ClosestIncumbentComparison(DebugComparison):
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
-            logger.debug(
-                "Config ran on other isb_keys than the incumbents. Should not happen.")
+            logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
             return True
 
         # Only compare domination between one incumbent (as relaxation measure)
-        #iid = self._rng.choice(len(incumbents))
-        #TODO Normalize to determine closests?
+        # iid = self._rng.choice(len(incumbents))
+        # TODO Normalize to determine closests?
         inc_costs = _get_costs(self.runhistory, incumbents, [config_isb_keys for _ in incumbents], normalize=True)
         conf_cost = _get_costs(self.runhistory, [config], [config_isb_keys], normalize=True)[0]
         distances = [np.linalg.norm(inc_cost - conf_cost) for inc_cost in inc_costs]
@@ -210,17 +201,17 @@ class ClosestIncumbentComparison(DebugComparison):
         # Only the trials of the challenger
         all_incumbent_isb_keys = [config_isb_keys for _ in incumbents]
 
-        new_incumbents = self._calculate_pareto_front(self.runhistory,
-                                                      incumbents,
-                                                      all_incumbent_isb_keys)
+        new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
 
         verdict = config in new_incumbents
-        self._register_comparison(config=config,
-                                  incumbent=self.get_incumbents(),
-                                  isb_keys=len(config_isb_keys),
-                                  costs=self._get_costs_comp(config),
-                                  prediction=verdict,
-                                  name="ClosestInc")
+        self._register_comparison(
+            config=config,
+            incumbent=self.get_incumbents(),
+            isb_keys=len(config_isb_keys),
+            costs=self._get_costs_comp(config),
+            prediction=verdict,
+            name="ClosestInc",
+        )
 
         return config in new_incumbents
 
@@ -240,13 +231,11 @@ class RandomComparison(DebugComparison):
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(
-            compare=True)
+        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
-            logger.debug(
-                "Config ran on other isb_keys than the incumbents. Should not happen.")
+            logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
             return True
 
         # Ensure that the config is not part of the incumbent
@@ -255,12 +244,14 @@ class RandomComparison(DebugComparison):
 
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
         verdict = self._rng.random() >= 0.5
-        self._register_comparison(config=config,
-                                  incumbent=self.get_incumbents(),
-                                  isb_keys=len(config_isb_keys),
-                                  costs=self._get_costs_comp(config),
-                                  prediction=verdict,
-                                  name="Random")
+        self._register_comparison(
+            config=config,
+            incumbent=self.get_incumbents(),
+            isb_keys=len(config_isb_keys),
+            costs=self._get_costs_comp(config),
+            prediction=verdict,
+            name="Random",
+        )
         return verdict
 
 
@@ -279,13 +270,11 @@ class NoComparison(DebugComparison):
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(
-            compare=True)
+        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
-            logger.debug(
-                "Config ran on other isb_keys than the incumbents. Should not happen.")
+            logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
             return True
 
         # Ensure that the config is not part of the incumbent
@@ -294,17 +283,18 @@ class NoComparison(DebugComparison):
 
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
         verdict = True
-        self._register_comparison(config=config,
-                                  incumbent=self.get_incumbents(),
-                                  isb_keys=len(config_isb_keys),
-                                  costs=self._get_costs_comp(config),
-                                  prediction=verdict,
-                                  name="NoComp")
+        self._register_comparison(
+            config=config,
+            incumbent=self.get_incumbents(),
+            isb_keys=len(config_isb_keys),
+            costs=self._get_costs_comp(config),
+            prediction=verdict,
+            name="NoComp",
+        )
         return verdict
 
 
 class BootstrapComparison(DebugComparison):
-
     def _intermediate_comparison(self, config: Configuration) -> bool:
         """Compares the configuration by generating bootstraps
 
@@ -319,13 +309,11 @@ class BootstrapComparison(DebugComparison):
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(
-            compare=True)
+        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
-            logger.debug(
-                "Config ran on other isb_keys than the incumbents. Should not happen.")
+            logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
             return True
 
         # Ensure that the config is not part of the incumbent
@@ -337,41 +325,41 @@ class BootstrapComparison(DebugComparison):
 
         n_samples = 1000
         if len(config_isb_keys) < 7:  # When there are only a limited number of trials available we run all combinations
-            samples = list(itertools.combinations_with_replacement(list(range(len(config_isb_keys))), r=len(config_isb_keys)))
+            samples = list(
+                itertools.combinations_with_replacement(list(range(len(config_isb_keys))), r=len(config_isb_keys))
+            )
             n_samples = len(samples)
         else:
-            samples = np.random.choice(len(config_isb_keys),
-                                       (n_samples, len(config_isb_keys)),
-                                       replace=True)
+            samples = np.random.choice(len(config_isb_keys), (n_samples, len(config_isb_keys)), replace=True)
 
         verdicts = np.zeros(n_samples, dtype=bool)
 
-
         for sid, sample in enumerate(samples):
             sample_isb_keys = [config_isb_keys[i] for i in sample]
-            all_incumbent_isb_keys = [sample_isb_keys]*len(incumbents)
-            new_incumbents = self._calculate_pareto_front(self.runhistory,
-                                                          incumbents,
-                                                          all_incumbent_isb_keys)
+            all_incumbent_isb_keys = [sample_isb_keys] * len(incumbents)
+            new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
 
             verdicts[sid] = config in new_incumbents
 
-        verdict = np.count_nonzero(verdicts) >= 0.5 * n_samples  # The config is in more than 50% of the times non-dominated
-        #P = np.count_nonzero(verdicts)/n_samples
-        #print(f"P = {np.count_nonzero(verdicts)}/{n_samples}={P:.2f}")
-        self._register_comparison(config=config,
-                                  incumbent=self.get_incumbents(),
-                                  isb_keys=len(config_isb_keys),
-                                  costs=self._get_costs_comp(config),
-                                  prediction=verdict,
-                                  name="Bootstrap",
-                                  probability=np.count_nonzero(verdicts)/n_samples,
-                                  n_samples=n_samples)
+        verdict = (
+            np.count_nonzero(verdicts) >= 0.5 * n_samples
+        )  # The config is in more than 50% of the times non-dominated
+        # P = np.count_nonzero(verdicts)/n_samples
+        # print(f"P = {np.count_nonzero(verdicts)}/{n_samples}={P:.2f}")
+        self._register_comparison(
+            config=config,
+            incumbent=self.get_incumbents(),
+            isb_keys=len(config_isb_keys),
+            costs=self._get_costs_comp(config),
+            prediction=verdict,
+            name="Bootstrap",
+            probability=np.count_nonzero(verdicts) / n_samples,
+            n_samples=n_samples,
+        )
         return verdict
 
 
 class BootstrapSingleComparison(DebugComparison):
-
     def _intermediate_comparison(self, config: Configuration) -> bool:
         """Compares the configuration by generating bootstraps
 
@@ -387,13 +375,11 @@ class BootstrapSingleComparison(DebugComparison):
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(
-            compare=True)
+        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
-            logger.debug(
-                "Config ran on other isb_keys than the incumbents. Should not happen.")
+            logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
             return True
 
         # Ensure that the config is not part of the incumbent
@@ -405,41 +391,41 @@ class BootstrapSingleComparison(DebugComparison):
 
         n_samples = 1000
         if len(config_isb_keys) < 7:  # When there are only a limited number of trials available we run all combinations
-            samples = list(itertools.combinations_with_replacement(list(range(len(config_isb_keys))), r=len(config_isb_keys)))
+            samples = list(
+                itertools.combinations_with_replacement(list(range(len(config_isb_keys))), r=len(config_isb_keys))
+            )
             n_samples = len(samples)
         else:
-            samples = np.random.choice(len(config_isb_keys),
-                                       (n_samples, len(config_isb_keys)),
-                                       replace=True)
+            samples = np.random.choice(len(config_isb_keys), (n_samples, len(config_isb_keys)), replace=True)
 
         verdicts = np.zeros(n_samples, dtype=bool)
 
-
         for sid, sample in enumerate(samples):
             sample_isb_keys = [config_isb_keys[i] for i in sample]
-            all_incumbent_isb_keys = [sample_isb_keys]*len(incumbents)
-            new_incumbents = self._calculate_pareto_front(self.runhistory,
-                                                          incumbents,
-                                                          all_incumbent_isb_keys)
+            all_incumbent_isb_keys = [sample_isb_keys] * len(incumbents)
+            new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
 
             verdicts[sid] = config in new_incumbents
 
-        verdict = np.count_nonzero(verdicts) >= 0.5 * n_samples  # The config is in more than 50% of the times non-dominated
-        #P = np.count_nonzero(verdicts)/n_samples
-        #print(f"P = {np.count_nonzero(verdicts)}/{n_samples}={P:.2f}")
-        self._register_comparison(config=config,
-                                  incumbent=self.get_incumbents(),
-                                  isb_keys=len(config_isb_keys),
-                                  costs=self._get_costs_comp(config),
-                                  prediction=verdict,
-                                  name="BootstrapSingle",
-                                  probability=np.count_nonzero(verdicts)/n_samples,
-                                  n_samples=n_samples)
+        verdict = (
+            np.count_nonzero(verdicts) >= 0.5 * n_samples
+        )  # The config is in more than 50% of the times non-dominated
+        # P = np.count_nonzero(verdicts)/n_samples
+        # print(f"P = {np.count_nonzero(verdicts)}/{n_samples}={P:.2f}")
+        self._register_comparison(
+            config=config,
+            incumbent=self.get_incumbents(),
+            isb_keys=len(config_isb_keys),
+            costs=self._get_costs_comp(config),
+            prediction=verdict,
+            name="BootstrapSingle",
+            probability=np.count_nonzero(verdicts) / n_samples,
+            n_samples=n_samples,
+        )
         return verdict
 
 
 class BootstrapClosestComparison(DebugComparison):
-
     def _intermediate_comparison(self, config: Configuration) -> bool:
         """Compares the configuration by generating bootstraps
 
@@ -455,13 +441,11 @@ class BootstrapClosestComparison(DebugComparison):
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(
-            compare=True)
+        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
-            logger.debug(
-                "Config ran on other isb_keys than the incumbents. Should not happen.")
+            logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
             return True
 
         # Ensure that the config is not part of the incumbent
@@ -476,36 +460,37 @@ class BootstrapClosestComparison(DebugComparison):
 
         n_samples = 1000
         if len(config_isb_keys) < 7:  # When there are only a limited number of trials available we run all combinations
-            samples = list(itertools.combinations_with_replacement(list(range(len(config_isb_keys))), r=len(config_isb_keys)))
+            samples = list(
+                itertools.combinations_with_replacement(list(range(len(config_isb_keys))), r=len(config_isb_keys))
+            )
             n_samples = len(samples)
         else:
-            samples = np.random.choice(len(config_isb_keys),
-                                       (n_samples, len(config_isb_keys)),
-                                       replace=True)
+            samples = np.random.choice(len(config_isb_keys), (n_samples, len(config_isb_keys)), replace=True)
 
         verdicts = np.zeros(n_samples, dtype=bool)
 
-
         for sid, sample in enumerate(samples):
             sample_isb_keys = [config_isb_keys[i] for i in sample]
-            all_incumbent_isb_keys = [sample_isb_keys]*len(incumbents)
-            new_incumbents = self._calculate_pareto_front(self.runhistory,
-                                                          incumbents,
-                                                          all_incumbent_isb_keys)
+            all_incumbent_isb_keys = [sample_isb_keys] * len(incumbents)
+            new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
 
             verdicts[sid] = config in new_incumbents
 
-        verdict = np.count_nonzero(verdicts) >= 0.5 * n_samples  # The config is in more than 50% of the times non-dominated
-        #P = np.count_nonzero(verdicts)/n_samples
-        #print(f"P = {np.count_nonzero(verdicts)}/{n_samples}={P:.2f}")
-        self._register_comparison(config=config,
-                                  incumbent=self.get_incumbents(),
-                                  isb_keys=len(config_isb_keys),
-                                  costs=self._get_costs_comp(config),
-                                  prediction=verdict,
-                                  name="BootstrapClosest",
-                                  probability=np.count_nonzero(verdicts)/n_samples,
-                                  n_samples=n_samples)
+        verdict = (
+            np.count_nonzero(verdicts) >= 0.5 * n_samples
+        )  # The config is in more than 50% of the times non-dominated
+        # P = np.count_nonzero(verdicts)/n_samples
+        # print(f"P = {np.count_nonzero(verdicts)}/{n_samples}={P:.2f}")
+        self._register_comparison(
+            config=config,
+            incumbent=self.get_incumbents(),
+            isb_keys=len(config_isb_keys),
+            costs=self._get_costs_comp(config),
+            prediction=verdict,
+            name="BootstrapClosest",
+            probability=np.count_nonzero(verdicts) / n_samples,
+            n_samples=n_samples,
+        )
         return verdict
 
 
@@ -542,13 +527,11 @@ class SRaceComparison(DebugComparison):
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(
-            compare=True)
+        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
-            logger.debug(
-                "Config ran on other isb_keys than the incumbents. Should not happen.")
+            logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
             return True
 
         # Ensure that the config is not part of the incumbent
@@ -559,9 +542,13 @@ class SRaceComparison(DebugComparison):
         chall_perf = self.runhistory._cost(config, config_isb_keys)
         for incumbent in incumbents:
             inc_perf = self.runhistory._cost(incumbent, config_isb_keys)
-            n_ij = sum([dominates(*x) for x in zip(chall_perf, inc_perf)])  # Number of times the incumbent candidate dominates the challenger
-            n_ji = sum([dominates(*x) for x in zip(inc_perf, chall_perf)])  # Number of times the challenger dominates the incumbent candidate
-            p_value = 1 - binom.cdf(n_ij - 1, n_ij + n_ji, .5)
+            n_ij = sum(
+                [dominates(*x) for x in zip(chall_perf, inc_perf)]
+            )  # Number of times the incumbent candidate dominates the challenger
+            n_ji = sum(
+                [dominates(*x) for x in zip(inc_perf, chall_perf)]
+            )  # Number of times the challenger dominates the incumbent candidate
+            p_value = 1 - binom.cdf(n_ij - 1, n_ij + n_ji, 0.5)
             p_values.append(p_value)
 
         pvalues_order = np.argsort(p_values)
@@ -578,12 +565,14 @@ class SRaceComparison(DebugComparison):
                 break
 
         verdict = np.count_nonzero(reject) != 0
-        #P = np.count_nonzero(verdicts)/n_samples
-        #print(f"P = {np.count_nonzero(verdicts)}/{n_samples}={P:.2f}")
-        self._register_comparison(config=config,
-                                  incumbent=self.get_incumbents(),
-                                  isb_keys=len(config_isb_keys),
-                                  costs={conf: cost for conf, cost in zip(incumbents, costs)},
-                                  prediction=verdict,
-                                  name="S-Race")
+        # P = np.count_nonzero(verdicts)/n_samples
+        # print(f"P = {np.count_nonzero(verdicts)}/{n_samples}={P:.2f}")
+        self._register_comparison(
+            config=config,
+            incumbent=self.get_incumbents(),
+            isb_keys=len(config_isb_keys),
+            costs={conf: cost for conf, cost in zip(incumbents, costs)},
+            prediction=verdict,
+            name="S-Race",
+        )
         return verdict

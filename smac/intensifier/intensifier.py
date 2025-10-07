@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import time
 from typing import Any, Iterator
+
+import time
 
 from ConfigSpace import Configuration
 
@@ -120,8 +121,10 @@ class Intensifier(AbstractIntensifier):
 
         is_keys = self.get_instance_seed_keys_of_interest()
         if len(is_keys) < self._min_config_calls:
-            logger.debug(f"There are less instance, seed pairs of interest than the requested minimum trails per "
-                         f"configuration. Changing min_config_calls from {self._min_config_calls} to {len(is_keys)}")
+            logger.debug(
+                f"There are less instance, seed pairs of interest than the requested minimum trails per "
+                f"configuration. Changing min_config_calls from {self._min_config_calls} to {len(is_keys)}"
+            )
             self._min_config_calls = len(is_keys)
 
         # What if there are already trials in the runhistory? Should we queue them up?
@@ -282,13 +285,14 @@ class Intensifier(AbstractIntensifier):
                     if len(incumbent_isb_keys) > 0:
                         isk_keys = incumbent_isb_keys
 
-
                     trials = self._get_next_trials(config, N=N, from_keys=isk_keys)
                     if len(trials) == 0:
                         # We remove the config and do not add it back to the queue.
                         self._queue.remove((config, N))
-                        logger.debug(f"--- No trails to evaluate for config {config_hash}. "
-                                     f"Removed config {config_hash} with N={N} from queue.")
+                        logger.debug(
+                            f"--- No trails to evaluate for config {config_hash}. "
+                            f"Removed config {config_hash} with N={N} from queue."
+                        )
                     else:
                         logger.debug(f"--- Yielding {len(trials)} trials to evaluate config {config_hash}...")
                         for trial in trials:
@@ -304,7 +308,6 @@ class Intensifier(AbstractIntensifier):
                         # Now we have to remove the config
                         self._queue.remove((config, N))
                         logger.debug(f"--- Removed config {config_hash} with N={N} from queue.")
-
 
                         # Finally, we add the same config to the queue with a higher N
                         # If the config was rejected by the runhistory, then it's been removed in the next iteration

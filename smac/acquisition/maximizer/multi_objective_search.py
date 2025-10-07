@@ -5,15 +5,16 @@ from typing import Any
 import itertools
 import time
 
-from pygmo import fast_non_dominated_sorting
-
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.exceptions import ForbiddenValueError
+from pygmo import fast_non_dominated_sorting
 
 from smac.acquisition.function import AbstractAcquisitionFunction
+from smac.acquisition.maximizer.local_and_random_search import (
+    LocalAndSortedRandomSearch,
+)
 from smac.acquisition.maximizer.local_search import LocalSearch
-from smac.acquisition.maximizer.local_and_random_search import LocalAndSortedRandomSearch
 from smac.utils.configspace import (
     convert_configurations_to_array,
     get_one_exchange_neighbourhood,
@@ -26,7 +27,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class MOLocalSearch(LocalSearch):    
+class MOLocalSearch(LocalSearch):
     def _get_initial_points(
         self,
         previous_configs: list[Configuration],
@@ -34,7 +35,7 @@ class MOLocalSearch(LocalSearch):
         additional_start_points: list[tuple[float, Configuration]] | None,
     ) -> list[Configuration]:
         """Get initial points to start search from.
-        
+
         If we already have a population, add those to the initial points.
 
         Parameters
@@ -50,8 +51,10 @@ class MOLocalSearch(LocalSearch):
         -------
         list[Configuration]
             A list of initial points/configurations.
-        """        
-        init_points = super()._get_initial_points(previous_configs=previous_configs, n_points=n_points, additional_start_points=additional_start_points)
+        """
+        init_points = super()._get_initial_points(
+            previous_configs=previous_configs, n_points=n_points, additional_start_points=additional_start_points
+        )
 
         # Add population to Local search
         # TODO where is population saved? update accordingly
@@ -131,5 +134,5 @@ class MOLocalAndSortedRandomSearch(LocalAndSortedRandomSearch):
             challengers=challengers,
             max_steps=max_steps,
             n_steps_plateau_walk=n_steps_plateau_walk,
-            seed=seed
+            seed=seed,
         )

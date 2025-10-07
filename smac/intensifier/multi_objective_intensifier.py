@@ -17,6 +17,10 @@ from ConfigSpace import Configuration
 import smac
 from smac.callback import Callback
 from smac.constants import MAXINT
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.intensifier.hyperband import Hyperband
+from smac.intensifier.intensifier import Intensifier
+from smac.intensifier.successive_halving import SuccessiveHalving
 from smac.main.config_selector import ConfigSelector
 from smac.runhistory import TrialInfo
 from smac.runhistory.dataclasses import (
@@ -30,11 +34,6 @@ from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash, print_config_changes
 from smac.utils.logging import get_logger
 from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
-from smac.intensifier.abstract_intensifier import AbstractIntensifier
-from smac.intensifier.hyperband import Hyperband
-from smac.intensifier.successive_halving import SuccessiveHalving
-from smac.intensifier.intensifier import Intensifier
-
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -42,6 +41,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 # TODO add minimum population size?
+
 
 class MOIntensifierMixin(object):
     def _calculate_pareto_front(
@@ -60,8 +60,10 @@ class MOIntensifierMixin(object):
     #     # TODO adjust
     #     raise NotImplementedError
 
-    def _cut_incumbents(self, incumbent_ids: list[int], all_incumbent_isb_keys: list[list[InstanceSeedBudgetKey]]) -> list[int]:
-        #TODO JG sort by hypervolume
+    def _cut_incumbents(
+        self, incumbent_ids: list[int], all_incumbent_isb_keys: list[list[InstanceSeedBudgetKey]]
+    ) -> list[int]:
+        # TODO JG sort by hypervolume
         new_incumbents = sort_by_crowding_distance(self.runhistory, incumbent_ids, all_incumbent_isb_keys)
         new_incumbents = new_incumbents[: self._max_incumbents]
 
@@ -81,11 +83,14 @@ class MOIntensifierMixin(object):
         """
         return self.runhistory.get_instance_seed_budget_keys(config, highest_observed_budget_only=True)
 
+
 class MOIntensifier(MOIntensifierMixin, Intensifier):
     pass
 
+
 class MOSuccessiveHalving(MOIntensifierMixin, SuccessiveHalving):
     pass
+
 
 class MOHyperband(MOIntensifierMixin, Hyperband):
     pass

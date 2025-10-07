@@ -53,7 +53,7 @@ class MultiObjectiveModel(AbstractModel):
             seed=seed,
         )
 
-        self._n_features = self._models[0]._n_features #TODO JG make more elegant
+        self._n_features = self._models[0]._n_features  # TODO JG make more elegant
 
     @property
     def models(self) -> list[AbstractModel]:

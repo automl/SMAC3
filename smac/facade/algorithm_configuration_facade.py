@@ -9,13 +9,13 @@ from smac.acquisition.maximizer.local_and_random_search import (
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensifier.intensifier import Intensifier
+from smac.intensifier.mixins import intermediate_decision, intermediate_update
 from smac.model.random_forest.random_forest import RandomForest
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
-from smac.intensifier.mixins import intermediate_update, intermediate_decision
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -116,9 +116,10 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         max_incumbents : int, defaults to 10
             How many incumbents to keep track of in the case of multi-objective.
         """
-        class NewIntensifier(intermediate_decision.NewCostDominatesOldCost,
-                             intermediate_update.ClosestIncumbentComparison,
-                             Intensifier):
+
+        class NewIntensifier(
+            intermediate_decision.NewCostDominatesOldCost, intermediate_update.ClosestIncumbentComparison, Intensifier
+        ):
             pass
 
         return NewIntensifier(

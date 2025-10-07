@@ -18,7 +18,6 @@ logger = get_logger(__name__)
 
 
 class RunHistoryEncoder(AbstractRunHistoryEncoder):
-
     def _build_matrix(
         self,
         trials: Mapping[TrialKey, TrialValue],

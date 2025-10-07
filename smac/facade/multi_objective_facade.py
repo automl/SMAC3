@@ -2,22 +2,28 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.acquisition.function.expected_improvement import EI
 from smac.acquisition.function.expected_hypervolume import PHVI
+from smac.acquisition.function.expected_improvement import EI
+from smac.acquisition.maximizer.multi_objective_search import (
+    MOLocalAndSortedRandomSearch,
+)
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensifier.intensifier import Intensifier
+from smac.intensifier.mixins import (
+    intermediate_decision,
+    intermediate_update,
+    update_incumbent,
+)
 from smac.intensifier.multi_objective_intensifier import MOIntensifier
-from smac.intensifier.mixins import intermediate_update, intermediate_decision, update_incumbent
-from smac.model.random_forest.random_forest import RandomForest
 from smac.model.multi_objective_model import MultiObjectiveModel
+from smac.model.random_forest.random_forest import RandomForest
 from smac.multi_objective.aggregation_strategy import NoAggregationStrategy
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.runhistory.encoder.log_encoder import RunHistoryLogEncoder
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
-from smac.acquisition.maximizer.multi_objective_search import MOLocalAndSortedRandomSearch
 
 __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
@@ -81,10 +87,10 @@ class MultiObjectiveFacade(AbstractFacade):
 
     @staticmethod
     def get_intensifier(  # type: ignore
-            scenario: Scenario,
-            *,
-            max_config_calls: int = 2000,
-            max_incumbents: int = 10,
+        scenario: Scenario,
+        *,
+        max_config_calls: int = 2000,
+        max_incumbents: int = 10,
     ) -> Intensifier:
         """Returns ``MOIntensifier`` as intensifier. Uses the default configuration for ``race_against``.
 
@@ -97,9 +103,10 @@ class MultiObjectiveFacade(AbstractFacade):
         max_incumbents : int, defaults to 10
             How many incumbents to keep track of in the case of multi-objective.
         """
-        class NewIntensifier(intermediate_decision.NewCostDominatesOldCost,
-                             intermediate_update.ClosestIncumbentComparison,
-                             MOIntensifier):
+
+        class NewIntensifier(
+            intermediate_decision.NewCostDominatesOldCost, intermediate_update.ClosestIncumbentComparison, MOIntensifier
+        ):
             pass
 
         return NewIntensifier(

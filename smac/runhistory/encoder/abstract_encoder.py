@@ -305,4 +305,3 @@ class AbstractRunHistoryEncoder:
         transformed_values : np.ndarray
         """
         raise NotImplementedError
-

@@ -267,7 +267,6 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         sort_objectives = [costs.flatten()]
         return sort_objectives
 
-
     @staticmethod
     def _unique_list(elements: list | itertools.chain) -> list:
         """
@@ -405,7 +404,9 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     obtain_n[i] = len(neighbors_for_i)
                     neighbors.extend(neighbors_for_i)
 
-            logger.debug(f"Iteration {num_iters} with {np.count_nonzero(active)} active searches and {len(neighbors)} aqcuisition function calls.")
+            logger.debug(
+                f"Iteration {num_iters} with {np.count_nonzero(active)} active searches and {len(neighbors)} aqcuisition function calls."
+            )
             if len(neighbors) != 0:
                 start_time = time.time()
                 acq_val = self._acquisition_function(neighbors)
@@ -493,8 +494,8 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     )
 
         logger.debug(
-            f"Local searches took {local_search_steps} steps and looked at {neighbors_looked_at} configurations." 
-            f"Computing the acquisition function for each search took {np.sum(times_per_iteration)/num_candidates}" 
+            f"Local searches took {local_search_steps} steps and looked at {neighbors_looked_at} configurations."
+            f"Computing the acquisition function for each search took {np.sum(times_per_iteration)/num_candidates}"
             f"(prev {np.mean(times_per_iteration)}) seconds on average and each acquisition function call took {times_per_iteration/np.sum(neighbors_looked_at)} seconds on average."
             f"In total the whole procedure took {np.sum(times_per_iteration)} seconds to look at {np.sum(neighbors_looked_at)} configurations."
         )
