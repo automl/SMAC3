@@ -91,6 +91,7 @@ def sort_by_crowding_distance(
     runhistory: RunHistory,
     configs: list[Configuration],
     config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]],
+    normalize: bool = False,
 ) -> list[Configuration]:
     """Sorts the passed configurations by their crowding distance. Taken from
     https://github.com/anyoptimization/pymoo/blob/20abef1ade71915352217400c11ece4c2f35163e/pymoo/algorithms/nsga2.py
@@ -104,13 +105,14 @@ def sort_by_crowding_distance(
         The configurations which should be sorted.
     config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
         The instance-seed budget keys for the configurations which should be sorted.
-
+    normalize: bool
+        If the costs should be normalized
     Returns
     -------
     sorted_list : list[Configuration]
         Configurations sorted by crowding distance.
     """
-    F = _get_costs(runhistory, configs, config_instance_seed_budget_keys, normalize=True)
+    F = _get_costs(runhistory, configs, config_instance_seed_budget_keys, normalize=normalize)
     infinity = 1e14
 
     n_points = F.shape[0]

@@ -44,7 +44,9 @@ class MOIntensifierMixin(AbstractIntensifier):
         self, incumbent_ids: list[int], all_incumbent_isb_keys: list[list[InstanceSeedBudgetKey]]
     ) -> list[int]:
         # TODO JG sort by hypervolume
-        new_incumbents = sort_by_crowding_distance(self.runhistory, incumbent_ids, all_incumbent_isb_keys)
+        new_incumbents = sort_by_crowding_distance(
+            self.runhistory, incumbent_ids, all_incumbent_isb_keys, normalize=True
+        )
         new_incumbents = new_incumbents[: self._max_incumbents]
 
         logger.info(

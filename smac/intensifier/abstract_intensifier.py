@@ -618,8 +618,10 @@ class AbstractIntensifier:
         new_incumbent_ids = [rh.get_config_id(c) for c in new_incumbents]
 
         # Update trajectory
-        if previous_incumbents == new_incumbents:  # Only happens with incumbent config
-            self._remove_rejected_config(config)
+        if previous_incumbents == new_incumbents:  # Only happens with incumbent config #TODO JG check why this is
+            self._remove_rejected_config(config)  # Remove the incumbent from the rejected config list
+
+            # TODO JG ?remove the config it is the incumbent. otherwise add the config.? However if a config is rejected, it should be possible to requeue a configuration.
             return
         elif len(previous_incumbents) == len(new_incumbents):
             # In this case, we have to determine which config replaced which incumbent and reject it
@@ -804,7 +806,8 @@ class AbstractIntensifier:
     #     new_incumbent_ids = [rh.get_config_id(c) for c in new_incumbents]
     #
     #     #TODO JG: merge 06-10-2025 updated
-    #             if len(previous_incumbents) == len(new_incumbents):
+
+    #         if len(previous_incumbents) == len(new_incumbents):
     #             if previous_incumbents == new_incumbents:
     #                 # No changes in the incumbents, we need this clause because we can't use set difference then
     #                 if config_id in new_incumbent_ids:
@@ -859,7 +862,9 @@ class AbstractIntensifier:
     def _cut_incumbents(
         self, incumbent_ids: list[int], all_incumbent_isb_keys: list[list[InstanceSeedBudgetKey]]
     ) -> list[int]:
-        new_incumbents = sort_by_crowding_distance(self.runhistory, incumbent_ids, all_incumbent_isb_keys)
+        new_incumbents = sort_by_crowding_distance(
+            self.runhistory, incumbent_ids, all_incumbent_isb_keys, normalize=True
+        )
         new_incumbents = new_incumbents[: self._max_incumbents]
 
         # or random?
