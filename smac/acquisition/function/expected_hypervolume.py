@@ -266,6 +266,7 @@ class PHVI(AbstractHVI):
 
     def _update(self, **kwargs: Any) -> None:
         super(PHVI, self)._update(**kwargs)
+        assert self.model is not None, "Did you update the AF with the model?"
         incumbents: list[Configuration] = kwargs.get("incumbents", None)
 
         # Update PHVI
@@ -282,7 +283,7 @@ class PHVI(AbstractHVI):
 
         logger.info(f"New population HV: {population_hv}")
 
-    def get_hypervolume(self, points: np.ndarray = None, reference_point: list = None) -> float:
+    def get_hypervolume(self, points: np.ndarray = None, reference_point: list | None = None) -> float:
         """
         Compute the hypervolume
 
@@ -316,6 +317,8 @@ class PHVI(AbstractHVI):
         np.ndarray(N,1)
             Expected HV Improvement of X
         """
+        assert self.model is not None, "Did you update the AF with the model?"
+
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 

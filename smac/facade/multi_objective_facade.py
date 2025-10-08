@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.acquisition.function.expected_hypervolume import EHVI, PHVI
+from smac.acquisition.function.expected_hypervolume import PHVI, AbstractHVI
 from smac.acquisition.maximizer.multi_objective_search import (
     MOLocalAndSortedRandomSearch,
 )
@@ -38,7 +38,7 @@ class MultiObjectiveFacade(AbstractFacade):
         max_depth: int = 20,
         bootstrapping: bool = True,
         pca_components: int = 4,
-    ) -> RandomForest:
+    ) -> MultiObjectiveModel:
         """Returns a random forest as surrogate model.
 
         Parameters
@@ -76,7 +76,7 @@ class MultiObjectiveFacade(AbstractFacade):
                 )
             )
 
-        return MultiObjectiveModel(models=models, objectives=scenario.objectives)
+        return MultiObjectiveModel(models=models, objectives=scenario.objectives)  # type: ignore[arg-type]
 
     @staticmethod
     def get_intensifier(  # type: ignore
@@ -114,7 +114,7 @@ class MultiObjectiveFacade(AbstractFacade):
         scenario: Scenario,
         *,
         xi: float = 0.0,
-    ) -> EHVI:
+    ) -> AbstractHVI:
         """Returns an Expected Improvement acquisition function.
 
         Parameters

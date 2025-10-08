@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+from typing import Any
+
 import itertools
 
 import numpy as np
 from ConfigSpace import Configuration
 from scipy.stats import binom
-from typing import Any
 
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.utils.configspace import get_config_hash
@@ -16,6 +17,7 @@ __copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
+
 
 class DebugComparison(AbstractIntensifier):
     def _register_comparison(self, **kwargs: Any) -> None:
