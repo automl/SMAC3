@@ -1,6 +1,5 @@
-"""
-Support Vector Machine with Cross-Validation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Support Vector Machine with Cross-Validation
+# Flags: doc-Runnable
 
 An example of optimizing a simple support vector machine on the IRIS dataset. We use the
 hyperparameter optimization facade, which uses a random forest as its surrogate model. It is able to
@@ -16,7 +15,7 @@ from sklearn.model_selection import cross_val_score
 
 from smac import HyperparameterOptimizationFacade, Scenario
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -46,16 +45,16 @@ class SVM:
         use_gamma_value = InCondition(child=gamma_value, parent=gamma, values=["value"])
 
         # Add hyperparameters and conditions to our configspace
-        cs.add_hyperparameters([kernel, C, shrinking, degree, coef, gamma, gamma_value])
-        cs.add_conditions([use_degree, use_coef, use_gamma, use_gamma_value])
+        cs.add([kernel, C, shrinking, degree, coef, gamma, gamma_value])
+        cs.add([use_degree, use_coef, use_gamma, use_gamma_value])
 
         return cs
 
     def train(self, config: Configuration, seed: int = 0) -> float:
         """Creates a SVM based on a configuration and evaluates it on the
         iris-dataset using cross-validation."""
-        config_dict = config.get_dictionary()
-        if "gamma" in config:
+        config_dict = dict(config)
+        if "gamma" in config_dict:
             config_dict["gamma"] = config_dict["gamma_value"] if config_dict["gamma"] == "value" else "auto"
             config_dict.pop("gamma_value", None)
 

@@ -11,7 +11,7 @@ import sklearn.gaussian_process.kernels as kernels
 from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 from smac.utils.configspace import get_conditional_hyperparameters
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -250,12 +250,12 @@ class AbstractKernel:
 
     def _set_active_dims(self, operate_on: np.ndarray | None = None) -> None:
         """Sets dimensions this kernel should work on."""
-        if operate_on is not None and type(operate_on) in (list, np.ndarray):
+        if operate_on is not None and isinstance(operate_on, (list, np.ndarray)):
             if not isinstance(operate_on, np.ndarray):
-                raise TypeError("The argument `operate_on` needs to be of type np.ndarray but is %s" % type(operate_on))
+                raise TypeError(f"The argument `operate_on` needs to be of type np.ndarray but is {type(operate_on)}")
 
-            if operate_on.dtype != int:
-                raise ValueError("The dtype of argument `operate_on` needs to be int, but is %s" % operate_on.dtype)
+            if not np.issubdtype(operate_on.dtype, np.integer):
+                raise ValueError(f"The dtype of `operate_on` needs to be np.integer, but is {operate_on.dtype}")
 
             self.operate_on = operate_on
             self._len_active = len(operate_on)

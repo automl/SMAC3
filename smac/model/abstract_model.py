@@ -16,7 +16,7 @@ from smac.constants import VERY_SMALL_NUMBER
 from smac.utils.configspace import get_types
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -68,7 +68,7 @@ class AbstractModel:
                         raise RuntimeError("Instances must have the same number of features.")
 
         self._n_features = n_features
-        self._n_hps = len(self._configspace.get_hyperparameters())
+        self._n_hps = len(list(self._configspace.values()))
 
         self._pca = PCA(n_components=self._pca_components)
         self._scaler = MinMaxScaler()

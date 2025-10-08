@@ -10,7 +10,7 @@ from smac.acquisition.function.abstract_acquisition_function import (
 )
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -21,7 +21,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 
     Example for LCB (UCB adds the variance term instead of subtracting it):
 
-    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
+    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [[SKKS10][SKKS10]]
 
     with
 
@@ -127,6 +127,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
             )
         if self._num_data is None:
             raise ValueError(
+                "No current number of data points specified. Call `update` to inform the acquisition function."
                 "No current number of data points specified. Call `update` to inform the acquisition function."
             )
 

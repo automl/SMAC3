@@ -149,6 +149,5 @@ src
 .idea
 .vscode
 
-tmp
-hydra-*
-wandb
+projects
+_api

@@ -8,7 +8,7 @@ from ConfigSpace import Configuration
 
 from smac.runhistory.enumerations import StatusType
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -98,6 +98,8 @@ class TrialValue:
     ----------
     cost : float | list[float]
     time : float, defaults to 0.0
+    cpu_time : float, defaults to 0.0
+        Describes the amount of time the trial spend on hardware.
     status : StatusType, defaults to StatusType.SUCCESS
     starttime : float, defaults to 0.0
     endtime : float, defaults to 0.0
@@ -106,6 +108,7 @@ class TrialValue:
 
     cost: float | list[float]
     time: float = 0.0
+    cpu_time: float = 0.0
     status: StatusType = StatusType.SUCCESS
     starttime: float = 0.0
     endtime: float = 0.0

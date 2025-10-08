@@ -192,7 +192,7 @@ def test_intensifier_with_filled_runhistory(make_scenario, configspace_small, ma
     intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
     config = configspace_small.get_default_configuration()
-    config2 = configspace_small.sample_configuration(1)
+    config2 = configspace_small.sample_configuration()
 
     # Add some entries to the runhistory
     runhistory.add(

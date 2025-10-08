@@ -18,7 +18,7 @@ def configspace_small() -> ConfigurationSpace:
     c = Categorical("c", ["cat", "dog", "mouse"], default="cat")
 
     # Add all hyperparameters at once:
-    cs.add_hyperparameters([a, b, c])
+    cs.add([a, b, c])
 
     return cs
 
@@ -36,7 +36,7 @@ def configspace_large() -> ConfigurationSpace:
     learning_rate_init = Float("learning_rate_init", (0.0001, 1.0), default=0.001, log=True)
 
     # Add all hyperparameters at once:
-    cs.add_hyperparameters(
+    cs.add(
         [
             n_layer,
             n_neurons,
@@ -57,6 +57,6 @@ def configspace_large() -> ConfigurationSpace:
     use_batch_size = InCondition(child=batch_size, parent=solver, values=["sgd", "adam"])
 
     # We can also add multiple conditions on hyperparameters at once:
-    cs.add_conditions([use_lr, use_batch_size, use_lr_init])
+    cs.add([use_lr, use_batch_size, use_lr_init])
 
     return cs

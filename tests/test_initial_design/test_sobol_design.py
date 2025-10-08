@@ -3,7 +3,7 @@ from ConfigSpace import ConfigurationSpace, Float
 
 from smac.initial_design.sobol_design import SobolInitialDesign
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -24,7 +24,7 @@ def test_sobol_design(make_scenario, configspace_large):
 def test_max_hyperparameters(make_scenario):
     cs = ConfigurationSpace()
     hyperparameters = [Float("x%d" % (i + 1), (0, 1)) for i in range(21202)]
-    cs.add_hyperparameters(hyperparameters)
+    cs.add(hyperparameters)
 
     scenario = make_scenario(cs)
 

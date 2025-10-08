@@ -24,8 +24,9 @@ from smac.runner.dask_runner import DaskParallelRunner
 from smac.scenario import Scenario
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
+from smac.utils.numpyencoder import NumpyEncoder
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -39,8 +40,10 @@ class SMBO:
     ----------
     scenario : Scenario
         The scenario object, holding all environmental information.
-    runner : AbstractRunner
+    runner : AbstractRunner | None
         The runner (containing the target function) is called internally to judge a trial's performance.
+        In the rare case that ``optimize`` is never called and SMBO is operated with ``ask`` and ``tell`` only,
+        the runner is allowed to be None
     runhistory : Runhistory
         The runhistory stores all trials.
     intensifier : AbstractIntensifier
@@ -59,7 +62,7 @@ class SMBO:
     def __init__(
         self,
         scenario: Scenario,
-        runner: AbstractRunner,
+        runner: AbstractRunner | None,
         runhistory: RunHistory,
         intensifier: AbstractIntensifier,
         overwrite: bool = False,
@@ -80,6 +83,7 @@ class SMBO:
         # Stats variables
         self._start_time: float | None = None
         self._used_target_function_walltime = 0.0
+        self._used_target_function_cputime = 0.0
 
         # Set walltime used method for intensifier
         self._intensifier.used_walltime = lambda: self.used_walltime  # type: ignore
@@ -112,7 +116,7 @@ class SMBO:
     @property
     def remaining_cputime(self) -> float:
         """Subtracts the target function running budget with the used time."""
-        return self._scenario.cputime_limit - self._used_target_function_walltime
+        return self._scenario.cputime_limit - self._used_target_function_cputime
 
     @property
     def remaining_trials(self) -> int:
@@ -140,6 +144,11 @@ class SMBO:
     def used_target_function_walltime(self) -> float:
         """Returns how much walltime the target function spend so far."""
         return self._used_target_function_walltime
+
+    @property
+    def used_target_function_cputime(self) -> float:
+        """Returns how much time the target function spend on the hardware so far."""
+        return self._used_target_function_cputime
 
     def ask(self) -> TrialInfo:
         """Asks the intensifier for the next trial.
@@ -194,7 +203,7 @@ class SMBO:
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
             if continue_optimization is not None and not continue_optimization:
-                logger.info(f'Callback {callback} returned False (on_tell_start). Abort is requested.')
+                logger.info(f"Callback {callback} returned False (on_tell_start). Abort is requested.")
                 self._stop = True
 
         # Some sanity checks here
@@ -208,6 +217,7 @@ class SMBO:
             config=info.config,
             cost=value.cost,
             time=value.time,
+            cpu_time=value.cpu_time,
             status=value.status,
             instance=info.instance,
             seed=info.seed,
@@ -226,7 +236,7 @@ class SMBO:
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called.
             if continue_optimization is not None and not continue_optimization:
-                logger.info(f'Callback {callback} returned False (on_tell_end). Abort is requested.')
+                logger.info(f"Callback {callback} returned False (on_tell_end). Abort is requested.")
                 self._stop = True
 
         if save:
@@ -287,6 +297,11 @@ class SMBO:
             callback.on_start(self)
 
         dask_data_to_scatter = {}
+        if self._runner is None:
+            raise ValueError(
+                "Runner is not set in SMBO. Likely issue is that the target_function was not set in the Facade."
+            )
+
         if isinstance(self._runner, DaskParallelRunner) and data_to_scatter is not None:
             dask_data_to_scatter = dict(data_to_scatter=self._runner._client.scatter(data_to_scatter, broadcast=True))
         elif data_to_scatter is not None:
@@ -359,6 +374,7 @@ class SMBO:
     def reset(self) -> None:
         """Resets the internal variables of the optimizer, intensifier, and runhistory."""
         self._used_target_function_walltime = 0
+        self._used_target_function_cputime = 0
         self._finished = False
 
         # We also reset runhistory and intensifier here
@@ -402,6 +418,7 @@ class SMBO:
             self._intensifier.load(intensifier_fn)
 
             self._used_target_function_walltime = data["used_target_function_walltime"]
+            self._used_target_function_cputime = data["used_target_function_cputime"]
             self._finished = data["finished"]
             self._start_time = time.time() - data["used_walltime"]
 
@@ -413,13 +430,14 @@ class SMBO:
             data = {
                 "used_walltime": self.used_walltime,
                 "used_target_function_walltime": self.used_target_function_walltime,
+                "used_target_function_cputime": self.used_target_function_cputime,
                 "last_update": time.time(),
                 "finished": self._finished,
             }
 
             # Save optimization data
             with open(str(path / "optimization.json"), "w") as file:
-                json.dump(data, file, indent=2)
+                json.dump(data, file, indent=2, cls=NumpyEncoder)
 
             # And save runhistory and intensifier
             self._runhistory.save(path / "runhistory.json")
@@ -429,6 +447,12 @@ class SMBO:
         """Adds results from the runner to the runhistory. Although most of the functionality could be written
         in the tell method, we separate it here to make it accessible for the automatic optimization procedure only.
         """
+        if self._runner is None:
+            raise ValueError(
+                "Runner is not set in SMBO. Likely issue is that the target_function was not set "
+                "in the Facade. So we cannot query the runner for results."
+            )
+
         # Check if there is any result
         for trial_info, trial_value in self._runner.iter_results():
             # Add the results of the run to the run history
@@ -446,6 +470,7 @@ class SMBO:
 
             # Update SMAC stats
             self._used_target_function_walltime += float(trial_value.time)
+            self._used_target_function_cputime += float(trial_value.cpu_time)
 
             # Gracefully end optimization if termination cost is reached
             if self._scenario.termination_cost_threshold != np.inf:
@@ -510,7 +535,7 @@ class SMBO:
                         logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
                         self.reset()
                 else:
-                    # Here, we run into differen scenarios
+                    # Here, we run into different scenarios
                     diff = recursively_compare_dicts(
                         Scenario.make_serializable(self._scenario),
                         Scenario.make_serializable(old_scenario),
@@ -571,6 +596,11 @@ class SMBO:
             The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
             averaged.
         """
+        if self._runner is None:
+            raise ValueError(
+                "Runner is not set in SMBO. Likely issue is that the target_function was not set in the Facade."
+            )
+
         if seed is None:
             seed = self._scenario.seed
 
@@ -584,11 +614,8 @@ class SMBO:
             if trial.instance is not None:
                 kwargs["instance"] = trial.instance
 
-            # TODO: Use submit run for faster evaluation
-            # self._runner.submit_trial(trial_info=trial)
-            _, cost, _, _ = self._runner.run(config, **kwargs)
-            costs += [cost]
-
+            self._runner.submit_trial(trial_info=trial)
+        costs = [trial_value.cost for _, trial_value in self._runner.iter_results()]
         np_costs = np.array(costs)
         return np.mean(np_costs, axis=0)
 
@@ -604,5 +631,7 @@ class SMBO:
             f"--- Used wallclock time: {round(self.used_walltime)} / {self._scenario.walltime_limit} sec\n"
             "--- Used target function runtime: "
             f"{round(self.used_target_function_walltime, 2)} / {self._scenario.cputime_limit} sec\n"
+            "--- Used target function CPU time: "
+            f"{round(self.used_target_function_cputime, 2)} / {self._scenario.cputime_limit} sec\n"
             f"----------------------------------------------------"
         )

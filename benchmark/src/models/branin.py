@@ -20,7 +20,7 @@ class Branin(Model):
         x2 = Float("x2", (0, 15), default=0)
 
         # Add hyperparameters and conditions to our configspace
-        cs.add_hyperparameters([x1, x2])
+        cs.add([x1, x2])
 
         return cs
 

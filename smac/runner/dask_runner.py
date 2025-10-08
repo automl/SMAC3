@@ -13,7 +13,7 @@ from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runner.abstract_runner import AbstractRunner
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -91,7 +91,7 @@ class DaskParallelRunner(AbstractRunner):
             )
 
             if self._scenario.output_directory is not None:
-                self._scheduler_file = self._scenario.output_directory / ".dask_scheduler_file"
+                self._scheduler_file = Path(self._scenario.output_directory, ".dask_scheduler_file")
                 self._client.write_scheduler_file(scheduler_file=str(self._scheduler_file))
         else:
             # We just use their set up
@@ -163,7 +163,7 @@ class DaskParallelRunner(AbstractRunner):
         budget: float | None = None,
         seed: int | None = None,
         **dask_data_to_scatter: dict[str, Any],
-    ) -> tuple[StatusType, float | list[float], float, dict]:  # noqa: D102
+    ) -> tuple[StatusType, float | list[float], float, float, dict]:  # noqa: D102
         return self._single_worker.run(
             config=config, instance=instance, seed=seed, budget=budget, **dask_data_to_scatter
         )

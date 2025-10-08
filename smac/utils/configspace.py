@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from typing import Iterable
+
 import hashlib
 import logging
 from functools import partial
-from typing import Iterable
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
@@ -12,15 +13,21 @@ from ConfigSpace.hyperparameters import (
     BetaIntegerHyperparameter,
     CategoricalHyperparameter,
     Constant,
+    IntegerHyperparameter,
     NormalFloatHyperparameter,
     NormalIntegerHyperparameter,
+    NumericalHyperparameter,
     OrdinalHyperparameter,
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-from ConfigSpace.util import get_one_exchange_neighbourhood
+from ConfigSpace.util import (
+    ForbiddenValueError,
+    deactivate_inactive_hyperparameters,
+    get_one_exchange_neighbourhood,
+)
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -54,11 +61,11 @@ def get_types(
     The bounds for the instance features are *not* added in this function.
     """
     # Extract types vector for rf from config space and the bounds
-    types = [0] * len(configspace.get_hyperparameters())
+    types = [0] * len(list(configspace.values()))
     bounds = [(np.nan, np.nan)] * len(types)
 
-    for i, param in enumerate(configspace.get_hyperparameters()):
-        parents = configspace.get_parents_of(param.name)
+    for i, param in enumerate(list(configspace.values())):
+        parents = configspace.parents_of[param.name]
         if len(parents) == 0:
             can_be_inactive = False
         else:
@@ -102,22 +109,22 @@ def get_types(
             if can_be_inactive:
                 raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
 
-            bounds[i] = (param._lower, param._upper)
+            bounds[i] = (param.lower_vectorized, param.upper_vectorized)
         elif isinstance(param, NormalIntegerHyperparameter):
             if can_be_inactive:
                 raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
 
-            bounds[i] = (param.nfhp._lower, param.nfhp._upper)
+            bounds[i] = (param.lower_vectorized, param.upper_vectorized)
         elif isinstance(param, BetaFloatHyperparameter):
             if can_be_inactive:
                 raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
 
-            bounds[i] = (param._lower, param._upper)
+            bounds[i] = (param.lower_vectorized, param.upper_vectorized)
         elif isinstance(param, BetaIntegerHyperparameter):
             if can_be_inactive:
                 raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
 
-            bounds[i] = (param.bfhp._lower, param.bfhp._upper)
+            bounds[i] = (param.lower_vectorized, param.upper_vectorized)
         elif not isinstance(
             param,
             (
@@ -170,12 +177,72 @@ def print_config_changes(
     if incumbent is None or challenger is None:
         return
 
-    params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
-    for param in params:
-        if param[1] != param[2]:
-            logger.info("--- %s: %r -> %r" % param)
+    inc_keys = set(incumbent.keys())
+    all_keys = inc_keys.union(challenger.keys())
+
+    lines = []
+    for k in sorted(all_keys):
+        inc_k = incumbent.get(k, "-inactive-")
+        cha_k = challenger.get(k, "-inactive-")
+        lines.append(f"--- {k}: {inc_k} -> {cha_k}" + " (unchanged)" if inc_k == cha_k else "")
+
+    msg = "\n".join(lines)
+    logger.debug(msg)
+
+
+def transform_continuous_designs(
+    design: np.ndarray, origin: str, configspace: ConfigurationSpace
+) -> list[Configuration]:
+    """Transforms the continuous designs into a discrete list of configurations.
+
+    Parameters
+    ----------
+    design : np.ndarray
+        Array of hyperparameters originating from the initial design strategy.
+    origin : str | None, defaults to None
+        Label for a configuration where it originated from.
+    configspace : ConfigurationSpace
+
+    Returns
+    -------
+    configs : list[Configuration]
+        Continuous transformed configs.
+    """
+    params = configspace.get_hyperparameters()
+    for idx, param in enumerate(params):
+        if isinstance(param, IntegerHyperparameter):
+            design[:, idx] = param._inverse_transform(param._transform(design[:, idx]))
+        elif isinstance(param, NumericalHyperparameter):
+            continue
+        elif isinstance(param, Constant):
+            design_ = np.zeros(np.array(design.shape) + np.array((0, 1)))
+            design_[:, :idx] = design[:, :idx]
+            design_[:, idx + 1 :] = design[:, idx:]
+            design = design_
+        elif isinstance(param, CategoricalHyperparameter):
+            v_design = design[:, idx]
+            v_design[v_design == 1] = 1 - 10**-10
+            design[:, idx] = np.array(v_design * len(param.choices), dtype=int)
+        elif isinstance(param, OrdinalHyperparameter):
+            v_design = design[:, idx]
+            v_design[v_design == 1] = 1 - 10**-10
+            design[:, idx] = np.array(v_design * len(param.sequence), dtype=int)
         else:
-            logger.debug("--- %s Remains unchanged: %r", param[0], param[1])
+            raise ValueError("Hyperparameter not supported when transforming a continuous design.")
+
+    configs = []
+    for vector in design:
+        try:
+            conf = deactivate_inactive_hyperparameters(
+                configuration=None, configuration_space=configspace, vector=vector
+            )
+        except ForbiddenValueError:
+            continue
+
+        conf.origin = origin
+        configs.append(conf)
+
+    return configs
 
 
 # def check_subspace_points(

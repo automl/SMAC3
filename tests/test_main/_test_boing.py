@@ -149,8 +149,8 @@ def test_do_switching(make_scenario):
 
 def test_subspace_extraction():
     cs = ConfigurationSpace(0)
-    cs.add_hyperparameter(UniformFloatHyperparameter("x0", 0.0, 1.0))
-    cs.add_hyperparameter(CategoricalHyperparameter("x1", [0, 1, 2, 3, 4, 5]))
+    cs.add(UniformFloatHyperparameter("x0", 0.0, 1.0))
+    cs.add(CategoricalHyperparameter("x1", [0, 1, 2, 3, 4, 5]))
 
     rf = RandomForest(
         cs,

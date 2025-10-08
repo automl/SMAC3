@@ -13,7 +13,7 @@ from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 from smac.model.gaussian_process.priors.tophat_prior import SoftTopHatPrior, TophatPrior
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -171,7 +171,7 @@ class AbstractGaussianProcess(AbstractModel):
 
     def _set_has_conditions(self) -> None:
         """Sets `has_conditions` on `current_param`."""
-        has_conditions = len(self._configspace.get_conditions()) > 0
+        has_conditions = len(self._configspace.conditions) > 0
         to_visit = []
         to_visit.append(self._kernel)
 

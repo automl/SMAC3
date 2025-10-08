@@ -1,6 +1,5 @@
-"""
-ParEGO
-^^^^^^
+"""ParEGO
+# Flags: doc-Runnable
 
 An example of how to use multi-objective optimization with ParEGO. Both accuracy and run-time are going to be
 optimized on the digits dataset using an MLP, and the configurations are shown in a plot, highlighting the best ones in 
@@ -34,7 +33,7 @@ from smac import Scenario
 from smac.facade.abstract_facade import AbstractFacade
 from smac.multi_objective.parego import ParEGO
 
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -54,21 +53,21 @@ class MLP:
         learning_rate = Categorical("learning_rate", ["constant", "invscaling", "adaptive"], default="constant")
         learning_rate_init = Float("learning_rate_init", (0.0001, 1.0), default=0.001, log=True)
 
-        cs.add_hyperparameters([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
+        cs.add([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
 
         use_lr = EqualsCondition(child=learning_rate, parent=solver, value="sgd")
         use_lr_init = InCondition(child=learning_rate_init, parent=solver, values=["sgd", "adam"])
         use_batch_size = InCondition(child=batch_size, parent=solver, values=["sgd", "adam"])
 
         # We can also add multiple conditions on hyperparameters at once:
-        cs.add_conditions([use_lr, use_batch_size, use_lr_init])
+        cs.add([use_lr, use_batch_size, use_lr_init])
 
         return cs
 
     def train(self, config: Configuration, seed: int = 0, budget: int = 10) -> dict[str, float]:
-        lr = config["learning_rate"] if config["learning_rate"] else "constant"
-        lr_init = config["learning_rate_init"] if config["learning_rate_init"] else 0.001
-        batch_size = config["batch_size"] if config["batch_size"] else 200
+        lr = config.get("learning_rate", "constant")
+        lr_init = config.get("learning_rate_init", 0.001)
+        batch_size = config.get("batch_size", 200)
 
         start_time = time.time()
 

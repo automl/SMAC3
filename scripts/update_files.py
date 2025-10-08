@@ -68,7 +68,7 @@ if __name__ == "__main__":
         if filename == "smac/__init__.py":
             continue
 
-        replace_if_starts_with(filename, "__copyright__ =", '__copyright__ = "Copyright 2022, automl.org"')
+        replace_if_starts_with(filename, "__copyright__ =", '__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"')
         replace_if_starts_with(filename, "__author__ =")
         replace_if_starts_with(filename, "__maintainer__ =")
         replace_if_starts_with(filename, "__version__ =")

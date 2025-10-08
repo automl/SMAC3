@@ -29,7 +29,7 @@ def normalize_costs(
 
     costs = []
     for v, b in zip(values, bounds):
-        assert type(v) != list
+        assert not isinstance(v, list)
         p = v - b[0]
         q = b[1] - b[0]
 
