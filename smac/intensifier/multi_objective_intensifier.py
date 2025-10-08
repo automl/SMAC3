@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.intensifier.hyperband import Hyperband
 from smac.intensifier.intensifier import Intensifier
 from smac.intensifier.successive_halving import SuccessiveHalving
@@ -21,7 +22,7 @@ logger = get_logger(__name__)
 # TODO add minimum population size?
 
 
-class MOIntensifierMixin(object):
+class MOIntensifierMixin(AbstractIntensifier):
     def _calculate_pareto_front(
         self,
         runhistory: RunHistory,

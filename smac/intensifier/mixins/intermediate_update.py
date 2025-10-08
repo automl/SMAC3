@@ -395,7 +395,7 @@ class BootstrapSingleComparison(DebugComparison):
             probability=np.count_nonzero(verdicts) / n_samples,
             n_samples=n_samples,
         )
-        return verdict
+        return bool(verdict)
 
 
 class BootstrapClosestComparison(DebugComparison):
@@ -478,7 +478,7 @@ class SRaceComparison(DebugComparison):
         A boolean which indicates if we should continue with this configuration.
         """
 
-        def get_alpha(delta, n_instances):
+        def get_alpha(delta: float, n_instances: int) -> float:
             steps = 0
             n = 1
             inst = 0
@@ -489,7 +489,7 @@ class SRaceComparison(DebugComparison):
 
             return (1 - delta) / (n_instances) * (steps - 1)
 
-        def dominates(a, b):
+        def dominates(a: list[float], b: list[float]) -> int:
             # Checks if a dominates b
             a = np.array(a)
             b = np.array(b)
@@ -509,14 +509,14 @@ class SRaceComparison(DebugComparison):
             return True
 
         p_values = []
-        chall_perf = self.runhistory._cost(config, config_isb_keys)
+        chall_perf: list[list[float]] = self.runhistory._cost(config, config_isb_keys)  # type: ignore[assignment]
         for incumbent in incumbents:
-            inc_perf = self.runhistory._cost(incumbent, config_isb_keys)
+            inc_perf: list[list[float]] = self.runhistory._cost(incumbent, config_isb_keys)  # type: ignore[assignment]
             n_ij = sum(
-                [dominates(*x) for x in zip(chall_perf, inc_perf)]
+                [dominates(_chall_perf, _inc_perf) for _chall_perf, _inc_perf in zip(chall_perf, inc_perf)]
             )  # Number of times the incumbent candidate dominates the challenger
             n_ji = sum(
-                [dominates(*x) for x in zip(inc_perf, chall_perf)]
+                [dominates(_chall_perf, _inc_perf) for _chall_perf, _inc_perf in zip(chall_perf, inc_perf)]
             )  # Number of times the challenger dominates the incumbent candidate
             p_value = 1 - binom.cdf(n_ij - 1, n_ij + n_ji, 0.5)
             p_values.append(p_value)

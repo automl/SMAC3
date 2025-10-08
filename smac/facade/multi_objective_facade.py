@@ -143,7 +143,7 @@ class MultiObjectiveFacade(AbstractFacade):
     def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
-        additional_configs: list[Configuration] = [],
+        additional_configs: list[Configuration] | None = None,
     ) -> DefaultInitialDesign:
         """Returns an initial design, which returns the default configuration.
 

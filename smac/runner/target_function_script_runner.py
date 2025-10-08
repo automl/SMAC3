@@ -51,7 +51,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         self,
         target_function: str,
         scenario: Scenario,
-        required_arguments: list[str] = None,
+        required_arguments: list[str] | None = None,
     ):
         if required_arguments is None:
             required_arguments = []

@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+from typing import Any
+
 import itertools
 
 import numpy as np
 from ConfigSpace import Configuration
 
+from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -13,8 +16,8 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class DebugUpdate(object):
-    def _register_incumbent_update(self, **kwargs):
+class DebugUpdate(AbstractIntensifier):
+    def _register_incumbent_update(self, **kwargs: Any) -> None:
         if not hasattr(self, "_update_incumbent_log"):
             self._update_incumbent_log = []
         self._update_incumbent_log.append(kwargs)

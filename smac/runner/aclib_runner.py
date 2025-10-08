@@ -20,7 +20,7 @@ class ACLibRunner(TargetFunctionScriptRunner):
         self,
         target_function: str,
         scenario: Scenario,
-        required_arguments: list[str] = [],
+        required_arguments: list[str] | None = None,
         target_function_arguments: dict[str, str] | None = None,
     ):
 
