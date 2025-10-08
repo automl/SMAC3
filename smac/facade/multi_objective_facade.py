@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.acquisition.function.expected_hypervolume import PHVI, AbstractHVI
+from smac.acquisition.function.hypervolume import PHVI, AbstractHVI
 from smac.acquisition.maximizer.multi_objective_search import (
     MOLocalAndSortedRandomSearch,
 )
