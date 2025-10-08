@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 
 
 class AbstractHVI(AbstractAcquisitionFunction):
-    def __init__(self):
+    def __init__(self) -> None:
         """Computes for a given x the predicted hypervolume improvement as
         acquisition value.
         """
@@ -33,23 +33,8 @@ class AbstractHVI(AbstractAcquisitionFunction):
         self._runhistory: RunHistory | None = None
         self._runhistory_encoder: AbstractRunHistoryEncoder | None = None
 
-    @property
-    def runhistory(self) -> RunHistory:
-        """Return the runhistory."""
-        return self._runhistory
-
-    @runhistory.setter
-    def runhistory(self, runhistory: RunHistory):
-        self._runhistory = runhistory
-
-    @property
-    def runhistory_encoder(self) -> AbstractRunHistoryEncoder:
-        """Return the runhistory encoder."""
-        return self._runhistory_encoder
-
-    @runhistory_encoder.setter
-    def runhistory_encoder(self, runhistory_encoder: AbstractRunHistoryEncoder):
-        self._runhistory_encoder = runhistory_encoder
+        self._population_hv: float | None = None
+        self._population_costs: np.ndarray | None = None
 
     @property
     def name(self) -> str:
@@ -67,9 +52,14 @@ class AbstractHVI(AbstractAcquisitionFunction):
                 "No incumbents here. Did the intensifier properly update the incumbents in the runhistory?"
             )
 
-        objective_bounds = np.array(self.runhistory.objective_bounds)
-        self._objective_bounds = self.runhistory_encoder.transform_response_values(objective_bounds)
-        self._reference_point = [1.1] * len(self._objective_bounds)
+        self._runhistory = kwargs.get("runhistory")
+        self._runhistory_encoder = kwargs.get("runhistory_encoder")
+        assert self._runhistory is not None, "Did you update the AF with the runhistory?"
+        assert self._runhistory_encoder is not None, "Did you update the AF with the runhistory encoder?"
+
+        objective_bounds = np.array(self._runhistory.objective_bounds)
+        self._objective_bounds = self._runhistory_encoder.transform_response_values(objective_bounds)
+        self._reference_point = [1.1] * len(self._objective_bounds)  # type: ignore[arg-type,assignment]
 
     def get_hypervolume(self, points: np.ndarray) -> float:
         """
@@ -105,6 +95,10 @@ class AbstractHVI(AbstractAcquisitionFunction):
         np.ndarray(N,1)
             Expected HV Improvement of X
         """
+        assert self.model is not None, "Did you update the AF with the model?"
+        assert self._population_costs is not None
+        assert self._population_hv is not None
+
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
@@ -117,18 +111,16 @@ class AbstractHVI(AbstractAcquisitionFunction):
 
         phvi = np.zeros(len(X))
         for i, indiv in enumerate(mean):
-            points = list(self.population_costs) + [indiv]
+            points = list(self._population_costs) + [indiv]
             hv = self.get_hypervolume(points)
-            phvi[i] = hv - self.population_hv
+            phvi[i] = hv - self._population_hv
 
         return phvi.reshape(-1, 1)
 
 
 class PHVI(AbstractHVI):
-    def __init__(self):
+    def __init__(self) -> None:
         super(PHVI, self).__init__()
-        self.population_hv = None
-        self.population_costs = None
 
     @property
     def name(self) -> str:
@@ -149,8 +141,8 @@ class PHVI(AbstractHVI):
         # Compute HV
         population_hv = self.get_hypervolume(population_costs)
 
-        self.population_costs = population_costs
-        self.population_hv = population_hv
+        self._population_costs = population_costs
+        self._population_hv = population_hv
 
         logger.info(f"New population HV: {population_hv}")
 
@@ -170,6 +162,8 @@ class PHVI(AbstractHVI):
             Predicted HV Improvement of X
         """
         assert self.model is not None, "Did you update the AF with the model?"
+        assert self._population_costs is not None
+        assert self._population_hv is not None
 
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
@@ -177,8 +171,8 @@ class PHVI(AbstractHVI):
         mean, _ = self.model.predict_marginalized(X)  # Expected to be not normalized
         phvi = np.zeros(len(X))
         for i, indiv in enumerate(mean):
-            points = list(self.population_costs) + [indiv]
+            points = list(self._population_costs) + [indiv]
             hv = self.get_hypervolume(points)
-            phvi[i] = hv - self.population_hv
+            phvi[i] = hv - self._population_hv
 
         return phvi.reshape(-1, 1)

@@ -131,12 +131,6 @@ class ConfigSelector:
             # raise RuntimeError("SMAC needs initial configurations to work.")
             logger.warning("No initial configurations were sampled.")
 
-        if hasattr(self._acquisition_function, "runhistory"):
-            self._acquisition_function.runhistory = runhistory
-
-        if hasattr(self._acquisition_function, "runhistory_encoder"):
-            self._acquisition_function.runhistory_encoder = runhistory_encoder
-
     @property
     def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
@@ -238,6 +232,8 @@ class ConfigSelector:
                     num_data=len(self._get_evaluated_configs()),
                     X=X_configurations,
                     incumbents=self._runhistory.incumbents,
+                    runhistory=self._runhistory,
+                    runhistory_encoder=self._runhistory_encoder,
                 )
 
             # We want to cache how many entries we used because if we have the same number of entries
