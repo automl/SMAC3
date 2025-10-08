@@ -59,6 +59,9 @@ extras_require = {
         "pytest-coverage",
         "pytest-cases",
     ],
+    "wandb": [
+        "wandb",
+    ]
 }
 
 setuptools.setup(
@@ -88,6 +91,7 @@ setuptools.setup(
         "emcee>=3.0.0",
         "regex",
         "pyyaml",
+        "seaborn",
     ],
     extras_require=extras_require,
     test_suite="pytest",

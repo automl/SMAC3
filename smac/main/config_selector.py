@@ -217,11 +217,13 @@ class ConfigSelector:
             # we don't need to train the next time
             self._previous_entries = Y.shape[0]
 
-            # Now we maximize the acquisition function
+            # Now we maximize the acquisition function            
             challengers = self._acquisition_maximizer.maximize(
                 previous_configs,
                 random_design=self._random_design,
             )
+            # DO NOT FIDDLE WITH THE CHALLENGERS LIST because it is an iterator
+            # e.g. if we convert it to a list, the following for loop does not work!
 
             counter = 0
             failed_counter = 0
@@ -241,6 +243,10 @@ class ConfigSelector:
                         )
                         break
                 else:
+                    logger.debug(
+                            f"Config {config} was already processed. Increase fail counter. "\
+                             "Re-maximize acquisition function to find a new config."
+                        )
                     failed_counter += 1
 
                     # We exit the loop if we have tried to add the same configuration too often
