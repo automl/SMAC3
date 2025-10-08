@@ -26,46 +26,6 @@ __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
 
-# class _PosteriorProxy(object):
-#     def __init__(self) -> None:
-#         self.mean: Tensor = []
-#         self.variance: Tensor = []
-
-# class _ModelProxy(Model, ABC):
-#     def __init__(self, model: AbstractModel, objective_bounds: list[tuple[float, float]]):
-#         super(_ModelProxy).__init__()
-#         self.model = model
-#         self._objective_bounds = objective_bounds
-#
-#     def posterior(self, X: Tensor, **kwargs: Any) -> _PosteriorProxy:
-#         """Docstring
-#         X: A `b x q x d`-dim Tensor, where `d` is the dimension of the
-#         feature space, `q` is the number of points considered jointly,
-#         and `b` is the batch dimension.
-#
-#
-#         A `Posterior` object, representing a batch of `b` joint distributions
-#         over `q` points and `m` outputs each.
-#         """
-#         assert X.shape[1] == 1
-#         X = X.reshape([X.shape[0], -1]).numpy()  # 3D -> 2D
-#
-#         # predict
-#         # start_time = time.time()
-#         # print(f"Start predicting ")
-#         mean, var_ = self.model.predict_marginalized(X)
-#         normalized_mean = np.array([normalize_costs(m, self._objective_bounds) for m in mean])
-#         scale = normalized_mean / mean
-#         var_ *= scale  # Scale variance accordingly
-#         mean = normalized_mean
-#         # print(f"Done in {time.time() - start_time}s")
-#         post = _PosteriorProxy()
-#         post.mean = torch.asarray(mean).reshape(X.shape[0], 1, -1)  # 2D -> 3D
-#         post.variance = torch.asarray(var_).reshape(X.shape[0], 1, -1)  # 2D -> 3D
-#
-#         return post
-
-
 class AbstractHVI(AbstractAcquisitionFunction):
     def __init__(self):
         """Computes for a given x the predicted hypervolume improvement as
