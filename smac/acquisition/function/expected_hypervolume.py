@@ -117,7 +117,7 @@ class AbstractHVI(AbstractAcquisitionFunction):
         self._objective_bounds = self.runhistory_encoder.transform_response_values(objective_bounds)
         self._reference_point = [1.1] * len(self._objective_bounds)
 
-    def get_hypervolume(self, points: np.ndarray = None, reference_point: list = None) -> float:
+    def get_hypervolume(self, points: np.ndarray) -> float:
         """
         Compute the hypervolume
 
@@ -133,10 +133,7 @@ class AbstractHVI(AbstractAcquisitionFunction):
         """
         # Normalize the objectives here to give equal attention to the objectives when computing the HV
         points = [normalize_costs(p, self._objective_bounds) for p in points]
-
         hv = pygmo.hypervolume(points)
-        # if reference_point is None:
-        #     self._reference_point = hv.refpoint(offset=1)
         return hv.compute(self._reference_point)
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
@@ -283,25 +280,6 @@ class PHVI(AbstractHVI):
 
         logger.info(f"New population HV: {population_hv}")
 
-    def get_hypervolume(self, points: np.ndarray = None, reference_point: list | None = None) -> float:
-        """
-        Compute the hypervolume
-
-        Parameters
-        ----------
-        points : np.ndarray
-            A 2d numpy array. 1st dimension is an entity and the 2nd dimension are the costs
-        reference_point : list
-
-        Return
-        ------
-        hypervolume: float
-        """
-        # Normalize the objectives here to give equal attention to the objectives when computing the HV
-        points = [normalize_costs(p, self._objective_bounds) for p in points]
-        hv = pygmo.hypervolume(points)
-        return hv.compute(self._reference_point)
-
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the PHVI values and its derivatives.
 
@@ -315,7 +293,7 @@ class PHVI(AbstractHVI):
         Returns
         -------
         np.ndarray(N,1)
-            Expected HV Improvement of X
+            Predicted HV Improvement of X
         """
         assert self.model is not None, "Did you update the AF with the model?"
 
