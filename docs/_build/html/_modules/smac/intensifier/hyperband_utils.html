@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>smac.intensifier.hyperband_utils &#8212; SMAC3 Documentation 2.3.1 documentation</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script src="../../../_static/documentation_options.js?v=7de5c1a2"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../../../index.html">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.3.1
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.1/">v2.3.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.0/">v2.3.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../../search.html" method="get" style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.3.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for smac.intensifier.hyperband_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.intensifier.successive_halving</span><span class="w"> </span><span class="kn">import</span> <span class="n">SuccessiveHalving</span>
+
+
+<div class="viewcode-block" id="determine_HB">
+<a class="viewcode-back" href="../../../api/smac.intensifier.hyperband_utils.html#smac.intensifier.hyperband_utils.determine_HB">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">determine_HB</span><span class="p">(</span><span class="n">min_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">max_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine one Hyperband round</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    min_budget : float</span>
+<span class="sd">        Minimum budget per trial in fidelity units</span>
+<span class="sd">    max_budget : float</span>
+<span class="sd">        Maximum budget per trial in fidelity units</span>
+<span class="sd">    eta : int, defaults to 3</span>
+<span class="sd">        Input that controls the proportion of configurations discarded in each round of Successive Halving.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Info about the Hyperband round</span>
+<span class="sd">            &quot;max_iterations&quot;</span>
+<span class="sd">            &quot;n_configs_in_stage&quot;</span>
+<span class="sd">            &quot;budgets_in_stage&quot;</span>
+<span class="sd">            &quot;trials_used&quot;</span>
+<span class="sd">            &quot;budget_used&quot;</span>
+<span class="sd">            &quot;number_of_brackets&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_s_max</span> <span class="o">=</span> <span class="n">SuccessiveHalving</span><span class="o">.</span><span class="n">_get_max_iterations</span><span class="p">(</span><span class="n">eta</span><span class="p">,</span> <span class="n">max_budget</span><span class="p">,</span> <span class="n">min_budget</span><span class="p">)</span>
+
+    <span class="n">_max_iterations</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">_n_configs_in_stage</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">_budgets_in_stage</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_s_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">max_iter</span> <span class="o">=</span> <span class="n">_s_max</span> <span class="o">-</span> <span class="n">i</span>
+
+        <span class="n">_budgets_in_stage</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_n_configs_in_stage</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">SuccessiveHalving</span><span class="o">.</span><span class="n">_compute_configs_and_budgets_for_stages</span><span class="p">(</span>
+            <span class="n">eta</span><span class="p">,</span> <span class="n">max_budget</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">,</span> <span class="n">_s_max</span>
+        <span class="p">)</span>
+        <span class="n">_max_iterations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_iter</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">total_trials</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_n_configs_in_stage</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+    <span class="n">total_budget</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_budgets_in_stage</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;max_iterations&quot;</span><span class="p">:</span> <span class="n">_max_iterations</span><span class="p">,</span>
+        <span class="s2">&quot;n_configs_in_stage&quot;</span><span class="p">:</span> <span class="n">_n_configs_in_stage</span><span class="p">,</span>
+        <span class="s2">&quot;budgets_in_stage&quot;</span><span class="p">:</span> <span class="n">_budgets_in_stage</span><span class="p">,</span>
+        <span class="s2">&quot;trials_used&quot;</span><span class="p">:</span> <span class="n">total_trials</span><span class="p">,</span>
+        <span class="s2">&quot;budget_used&quot;</span><span class="p">:</span> <span class="n">total_budget</span><span class="p">,</span>
+        <span class="s2">&quot;number_of_brackets&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">_max_iterations</span><span class="p">),</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="determine_hyperband_for_multifidelity">
+<a class="viewcode-back" href="../../../api/smac.intensifier.hyperband_utils.html#smac.intensifier.hyperband_utils.determine_hyperband_for_multifidelity">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">determine_hyperband_for_multifidelity</span><span class="p">(</span>
+    <span class="n">total_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">min_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">max_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine how many Hyperband rounds should happen based on a total budget</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    total_budget : float</span>
+<span class="sd">        Total budget for the complete optimization in fidelity units</span>
+<span class="sd">    min_budget : float</span>
+<span class="sd">        Minimum budget per trial in fidelity units</span>
+<span class="sd">    max_budget : float</span>
+<span class="sd">        Maximum budget per trial in fidelity units</span>
+<span class="sd">    eta : int, defaults to 3</span>
+<span class="sd">        Input that controls the proportion of configurations discarded in each round of Successive Halving.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Info about one Hyperband round</span>
+<span class="sd">            &quot;max_iterations&quot;</span>
+<span class="sd">            &quot;n_configs_in_stage&quot;</span>
+<span class="sd">            &quot;budgets_in_stage&quot;</span>
+<span class="sd">            &quot;trials_used&quot;</span>
+<span class="sd">            &quot;budget_used&quot;</span>
+<span class="sd">            &quot;number_of_brackets&quot;</span>
+<span class="sd">        Info about whole optimization</span>
+<span class="sd">            &quot;n_trials&quot;</span>
+<span class="sd">            &quot;total_budget&quot;</span>
+<span class="sd">            &quot;eta&quot;</span>
+<span class="sd">            &quot;min_budget&quot;</span>
+<span class="sd">            &quot;max_budget&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Determine the HB</span>
+    <span class="n">hyperband_round</span> <span class="o">=</span> <span class="n">determine_HB</span><span class="p">(</span><span class="n">eta</span><span class="o">=</span><span class="n">eta</span><span class="p">,</span> <span class="n">min_budget</span><span class="o">=</span><span class="n">min_budget</span><span class="p">,</span> <span class="n">max_budget</span><span class="o">=</span><span class="n">max_budget</span><span class="p">)</span>
+
+    <span class="c1"># Calculate how many HB rounds we can have</span>
+    <span class="n">budget_used_per_hyperband_round</span> <span class="o">=</span> <span class="n">hyperband_round</span><span class="p">[</span><span class="s2">&quot;budget_used&quot;</span><span class="p">]</span>
+    <span class="n">number_of_full_hb_rounds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">total_budget</span> <span class="o">/</span> <span class="n">budget_used_per_hyperband_round</span><span class="p">))</span>
+    <span class="n">remaining_budget</span> <span class="o">=</span> <span class="n">total_budget</span> <span class="o">%</span> <span class="n">budget_used_per_hyperband_round</span>
+    <span class="n">trials_used_per_hb_round</span> <span class="o">=</span> <span class="n">hyperband_round</span><span class="p">[</span><span class="s2">&quot;trials_used&quot;</span><span class="p">]</span>
+    <span class="n">n_configs_in_stage</span> <span class="o">=</span> <span class="n">hyperband_round</span><span class="p">[</span><span class="s2">&quot;n_configs_in_stage&quot;</span><span class="p">]</span>
+    <span class="n">budgets_in_stage</span> <span class="o">=</span> <span class="n">hyperband_round</span><span class="p">[</span><span class="s2">&quot;budgets_in_stage&quot;</span><span class="p">]</span>
+
+    <span class="n">remaining_trials</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">stage</span> <span class="ow">in</span> <span class="n">n_configs_in_stage</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">budgets_in_stage</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">n_configs_in_stage</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
+            <span class="c1"># How many trials are left?</span>
+            <span class="c1"># If b * c is lower than remaining budget, we can add full c</span>
+            <span class="c1"># otherwise we need to find out how many trials we can do with this budget</span>
+            <span class="n">remaining_trials</span> <span class="o">+=</span> <span class="nb">min</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">remaining_budget</span> <span class="o">/</span> <span class="n">b</span><span class="p">)))</span>
+            <span class="c1"># We cannot go lower than 0</span>
+            <span class="c1"># If we are in the case of b*c &gt; remaining_budget, we will not have any</span>
+            <span class="c1"># budget left. We can not add full c but the number of trials that still fit</span>
+            <span class="n">remaining_budget</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">remaining_budget</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span>
+
+    <span class="n">n_trials</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number_of_full_hb_rounds</span> <span class="o">*</span> <span class="n">trials_used_per_hb_round</span> <span class="o">+</span> <span class="n">remaining_trials</span><span class="p">)</span>
+
+    <span class="n">hyperband_info</span> <span class="o">=</span> <span class="n">hyperband_round</span>
+    <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;n_trials&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_trials</span>
+    <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;total_budget&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_budget</span>
+    <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;eta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">eta</span>
+    <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;min_budget&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_budget</span>
+    <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;max_budget&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_budget</span>
+
+    <span class="k">return</span> <span class="n">hyperband_info</span></div>
+
+
+
+<div class="viewcode-block" id="print_hyperband_summary">
+<a class="viewcode-back" href="../../../api/smac.intensifier.hyperband_utils.html#smac.intensifier.hyperband_utils.print_hyperband_summary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_hyperband_summary</span><span class="p">(</span><span class="n">hyperband_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print summary about Hyperband as used in the MultiFidelityFacade</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hyperband_info : dict</span>
+<span class="sd">        Info dict about Hyperband</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">,</span> <span class="s2">&quot;HYPERBAND IN MULTI-FIDELITY&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total budget:</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;total_budget&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total number of trials:</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;n_trials&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;number of HB rounds:</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;total_budget&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;budget_used&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">~~~~~~~~~~~~HYPERBAND ROUND&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">eta:</span><span class="se">\t\t\t\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;eta&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">min budget per trial:</span><span class="se">\t\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;min_budget&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">max budget per trial:</span><span class="se">\t\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;max_budget&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">total number of trials per HB round:</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;trials_used&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">budget used per HB round:</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;budget_used&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">number of brackets:</span><span class="se">\t\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;number_of_brackets&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">budgets per stage:</span><span class="se">\t\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;budgets_in_stage&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">n configs per stage:</span><span class="se">\t\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;n_configs_in_stage&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">30</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="s2">&quot;HYPERBAND IN MULTI-FIDELITY&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="get_n_trials_for_hyperband_multifidelity">
+<a class="viewcode-back" href="../../../api/smac.intensifier.hyperband_utils.html#smac.intensifier.hyperband_utils.get_n_trials_for_hyperband_multifidelity">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_n_trials_for_hyperband_multifidelity</span><span class="p">(</span>
+    <span class="n">total_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">min_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">max_budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">print_summary</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the number of trials needed for multi-fidelity optimization</span>
+
+<span class="sd">    Specify the total budget and find out how many trials that equals.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    total_budget : float</span>
+<span class="sd">        Total budget for the complete optimization in fidelity units.</span>
+<span class="sd">        A fidelity unit can be one epoch or a fraction of a dataset size.</span>
+<span class="sd">    min_budget : float</span>
+<span class="sd">        Minimum budget per trial in fidelity units</span>
+<span class="sd">    max_budget : float</span>
+<span class="sd">        Maximum budget per trial in fidelity units</span>
+<span class="sd">    eta : int, defaults to 3</span>
+<span class="sd">        Input that controls the proportion of configurations discarded in each round of Successive Halving.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        Number of trials needed for the specified total budgets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hyperband_info</span> <span class="o">=</span> <span class="n">determine_hyperband_for_multifidelity</span><span class="p">(</span>
+        <span class="n">total_budget</span><span class="o">=</span><span class="n">total_budget</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="n">eta</span><span class="p">,</span> <span class="n">min_budget</span><span class="o">=</span><span class="n">min_budget</span><span class="p">,</span> <span class="n">max_budget</span><span class="o">=</span><span class="n">max_budget</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">print_summary</span><span class="p">:</span>
+        <span class="n">print_hyperband_summary</span><span class="p">(</span><span class="n">hyperband_info</span><span class="o">=</span><span class="n">hyperband_info</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hyperband_info</span><span class="p">[</span><span class="s2">&quot;n_trials&quot;</span><span class="p">]</span></div>
+
+</pre></div>
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright Copyright 2025, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+8.2.3. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

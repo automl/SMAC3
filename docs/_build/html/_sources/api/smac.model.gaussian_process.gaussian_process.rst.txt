@@ -1,0 +1,37 @@
+smac.model.gaussian\_process.gaussian\_process
+==============================================
+
+.. automodule:: smac.model.gaussian_process.gaussian_process
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      GaussianProcess
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>smac.main.smbo &#8212; SMAC3 Documentation 2.3.1 documentation</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script src="../../../_static/documentation_options.js?v=7de5c1a2"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../../../index.html">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.3.1
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.1/">v2.3.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.0/">v2.3.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../../search.html" method="get" style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.3.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for smac.main.smbo</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ConfigSpace</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ndarray</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.acquisition.function.abstract_acquisition_function</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.callback.callback</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.intensifier.abstract_intensifier</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractIntensifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.model.abstract_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runhistory</span><span class="w"> </span><span class="kn">import</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">TrialInfo</span><span class="p">,</span> <span class="n">TrialValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runhistory.runhistory</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">FirstRunCrashedException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runner.abstract_runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractRunner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runner.dask_runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">DaskParallelRunner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.utils.data_structures</span><span class="w"> </span><span class="kn">import</span> <span class="n">recursively_compare_dicts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.utils.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.utils.numpyencoder</span><span class="w"> </span><span class="kn">import</span> <span class="n">NumpyEncoder</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2025, Leibniz University Hanover, Institute of AI&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SMBO">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SMBO</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation that contains the main Bayesian optimization loop.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scenario : Scenario</span>
+<span class="sd">        The scenario object, holding all environmental information.</span>
+<span class="sd">    runner : AbstractRunner</span>
+<span class="sd">        The runner (containing the target function) is called internally to judge a trial&#39;s performance.</span>
+<span class="sd">    runhistory : Runhistory</span>
+<span class="sd">        The runhistory stores all trials.</span>
+<span class="sd">    intensifier : AbstractIntensifier</span>
+<span class="sd">        The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run</span>
+<span class="sd">        next.</span>
+<span class="sd">    overwrite: bool, defaults to False</span>
+<span class="sd">        When True, overwrites the run results if a previous run is found that is</span>
+<span class="sd">        inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked</span>
+<span class="sd">        for the exact behaviour (overwrite completely, save old run, or use old results).</span>
+
+<span class="sd">    Warning</span>
+<span class="sd">    -------</span>
+<span class="sd">    This model should be initialized by a facade only.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="n">runner</span><span class="p">:</span> <span class="n">AbstractRunner</span><span class="p">,</span>
+        <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+        <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractIntensifier</span><span class="p">,</span>
+        <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span> <span class="o">=</span> <span class="n">scenario</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configspace</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="o">=</span> <span class="n">runhistory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span> <span class="o">=</span> <span class="n">intensifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trial_generator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">intensifier</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span> <span class="o">=</span> <span class="n">runner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_overwrite</span> <span class="o">=</span> <span class="n">overwrite</span>
+
+        <span class="c1"># Internal variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Gracefully stop SMAC</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callback</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Stats variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_walltime</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_cputime</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="c1"># Set walltime used method for intensifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">used_walltime</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">used_walltime</span>  <span class="c1"># type: ignore</span>
+
+        <span class="c1"># We initialize the state based on previous data.</span>
+        <span class="c1"># If no previous data is found then we take care of the initial design.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_state</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The run history, which is filled with all information during the optimization process.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">intensifier</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractIntensifier</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The run history, which is filled with all information during the optimization process.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remaining_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subtracts the runtime configuration budget with the used wallclock time.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">walltime_limit</span> <span class="o">-</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remaining_cputime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subtracts the target function running budget with the used time.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">cputime_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_cputime</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remaining_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subtract the target function runs in the scenario with the used ta runs.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">n_trials</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">submitted</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">budget_exhausted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether the the remaining walltime, cputime or trials was exceeded.&quot;&quot;&quot;</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaining_walltime</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaining_cputime</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaining_trials</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">A</span> <span class="ow">or</span> <span class="n">B</span> <span class="ow">or</span> <span class="n">C</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">used_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns used wallclock time.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">used_target_function_walltime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns how much walltime the target function spend so far.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_walltime</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">used_target_function_cputime</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns how much time the target function spend on the hardware so far.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_cputime</span>
+
+<div class="viewcode-block" id="SMBO.ask">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.ask">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrialInfo</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asks the intensifier for the next trial.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        info : TrialInfo</span>
+<span class="sd">            Information about the trial (config, instance, seed, budget).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Calling ask...&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">on_ask_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># Now we use our generator to get the next trial info</span>
+        <span class="n">trial_info</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_trial_generator</span><span class="p">)</span>
+
+        <span class="c1"># Track the fact that the trial was returned</span>
+        <span class="c1"># This is really important because otherwise the intensifier would most likly sample the same trial again</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">add_running_trial</span><span class="p">(</span><span class="n">trial_info</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">on_ask_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial_info</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;...and received a new trial.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">trial_info</span></div>
+
+
+<div class="viewcode-block" id="SMBO.tell">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.tell">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tell</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">info</span><span class="p">:</span> <span class="n">TrialInfo</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">TrialValue</span><span class="p">,</span>
+        <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the result of a trial to the runhistory and updates the stats object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        info : TrialInfo</span>
+<span class="sd">            Describes the trial from which to process the results.</span>
+<span class="sd">        value : TrialValue</span>
+<span class="sd">            Contains relevant information regarding the execution of a trial.</span>
+<span class="sd">        save : bool, optional to True</span>
+<span class="sd">            Whether the runhistory should be saved.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;Custom&quot;</span>
+
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">callback</span><span class="o">.</span><span class="n">on_tell_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+            <span class="c1"># If a callback returns False, the optimization loop should be interrupted</span>
+            <span class="c1"># the other callbacks are still being called.</span>
+            <span class="k">if</span> <span class="n">response</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;A callback returned False. Abort is requested.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Some sanity checks here</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">uses_instances</span> <span class="ow">and</span> <span class="n">info</span><span class="o">.</span><span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Passed instance is None but intensifier requires instances.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">uses_budgets</span> <span class="ow">and</span> <span class="n">info</span><span class="o">.</span><span class="n">budget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Passed budget is None but intensifier requires budgets.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">cost</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span>
+            <span class="n">time</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+            <span class="n">cpu_time</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">cpu_time</span><span class="p">,</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">budget</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
+            <span class="n">starttime</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">starttime</span><span class="p">,</span>
+            <span class="n">endtime</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">endtime</span><span class="p">,</span>
+            <span class="n">additional_info</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">additional_info</span><span class="p">,</span>
+            <span class="n">force_update</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Important to overwrite the status RUNNING</span>
+        <span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tell method was called with cost </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">cost</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">StatusType</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">status</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">callback</span><span class="o">.</span><span class="n">on_tell_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+            <span class="c1"># If a callback returns False, the optimization loop should be interrupted</span>
+            <span class="c1"># the other callbacks are still being called.</span>
+            <span class="k">if</span> <span class="n">response</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;A callback returned False. Abort is requested.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SMBO.update_model">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.update_model">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the model and updates the acquisition function.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">config_selector</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">_config_selector</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config_selector</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
+
+            <span class="k">assert</span> <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="SMBO.update_acquisition_function">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.update_acquisition_function">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_acquisition_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the acquisition function including the associated model and the acquisition</span>
+<span class="sd">        optimizer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">config_selector</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">_config_selector</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span>
+            <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">config_selector</span><span class="o">.</span><span class="n">_model</span>
+
+            <span class="k">assert</span> <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_maximizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">config_selector</span><span class="o">.</span><span class="n">_acquisition_maximizer</span><span class="o">.</span><span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span></div>
+
+
+<div class="viewcode-block" id="SMBO.optimize">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.optimize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data_to_scatter</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs the Bayesian optimization loop.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_to_scatter: dict[str, Any] | None</span>
+<span class="sd">            When a user scatters data from their local process to the distributed network,</span>
+<span class="sd">            this data is distributed in a round-robin fashion grouping by number of cores.</span>
+<span class="sd">            Roughly speaking, we can keep this data in memory and then we do not have to (de-)serialize the data</span>
+<span class="sd">            every time we would like to execute a target function with a big dataset.</span>
+<span class="sd">            For example, when your target function has a big dataset shared across all the target function,</span>
+<span class="sd">            this argument is very useful.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        incumbent : Configuration</span>
+<span class="sd">            The best found configuration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># We return the incumbent if we already finished the a process (we don&#39;t want to allow to call</span>
+        <span class="c1"># optimize more than once).</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Optimization process was already finished. Returning incumbent...&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">count_objectives</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">get_incumbent</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span>
+
+        <span class="c1"># Start the timer before we do anything</span>
+        <span class="c1"># If we continue the optimization, the starting time is set by the load method</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="n">dask_data_to_scatter</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="p">,</span> <span class="n">DaskParallelRunner</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data_to_scatter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dask_data_to_scatter</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data_to_scatter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data_to_scatter</span><span class="p">,</span> <span class="n">broadcast</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">data_to_scatter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;data_to_scatter is valid only for DaskParallelRunner, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;but </span><span class="si">{</span><span class="n">dask_data_to_scatter</span><span class="si">}</span><span class="s2"> was provided for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Main BO loop</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
+                <span class="n">callback</span><span class="o">.</span><span class="n">on_iteration_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Sample next trial from the intensification</span>
+                <span class="n">trial_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
+
+                <span class="c1"># We submit the trial to the runner</span>
+                <span class="c1"># In multi-worker mode, SMAC waits till a new worker is available here</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">submit_trial</span><span class="p">(</span><span class="n">trial_info</span><span class="o">=</span><span class="n">trial_info</span><span class="p">,</span> <span class="o">**</span><span class="n">dask_data_to_scatter</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># We add results from the runner if results are available</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_results</span><span class="p">()</span>
+
+            <span class="c1"># Some statistics</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Remaining wallclock time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_walltime</span><span class="si">}</span><span class="s2">; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Remaining cpu time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_cputime</span><span class="si">}</span><span class="s2">; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Remaining trials: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_trials</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">finished</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finished </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">finished</span><span class="si">}</span><span class="s2"> trials.&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
+                <span class="n">callback</span><span class="o">.</span><span class="n">on_iteration_end</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+            <span class="c1"># Now we check whether we have to stop the optimization</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_exhausted</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_exhausted</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Configuration budget is exhausted:&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Remaining wallclock time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_walltime</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Remaining cpu time: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_cputime</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Remaining trials: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">remaining_trials</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Shutting down because the stop flag was set.&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Wait for the trials to finish</span>
+                <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_results</span><span class="p">()</span>
+
+                <span class="c1"># Break from the intensification loop, as there are no more resources</span>
+                <span class="k">break</span>
+
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">on_end</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># We only set the finished flag if the budget really was exhausted</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_exhausted</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">count_objectives</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">get_incumbent</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SMBO.reset">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.reset">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the internal variables of the optimizer, intensifier, and runhistory.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_walltime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_cputime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># We also reset runhistory and intensifier here</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SMBO.exists">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.exists">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the files associated with the run already exist.</span>
+<span class="sd">        Checks all files that are created by the optimizer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str | Path</span>
+<span class="sd">            The name of the folder of the SMAC run.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="n">optimization_fn</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">/</span> <span class="s2">&quot;optimization.json&quot;</span>
+        <span class="n">runhistory_fn</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">/</span> <span class="s2">&quot;runhistory.json&quot;</span>
+        <span class="n">intensifier_fn</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">/</span> <span class="s2">&quot;intensifier.json&quot;</span>
+
+        <span class="k">if</span> <span class="n">optimization_fn</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">runhistory_fn</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">intensifier_fn</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="SMBO.load">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the optimizer, intensifier, and runhistory from the output directory specified in the scenario.&quot;&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span>
+
+        <span class="n">optimization_fn</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">/</span> <span class="s2">&quot;optimization.json&quot;</span>
+        <span class="n">runhistory_fn</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">/</span> <span class="s2">&quot;runhistory.json&quot;</span>
+        <span class="n">intensifier_fn</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">/</span> <span class="s2">&quot;intensifier.json&quot;</span>
+
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">optimization_fn</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">runhistory_fn</span><span class="p">,</span> <span class="n">configspace</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">intensifier_fn</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_walltime</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;used_target_function_walltime&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_cputime</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;used_target_function_cputime&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;finished&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;used_walltime&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="SMBO.save">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.save">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the current stats, runhistory, and intensifier.&quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span>
+
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;used_walltime&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">used_walltime</span><span class="p">,</span>
+                <span class="s2">&quot;used_target_function_walltime&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">used_target_function_walltime</span><span class="p">,</span>
+                <span class="s2">&quot;used_target_function_cputime&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">used_target_function_cputime</span><span class="p">,</span>
+                <span class="s2">&quot;last_update&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span>
+                <span class="s2">&quot;finished&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Save optimization data</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;optimization.json&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">NumpyEncoder</span><span class="p">)</span>
+
+            <span class="c1"># And save runhistory and intensifier</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;intensifier.json&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds results from the runner to the runhistory. Although most of the functionality could be written</span>
+<span class="sd">        in the tell method, we separate it here to make it accessible for the automatic optimization procedure only.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if there is any result</span>
+        <span class="k">for</span> <span class="n">trial_info</span><span class="p">,</span> <span class="n">trial_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">iter_results</span><span class="p">():</span>
+            <span class="c1"># Add the results of the run to the run history</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">trial_info</span><span class="p">,</span> <span class="n">trial_value</span><span class="p">)</span>
+
+            <span class="c1"># We expect the first run to always succeed.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">finished</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">:</span>
+                <span class="n">additional_info</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">if</span> <span class="s2">&quot;traceback&quot;</span> <span class="ow">in</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">additional_info</span><span class="p">:</span>
+                    <span class="n">additional_info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">additional_info</span><span class="p">[</span><span class="s2">&quot;traceback&quot;</span><span class="p">]</span>
+
+                <span class="k">raise</span> <span class="n">FirstRunCrashedException</span><span class="p">(</span>
+                    <span class="s2">&quot;The first run crashed. Please check your setup again.&quot;</span> <span class="o">+</span> <span class="n">additional_info</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Update SMAC stats</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_walltime</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">trial_value</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_used_target_function_cputime</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">trial_value</span><span class="o">.</span><span class="n">cpu_time</span><span class="p">)</span>
+
+            <span class="c1"># Gracefully end optimization if termination cost is reached</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">termination_cost_threshold</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">:</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">trial_info</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">cost</span> <span class="o">=</span> <span class="p">[</span><span class="n">cost</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">termination_cost_threshold</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">cost_threshold</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">termination_cost_threshold</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cost_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">termination_cost_threshold</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cost_threshold</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;You must specify a termination cost threshold for each objective.&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">cost_threshold</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cost</span><span class="p">))):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cost threshold was reached. Abort is requested.&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="SMBO.register_callback">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.register_callback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callback</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Registers a callback to be called before, in between, and after the Bayesian optimization loop.</span>
+
+<span class="sd">        Callback is appended to the list by default.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        callback : Callback</span>
+<span class="sd">            The callback to be registered.</span>
+<span class="sd">        index : int, optional</span>
+<span class="sd">            The index at which the callback should be registered. The default is None.</span>
+<span class="sd">            If it is None, append the callback to the list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detects whether the optimization is restored from a previous state.&quot;&quot;&quot;</span>
+        <span class="c1"># Here we actually check whether the run should be continued or not.</span>
+        <span class="c1"># More precisely, we update our smbo/runhistory/intensifier object if all component arguments</span>
+        <span class="c1"># and scenario object are the same. For doing so, we create a specific hash.</span>
+        <span class="c1"># The SMBO object recognizes that stats (based on runhistory) is not empty and hence does not the run initial</span>
+        <span class="c1"># design anymore.</span>
+        <span class="c1"># Since the runhistory is already updated, the model uses previous data directly.</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_overwrite</span><span class="p">:</span>
+            <span class="n">old_output_directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">old_output_directory</span><span class="p">):</span>
+                <span class="n">old_scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">old_output_directory</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span> <span class="o">==</span> <span class="n">old_scenario</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Continuing from previous run.&quot;</span><span class="p">)</span>
+
+                    <span class="c1"># First we reset everything and then we load the old states</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+                    <span class="c1"># If the last run was not successful, we reset everything again</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">submitted</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">finished</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Since the previous run was not successful, SMAC will start from scratch again.&quot;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Here, we run into different scenarios</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="n">recursively_compare_dicts</span><span class="p">(</span>
+                        <span class="n">Scenario</span><span class="o">.</span><span class="n">make_serializable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="p">),</span>
+                        <span class="n">Scenario</span><span class="o">.</span><span class="n">make_serializable</span><span class="p">(</span><span class="n">old_scenario</span><span class="p">),</span>
+                        <span class="n">level</span><span class="o">=</span><span class="s2">&quot;scenario&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Found old run in `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">output_directory</span><span class="si">}</span><span class="s2">` but it is not the same as the current &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;one:</span><span class="se">\n</span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+                    <span class="n">feedback</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
+                        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Press one of the following numbers to continue or any other key to abort:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;(1) Overwrite old run completely and start a new run.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;(2) Rename the old run (append an &#39;-old&#39;) and start a new run.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">feedback</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+                        <span class="c1"># We don&#39;t have to do anything here, since we work with a clean runhistory and stats object</span>
+                        <span class="k">pass</span>
+                    <span class="k">elif</span> <span class="n">feedback</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span>
+                        <span class="c1"># Rename old run</span>
+                        <span class="n">new_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">old_scenario</span><span class="o">.</span><span class="n">output_directory</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+                        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                            <span class="n">new_dir</span> <span class="o">+=</span> <span class="s2">&quot;-old&quot;</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">old_scenario</span><span class="o">.</span><span class="n">output_directory</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">new_dir</span><span class="p">)</span>
+                                <span class="k">break</span>
+                            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                                <span class="k">pass</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;SMAC run was stopped by the user.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># And now we save everything</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SMBO.validate">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">ndarray</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates a configuration on other seeds than the ones used in the optimization process and on the highest</span>
+<span class="sd">        budget (if budget type is real-valued). Does not exceed the maximum number of config calls or seeds as defined</span>
+<span class="sd">        in the scenario.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : Configuration</span>
+<span class="sd">            Configuration to validate</span>
+<span class="sd">            In case that the budget type is real-valued budget, this argument is ignored.</span>
+<span class="sd">        seed : int | None, defaults to None</span>
+<span class="sd">            If None, the seed from the scenario is used.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cost : float | ndarray[float]</span>
+<span class="sd">            The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is</span>
+<span class="sd">            averaged.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">seed</span>
+
+        <span class="n">costs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_intensifier</span><span class="o">.</span><span class="n">get_trials_of_interest</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">):</span>
+            <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">trial</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">seed</span>
+            <span class="k">if</span> <span class="n">trial</span><span class="o">.</span><span class="n">budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;budget&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">budget</span>
+            <span class="k">if</span> <span class="n">trial</span><span class="o">.</span><span class="n">instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;instance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">instance</span>
+
+            <span class="c1"># TODO: Use submit run for faster evaluation</span>
+            <span class="c1"># self._runner.submit_trial(trial_info=trial)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">costs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cost</span><span class="p">]</span>
+
+        <span class="n">np_costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np_costs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SMBO.print_stats">
+<a class="viewcode-back" href="../../../api/smac.main.smbo.html#smac.main.smbo.SMBO.print_stats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints all statistics.&quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--- STATISTICS -------------------------------------</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--- Incumbent changed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">incumbents_changed</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--- Submitted trials: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">submitted</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">n_trials</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--- Finished trials: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">finished</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">n_trials</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--- Configurations: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">_n_id</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;--- Used wallclock time: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">used_walltime</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">walltime_limit</span><span class="si">}</span><span class="s2"> sec</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;--- Used target function runtime: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">used_target_function_walltime</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">cputime_limit</span><span class="si">}</span><span class="s2"> sec</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;--- Used target function CPU time: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">used_target_function_cputime</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">cputime_limit</span><span class="si">}</span><span class="s2"> sec</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;----------------------------------------------------&quot;</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright Copyright 2025, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+8.2.3. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

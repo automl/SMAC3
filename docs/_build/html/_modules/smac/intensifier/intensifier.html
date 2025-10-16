@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>smac.intensifier.intensifier &#8212; SMAC3 Documentation 2.3.1 documentation</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script src="../../../_static/documentation_options.js?v=7de5c1a2"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../../../index.html">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.3.1
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.1/">v2.3.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.0/">v2.3.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../../search.html" method="get" style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.3.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for smac.intensifier.intensifier</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterator</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ConfigSpace</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.intensifier.abstract_intensifier</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractIntensifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runhistory</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrialInfo</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runhistory.dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstanceSeedBudgetKey</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.utils.configspace</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_config_hash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.utils.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2025, Leibniz University Hanover, Institute of AI&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Intensifier">
+<a class="viewcode-back" href="../../../api/smac.intensifier.intensifier.html#smac.intensifier.Intensifier">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Intensifier</span><span class="p">(</span><span class="n">AbstractIntensifier</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of an intensifier supporting multi-fidelity, multi-objective, and multi-processing.</span>
+<span class="sd">    Races challengers against current incumbents.</span>
+
+<span class="sd">    The behaviour of this intensifier is as follows:</span>
+
+<span class="sd">    - First, adds configs from the runhistory to the queue with N=1 (they will be ignored if they are already</span>
+<span class="sd">      evaluated).</span>
+<span class="sd">    - While loop:</span>
+
+<span class="sd">      - If queue is empty: Intensifies exactly one more instance of one incumbent and samples a new configuration</span>
+<span class="sd">        afterwards.</span>
+<span class="sd">      - If queue is not empty: Configs in the queue are evaluated on N=(N*2) instances if they might be better</span>
+<span class="sd">        than the incumbents. If not, they are removed from the queue and rejected forever.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    max_config_calls : int, defaults to 3</span>
+<span class="sd">        Maximum number of configuration evaluations. Basically, how many instance-seed keys should be maxed evaluated</span>
+<span class="sd">        for a configuration.</span>
+<span class="sd">    max_incumbents : int, defaults to 10</span>
+<span class="sd">        How many incumbents to keep track of in the case of multi-objective.</span>
+<span class="sd">    retries : int, defaults to 16</span>
+<span class="sd">        How many more iterations should be done in case no new trial is found.</span>
+<span class="sd">    seed : int, defaults to None</span>
+<span class="sd">        Internal seed used for random events, like shuffle seeds.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="n">max_config_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">max_incumbents</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">max_config_calls</span><span class="o">=</span><span class="n">max_config_calls</span><span class="p">,</span> <span class="n">max_incumbents</span><span class="o">=</span><span class="n">max_incumbents</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_retries</span> <span class="o">=</span> <span class="n">retries</span>
+
+<div class="viewcode-block" id="Intensifier.reset">
+<a class="viewcode-back" href="../../../api/smac.intensifier.intensifier.html#smac.intensifier.Intensifier.reset">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the internal variables of the intensifier including the queue.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="c1"># Queue to keep track of the challengers</span>
+        <span class="c1"># (config, N=how many trials should be sampled)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uses_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uses_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uses_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">instances</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="Intensifier.get_state">
+<a class="viewcode-back" href="../../../api/smac.intensifier.intensifier.html#smac.intensifier.Intensifier.get_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># noqa: D102</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;queue&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_config_id</span><span class="p">(</span><span class="n">config</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">config</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">has_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="p">],</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="Intensifier.set_state">
+<a class="viewcode-back" href="../../../api/smac.intensifier.intensifier.html#smac.intensifier.Intensifier.set_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;queue&quot;</span><span class="p">]]</span></div>
+
+
+<div class="viewcode-block" id="Intensifier.__iter__">
+<a class="viewcode-back" href="../../../api/smac.intensifier.intensifier.html#smac.intensifier.Intensifier.__iter__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This iter method holds the logic for the intensification loop.</span>
+<span class="sd">        Some facts about the loop:</span>
+
+<span class="sd">        - Adds existing configurations from the runhistory to the queue (that means it supports user-inputs).</span>
+<span class="sd">        - Everytime an incumbent (with the lowest amount of trials) is intensified, a new challenger is added to the</span>
+<span class="sd">          queue.</span>
+<span class="sd">        - If all incumbents are evaluated on the same trials, a new trial is added to one of the incumbents.</span>
+<span class="sd">        - Only challengers which are not rejected/running/incumbent are intensified by N*2.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        trials : Iterator[TrialInfo]</span>
+<span class="sd">            Iterator over the trials.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
+
+        <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="c1"># What if there are already trials in the runhistory? Should we queue them up?</span>
+        <span class="c1"># Because they are part of the runhistory, they might be selected as incumbents. However, they are not</span>
+        <span class="c1"># intensified because they are not part of the queue. We could add them here to incorporate them in the</span>
+        <span class="c1"># intensification process.</span>
+        <span class="c1"># Idea: Add all configs to queue (if it is an incumbent it is removed automatically later on)</span>
+        <span class="c1"># N=1 is enough here as it will increase automatically in the iterations if the configuration is worthy</span>
+        <span class="c1"># Note: The incumbents are updated once the runhistory is set (see abstract intensifier)</span>
+        <span class="c1"># Note 2: If the queue was restored, we don&#39;t want to go in here (queue is restored)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_configs</span><span class="p">():</span>
+                <span class="nb">hash</span> <span class="o">=</span> <span class="n">get_config_hash</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">config</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added config </span><span class="si">{</span><span class="nb">hash</span><span class="si">}</span><span class="s2"> from runhistory to the intensifier queue.&quot;</span><span class="p">)</span>
+
+        <span class="n">fails</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">fails</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Some criteria to stop the intensification if nothing can be intensified anymore</span>
+            <span class="k">if</span> <span class="n">fails</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retries</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Intensifier could not find any new trials.&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="c1"># Some configs from the runhistory</span>
+            <span class="n">running_configs</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_running_configs</span><span class="p">()</span>
+            <span class="n">rejected_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rejected_configs</span><span class="p">()</span>
+
+            <span class="c1"># Now we get the incumbents sorted by number of trials</span>
+            <span class="c1"># Also, incorporate ``get_incumbent_instance_seed_budget_keys`` here because challengers are only allowed to</span>
+            <span class="c1"># sample from the incumbent&#39;s instances</span>
+            <span class="n">incumbents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbents</span><span class="p">(</span><span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;num_trials&quot;</span><span class="p">)</span>
+            <span class="n">incumbent_isb_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbent_instance_seed_budget_keys</span><span class="p">()</span>
+
+            <span class="c1"># Check if configs in queue are still running</span>
+            <span class="n">all_configs_running</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">config</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">config</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">running_configs</span><span class="p">:</span>
+                    <span class="n">all_configs_running</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">all_configs_running</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Queue is empty:&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;All configs in the queue are running:&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;--- No incumbent to intensify.&quot;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">incumbent</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">:</span>
+                    <span class="c1"># Instances of this particular incumbent</span>
+                    <span class="n">individual_incumbent_isb_keys</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+                    <span class="n">incumbent_hash</span> <span class="o">=</span> <span class="n">get_config_hash</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+
+                    <span class="c1"># We don&#39;t want to intensify an incumbent which is either still running or rejected</span>
+                    <span class="k">if</span> <span class="n">incumbent</span> <span class="ow">in</span> <span class="n">running_configs</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;--- Skipping intensifying incumbent </span><span class="si">{</span><span class="n">incumbent_hash</span><span class="si">}</span><span class="s2"> because it has trials pending.&quot;</span>
+                        <span class="p">)</span>
+                        <span class="k">continue</span>
+
+                    <span class="k">if</span> <span class="n">incumbent</span> <span class="ow">in</span> <span class="n">rejected_configs</span><span class="p">:</span>
+                        <span class="c1"># This should actually not happen because if a config is rejected the incumbent should</span>
+                        <span class="c1"># have changed</span>
+                        <span class="c1"># However, we just keep it here as sanity check</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Skipping intensifying incumbent </span><span class="si">{</span><span class="n">incumbent_hash</span><span class="si">}</span><span class="s2"> because it was rejected.&quot;</span><span class="p">)</span>
+                        <span class="k">continue</span>
+
+                    <span class="c1"># If incumbent was evaluated on all incumbent instance intersections but was not evaluated on</span>
+                    <span class="c1"># the differences, we have to add it here</span>
+                    <span class="n">incumbent_isb_key_differences</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incumbent_instance_seed_budget_key_differences</span><span class="p">()</span>
+
+                    <span class="c1"># We set shuffle to false because we first want to evaluate the incumbent instances, then the</span>
+                    <span class="c1"># differences (to make the instance-seed keys for the incumbents equal again)</span>
+                    <span class="n">trials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_trials</span><span class="p">(</span>
+                        <span class="n">incumbent</span><span class="p">,</span>
+                        <span class="n">from_keys</span><span class="o">=</span><span class="n">incumbent_isb_keys</span> <span class="o">+</span> <span class="n">incumbent_isb_key_differences</span><span class="p">,</span>
+                        <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="c1"># If we don&#39;t receive any trials, then we try it randomly with any other because we want to</span>
+                    <span class="c1"># intensify for sure</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">trials</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;--- Incumbent </span><span class="si">{</span><span class="n">incumbent_hash</span><span class="si">}</span><span class="s2"> was already evaluated on all incumbent instances &quot;</span>
+                            <span class="s2">&quot;and incumbent instance differences so far. Looking for new instances...&quot;</span>
+                        <span class="p">)</span>
+                        <span class="n">trials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_trials</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Randomly found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">trials</span><span class="p">)</span><span class="si">}</span><span class="s2"> new trials.&quot;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">trials</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">fails</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;--- Yielding trial </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">individual_incumbent_isb_keys</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> of &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span><span class="si">}</span><span class="s2"> from incumbent </span><span class="si">{</span><span class="n">incumbent_hash</span><span class="si">}</span><span class="s2">...&quot;</span>
+                        <span class="p">)</span>
+                        <span class="k">yield</span> <span class="n">trials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Finished yielding for config </span><span class="si">{</span><span class="n">incumbent_hash</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+                        <span class="c1"># We break here because we only want to intensify one more trial of one incumbent</span>
+                        <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># assert len(incumbent_isb_keys) == self._max_config_calls</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;--- Skipped intensifying incumbent </span><span class="si">{</span><span class="n">incumbent_hash</span><span class="si">}</span><span class="s2"> because no new trials have &quot;</span>
+                            <span class="s2">&quot;been found. Evaluated &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">individual_incumbent_isb_keys</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span><span class="si">}</span><span class="s2"> trials.&quot;</span>
+                        <span class="p">)</span>
+
+                <span class="c1"># For each intensification of the incumbent, we also want to intensify the next configuration</span>
+                <span class="c1"># We simply add it to the queue and intensify it in the next iteration</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">config</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_generator</span><span class="p">)</span>
+                    <span class="n">config_hash</span> <span class="o">=</span> <span class="n">get_config_hash</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">config</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Added a new config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> to the queue.&quot;</span><span class="p">)</span>
+
+                    <span class="c1"># If we added a new config, then we did something in this iteration</span>
+                    <span class="n">fails</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                    <span class="c1"># We stop if we don&#39;t find any configuration anymore</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;If you assume your configspace was not yet exhausted, try to &quot;</span>
+                        <span class="s2">&quot;increase the number of retries in the config selector.&quot;</span>
+                    <span class="p">)</span>
+                    <span class="k">return</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Start finding a new challenger in the queue:&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">copy</span><span class="p">()):</span>
+                    <span class="n">config_hash</span> <span class="o">=</span> <span class="n">get_config_hash</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+                    <span class="c1"># If the config is still running, we ignore it and head to the next config</span>
+                    <span class="k">if</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">running_configs</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> is still running. Skipping this config in the queue...&quot;</span><span class="p">)</span>
+                        <span class="k">continue</span>
+
+                    <span class="c1"># We want to get rid of configs in the queue which are rejected</span>
+                    <span class="k">if</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">rejected_configs</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> was removed from the queue because it was rejected.&quot;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">remove</span><span class="p">((</span><span class="n">config</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+                        <span class="k">continue</span>
+
+                    <span class="c1"># We don&#39;t want to intensify an incumbent here</span>
+                    <span class="k">if</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">incumbents</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> was removed from the queue because it is an incumbent.&quot;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">remove</span><span class="p">((</span><span class="n">config</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+                        <span class="k">continue</span>
+
+                    <span class="c1"># And then we yield as many trials as we specified N</span>
+                    <span class="c1"># However, only the same instances as the incumbents are used</span>
+                    <span class="n">isk_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbent_isb_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">isk_keys</span> <span class="o">=</span> <span class="n">incumbent_isb_keys</span>
+
+                    <span class="c1"># TODO: What to do if there are no incumbent instances? (Use-case: call multiple asks)</span>
+
+                    <span class="n">trials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_trials</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">,</span> <span class="n">from_keys</span><span class="o">=</span><span class="n">isk_keys</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Yielding </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">trials</span><span class="p">)</span><span class="si">}</span><span class="s2"> trials to evaluate config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="n">trials</span><span class="p">:</span>
+                        <span class="n">fails</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                        <span class="k">yield</span> <span class="n">trial</span>
+
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Finished yielding for config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+                    <span class="c1"># Now we have to remove the config</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">remove</span><span class="p">((</span><span class="n">config</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Removed config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> with N=</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> from queue.&quot;</span><span class="p">)</span>
+
+                    <span class="c1"># Finally, we add the same config to the queue with a higher N</span>
+                    <span class="c1"># If the config was rejected by the runhistory, then it&#39;s been removed in the next iteration</span>
+                    <span class="k">if</span> <span class="n">N</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_config_calls</span><span class="p">:</span>
+                        <span class="n">new_pair</span> <span class="o">=</span> <span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">new_pair</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;--- Doubled trials of config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> to N=</span><span class="si">{</span><span class="n">N</span><span class="o">*</span><span class="mi">2</span><span class="si">}</span><span class="s2"> and added it to the queue &quot;</span>
+                                <span class="s2">&quot;again.&quot;</span>
+                            <span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">config</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+
+                            <span class="c1"># Also reset fails here</span>
+                            <span class="n">fails</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Config </span><span class="si">{</span><span class="n">config_hash</span><span class="si">}</span><span class="s2"> with N=</span><span class="si">{</span><span class="n">N</span><span class="o">*</span><span class="mi">2</span><span class="si">}</span><span class="s2"> is already in the queue.&quot;</span><span class="p">)</span>
+
+                    <span class="c1"># If we are at this point, it really is important to break because otherwise, we would intensify</span>
+                    <span class="c1"># all configs in the queue in one iteration</span>
+                    <span class="k">break</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_next_trials</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">N</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">from_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InstanceSeedBudgetKey</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the next trials of the configuration based on ``get_trials_of_interest``. If N is specified,</span>
+<span class="sd">        maximum N trials are returned but not necessarily all of them (depending on evaluated already or still running).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        N : int | None, defaults to None</span>
+<span class="sd">            The maximum number of trials to return. If None, all trials (``max_config_calls``) are returned.</span>
+<span class="sd">            Running and evaluated trials are counted in.</span>
+<span class="sd">        from_keys : list[InstanceSeedBudgetKey], defaults to None</span>
+<span class="sd">            Only instances from the list are considered for the trials.</span>
+<span class="sd">        shuffle : bool, defaults to True</span>
+<span class="sd">            Shuffles the trials in groups. First, all instances are shuffled, then all seeds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
+        <span class="n">is_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_seed_keys_of_interest</span><span class="p">()</span>
+
+        <span class="c1"># Create trials from the instance seed pairs</span>
+        <span class="c1"># trials: list[TrialInfo] = []</span>
+        <span class="c1"># for is_key in is_keys:</span>
+        <span class="c1">#    trials.append(TrialInfo(config=config, instance=is_key.instance, seed=is_key.seed))</span>
+
+        <span class="c1"># Keep ``from_keys`` trials only</span>
+        <span class="k">if</span> <span class="n">from_keys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">valid_is_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">get_instance_seed_key</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">from_keys</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">is_key</span> <span class="ow">in</span> <span class="n">is_keys</span><span class="o">.</span><span class="n">copy</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">is_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_is_keys</span><span class="p">:</span>
+                    <span class="n">is_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">is_key</span><span class="p">)</span>
+
+        <span class="c1"># Counter is important to actually subtract the number of trials that are already evaluated/running</span>
+        <span class="c1"># Otherwise, evaluated/running trials are not considered</span>
+        <span class="c1"># Example: max_config_calls=16, N=8, 2 trials are running, 2 trials are evaluated, 4 trials are pending</span>
+        <span class="c1"># Without a counter, we would return 8 trials because there are still so many trials left open</span>
+        <span class="c1"># With counter, we would return only 4 trials because 4 trials are already evaluated/running</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Now we actually have to check whether the trials have been evaluated already</span>
+        <span class="n">evaluated_isb_keys</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_instance_seed_budget_keys</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">highest_observed_budget_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">isb_key</span> <span class="ow">in</span> <span class="n">evaluated_isb_keys</span><span class="p">:</span>
+            <span class="n">is_key</span> <span class="o">=</span> <span class="n">isb_key</span><span class="o">.</span><span class="n">get_instance_seed_key</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">is_key</span> <span class="ow">in</span> <span class="n">is_keys</span><span class="p">:</span>
+                <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">is_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">is_key</span><span class="p">)</span>
+
+        <span class="c1"># It&#39;s also important to remove running trials from the selection (we don&#39;t want to queue them again)</span>
+        <span class="n">running_trials</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">get_running_trials</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="n">running_trials</span><span class="p">:</span>
+            <span class="n">is_key</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">get_instance_seed_key</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">is_key</span> <span class="ow">in</span> <span class="n">is_keys</span><span class="p">:</span>
+                <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">is_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">is_key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
+            <span class="n">is_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reorder_instance_seed_keys</span><span class="p">(</span><span class="n">is_keys</span><span class="p">)</span>
+
+        <span class="c1"># Return only N trials</span>
+        <span class="k">if</span> <span class="n">N</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="n">counter</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">is_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">N</span><span class="p">:</span>
+                <span class="n">is_keys</span> <span class="o">=</span> <span class="n">is_keys</span><span class="p">[:</span><span class="n">N</span><span class="p">]</span>
+
+        <span class="c1"># Now we convert to trials</span>
+        <span class="n">trials</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TrialInfo</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">is_key</span> <span class="ow">in</span> <span class="n">is_keys</span><span class="p">:</span>
+            <span class="n">trials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TrialInfo</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">is_key</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">is_key</span><span class="o">.</span><span class="n">seed</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">trials</span></div>
+
+</pre></div>
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright Copyright 2025, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+8.2.3. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

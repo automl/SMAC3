@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Command-Line Interface &#8212; SMAC3 Documentation 2.3.1 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script src="../_static/documentation_options.js?v=7de5c1a2"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../index.html">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.3.1
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.1/">v2.3.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.0/">v2.3.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../search.html" method="get" style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.3.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#call-of-the-target-function">
+   Call of the Target Function
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#return-of-the-target-function">
+   Return of the Target Function
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#start-the-optimization">
+   Start the Optimization
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="command-line-interface">
+<h1>Command-Line Interface<a class="headerlink" href="#command-line-interface" title="Link to this heading">¶</a></h1>
+<p>The command-line interface enables the user to run target functions which are non-python code.
+The passed and further called script (using <code class="docutils literal notranslate"><span class="pre">Popen</span></code>) needs to return a standard output which is then interpreted
+to perform the optimization process.</p>
+<p>!!! note</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>In SMAC v2.0, SMAC can not be called from the command-line directly. Instead, the user should use the python 
+interface to call SMAC. The command-line interface is still available in SMAC v1.4.
+</pre></div>
+</div>
+<section id="call-of-the-target-function">
+<h2>Call of the Target Function<a class="headerlink" href="#call-of-the-target-function" title="Link to this heading">¶</a></h2>
+<p>The following example shows how the script is called:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>filename<span class="w"> </span>--instance<span class="o">=</span><span class="nb">test</span><span class="w"> </span>--instance_features<span class="o">=</span><span class="nb">test</span><span class="w"> </span>--seed<span class="o">=</span><span class="m">0</span><span class="w"> </span>--hyperparameter1<span class="o">=</span><span class="m">5323</span>
+</pre></div>
+</div>
+<p>However, as for the python target function, the arguments like instance or budget are depending on which
+components are used. The hyperparameters are depending on the configuration space. The variable <code class="docutils literal notranslate"><span class="pre">filename</span></code> could be
+something like <code class="docutils literal notranslate"><span class="pre">./path/to/your/script.sh</span></code>.</p>
+<p>We recommend using the following code to receive the arguments in a bash script. Please note that the user is not limited
+to bash scripts but can also use executables, python scripts or anything else.</p>
+<p>!!! note</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Since the script is called wih the filename only, make sure to mark the type of the file (e.g., ``#!/bin/bash`` 
+or ``#!/usr/bin/env python``).
+</pre></div>
+</div>
+<p>!!! warning</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Everytime an instance is passed, also an instance feature in form of a comma-separated list (no spaces) of floats is
+passed. If no instance feature for the instance is given, an empty list is passed.
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Set arguments first</span>
+<span class="k">for</span><span class="w"> </span>argument<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="k">do</span>
+<span class="w">    </span><span class="nv">key</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$argument</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f1<span class="w"> </span>-d<span class="o">=</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">value</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$argument</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f2<span class="w"> </span>-d<span class="o">=</span><span class="k">)</span><span class="w">   </span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$key</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;--&quot;</span>*<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="nv">v</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">key</span><span class="p">/--/</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="nb">declare</span><span class="w"> </span><span class="nv">$v</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="k">done</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$instance</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$hyperparameter1</span>
+</pre></div>
+</div>
+</section>
+<section id="return-of-the-target-function">
+<h2>Return of the Target Function<a class="headerlink" href="#return-of-the-target-function" title="Link to this heading">¶</a></h2>
+<p>The script must return an stdout (echo or print) in the following form (white-spaces are ignored):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cost</span><span class="o">=</span><span class="mf">0.5</span><span class="p">;</span> <span class="n">runtime</span><span class="o">=</span><span class="mf">0.01</span><span class="p">;</span> <span class="n">status</span><span class="o">=</span><span class="n">SUCCESS</span><span class="p">;</span> <span class="n">additional_info</span><span class="o">=</span><span class="n">test</span> <span class="p">(</span><span class="n">single</span><span class="o">-</span><span class="n">objective</span><span class="p">)</span>
+<span class="n">cost</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">;</span> <span class="n">runtime</span><span class="o">=</span><span class="mf">0.01</span><span class="p">;</span> <span class="n">status</span><span class="o">=</span><span class="n">SUCCESS</span><span class="p">;</span> <span class="n">additional_info</span><span class="o">=</span><span class="n">test</span> <span class="p">(</span><span class="n">multi</span><span class="o">-</span><span class="n">objective</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>All arguments are optional except cost and are separated by a semicolon. The string of the status must match
+one of the values from [<code class="docutils literal notranslate"><span class="pre">StatusType</span></code>][smac.runhistory.enumerations].</p>
+</section>
+<section id="start-the-optimization">
+<h2>Start the Optimization<a class="headerlink" href="#start-the-optimization" title="Link to this heading">¶</a></h2>
+<p>The optimization will be started by the normal python interface. The only difference is that you need to pass
+a string as target function instead of a python function.</p>
+<p>!! warning</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Your script needs to have rights to be executed (e.g., update the rights with ``chmod``).
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">smac</span> <span class="o">=</span> <span class="n">BlackBoxFacade</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">target_function</span><span class="o">=</span><span class="s2">&quot;./path/to/your/script.sh&quot;</span><span class="p">)</span>
+<span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright Copyright 2025, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+8.2.3. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

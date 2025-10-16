@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>smac.facade.random_facade &#8212; SMAC3 Documentation 2.3.1 documentation</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script src="../../../_static/documentation_options.js?v=7de5c1a2"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../../../index.html">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.3.1
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.1/">v2.3.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.0/">v2.3.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../../search.html" method="get" style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.3.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for smac.facade.random_facade</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ConfigSpace</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.acquisition.function.abstract_acquisition_function</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.acquisition.maximizer.random_search</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomSearch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.facade.abstract_facade</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractFacade</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.initial_design.default_design</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultInitialDesign</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.intensifier.intensifier</span><span class="w"> </span><span class="kn">import</span> <span class="n">Intensifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.model.random_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.multi_objective.aggregation_strategy</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeanAggregationStrategy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.random_design</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractRandomDesign</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runhistory.encoder.encoder</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunHistoryEncoder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scenario</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2025, Leibniz University Hanover, Institute of AI&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+
+<div class="viewcode-block" id="RandomFacade">
+<a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RandomFacade</span><span class="p">(</span><span class="n">AbstractFacade</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Facade to use Random Online Aggressive Racing (ROAR).</span>
+
+<span class="sd">    *Aggressive Racing:*</span>
+<span class="sd">    When we have a new configuration θ, we want to compare it to the current best</span>
+<span class="sd">    configuration, the incumbent θ*. ROAR uses the &#39;racing&#39; approach, where we run few times for unpromising θ and many</span>
+<span class="sd">    times for promising configurations. Once we are confident enough that θ is better than θ*, we update the</span>
+<span class="sd">    incumbent θ* ⟵ θ. `Aggressive` means rejecting low-performing configurations very early, often after a single run.</span>
+<span class="sd">    This together is called `aggressive racing`.</span>
+
+<span class="sd">    *ROAR Loop:*</span>
+<span class="sd">    The main ROAR loop looks as follows:</span>
+
+<span class="sd">    1. Select a configuration θ uniformly at random.</span>
+<span class="sd">    2. Compare θ to incumbent θ* online (one θ at a time):</span>
+<span class="sd">      - Reject/accept θ with `aggressive racing`</span>
+
+<span class="sd">    *Setup:*</span>
+<span class="sd">    Uses a random model and random search for the optimization of the acquisition function.</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    The surrogate model and the acquisition function is not used during the optimization and therefore replaced</span>
+<span class="sd">    by dummies.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RandomFacade.get_acquisition_function">
+<a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_acquisition_function">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_acquisition_function</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The random facade is not using an acquisition function. Therefore, we simply return a dummy function.&quot;&quot;&quot;</span>
+
+        <span class="k">class</span><span class="w"> </span><span class="nc">DummyAcquisitionFunction</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">X</span>
+
+        <span class="k">return</span> <span class="n">DummyAcquisitionFunction</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RandomFacade.get_intensifier">
+<a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_intensifier">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_intensifier</span><span class="p">(</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">max_config_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">max_incumbents</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Intensifier</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns ``Intensifier`` as intensifier.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        Please use the ``HyperbandFacade`` if you want to incorporate budgets.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
+<span class="sd">        If you are in an algorithm configuration setting, consider increasing ``max_config_calls``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        max_config_calls : int, defaults to 3</span>
+<span class="sd">            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated</span>
+<span class="sd">            for a configuration.</span>
+<span class="sd">        max_incumbents : int, defaults to 10</span>
+<span class="sd">            How many incumbents to keep track of in the case of multi-objective.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Intensifier</span><span class="p">(</span>
+            <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+            <span class="n">max_config_calls</span><span class="o">=</span><span class="n">max_config_calls</span><span class="p">,</span>
+            <span class="n">max_incumbents</span><span class="o">=</span><span class="n">max_incumbents</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RandomFacade.get_initial_design">
+<a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_initial_design">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_initial_design</span><span class="p">(</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">additional_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultInitialDesign</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an initial design, which returns the default configuration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        additional_configs: list[Configuration], defaults to []</span>
+<span class="sd">            Adds additional configurations to the initial design.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">additional_configs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">additional_configs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">DefaultInitialDesign</span><span class="p">(</span>
+            <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+            <span class="n">additional_configs</span><span class="o">=</span><span class="n">additional_configs</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RandomFacade.get_random_design">
+<a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_random_design">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_random_design</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractRandomDesign</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just like the acquisition function, we do not use a random design. Therefore, we return a dummy design.&quot;&quot;&quot;</span>
+
+        <span class="k">class</span><span class="w"> </span><span class="nc">DummyRandomDesign</span><span class="p">(</span><span class="n">AbstractRandomDesign</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">DummyRandomDesign</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RandomFacade.get_model">
+<a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_model">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RandomModel</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The model is used in the acquisition function. Since we do not use an acquisition function, we return a</span>
+<span class="sd">        dummy model (returning random values in this case).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RandomModel</span><span class="p">(</span>
+            <span class="n">configspace</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
+            <span class="n">instance_features</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_features</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RandomFacade.get_acquisition_maximizer">
+<a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_acquisition_maximizer">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_acquisition_maximizer</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RandomSearch</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;We return ``RandomSearch`` as maximizer which samples configurations randomly from the configuration</span>
+<span class="sd">        space and therefore neither uses the acquisition function nor the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RandomSearch</span><span class="p">(</span>
+            <span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RandomFacade.get_multi_objective_algorithm">
+<a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_multi_objective_algorithm">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_multi_objective_algorithm</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">objective_weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MeanAggregationStrategy</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the mean aggregation strategy for the multi-objective algorithm.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        scenario : Scenario</span>
+<span class="sd">        objective_weights : list[float] | None, defaults to None</span>
+<span class="sd">            Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of</span>
+<span class="sd">            objectives.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">MeanAggregationStrategy</span><span class="p">(</span>
+            <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+            <span class="n">objective_weights</span><span class="o">=</span><span class="n">objective_weights</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RandomFacade.get_runhistory_encoder">
+<a class="viewcode-back" href="../../../api/smac.facade.random_facade.html#smac.facade.RandomFacade.get_runhistory_encoder">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_runhistory_encoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistoryEncoder</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the default runhistory encoder.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RunHistoryEncoder</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright Copyright 2025, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+8.2.3. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

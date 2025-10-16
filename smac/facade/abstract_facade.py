@@ -418,7 +418,7 @@ class AbstractFacade:
     def get_config_selector(
         scenario: Scenario,
         *,
-        retrain_after: int = 8,
+        retrain_after: int = 1,
         retries: int = 16,
     ) -> ConfigSelector:
         """Returns the default configuration selector."""

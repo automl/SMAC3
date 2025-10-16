@@ -1,0 +1,37 @@
+smac.intensifier.successive\_halving
+====================================
+
+.. automodule:: smac.intensifier.successive_halving
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      SuccessiveHalving
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

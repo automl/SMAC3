@@ -1,0 +1,135 @@
+{
+    "name": "HPOFacade_retrain1",
+    "deterministic": true,
+    "objectives": "cost",
+    "crash_cost": Infinity,
+    "termination_cost_threshold": Infinity,
+    "walltime_limit": Infinity,
+    "cputime_limit": Infinity,
+    "trial_walltime_limit": null,
+    "trial_memory_limit": null,
+    "n_trials": 40,
+    "use_default_config": false,
+    "instances": null,
+    "instance_features": null,
+    "min_budget": null,
+    "max_budget": null,
+    "seed": 0,
+    "n_workers": 1,
+    "_meta": {
+        "facade": {
+            "name": "HyperparameterOptimizationFacade"
+        },
+        "runner": {
+            "name": "TargetFunctionRunner",
+            "code": "b'\\x97\\x00|\\x00d\\x01\\x19\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00|\\x00d\\x02\\x19\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00}\\x04}\\x03d\\x03}\\x05d\\x04d\\x05t\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00j\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00d\\x06z\\x08\\x00\\x00z\\x05\\x00\\x00z\\x0b\\x00\\x00}\\x06d\\x07t\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00j\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00z\\x0b\\x00\\x00}\\x07d\\x08}\\x08d\\t}\\td\\nd\\x0bt\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00j\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00z\\x05\\x00\\x00z\\x0b\\x00\\x00}\\n|\\x05|\\x04|\\x06|\\x03d\\x06z\\x08\\x00\\x00z\\x05\\x00\\x00z\\n\\x00\\x00|\\x07|\\x03z\\x05\\x00\\x00z\\x00\\x00\\x00|\\x08z\\n\\x00\\x00d\\x06z\\x08\\x00\\x00z\\x05\\x00\\x00|\\td\\n|\\nz\\n\\x00\\x00z\\x05\\x00\\x00t\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00j\\x02\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00|\\x03\\xa6\\x01\\x00\\x00\\xab\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00z\\x05\\x00\\x00z\\x00\\x00\\x00|\\tz\\x00\\x00\\x00S\\x00'"
+        },
+        "model": {
+            "name": "RandomForest",
+            "types": [
+                0,
+                0
+            ],
+            "bounds": [
+                [
+                    0,
+                    1.0
+                ],
+                [
+                    0,
+                    1.0
+                ]
+            ],
+            "pca_components": 7,
+            "n_trees": 10,
+            "n_points_per_tree": -1,
+            "ratio_features": 1.0,
+            "min_samples_split": 2,
+            "min_samples_leaf": 1,
+            "max_depth": 1048576,
+            "eps_purity": 1e-08,
+            "max_nodes": 1048576,
+            "bootstrapping": true
+        },
+        "acquisition_maximizer": {
+            "name": "LocalAndSortedRandomSearch",
+            "acquisition_function": {
+                "name": "EI",
+                "xi": 0.0,
+                "log": true
+            },
+            "challengers": 10000,
+            "seed": 0,
+            "random_search": {
+                "name": "RandomSearch",
+                "acquisition_function": {
+                    "name": "EI",
+                    "xi": 0.0,
+                    "log": true
+                },
+                "challengers": 5000,
+                "seed": 0
+            },
+            "local_search": {
+                "name": "LocalSearch",
+                "acquisition_function": {
+                    "name": "EI",
+                    "xi": 0.0,
+                    "log": true
+                },
+                "challengers": 5000,
+                "seed": 0,
+                "max_steps": null,
+                "n_steps_plateau_walk": 10,
+                "vectorization_min_obtain": 2,
+                "vectorization_max_obtain": 64
+            }
+        },
+        "acquisition_function": {
+            "name": "EI",
+            "xi": 0.0,
+            "log": true
+        },
+        "intensifier": {
+            "name": "SuccessiveHalving",
+            "max_incumbents": 10,
+            "max_config_calls": null,
+            "seed": 0,
+            "eta": 3,
+            "instance_seed_order": "shuffle_once",
+            "incumbent_selection": "highest_observed_budget"
+        },
+        "initial_design": {
+            "name": "SobolInitialDesign",
+            "n_configs": 10,
+            "n_configs_per_hyperparameter": 10,
+            "additional_configs": [],
+            "seed": 0
+        },
+        "random_design": {
+            "name": "ProbabilityRandomDesign",
+            "seed": 0,
+            "probability": 0.2
+        },
+        "runhistory_encoder": {
+            "name": "RunHistoryLogScaledEncoder",
+            "considered_states": [
+                1,
+                2,
+                4
+            ],
+            "lower_budget_states": [],
+            "scale_percentage": 5,
+            "seed": 0
+        },
+        "multi_objective_algorithm": null,
+        "config_selector": {
+            "name": "ConfigSelector",
+            "retrain_after": 1,
+            "retries": 16,
+            "min_trials": 1
+        },
+        "version": "2.3.1"
+    },
+    "output_directory": "results\\HPOFacade_retrain1\\HPOFacade_retrain1\\0"
+}

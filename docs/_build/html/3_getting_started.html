@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Getting Started &#8212; SMAC3 Documentation 2.3.1 documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    
+  <link rel="preload" as="script" href="_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script src="_static/documentation_options.js?v=7de5c1a2"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="index.html">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.3.1
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.1/">v2.3.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.0/">v2.3.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="search.html" method="get" style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.3.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configuration-space">
+   Configuration Space
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#target-function">
+   Target Function
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scenario">
+   Scenario
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#facade">
+   Facade
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <p><a class="reference internal" href="#"><code class="xref myst docutils literal notranslate"></code></a>{#getting_started}</p>
+<section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
+<p>SMAC needs four core components (configuration space, target function, scenario and a facade) to run an
+optimization process, all of which are explained on this page.</p>
+<p>They interact in the following way:</p>
+<figure markdown="span">
+  ![Interaction of SMAC's components](./images/smac_components_interaction.jpg){ width="300" }
+  <figcaption>Interaction of SMAC's components</figcaption>
+</figure>
+<section id="configuration-space">
+<h2>Configuration Space<a class="headerlink" href="#configuration-space" title="Link to this heading">¶</a></h2>
+<p>The configuration space defines the search space of the hyperparameters and, therefore, the tunable parameters’ legal
+ranges and default values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ConfigSpace</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigSpace</span>
+
+<span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">({</span>
+    <span class="s2">&quot;myfloat&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">),</span>                <span class="c1"># Uniform Float</span>
+    <span class="s2">&quot;myint&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>                     <span class="c1"># Uniform Integer</span>
+    <span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;dog&quot;</span><span class="p">],</span>   <span class="c1"># Categorical</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>Please see the documentation of <a class="reference external" href="https://automl.github.io/ConfigSpace">ConfigurationSpace</a> for more details.</p>
+</section>
+<section id="target-function">
+<h2>Target Function<a class="headerlink" href="#target-function" title="Link to this heading">¶</a></h2>
+<p>The target function takes a configuration from the configuration space and returns a performance value.
+For example, you could use a Neural Network to predict on your data and get some validation performance.
+If, for instance, you would tune the learning rate of the Network’s optimizer, every learning rate will
+change the final validation performance of the network. This is the target function.
+SMAC tries to find the best performing learning rate by trying different values and evaluating the target function -
+in an efficient way.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">MultiLayerPerceptron</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">])</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">accuracy</span>  <span class="c1"># SMAC always minimizes (the smaller the better)</span>
+</pre></div>
+</div>
+<p>!!! note
+In general, the arguments of the target function depend on the intensifier. However,
+in all cases, the first argument must be the configuration (arbitrary argument name is possible here) and a seed.
+If you specified instances in the scenario, SMAC requires <code class="docutils literal notranslate"><span class="pre">instance</span></code> as argument additionally. If you use
+<code class="docutils literal notranslate"><span class="pre">SuccessiveHalving</span></code> or <code class="docutils literal notranslate"><span class="pre">Hyperband</span></code> as intensifier but you did not specify instances, SMAC passes <code class="docutils literal notranslate"><span class="pre">budget</span></code> as
+argument to the target function. But don’t worry: SMAC will tell you if something is missing or if something is not
+used.</p>
+<p>!!! warning
+SMAC <em>always</em> minimizes the value returned from the target function.</p>
+<p>!!! warning
+SMAC passes either <code class="docutils literal notranslate"><span class="pre">instance</span></code> or <code class="docutils literal notranslate"><span class="pre">budget</span></code> to the target function but never both.</p>
+</section>
+<section id="scenario">
+<h2>Scenario<a class="headerlink" href="#scenario" title="Link to this heading">¶</a></h2>
+<p>The [Scenario][smac.scenario] is used to provide environment variables. For example,
+if you want to limit the optimization process by a time limit or want to specify where to save the results.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">smac</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scenario</span>
+
+<span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
+    <span class="n">configspace</span><span class="o">=</span><span class="n">cs</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;experiment_name&quot;</span><span class="p">,</span>
+    <span class="n">output_directory</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;your_output_directory&quot;</span><span class="p">)</span>
+    <span class="n">walltime_limit</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span>  <span class="c1"># Limit to two minutes</span>
+    <span class="n">n_trials</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>  <span class="c1"># Evaluated max 500 trials</span>
+    <span class="n">n_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>  <span class="c1"># Use eight workers</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>!!! note
+If no <code class="docutils literal notranslate"><span class="pre">name</span></code> is given, a hash of the experiment is used. Running the same experiment again at a later time will result in exactly the same hash. This is important, because the optimization will warmstart on the preexisting evaluations, if not otherwise specified in the [Facade][smac.facade.abstract_facade].</p>
+</section>
+<section id="facade">
+<h2>Facade<a class="headerlink" href="#facade" title="Link to this heading">¶</a></h2>
+<p>!!! warn
+By default Facades will try to warmstart on preexisting logs. This behavior can be specified using the <code class="docutils literal notranslate"><span class="pre">overwrite</span></code> parameter.</p>
+<p>A [facade][smac.facade.abstract_facade] is the entry point to SMAC, which constructs a default optimization
+pipeline for you. SMAC offers various facades, which satisfy many common use cases and are crucial to
+achieving peak performance. The idea behind the facades is to provide a simple interface to all of SMAC’s components,
+which is easy to use and understand and without the need of deep diving into the material. However, experts are
+invited to change the components to their specific hyperparameter optimization needs. The following
+table (horizontally scrollable) shows you what is supported and reveals the default [components][components]:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>[Black-Box][smac.facade.blackbox_facade]</p></th>
+<th class="head"><p>[Hyperparameter Optimization][smac.facade.hyperparameter_optimization_facade]</p></th>
+<th class="head"><p>[Multi-Fidelity][smac.facade.multi_fidelity_facade]</p></th>
+<th class="head"><p>[Algorithm Configuration][smac.facade.algorithm_configuration_facade]</p></th>
+<th class="head"><p>[Random][smac.facade.random_facade]</p></th>
+<th class="head"><p>[Hyperband][smac.facade.hyperband_facade]</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>#Parameters</p></td>
+<td><p>low</p></td>
+<td><p>low/medium/high</p></td>
+<td><p>low/medium/high</p></td>
+<td><p>low/medium/high</p></td>
+<td><p>low/medium/high</p></td>
+<td><p>low/medium/high</p></td>
+</tr>
+<tr class="row-odd"><td><p>Supports Instances</p></td>
+<td><p>❌</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p>Supports Multi-Fidelity</p></td>
+<td><p>❌</p></td>
+<td><p>❌</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>❌</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-odd"><td><p>Initial Design</p></td>
+<td><p>[Sobol][smac.initial_design.sobol_design]</p></td>
+<td><p>[Sobol][smac.initial_design.sobol_design]</p></td>
+<td><p>[Random][smac.initial_design.random_design]</p></td>
+<td><p>[Default][smac.initial_design.default_design]</p></td>
+<td><p>[Default][smac.initial_design.default_design]</p></td>
+<td><p>[Default][smac.initial_design.default_design]</p></td>
+</tr>
+<tr class="row-even"><td><p>Surrogate Model</p></td>
+<td><p>[Gaussian Process][smac.model.gaussian_process.gaussian_process]</p></td>
+<td><p>[Random Forest][smac.model.random_forest.random_forest]</p></td>
+<td><p>[Random Forest][smac.model.random_forest.random_forest]</p></td>
+<td><p>[Random Forest][smac.model.random_forest.random_forest]</p></td>
+<td><p>Not used</p></td>
+<td><p>Not used</p></td>
+</tr>
+<tr class="row-odd"><td><p>Acquisition Function</p></td>
+<td><p>[Expected Improvement][smac.acquisition.function.expected_improvement]</p></td>
+<td><p>[Log Expected Improvement][smac.acquisition.function.expected_improvement]</p></td>
+<td><p>[Log Expected Improvement][smac.acquisition.function.expected_improvement]</p></td>
+<td><p>[Expected Improvement][smac.acquisition.function.expected_improvement]</p></td>
+<td><p>Not used</p></td>
+<td><p>Not used</p></td>
+</tr>
+<tr class="row-even"><td><p>Acquisition Maximizer</p></td>
+<td><p>[Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search]</p></td>
+<td><p>[Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search]</p></td>
+<td><p>[Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search]</p></td>
+<td><p>[Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search]</p></td>
+<td><p>Not Used</p></td>
+<td><p>Not Used</p></td>
+</tr>
+<tr class="row-odd"><td><p>Intensifier</p></td>
+<td><p>[Default][smac.intensifier.intensifier]</p></td>
+<td><p>[Default][smac.intensifier.intensifier]</p></td>
+<td><p>[Hyperband][smac.intensifier.hyperband]</p></td>
+<td><p>[Default][smac.intensifier.intensifier]</p></td>
+<td><p>[Default][smac.intensifier.intensifier]</p></td>
+<td><p>[Hyperband][smac.intensifier.hyperband]</p></td>
+</tr>
+<tr class="row-even"><td><p>Runhistory Encoder</p></td>
+<td><p>[Default][smac.runhistory.encoder.encoder]</p></td>
+<td><p>[Log][smac.runhistory.encoder.log_encoder]</p></td>
+<td><p>[Log][smac.runhistory.encoder.log_encoder]</p></td>
+<td><p>[Default][smac.runhistory.encoder.encoder]</p></td>
+<td><p>[Default][smac.runhistory.encoder.encoder]</p></td>
+<td><p>[Default][smac.runhistory.encoder.encoder]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Random Design Probability</p></td>
+<td><p>8.5%</p></td>
+<td><p>20%</p></td>
+<td><p>20%</p></td>
+<td><p>50%</p></td>
+<td><p>Not used</p></td>
+<td><p>Not used</p></td>
+</tr>
+</tbody>
+</table>
+<p>!!! info
+The multi-fidelity facade is the closest implementation to <a class="reference external" href="https://github.com/automl/HpBandSter">BOHB</a>.</p>
+<p>!!! note
+We want to emphasize that SMAC is a highly modular optimization framework.
+The facade accepts many arguments to specify components of the pipeline. Please also note, that in contrast
+to previous versions, instantiated objects are passed instead of <em>kwargs</em>.</p>
+<p>The facades can be imported directly from the <code class="docutils literal notranslate"><span class="pre">smac</span></code> module.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">smac</span><span class="w"> </span><span class="kn">import</span> <span class="n">BlackBoxFacade</span> <span class="k">as</span> <span class="n">BBFacade</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac</span><span class="w"> </span><span class="kn">import</span> <span class="n">HyperparameterOptimizationFacade</span> <span class="k">as</span> <span class="n">HPOFacade</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiFidelityFacade</span> <span class="k">as</span> <span class="n">MFFacade</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac</span><span class="w"> </span><span class="kn">import</span> <span class="n">AlgorithmConfigurationFacade</span> <span class="k">as</span> <span class="n">ACFacade</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomFacade</span> <span class="k">as</span> <span class="n">RFacade</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac</span><span class="w"> </span><span class="kn">import</span> <span class="n">HyperbandFacade</span> <span class="k">as</span> <span class="n">HBFacade</span>
+
+<span class="n">smac</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">target_function</span><span class="o">=</span><span class="n">train</span><span class="p">)</span>
+<span class="n">smac</span> <span class="o">=</span> <span class="n">MFFacade</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">target_function</span><span class="o">=</span><span class="n">train</span><span class="p">)</span>
+<span class="n">smac</span> <span class="o">=</span> <span class="n">ACFacade</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">target_function</span><span class="o">=</span><span class="n">train</span><span class="p">)</span>
+<span class="n">smac</span> <span class="o">=</span> <span class="n">RFacade</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">target_function</span><span class="o">=</span><span class="n">train</span><span class="p">)</span>
+<span class="n">smac</span> <span class="o">=</span> <span class="n">HBFacade</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">target_function</span><span class="o">=</span><span class="n">train</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright Copyright 2025, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+8.2.3. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

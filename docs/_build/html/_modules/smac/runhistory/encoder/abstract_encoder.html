@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>smac.runhistory.encoder.abstract_encoder &#8212; SMAC3 Documentation 2.3.1 documentation</title>
+    
+  <link href="../../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    
+  <link rel="preload" as="script" href="../../../../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script src="../../../../_static/documentation_options.js?v=7de5c1a2"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../../../../index.html">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.3.1
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.1/">v2.3.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.0/">v2.3.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../../../search.html" method="get" style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.3.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for smac.runhistory.encoder.abstract_encoder</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Mapping</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.multi_objective</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractMultiObjectiveAlgorithm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runhistory.runhistory</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runner.abstract_runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">StatusType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.utils.configspace</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_configurations_to_array</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.utils.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2025, Leibniz University Hanover, Institute of AI&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AbstractRunHistoryEncoder">
+<a class="viewcode-back" href="../../../../api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AbstractRunHistoryEncoder</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class for preparing data in order to train a surrogate model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scenario : Scenario object.</span>
+<span class="sd">    considered_states : list[StatusType], defaults to [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMORYOUT]  # noqa: E501</span>
+<span class="sd">        Trials with the passed states are considered.</span>
+<span class="sd">    lower_budget_states : list[StatusType], defaults to []</span>
+<span class="sd">        Additionally consider all trials with these states for budget &lt; current budget.</span>
+<span class="sd">    scale_percentage : int, defaults to 5</span>
+<span class="sd">        Scaled y-transformation use a percentile to estimate distance to optimum. Only used in some sub-classes.</span>
+<span class="sd">    seed : int | None, defaults to none</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If no success states are given.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="n">considered_states</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StatusType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">lower_budget_states</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StatusType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">scale_percentage</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">considered_states</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">considered_states</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
+                <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">,</span>
+                <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMORYOUT</span><span class="p">,</span>
+            <span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">seed</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scale_percentage</span> <span class="o">=</span> <span class="n">scale_percentage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">count_objectives</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_algorithm_walltime_limit</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">trial_walltime_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lower_budget_states</span> <span class="o">=</span> <span class="n">lower_budget_states</span> <span class="k">if</span> <span class="n">lower_budget_states</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_considered_states</span> <span class="o">=</span> <span class="n">considered_states</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">instances</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instance_features</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">instance_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_features</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">count_instance_features</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_features</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;We strongly encourage to use instance features when using instances.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;If no instance features are passed, the runhistory encoder can not distinguish between different &quot;</span>
+                <span class="s2">&quot;instances and therefore returns the same data points with different values, all of which are &quot;</span>
+                <span class="s2">&quot;used to train the surrogate model.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;Consider using instance indices as features.&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Learned statistics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_percentile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_objectives</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span><span class="p">:</span> <span class="n">AbstractMultiObjectiveAlgorithm</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the meta-data of the created object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict[str, Any]: meta-data of the created object: name, considered states, lower budget</span>
+<span class="sd">        states, scale_percentage, seed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;considered_states&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_considered_states</span><span class="p">,</span>
+            <span class="s2">&quot;lower_budget_states&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lower_budget_states</span><span class="p">,</span>
+            <span class="s2">&quot;scale_percentage&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scale_percentage</span><span class="p">,</span>
+            <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The RunHistory used to transform the data.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span>
+
+    <span class="nd">@runhistory</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the multi objective algorithm.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="o">=</span> <span class="n">runhistory</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multi_objective_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractMultiObjectiveAlgorithm</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The multi objective algorithm used to transform the data.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span>
+
+    <span class="nd">@multi_objective_algorithm</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multi_objective_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">AbstractMultiObjectiveAlgorithm</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the multi objective algorithm.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multi_objective_algorithm</span> <span class="o">=</span> <span class="n">algorithm</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_matrix</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">trials</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">],</span>
+        <span class="n">store_statistics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Builds x and y matrices from selected runs of the RunHistory.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        trials : Mapping[TrialKey, TrialValue]</span>
+<span class="sd">        runhistory : RunHistory</span>
+<span class="sd">        store_statistics: bool, defaults to false</span>
+<span class="sd">            Whether to store statistics about the data (to be used at subsequent calls).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">        Y : np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_considered_trials</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns all trials that are considered for the model.</span>
+<span class="sd">        Depends on the user&#39;s considered states and lower budget states.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        budget_subset : list[int|float] | None, defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">trials</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">budget_subset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">budget_subset</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can not yet handle getting runs from multiple budgets.&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">trial_key</span><span class="p">,</span> <span class="n">trial_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">add</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">budget_subset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">trial_key</span><span class="o">.</span><span class="n">budget</span> <span class="ow">in</span> <span class="n">budget_subset</span> <span class="ow">and</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_considered_states</span><span class="p">:</span>
+                    <span class="n">add</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">trial_key</span><span class="o">.</span><span class="n">budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="n">budget_subset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="n">trial_key</span><span class="o">.</span><span class="n">budget</span> <span class="o">&lt;</span> <span class="n">budget_subset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="ow">and</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lower_budget_states</span>
+                <span class="p">):</span>
+                    <span class="n">add</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Get only successfully finished runs</span>
+                <span class="k">if</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_considered_states</span><span class="p">:</span>
+                    <span class="n">add</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="n">add</span><span class="p">:</span>
+                <span class="n">trials</span><span class="p">[</span><span class="n">trial_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">trial_value</span>
+
+        <span class="k">return</span> <span class="n">trials</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_timeout_trials</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">TrialKey</span><span class="p">,</span> <span class="n">TrialValue</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all trials that did have a timeout.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">budget_subset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">trials</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">trial</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">[</span><span class="n">trial</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">[</span><span class="n">trial</span><span class="p">]</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span>
+                <span class="c1"># and runhistory.data[run].time &gt;= self._algorithm_walltime_limit  # type: ignore</span>
+                <span class="ow">and</span> <span class="n">trial</span><span class="o">.</span><span class="n">budget</span> <span class="ow">in</span> <span class="n">budget_subset</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">trials</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">trial</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">[</span><span class="n">trial</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">[</span><span class="n">trial</span><span class="p">]</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span>
+                <span class="c1"># and runhistory.data[run].time &gt;= self._algorithm_walltime_limit  # type: ignore</span>
+            <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">trials</span>
+
+<div class="viewcode-block" id="AbstractRunHistoryEncoder.get_configurations">
+<a class="viewcode-back" href="../../../../api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.get_configurations">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_configurations</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns vector representation of the configurations.</span>
+
+<span class="sd">        Warning</span>
+<span class="sd">        -------</span>
+<span class="sd">        Instance features are not</span>
+<span class="sd">        appended and cost values are not taken into account.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        budget_subset : list[int|float] | None, defaults to none</span>
+<span class="sd">            List of budgets to consider.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        configs_array : np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s_trials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_considered_trials</span><span class="p">(</span><span class="n">budget_subset</span><span class="p">)</span>
+        <span class="n">s_config_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">s_trial</span><span class="o">.</span><span class="n">config_id</span> <span class="k">for</span> <span class="n">s_trial</span> <span class="ow">in</span> <span class="n">s_trials</span><span class="p">)</span>
+        <span class="n">t_trials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_timeout_trials</span><span class="p">(</span><span class="n">budget_subset</span><span class="p">)</span>
+        <span class="n">t_config_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">t_trial</span><span class="o">.</span><span class="n">config_id</span> <span class="k">for</span> <span class="n">t_trial</span> <span class="ow">in</span> <span class="n">t_trials</span><span class="p">)</span>
+        <span class="n">config_ids</span> <span class="o">=</span> <span class="n">s_config_ids</span> <span class="o">|</span> <span class="n">t_config_ids</span>
+        <span class="n">configurations</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">_ids_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">config_id</span> <span class="ow">in</span> <span class="n">config_ids</span><span class="p">]</span>
+        <span class="n">configs_array</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">(</span><span class="n">configurations</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">configs_array</span></div>
+
+
+<div class="viewcode-block" id="AbstractRunHistoryEncoder.transform">
+<a class="viewcode-back" href="../../../../api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">budget_subset</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a vector representation of the RunHistory.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        budget_subset : list | None, defaults to none</span>
+<span class="sd">            List of budgets to consider.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            Configuration vector and instance features.</span>
+<span class="sd">        Y : np.ndarray</span>
+<span class="sd">            Cost values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Transforming RunHistory into X, y format...&quot;</span><span class="p">)</span>
+
+        <span class="n">considered_trials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_considered_trials</span><span class="p">(</span><span class="n">budget_subset</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_matrix</span><span class="p">(</span><span class="n">trials</span><span class="o">=</span><span class="n">considered_trials</span><span class="p">,</span> <span class="n">store_statistics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Get real TIMEOUT runs</span>
+        <span class="n">timeout_trials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_timeout_trials</span><span class="p">(</span><span class="n">budget_subset</span><span class="p">)</span>
+
+        <span class="c1"># Use penalization (e.g. PAR10) for EPM training</span>
+        <span class="n">store_statistics</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min_y</span><span class="p">))</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="n">tX</span><span class="p">,</span> <span class="n">tY</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_matrix</span><span class="p">(</span><span class="n">trials</span><span class="o">=</span><span class="n">timeout_trials</span><span class="p">,</span> <span class="n">store_statistics</span><span class="o">=</span><span class="n">store_statistics</span><span class="p">)</span>
+
+        <span class="c1"># If we don&#39;t have successful runs, we have to return all timeout runs</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">considered_trials</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tX</span><span class="p">,</span> <span class="n">tY</span>
+
+        <span class="c1"># If we do not impute, we also return TIMEOUT data</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">tX</span><span class="p">))</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Y</span><span class="p">,</span> <span class="n">tY</span><span class="p">))</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Converted </span><span class="si">%d</span><span class="s2"> observations.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span></div>
+
+
+<div class="viewcode-block" id="AbstractRunHistoryEncoder.transform_response_values">
+<a class="viewcode-back" href="../../../../api/smac.runhistory.encoder.abstract_encoder.html#smac.runhistory.encoder.AbstractRunHistoryEncoder.transform_response_values">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform_response_values</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform function response values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        values : np.ndarray</span>
+<span class="sd">            Response values to be transformed.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        transformed_values : np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</div>
+
+</pre></div>
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../../../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright Copyright 2025, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+8.2.3. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

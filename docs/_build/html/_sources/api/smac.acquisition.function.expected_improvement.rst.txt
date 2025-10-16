@@ -1,0 +1,38 @@
+smac.acquisition.function.expected\_improvement
+===============================================
+
+.. automodule:: smac.acquisition.function.expected_improvement
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      EI
+      EIPS
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

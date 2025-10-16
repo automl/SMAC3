@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Components &#8212; SMAC3 Documentation 2.3.1 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script src="../_static/documentation_options.js?v=7de5c1a2"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../index.html">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.3.1
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.1/">v2.3.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.0/">v2.3.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../search.html" method="get" style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.3.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#surrogate-model-smac-facade-abstract-facade">
+   [Surrogate Model][smac.facade.abstract_facade]
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#acquisition-function-smac-acquisition-function-abstract-acquisition-function">
+   [Acquisition Function][smac.acquisition.function.abstract_acquisition_function]
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#acquisition-maximize-smac-acquisition-maximizer-abstract-acquisition-maximizer">
+   [Acquisition Maximize][smac.acquisition.maximizer.abstract_acquisition_maximizer]
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#initial-design-smac-initial-design-abstract-initial-design">
+   [Initial Design][smac.initial_design.abstract_initial_design]
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#random-design-smac-initial-design-random-design">
+   [Random Design][smac.initial_design.random_design]
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#intensifier-smac-intensifier-abstract-intensifier">
+   [Intensifier][smac.intensifier.abstract_intensifier]
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configuration-selector-smac-main-config-selector">
+   [Configuration Selector][smac.main.config_selector]
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#multi-objective-algorithm-smac-multi-objective-abstract-multi-objective-algorithm">
+   [Multi-Objective Algorithm][smac.multi_objective.abstract_multi_objective_algorithm]
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#runhistory-smac-runhistory-runhistory">
+   [RunHistory][smac.runhistory.runhistory]
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#runhistory-encoder-smac-runhistory-encoder-abstract-encoder">
+   [RunHistory Encoder][smac.runhistory.encoder.abstract_encoder]
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#callback-smac-callback-callback">
+   [Callback][smac.callback.callback]
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="components">
+<h1>Components<a class="headerlink" href="#components" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="#"><code class="xref myst docutils literal notranslate"></code></a>{#components}</p>
+<p>In addition to the basic components mentioned in [Getting Started][getting_started], all other components are
+explained in the following paragraphs to give a better picture of SMAC. These components are all used to guide
+the optimization process and simple changes can influence the results drastically.</p>
+<p>Before diving into the components, we shortly want to explain the main Bayesian optimization loop in SMAC.
+The [SMBO][SMBO] receives all instantiated components from the facade and the logic happens here.
+In general, a while loop is used to ask for the next trial, submit it to the runner, and wait for the runner to
+finish the evaluation. Since the runner and the [<code class="docutils literal notranslate"><span class="pre">SMBO</span></code>][smac.main.smbo]
+object are decoupled, the while loop continues and asks for even
+more trials (e.g., in case of multi-threading), which also can be submitted to the runner. If all workers are
+occupied, SMAC will wait until a new worker is available again. Moreover, limitations like wallclock time and remaining
+trials are checked in every iteration.</p>
+<section id="surrogate-model-smac-facade-abstract-facade">
+<h2>[Surrogate Model][smac.facade.abstract_facade]<a class="headerlink" href="#surrogate-model-smac-facade-abstract-facade" title="Link to this heading">¶</a></h2>
+<p>The surrogate model is used to approximate the objective function of configurations. In previous versions, the model was
+referred to as the Empirical Performance Model (EPM). Mostly, Bayesian optimization is used/associated with Gaussian
+processes. However, SMAC also incorporates random forests as surrogate models, which makes it possible to optimize for
+higher dimensional and complex spaces.</p>
+<p>The data used to train the surrogate model is collected by the runhistory encoder (receives data from the runhistory
+and transforms it). If budgets are
+involved, the highest budget which satisfies <code class="docutils literal notranslate"><span class="pre">min_trials</span></code> (defaults to 1) in [smac.main.config_selector][smac.main.config_selector] is
+used. If no budgets are used, all observations are used.</p>
+<p>If you are using instances, it is recommended to use instance features. The model is trained on each instance
+associated with its features. Imagine you have two hyperparameters, two instances and no instance features, the model
+would be trained on:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>HP 1</p></th>
+<th class="head"><p>HP 2</p></th>
+<th class="head"><p>Objective Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0.1</p></td>
+<td><p>0.8</p></td>
+<td><p>0.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.1</p></td>
+<td><p>0.8</p></td>
+<td><p>0.75</p></td>
+</tr>
+<tr class="row-even"><td><p>505</p></td>
+<td><p>7</p></td>
+<td><p>2.4</p></td>
+</tr>
+<tr class="row-odd"><td><p>505</p></td>
+<td><p>7</p></td>
+<td><p>1.3</p></td>
+</tr>
+</tbody>
+</table>
+<p>You can see that the same inputs lead to different objective values because of two instances. If you associate
+each instance with a feature, you would end-up with the following data points:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>HP 1</p></th>
+<th class="head"><p>HP 2</p></th>
+<th class="head"><p>Instance Feature</p></th>
+<th class="head"><p>Objective Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0.1</p></td>
+<td><p>0.8</p></td>
+<td><p>0</p></td>
+<td><p>0.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.1</p></td>
+<td><p>0.8</p></td>
+<td><p>1</p></td>
+<td><p>0.75</p></td>
+</tr>
+<tr class="row-even"><td><p>505</p></td>
+<td><p>7</p></td>
+<td><p>0</p></td>
+<td><p>2.4</p></td>
+</tr>
+<tr class="row-odd"><td><p>505</p></td>
+<td><p>7</p></td>
+<td><p>1</p></td>
+<td><p>1.3</p></td>
+</tr>
+</tbody>
+</table>
+<p>The steps to receiving data are as follows:</p>
+<ul class="simple">
+<li><p>The intensifier requests new configurations via <code class="docutils literal notranslate"><span class="pre">next(self.config_generator)</span></code>.</p></li>
+<li><p>The config selector collects the data via the runhistory encoder which iterates over the runhistory trials.</p></li>
+<li><p>The runhistory encoder only collects trials which are in <code class="docutils literal notranslate"><span class="pre">considered_states</span></code> and timeout trials. Also, only the
+highest budget is considered if budgets are used. In this step, multi-objective values are scalarized using the
+<code class="docutils literal notranslate"><span class="pre">normalize_costs</span></code> function (uses <code class="docutils literal notranslate"><span class="pre">objective_bounds</span></code> from the runhistory) and the multi-objective algorithm.
+For example, when ParEGO is used, the scalarization would be different in each training.</p></li>
+<li><p>The selected trial objectives are transformed (e.g., log-transformed, depending on the selected
+encoder).</p></li>
+<li><p>The hyperparameters might still have inactive values. The model takes care of that after the collected data
+are passed to the model.</p></li>
+</ul>
+</section>
+<section id="acquisition-function-smac-acquisition-function-abstract-acquisition-function">
+<h2>[Acquisition Function][smac.acquisition.function.abstract_acquisition_function]<a class="headerlink" href="#acquisition-function-smac-acquisition-function-abstract-acquisition-function" title="Link to this heading">¶</a></h2>
+<p>Acquisition functions are mathematical techniques that guide how the parameter space should be explored during Bayesian
+optimization. They use the predicted mean and predicted variance generated by the surrogate model.</p>
+<p>The acquisition function is used by the acquisition maximizer (see next section). Otherwise, SMAC provides
+a bunch of different acquisition functions (Lower Confidence Bound, Expected Improvement, Probability Improvement,
+Thompson, integrated acquisition functions and prior acquisition functions). We refer to literature
+for more information about acquisition functions.</p>
+<p>!!! note
+The acquisition function calculates the acquisition value for each configuration. However, the configurations
+are provided by the acquisition maximizer. Therefore, the acquisition maximizer is responsible for receiving
+the next configurations.</p>
+</section>
+<section id="acquisition-maximize-smac-acquisition-maximizer-abstract-acquisition-maximizer">
+<h2>[Acquisition Maximize][smac.acquisition.maximizer.abstract_acquisition_maximizer]<a class="headerlink" href="#acquisition-maximize-smac-acquisition-maximizer-abstract-acquisition-maximizer" title="Link to this heading">¶</a></h2>
+<p>The acquisition maximizer is a wrapper for the acquisition function. It returns the next configurations. SMAC
+supports local search, (sorted) random search, local and (sorted) random search, and differential evolution.
+While local search checks neighbours of the best configurations, random search makes sure to explore the configuration
+space. When using sorted random search, random configurations are sorted by the value of the acquisition function.</p>
+<p>!!! warning
+Pay attention to the number of challengers: If you experience RAM issues or long computational times in the
+acquisition function, you might lower the number of challengers.</p>
+<p>The acquisition maximizer also incorporates the [Random Design][random-design]. Please see the
+[ChallengerList][smac.acquisition.maximizer.helpers] for more information.</p>
+</section>
+<section id="initial-design-smac-initial-design-abstract-initial-design">
+<h2>[Initial Design][smac.initial_design.abstract_initial_design]<a class="headerlink" href="#initial-design-smac-initial-design-abstract-initial-design" title="Link to this heading">¶</a></h2>
+<p>The surrogate model needs data to be trained. Therefore, the initial design is used to generate the initial data points.
+We provide random, latin hypercube, sobol, factorial and default initial designs. The default initial design uses
+the default configuration from the configuration space and with the factorial initial design, we generate corner
+points of the configuration space. The sobol sequences are an example of quasi-random low-discrepancy sequences and
+the latin hypercube design is a statistical method for generating a near-random sample of parameter values from
+a multidimensional distribution.</p>
+<p>The initial design configurations are yielded by the config selector first. Moreover, the config selector keeps
+track of which configurations already have been returned to make sure a configuration is not returned twice.</p>
+<p><a class="reference internal" href="#"><code class="xref myst docutils literal notranslate"></code></a>{#random-design}</p>
+</section>
+<section id="random-design-smac-initial-design-random-design">
+<h2>[Random Design][smac.initial_design.random_design]<a class="headerlink" href="#random-design-smac-initial-design-random-design" title="Link to this heading">¶</a></h2>
+<p>The random design is used in the acquisition maximizer to tell whether the next configuration should be
+random or sampled from the acquisition function. For example, if we use a random design with a probability of
+50%, we have a 50% chance to sample a random configuration and a 50% chance to sample a configuration from the
+acquisition function (although the acquisition function includes exploration and exploitation trade-off already).
+This design makes sure that the optimization process is not stuck in a local optimum and we
+are <em>guaranteed</em> to find the best configuration over time.</p>
+<p>In addition to simple probability random design, we also provide annealing and modulus random design.</p>
+</section>
+<section id="intensifier-smac-intensifier-abstract-intensifier">
+<h2>[Intensifier][smac.intensifier.abstract_intensifier]<a class="headerlink" href="#intensifier-smac-intensifier-abstract-intensifier" title="Link to this heading">¶</a></h2>
+<p>The intensifier compares different configurations based on evaluated :term:<code class="docutils literal notranslate"><span class="pre">trial&lt;Trial&gt;</span></code> so far. It decides
+which configuration should be <code class="docutils literal notranslate"><span class="pre">intensified</span></code> or, in other words, if a configuration is worth to spend more time on (e.g.,
+evaluate another seed pair, evaluate on another instance, or evaluate on a higher budget).</p>
+<p>!!! warning
+Always pay attention to <code class="docutils literal notranslate"><span class="pre">max_config_calls</span></code> or <code class="docutils literal notranslate"><span class="pre">n_seeds</span></code>: If this argument is set high, the intensifier might
+spend a lot of time on a single configuration.</p>
+<p>Depending on the components and arguments, the intensifier tells you which seeds, budgets, and/or instances
+are used throughout the optimization process. You can use the methods <code class="docutils literal notranslate"><span class="pre">uses_seeds</span></code>, <code class="docutils literal notranslate"><span class="pre">uses_budgets</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">uses_instances</span></code> (directly callable via the facade) to (sanity-)check whether the intensifier uses these arguments.</p>
+<p>Another important fact is that the intensifier keeps track of the current incumbent (a.k.a. the best configuration
+found so far). In case of multi-objective, multiple incumbents could be found.</p>
+<p>All intensifiers support multi-objective, multi-fidelity, and multi-threading:</p>
+<ul class="simple">
+<li><p>Multi-Objective: Keeping track of multiple incumbents at once.</p></li>
+<li><p>Multi-Fidelity: Incorporating instances or budgets.</p></li>
+<li><p>Multi-Threading: Intensifier are implemented as generators so that calling <code class="docutils literal notranslate"><span class="pre">next</span></code> on the intensifier can be
+repeated as often as needed. Intensifier are not required to receive results as the results are directly taken from
+the runhistory.</p></li>
+</ul>
+<p>!!! note
+All intensifiers are working on the runhistory and recognize previous logged trials (e.g., if the user already
+evaluated something beforehand). Previous configurations (in the best case, also complete trials) are added to the
+queue/tracker again so that they are integrated into the intensification process.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>That means continuing a run as well as incorporating user inputs are natively supported.
+</pre></div>
+</div>
+</section>
+<section id="configuration-selector-smac-main-config-selector">
+<h2>[Configuration Selector][smac.main.config_selector]<a class="headerlink" href="#configuration-selector-smac-main-config-selector" title="Link to this heading">¶</a></h2>
+<p>The configuration selector uses the initial design, surrogate model, acquisition maximizer/function, runhistory,
+runhistory encoder, and random design to select the next configuration. The configuration selector is directly
+used by the intensifier and is called everytime a new configuration is requested.</p>
+<p>The idea behind the configuration selector is straight forward:</p>
+<ul class="simple">
+<li><p>Yield the initial design configurations.</p></li>
+<li><p>Train the surrogate model with the data from the runhistory encoder.</p></li>
+<li><p>Get the next <code class="docutils literal notranslate"><span class="pre">retrain_after</span></code> configurations from the acquisition function/maximizer and yield them.</p></li>
+<li><p>After all <code class="docutils literal notranslate"><span class="pre">retrain_after</span></code> configurations were yield, go back to step 2.</p></li>
+</ul>
+<p>!!! note
+The configuration selector is a generator and yields configurations. Therefore, the current state of the
+selector is saved and when the intensifier calls <code class="docutils literal notranslate"><span class="pre">next</span></code>, the selector continues there where it stopped.</p>
+<p>!!! note
+Everytime the surrogate model is trained, the multi-objective algorithm is updated via
+<code class="docutils literal notranslate"><span class="pre">update_on_iteration_start</span></code>.</p>
+</section>
+<section id="multi-objective-algorithm-smac-multi-objective-abstract-multi-objective-algorithm">
+<h2>[Multi-Objective Algorithm][smac.multi_objective.abstract_multi_objective_algorithm]<a class="headerlink" href="#multi-objective-algorithm-smac-multi-objective-abstract-multi-objective-algorithm" title="Link to this heading">¶</a></h2>
+<p>The multi-objective algorithm is used to scalarize multi-objective values. The multi-objective algorithm
+gets normalized objective values passed and returns a single value. The resulting value (called by the
+runhistory encoder) is then used to train the surrogate model.</p>
+<p>!!! warning
+Depending on the multi-objective algorithm, the values for the runhistory encoder might differ each time
+the surrogate model is trained. Let’s take ParEGO for example:
+Everytime a new configuration is sampled (see ConfigSelector), the objective weights are updated. Therefore,
+the scalarized values are different and the acquisition maximizer might return completely different configurations.</p>
+</section>
+<section id="runhistory-smac-runhistory-runhistory">
+<h2>[RunHistory][smac.runhistory.runhistory]<a class="headerlink" href="#runhistory-smac-runhistory-runhistory" title="Link to this heading">¶</a></h2>
+<p>The runhistory holds all (un-)evaluated trials of the optimization run. You can use the runhistory to
+get (running) configs, (running) trials, trials of a specific config, and more.
+The runhistory encoder iterates over the runhistory to receive data for the surrogate model. The following
+code shows how to iterate over the runhistory:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">smac</span> <span class="o">=</span> <span class="n">HPOFacade</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+<span class="c1"># Iterate over all trials</span>
+<span class="k">for</span> <span class="n">trial_info</span><span class="p">,</span> <span class="n">trial_value</span> <span class="ow">in</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="c1"># Trial info</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">trial_info</span><span class="o">.</span><span class="n">config</span>
+    <span class="n">instance</span> <span class="o">=</span> <span class="n">trial_info</span><span class="o">.</span><span class="n">instance</span>
+    <span class="n">budget</span> <span class="o">=</span> <span class="n">trial_info</span><span class="o">.</span><span class="n">budget</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">trial_info</span><span class="o">.</span><span class="n">seed</span>
+
+    <span class="c1"># Trial value</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">cost</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">time</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">status</span>
+    <span class="n">starttime</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">starttime</span>
+    <span class="n">endtime</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">endtime</span>
+    <span class="n">additional_info</span> <span class="o">=</span> <span class="n">trial_value</span><span class="o">.</span><span class="n">additional_info</span>
+
+<span class="c1"># Iterate over all configs</span>
+<span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_configs</span><span class="p">():</span>
+    <span class="c1"># Get the cost of all trials of this config</span>
+    <span class="n">average_cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>!!! warning
+The intensifier uses a callback to update the incumbent everytime a new trial is added to the runhistory.</p>
+</section>
+<section id="runhistory-encoder-smac-runhistory-encoder-abstract-encoder">
+<h2>[RunHistory Encoder][smac.runhistory.encoder.abstract_encoder]<a class="headerlink" href="#runhistory-encoder-smac-runhistory-encoder-abstract-encoder" title="Link to this heading">¶</a></h2>
+<p>The runhistory encoder is used to encode the runhistory data into a format that can be used by the surrogate model.
+Only trials with the status <code class="docutils literal notranslate"><span class="pre">considered_states</span></code> and timeout trials are considered. Multi-objective values are
+scalarized using the <code class="docutils literal notranslate"><span class="pre">normalize_costs</span></code> function (uses <code class="docutils literal notranslate"><span class="pre">objective_bounds</span></code> from the runhistory). Afterwards, the
+normalized value is processed by the multi-objective algorithm.</p>
+</section>
+<section id="callback-smac-callback-callback">
+<h2>[Callback][smac.callback.callback]<a class="headerlink" href="#callback-smac-callback-callback" title="Link to this heading">¶</a></h2>
+<p>Callbacks provide the ability to easily execute code before, inside, and after the Bayesian optimization loop.
+To add a callback, you have to inherit from <code class="docutils literal notranslate"><span class="pre">smac.Callback</span></code> and overwrite the methods (if needed).
+Afterwards, you can pass the callbacks to any facade.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">smac</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiFidelityFacade</span><span class="p">,</span> <span class="n">Callback</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_iteration_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_iteration_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="n">SMBO</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># We just do a simple printing here</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
+<span class="n">smac</span> <span class="o">=</span> <span class="n">MultiFidelityFacade</span><span class="p">(</span>
+    <span class="o">...</span>
+    <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">CustomCallback</span><span class="p">()]</span>
+<span class="p">)</span>
+<span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright Copyright 2025, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+8.2.3. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

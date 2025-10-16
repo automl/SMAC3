@@ -1,0 +1,38 @@
+smac.utils.pareto\_front
+========================
+
+.. automodule:: smac.utils.pareto_front
+
+   
+   
+   
+
+   
+   
+
+   Functions
+   ^^^^^^^^^
+
+   .. autosummary::
+   
+      calculate_pareto_front
+      sort_by_crowding_distance
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

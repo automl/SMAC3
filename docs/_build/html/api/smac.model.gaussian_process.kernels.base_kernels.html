@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>smac.model.gaussian_process.kernels.base_kernels &#8212; SMAC3 Documentation 2.3.1 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script src="../_static/documentation_options.js?v=7de5c1a2"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../index.html">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.3.1
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.1/">v2.3.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.0/">v2.3.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../search.html" method="get" style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.3.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#classes">
+   Classes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#interfaces">
+   Interfaces
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       AbstractKernel
+      </span>
+     </code>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.operate_on">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractKernel.operate_on
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.has_conditions">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractKernel.has_conditions
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.prior">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractKernel.prior
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.__call__">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractKernel.__call__()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.get_params">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractKernel.get_params()
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.hyperparameters">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractKernel.hyperparameters
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.meta">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractKernel.meta
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.n_dims">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         AbstractKernel.n_dims
+        </span>
+       </code>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.ConstantKernel">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ConstantKernel
+      </span>
+     </code>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.ConstantKernel.__call__">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         ConstantKernel.__call__()
+        </span>
+       </code>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.ProductKernel">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ProductKernel
+      </span>
+     </code>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.ProductKernel.__call__">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         ProductKernel.__call__()
+        </span>
+       </code>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.SumKernel">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       SumKernel
+      </span>
+     </code>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#smac.model.gaussian_process.kernels.base_kernels.SumKernel.__call__">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         SumKernel.__call__()
+        </span>
+       </code>
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="module-smac.model.gaussian_process.kernels.base_kernels">
+<span id="smac-model-gaussian-process-kernels-base-kernels"></span><h1>smac.model.gaussian_process.kernels.base_kernels<a class="headerlink" href="#module-smac.model.gaussian_process.kernels.base_kernels" title="Link to this heading">¶</a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
+<table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel" title="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractKernel</span></code></a>(*[, operate_on, ...])</p></td>
+<td><p>This is a mixin for a kernel to override functions of the kernel.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.ConstantKernel" title="smac.model.gaussian_process.kernels.base_kernels.ConstantKernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConstantKernel</span></code></a>([constant_value, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.ProductKernel" title="smac.model.gaussian_process.kernels.base_kernels.ProductKernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProductKernel</span></code></a>(k1, k2[, operate_on, ...])</p></td>
+<td><p>Product kernel implementation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.SumKernel" title="smac.model.gaussian_process.kernels.base_kernels.SumKernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SumKernel</span></code></a>(k1, k2[, operate_on, has_conditions])</p></td>
+<td><p>Sum kernel implementation.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="interfaces">
+<h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.kernels.base_kernels.</span></span><span class="sig-name descname"><span class="pre">AbstractKernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">operate_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#AbstractKernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,
+it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the
+Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won’t know about
+anything related to the superclass and some type:ignore statements has to be added when accessing a member that is
+declared in the superclass such as <cite>self.has_conditions</cite>, <cite>self._call</cite>, <cite>super().get_params</cite>, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>operate_on</strong> (<em>np.ndarray</em><em>, </em><em>defaults to None</em>) – On which numpy array should be operated on.</p></li>
+<li><p><strong>has_conditions</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – Whether the kernel has conditions.</p></li>
+<li><p><strong>prior</strong> (<a class="reference internal" href="smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior" title="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior"><em>AbstractPrior</em></a><em>, </em><em>defaults to None</em>) – Which prior the kernel is using.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.operate_on">
+<span class="sig-name descname"><span class="pre">operate_on</span></span><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.operate_on" title="Link to this definition">¶</a></dt>
+<dd><p>On which numpy array should be operated on.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray, defaults to None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.has_conditions">
+<span class="sig-name descname"><span class="pre">has_conditions</span></span><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.has_conditions" title="Link to this definition">¶</a></dt>
+<dd><p>Whether the kernel has conditions. Might be changed by the gaussian process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, defaults to False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.prior">
+<span class="sig-name descname"><span class="pre">prior</span></span><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.prior" title="Link to this definition">¶</a></dt>
+<dd><p>Which prior the kernel is using. Primarily used by sklearn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.model.gaussian_process.priors.abstract_prior.html#smac.model.gaussian_process.priors.abstract_prior.AbstractPrior" title="smac.model.gaussian_process.priors.abstract_prior.AbstractPrior">AbstractPrior</a>, defaults to None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#AbstractKernel.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.__call__" title="Link to this definition">¶</a></dt>
+<dd><p>Call the kernel function. Internally, <cite>self._call</cite> is called, which must be specified by a subclass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#AbstractKernel.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.get_params" title="Link to this definition">¶</a></dt>
+<dd><p>Get parameters of this kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>deep</strong> (<em>bool</em><em>, </em><em>defaults to True</em>) – If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>params</strong> – Parameter names mapped to their values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.hyperparameters">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hyperparameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Hyperparameter</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.hyperparameters" title="Link to this definition">¶</a></dt>
+<dd><p>Returns a list of all hyperparameter specifications.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.meta">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">meta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.meta" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the meta data of the created object. This method calls the <cite>get_params</cite> method to collect the
+parameters of the kernel.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.n_dims">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_dims</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel.n_dims" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the number of non-fixed hyperparameters of the kernel.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.ConstantKernel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.kernels.base_kernels.</span></span><span class="sig-name descname"><span class="pre">ConstantKernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constant_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant_value_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1e-05,</span> <span class="pre">100000.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operate_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#ConstantKernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.ConstantKernel" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel" title="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractKernel</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantKernel</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.ConstantKernel.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#ConstantKernel.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.ConstantKernel.__call__" title="Link to this definition">¶</a></dt>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y).</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+is evaluated instead.</p></li>
+<li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
+hyperparameter is determined. Only supported when Y is None.</p></li>
+<li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>K</strong> (<em>np.ndarray, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y).</p></li>
+<li><p><strong>K_gradient</strong> (<em>np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+hyperparameter of the kernel. Only returned when eval_gradient
+is True.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.ProductKernel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.kernels.base_kernels.</span></span><span class="sig-name descname"><span class="pre">ProductKernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operate_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#ProductKernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.ProductKernel" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel" title="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractKernel</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Product</span></code></p>
+<p>Product kernel implementation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.ProductKernel.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#ProductKernel.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.ProductKernel.__call__" title="Link to this definition">¶</a></dt>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y).</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+is evaluated instead.</p></li>
+<li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
+hyperparameter is determined.</p></li>
+<li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>K</strong> (<em>np.ndarray, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y).</p></li>
+<li><p><strong>K_gradient</strong> (<em>np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+hyperparameter of the kernel. Only returned when eval_gradient
+is True.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.SumKernel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.model.gaussian_process.kernels.base_kernels.</span></span><span class="sig-name descname"><span class="pre">SumKernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operate_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#SumKernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.SumKernel" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.model.gaussian_process.kernels.base_kernels.AbstractKernel" title="smac.model.gaussian_process.kernels.base_kernels.AbstractKernel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractKernel</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sum</span></code></p>
+<p>Sum kernel implementation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.model.gaussian_process.kernels.base_kernels.SumKernel.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/model/gaussian_process/kernels/base_kernels.html#SumKernel.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.model.gaussian_process.kernels.base_kernels.SumKernel.__call__" title="Link to this definition">¶</a></dt>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y).</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+is evaluated instead.</p></li>
+<li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
+hyperparameter is determined.</p></li>
+<li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>K</strong> (<em>np.ndarray, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y).</p></li>
+<li><p><strong>K_gradient</strong> (<em>np.ndarray (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+hyperparameter of the kernel. Only returned when eval_gradient
+is True.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright Copyright 2025, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+8.2.3. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

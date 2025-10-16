@@ -1,0 +1,37 @@
+smac.acquisition.maximizer.local\_search
+========================================
+
+.. automodule:: smac.acquisition.maximizer.local_search
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      LocalSearch
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

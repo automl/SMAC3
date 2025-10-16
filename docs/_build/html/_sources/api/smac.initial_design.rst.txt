@@ -1,0 +1,45 @@
+﻿smac.initial\_design
+====================
+
+.. automodule:: smac.initial_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   abstract_initial_design
+   default_design
+   factorial_design
+   latin_hypercube_design
+   random_design
+   sobol_design
+

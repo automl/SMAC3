@@ -1,0 +1,37 @@
+smac.acquisition.function.prior\_acquisition\_function
+======================================================
+
+.. automodule:: smac.acquisition.function.prior_acquisition_function
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      PriorAcquisitionFunction
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

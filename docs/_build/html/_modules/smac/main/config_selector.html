@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>smac.main.config_selector &#8212; SMAC3 Documentation 2.3.1 documentation</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script src="../../../_static/documentation_options.js?v=7de5c1a2"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../../../index.html">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.3.1
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.1/">v2.3.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.0/">v2.3.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../../search.html" method="get" style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.3.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for smac.main.config_selector</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterator</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ConfigSpace</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.acquisition.function.abstract_acquisition_function</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.acquisition.maximizer.abstract_acquisition_maximizer</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AbstractAcquisitionMaximizer</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.callback.callback</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.initial_design</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractInitialDesign</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.model.abstract_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.random_design.abstract_random_design</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractRandomDesign</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runhistory.encoder.abstract_encoder</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractRunHistoryEncoder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.runhistory.runhistory</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.utils.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2025, Leibniz University Hanover, Institute of AI&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ConfigSelector">
+<a class="viewcode-back" href="../../../api/smac.main.config_selector.html#smac.main.config_selector.ConfigSelector">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigSelector</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The config selector handles the surrogate model and the acquisition function. Based on both components, the next</span>
+<span class="sd">    configuration is selected.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    retrain_after : int, defaults to 8</span>
+<span class="sd">        How many configurations should be returned before the surrogate model is retrained.</span>
+<span class="sd">    retries : int, defaults to 8</span>
+<span class="sd">        How often to retry receiving a new configuration before giving up.</span>
+<span class="sd">    min_trials: int, defaults to 1</span>
+<span class="sd">        How many samples are required to train the surrogate model. If budgets are involved,</span>
+<span class="sd">        the highest budgets are checked first. For example, if min_trials is three, but we find only</span>
+<span class="sd">        two trials in the runhistory for the highest budget, we will use trials of a lower budget</span>
+<span class="sd">        instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">retrain_after</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="n">min_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Those are the configs sampled from the passed initial design</span>
+        <span class="c1"># Selecting configurations from initial design</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_design_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Set classes globally</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span> <span class="o">=</span> <span class="n">scenario</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span><span class="p">:</span> <span class="n">AbstractRunHistoryEncoder</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">:</span> <span class="n">AbstractModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_maximizer</span><span class="p">:</span> <span class="n">AbstractAcquisitionMaximizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_design</span><span class="p">:</span> <span class="n">AbstractRandomDesign</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callback</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># And other variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_retrain_after</span> <span class="o">=</span> <span class="n">retrain_after</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_previous_entries</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_predict_x_best</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_trials</span> <span class="o">=</span> <span class="n">min_trials</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_considered_budgets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+
+        <span class="c1"># How often to retry receiving a new configuration</span>
+        <span class="c1"># (counter increases if the received config was already returned before)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_retries</span> <span class="o">=</span> <span class="n">retries</span>
+
+        <span class="c1"># Processed configurations should be stored here; this is important to not return the same configuration twice</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_processed_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_components</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">initial_design</span><span class="p">:</span> <span class="n">AbstractInitialDesign</span><span class="p">,</span>
+        <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+        <span class="n">runhistory_encoder</span><span class="p">:</span> <span class="n">AbstractRunHistoryEncoder</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">AbstractModel</span><span class="p">,</span>
+        <span class="n">acquisition_maximizer</span><span class="p">:</span> <span class="n">AbstractAcquisitionMaximizer</span><span class="p">,</span>
+        <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
+        <span class="n">random_design</span><span class="p">:</span> <span class="n">AbstractRandomDesign</span><span class="p">,</span>
+        <span class="n">callbacks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callback</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="o">=</span> <span class="n">runhistory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span> <span class="o">=</span> <span class="n">runhistory_encoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_maximizer</span> <span class="o">=</span> <span class="n">acquisition_maximizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_random_design</span> <span class="o">=</span> <span class="n">random_design</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span> <span class="o">=</span> <span class="n">callbacks</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_design_configs</span> <span class="o">=</span> <span class="n">initial_design</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_design_configs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;SMAC needs initial configurations to work.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the meta data of the created object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;retrain_after&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrain_after</span><span class="p">,</span>
+            <span class="s2">&quot;retries&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retries</span><span class="p">,</span>
+            <span class="s2">&quot;min_trials&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_trials</span><span class="p">,</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="ConfigSelector.__iter__">
+<a class="viewcode-back" href="../../../api/smac.main.config_selector.html#smac.main.config_selector.ConfigSelector.__iter__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method returns the next configuration to evaluate. It ignores already processed configurations, i.e.,</span>
+<span class="sd">        the configurations from the runhistory, if the runhistory is not empty.</span>
+<span class="sd">        The method (after yielding the initial design configurations) trains the surrogate model, maximizes the</span>
+<span class="sd">        acquisition function and yields ``n`` configurations. After the ``n`` configurations, the surrogate model is</span>
+<span class="sd">        trained again, etc. The program stops if ``retries`` was reached within each iteration. A configuration</span>
+<span class="sd">        is ignored, if it was used already before.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        When SMAC continues a run, processed configurations from the runhistory are ignored. For example, if the</span>
+<span class="sd">        intitial design configurations already have been processed, they are ignored here. After the run is</span>
+<span class="sd">        continued, however, the surrogate model is trained based on the runhistory in all cases.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        next_config : Iterator[Configuration]</span>
+<span class="sd">            The next configuration to evaluate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_maximizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_design</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_processed_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">get_configs</span><span class="p">()</span>
+
+        <span class="c1"># We add more retries because there could be a case in which the processed configs are sampled again</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_retries</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_processed_configs</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Search for the next configuration...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_call_callbacks_on_start</span><span class="p">()</span>
+
+        <span class="c1"># First: We return the initial configurations</span>
+        <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_design_configs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">config</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_processed_configs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_processed_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_call_callbacks_on_end</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">config</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_call_callbacks_on_start</span><span class="p">()</span>
+
+        <span class="c1"># We want to generate configurations endlessly</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># Cost value of incumbent configuration (required for acquisition function).</span>
+            <span class="c1"># If not given, it will be inferred from runhistory or predicted.</span>
+            <span class="c1"># If not given and runhistory is empty, it will raise a ValueError.</span>
+            <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="c1"># Everytime we re-train the surrogate model, we also update our multi-objective algorithm</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">mo</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span><span class="o">.</span><span class="n">multi_objective_algorithm</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">mo</span><span class="o">.</span><span class="n">update_on_iteration_start</span><span class="p">()</span>
+
+            <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_configurations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_data</span><span class="p">()</span>
+            <span class="n">previous_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">get_configs</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Only return a single point to avoid an overly high number of random search iterations.</span>
+                <span class="c1"># We got rid of random search here and replaced it with a simple configuration sampling from</span>
+                <span class="c1"># the configspace.</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No data available to train the model. Sample a random configuration.&quot;</span><span class="p">)</span>
+
+                <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scenario</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_call_callbacks_on_end</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">config</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_call_callbacks_on_start</span><span class="p">()</span>
+
+                <span class="c1"># Important to continue here because we still don&#39;t have data available</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Check if X/Y differs from the last run, otherwise use cached results</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_previous_entries</span> <span class="o">!=</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+
+                <span class="n">x_best_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">incumbent_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">best_observation</span> <span class="o">=</span> <span class="n">incumbent_value</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Runhistory is empty and the cost value of the incumbent is unknown.&quot;</span><span class="p">)</span>
+
+                    <span class="n">x_best_array</span><span class="p">,</span> <span class="n">best_observation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_x_best</span><span class="p">(</span><span class="n">X_configurations</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_function</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">,</span>
+                    <span class="n">eta</span><span class="o">=</span><span class="n">best_observation</span><span class="p">,</span>
+                    <span class="n">incumbent_array</span><span class="o">=</span><span class="n">x_best_array</span><span class="p">,</span>
+                    <span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_evaluated_configs</span><span class="p">()),</span>
+                    <span class="n">X</span><span class="o">=</span><span class="n">X_configurations</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="c1"># We want to cache how many entries we used because if we have the same number of entries</span>
+            <span class="c1"># we don&#39;t need to train the next time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_previous_entries</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># Now we maximize the acquisition function</span>
+            <span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_maximizer</span><span class="o">.</span><span class="n">maximize</span><span class="p">(</span>
+                <span class="n">previous_configs</span><span class="p">,</span>
+                <span class="n">random_design</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_random_design</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">failed_counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">challengers</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">config</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_processed_configs</span><span class="p">:</span>
+                    <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_processed_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_call_callbacks_on_end</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="n">config</span>
+                    <span class="n">retrain</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrain_after</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_call_callbacks_on_start</span><span class="p">()</span>
+
+                    <span class="c1"># We break to enforce a new iteration of the while loop (i.e. we retrain the surrogate model)</span>
+                    <span class="k">if</span> <span class="n">retrain</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Yielded </span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2"> configurations. Start new iteration and retrain surrogate model.&quot;</span>
+                        <span class="p">)</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">failed_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                    <span class="c1"># We exit the loop if we have tried to add the same configuration too often</span>
+                    <span class="k">if</span> <span class="n">failed_counter</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retries</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not return a new configuration after </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_retries</span><span class="si">}</span><span class="s2"> retries.&quot;</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                        <span class="k">return</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call_callbacks_on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">on_next_configurations_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call_callbacks_on_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls ``on_next_configurations_end`` of the registered callbacks.&quot;&quot;&quot;</span>
+        <span class="c1"># For safety reasons: Return a copy of the config</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">on_next_configurations_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_collect_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collects the data from the runhistory to train the surrogate model. In the case of budgets, the data</span>
+<span class="sd">        collection strategy is as follows: Looking from highest to lowest budget, return those observations</span>
+<span class="sd">        that support at least ``self._min_trials`` points.</span>
+
+<span class="sd">        If no budgets are used, this is equivalent to returning all observations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="c1"># If we use a float value as a budget, we want to train the model only on the highest budget</span>
+        <span class="n">unique_budgets</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">run_key</span><span class="o">.</span><span class="n">budget</span> <span class="k">for</span> <span class="n">run_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="k">if</span> <span class="n">run_key</span><span class="o">.</span><span class="n">budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+
+        <span class="n">available_budgets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_budgets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Sort available budgets from highest to lowest budget</span>
+            <span class="n">available_budgets</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unique_budgets</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">available_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+
+        <span class="c1"># Get #points per budget and if there are enough samples, then build a model</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">available_budgets</span><span class="p">:</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="p">[</span><span class="n">b</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_trials</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_considered_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">]</span>
+
+                <span class="c1"># Possible add running configs?</span>
+                <span class="n">configs_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory_encoder</span><span class="o">.</span><span class="n">get_configurations</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_considered_budgets</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">configs_array</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">[</span>
+                    <span class="mi">0</span><span class="p">,</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_evaluated_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runhistory</span><span class="o">.</span><span class="n">get_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_considered_budgets</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_x_best</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get value, configuration, and array representation of the *best* configuration.</span>
+
+<span class="sd">        The definition of best varies depending on the argument ``predict``. If set to `True`,</span>
+<span class="sd">        this function will return the stats of the best configuration as predicted by the model,</span>
+<span class="sd">        otherwise it will return the stats for the best observed configuration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        predict : bool</span>
+<span class="sd">            Whether to use the predicted or observed best.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        np.ndarry</span>
+<span class="sd">        Configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_x_best</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span>
+            <span class="n">costs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="nb">map</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="n">model</span><span class="o">.</span><span class="n">predict_marginalized</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>  <span class="c1"># type: ignore</span>
+                        <span class="n">x</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">X</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">costs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">x_best_array</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">best_observation</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># else:</span>
+        <span class="c1">#    all_configs = self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)</span>
+        <span class="c1">#    x_best = self._incumbent</span>
+        <span class="c1">#    x_best_array = convert_configurations_to_array(all_configs)</span>
+        <span class="c1">#    best_observation = self._runhistory.get_cost(x_best)</span>
+        <span class="c1">#    best_observation_as_array = np.array(best_observation).reshape((1, 1))</span>
+
+        <span class="c1">#    # It&#39;s unclear how to do this for inv scaling and potential future scaling.</span>
+        <span class="c1">#    # This line should be changed if necessary</span>
+        <span class="c1">#    best_observation = self._runhistory_encoder.transform_response_values(best_observation_as_array)</span>
+        <span class="c1">#    best_observation = best_observation[0][0]</span>
+
+        <span class="k">return</span> <span class="n">x_best_array</span><span class="p">,</span> <span class="n">best_observation</span></div>
+
+</pre></div>
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright Copyright 2025, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+8.2.3. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+smac.acquisition.maximizer.differential\_evolution
+==================================================
+
+.. automodule:: smac.acquisition.maximizer.differential_evolution
+
+   
+   
+   
+
+   
+   
+
+   Functions
+   ^^^^^^^^^
+
+   .. autosummary::
+   
+      check_kwarg
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      DifferentialEvolution
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

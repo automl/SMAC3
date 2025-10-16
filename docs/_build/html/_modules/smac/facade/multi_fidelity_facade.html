@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>smac.facade.multi_fidelity_facade &#8212; SMAC3 Documentation 2.3.1 documentation</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=2eb4fb78" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script src="../../../_static/documentation_options.js?v=7de5c1a2"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../../../index.html">
+  <!-- <p class="title">SMAC3 Documentation</p> -->
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown mt-1">
+    <button type="button" class="btn btn-secondary btn-md navbar-btn dropdown-toggle" id="dLabelMore"
+        data-toggle="dropdown">
+        v2.3.1
+        <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu list-group-flush py-0" aria-labelledby="dLabelMore">
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.1/">v2.3.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.3.0/">v2.3.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.2.0/">v2.2.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.1.0/">v2.1.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.1/">v2.0.1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0/">v2.0.0</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0b1/">v2.0.0b1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a2/">v2.0.0a2</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v2.0.0a1/">v2.0.0a1</a>
+        <a class="list-group-item list-group-item-action" href="https://automl.github.io/SMAC3/v1.4.0/">v1.4.0</a>
+    </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../../search.html" method="get" style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control btn btn-md" name="q" id="search-input"
+    placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off">
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v2.3.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for smac.facade.multi_fidelity_facade</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ConfigSpace</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.facade.hyperparameter_optimization_facade</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">HyperparameterOptimizationFacade</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.initial_design.random_design</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomInitialDesign</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.intensifier.hyperband</span><span class="w"> </span><span class="kn">import</span> <span class="n">Hyperband</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">smac.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scenario</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2025, Leibniz University Hanover, Institute of AI&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+
+<div class="viewcode-block" id="MultiFidelityFacade">
+<a class="viewcode-back" href="../../../api/smac.facade.multi_fidelity_facade.html#smac.facade.MultiFidelityFacade">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MultiFidelityFacade</span><span class="p">(</span><span class="n">HyperparameterOptimizationFacade</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This facade configures SMAC in a multi-fidelity setting.</span>
+
+<span class="sd">    !!! warning</span>
+<span class="sd">        ``smac.main.config_selector.ConfigSelector`` contains the ``min_trials`` parameter. This parameter determines</span>
+<span class="sd">        how many samples are required to train the surrogate model. If budgets are involved, the highest budgets</span>
+<span class="sd">        are checked first. For example, if min_trials is three, but we find only two trials in the runhistory for</span>
+<span class="sd">        the highest budget, we will use trials of a lower budget instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MultiFidelityFacade.get_intensifier">
+<a class="viewcode-back" href="../../../api/smac.facade.multi_fidelity_facade.html#smac.facade.MultiFidelityFacade.get_intensifier">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_intensifier</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">eta</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">n_seeds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">instance_seed_order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;shuffle_once&quot;</span><span class="p">,</span>
+        <span class="n">max_incumbents</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">incumbent_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;highest_observed_budget&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Hyperband</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a Hyperband intensifier instance. Budgets are supported.</span>
+
+<span class="sd">        eta : int, defaults to 3</span>
+<span class="sd">            Input that controls the proportion of configurations discarded in each round of Successive Halving.</span>
+<span class="sd">        n_seeds : int, defaults to 1</span>
+<span class="sd">            How many seeds to use for each instance.</span>
+<span class="sd">        instance_seed_order : str, defaults to &quot;shuffle_once&quot;</span>
+<span class="sd">            How to order the instance-seed pairs. Can be set to:</span>
+<span class="sd">            * None: No shuffling at all and use the instance-seed order provided by the user.</span>
+<span class="sd">            * &quot;shuffle_once&quot;: Shuffle the instance-seed keys once and use the same order across all runs.</span>
+<span class="sd">            * &quot;shuffle&quot;: Shuffles the instance-seed keys for each bracket individually.</span>
+<span class="sd">        incumbent_selection : str, defaults to &quot;any_budget&quot;</span>
+<span class="sd">            How to select the incumbent when using budgets. Can be set to:</span>
+<span class="sd">            * &quot;any_budget&quot;: Incumbent is the best on any budget, i.e., the best performance regardless of budget.</span>
+<span class="sd">            * &quot;highest_observed_budget&quot;: Incumbent is the best in the highest budget run so far.</span>
+<span class="sd">            refer to `runhistory.get_trials` for more details. Crucially, if true, then a</span>
+<span class="sd">            for a given config-instance-seed, only the highest (so far executed) budget is used for</span>
+<span class="sd">            comparison against the incumbent. Notice, that if the highest observed budget is smaller</span>
+<span class="sd">            than the highest budget of the incumbent, the configuration will be queued again to</span>
+<span class="sd">            be intensified again.</span>
+<span class="sd">            * &quot;highest_budget&quot;: Incumbent is selected only based on the absolute highest budget</span>
+<span class="sd">            available only.</span>
+<span class="sd">        max_incumbents : int, defaults to 10</span>
+<span class="sd">            How many incumbents to keep track of in the case of multi-objective.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Hyperband</span><span class="p">(</span>
+            <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+            <span class="n">eta</span><span class="o">=</span><span class="n">eta</span><span class="p">,</span>
+            <span class="n">n_seeds</span><span class="o">=</span><span class="n">n_seeds</span><span class="p">,</span>
+            <span class="n">instance_seed_order</span><span class="o">=</span><span class="n">instance_seed_order</span><span class="p">,</span>
+            <span class="n">max_incumbents</span><span class="o">=</span><span class="n">max_incumbents</span><span class="p">,</span>
+            <span class="n">incumbent_selection</span><span class="o">=</span><span class="n">incumbent_selection</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MultiFidelityFacade.get_initial_design">
+<a class="viewcode-back" href="../../../api/smac.facade.multi_fidelity_facade.html#smac.facade.MultiFidelityFacade.get_initial_design">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_initial_design</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">n_configs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_configs_per_hyperparamter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">max_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span>
+        <span class="n">additional_configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RandomInitialDesign</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a random initial design.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        scenario : Scenario</span>
+<span class="sd">        n_configs : int | None, defaults to None</span>
+<span class="sd">            Number of initial configurations (disables the arguments ``n_configs_per_hyperparameter``).</span>
+<span class="sd">        n_configs_per_hyperparameter: int, defaults to 10</span>
+<span class="sd">            Number of initial configurations per hyperparameter. For example, if my configuration space covers five</span>
+<span class="sd">            hyperparameters and ``n_configs_per_hyperparameter`` is set to 10, then 50 initial configurations will be</span>
+<span class="sd">            samples.</span>
+<span class="sd">        max_ratio: float, defaults to 0.25</span>
+<span class="sd">            Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.</span>
+<span class="sd">            Additional configurations are not affected by this parameter.</span>
+<span class="sd">        additional_configs: list[Configuration], defaults to []</span>
+<span class="sd">            Adds additional configurations to the initial design.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">additional_configs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">additional_configs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">RandomInitialDesign</span><span class="p">(</span>
+            <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+            <span class="n">n_configs</span><span class="o">=</span><span class="n">n_configs</span><span class="p">,</span>
+            <span class="n">n_configs_per_hyperparameter</span><span class="o">=</span><span class="n">n_configs_per_hyperparamter</span><span class="p">,</span>
+            <span class="n">max_ratio</span><span class="o">=</span><span class="n">max_ratio</span><span class="p">,</span>
+            <span class="n">additional_configs</span><span class="o">=</span><span class="n">additional_configs</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright Copyright 2025, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+8.2.3. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
