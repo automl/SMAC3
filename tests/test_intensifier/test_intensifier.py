@@ -169,8 +169,14 @@ def test_intensifier(make_scenario, configspace_small, make_config_selector):
 
     # Let's mark the first trial as finished
     # The config should become an incumbent now.
-    runhistory.add(config=trial.config, cost=10, time=0.0, instance=trial.instance, seed=trial.seed,
-                   force_update=True)
+    runhistory.add(
+        config=trial.config,
+        cost=10,
+        time=0.0,
+        instance=trial.instance,
+        seed=trial.seed,
+        force_update=True
+    )
     intensifier.update_incumbents(trial.config)
     assert intensifier.get_incumbent() == trial.config
 
