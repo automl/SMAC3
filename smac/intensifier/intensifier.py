@@ -452,7 +452,6 @@ class Intensifier(AbstractIntensifier):
         # original logic for get_runs_for_config:
         # https://github.com/automl/SMAC3/blob/f1d2aa2ea3b6ad4075550af69e3300f19411a5ea/smac/runhistory/runhistory.py#L772
         if incumbents[0] == challenger:
-            # fixme not multi-objective ready
             # initially when the queue is empty, the incumbent is intensified, then the cutoff
             # must be the runtime minus the already spent budget on the incumbent across
             # instances.
@@ -472,8 +471,6 @@ class Intensifier(AbstractIntensifier):
             inc_id = self.runhistory.get_config_id(incumbents[0])
             inc_isb = self.runhistory.get_instance_seed_budget_keys(incumbents[0])
 
-            # FIXME: on_keys will only have the current instance-seed pair not all of the
-            #  ones of the instance subset, the current challenger is allowed to run on
             combined_list: list[Union[InstanceSeedKey, InstanceSeedBudgetKey]] = [*on_keys, *chall_inst_seeds]
             current_inc_isb = [
                 key for key in inc_isb if any(k.instance == key.instance and k.seed == key.seed for k in combined_list)
@@ -503,12 +500,8 @@ class Intensifier(AbstractIntensifier):
                     raise UnsupportedError()
 
             # compute the already used runtime for the challenger across instances
-            # FIXME: in the case of multiple seeds per instance, we need to imagine
-            #  that the instance we want to allocate budget for is not yet evaluated on other
-            #  seeds!
             chal_sum_cost = self.runhistory.sum_cost(
                 config=challenger,
-                # fixme: chall_inst_seeds needs to be List[InstanceSeedBudgetKey]
                 instance_seed_budget_keys=chall_inst_seeds,
             )
             assert type(chal_sum_cost) == float
