@@ -409,12 +409,9 @@ class Intensifier(AbstractIntensifier):
         combination at the moment the challenger is considered for the instance, ignorant of
         the runtime cost of the currently running instances of the same configuration.
 
-        !Only applicable if self.run_obj_time
+        !Only applicable if the objective is runtime (Unchecked)
 
-        !Only applicable in single-objective scenarios where the only cost function is run_obj_time
-
-        !runs on incumbent should be superset of the runs performed for the
-         challenger
+        !Only applicable in single-objective scenarios (Checked)
 
         Parameters
         ----------
@@ -438,14 +435,21 @@ class Intensifier(AbstractIntensifier):
             return float(self._scenario.runtime_cutoff) if self._scenario.runtime_cutoff is not None else float("inf")
 
         if len(incumbents) > 1:
-            warnings.warn("Adaptive capping is only supported for single incumbent scenarios")
+            warnings.warn(
+                "Adaptive capping is not supported for scenarios with multiple simultaneous incumbents, e.g., "
+                "multi-objective scenarios"
+            )
+            raise NotImplementedError("Adaptive capping is not supported for scenarios with multiple incumbents")
 
         inc_sum_cost_unchecked = self.runhistory.sum_cost(
             config=incumbents[0],
             normalize=False,
         )
         if isinstance(inc_sum_cost_unchecked, list):
-            raise UnsupportedError()
+            raise UnsupportedError(
+                "Incumbent sum cost should be a single value and not a list, as adaptive capping is not "
+                "supported for scenarios with multiple objectives."
+            )
         else:
             inc_sum_cost: float = inc_sum_cost_unchecked
 
