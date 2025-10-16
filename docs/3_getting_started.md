@@ -87,7 +87,7 @@ scenario = Scenario(
 !!! info "Deterministic Behavior"
     The **`deterministic`** parameter controls whether the objective function is assumed to be noise-free.
     * **For Deterministic Objectives (`deterministic=True`):** Use this when repeated evaluations of the same configuration produce identical results. In this mode, each configuration is evaluated only once, and the surrogate model does not include a noise term.
-    * **For Stochastic Objectives (`deterministic=False`):** Use this when the objective is noisy. Intensification parameters like `max_config_calls` and `n_seeds` must be set to enable repeated evaluations per configuration, allowing the surrogate to model aleatoric uncertainty.
+    * **For Stochastic Objectives (`deterministic=False`):** Use this when the objective is noisy. Intensification parameters like `max_config_calls` and `n_seeds` must be set to enable repeated evaluations per configuration.
 
 
 !!! note
