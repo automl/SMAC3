@@ -34,9 +34,10 @@ class Scenario:
         The directory in which to save the output. The files are saved in `./output_directory/name/seed`.
     deterministic : bool, default=False
         If True, only one seed is passed to the target function, assuming deterministic (noise-free) behavior.
-        Otherwise, multiple seeds are passed (if `n_seeds` > 1) to enable repeated evaluations for statistical robustness.
-        For non-deterministic functions, users must specify intensification parameters (e.g., `max_config_calls`, `n_seeds`)
-        to ensure reliable performance estimates and optionally model noise in the Gaussian Process surrogate.
+        Otherwise, multiple seeds are passed (if `n_seeds` > 1) to enable repeated evaluations.
+        For non-deterministic functions, users must specify intensification parameters
+        (e.g., `max_config_calls`, `n_seeds`) to ensure reliable performance estimates
+        and optionally model noise in the Gaussian Process surrogate.
     objectives : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
     crash_cost : float | list[float], defaults to np.inf
