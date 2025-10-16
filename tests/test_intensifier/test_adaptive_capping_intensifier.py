@@ -10,13 +10,25 @@ import numpy as np
 from smac.main.exceptions import ConfigurationSpaceExhaustedException
 from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
-
+"""
+The Adaptive Capping Intensifier test tests SMAC capabilities to work with the adaptive capping feature being enabled.
+To this end, we create a train function mockup which also logs every single evaluation requested by SMAC to ensure that
+it follows the corresponding rules, i.e., evaluates the right configurations, switches the incumbent in the right moment
+and also allocates the right amount of budget. This test logs any unexpected evaluation and prints a list of evaluations
+(stored in the `expected_behavior_violations`) to facilitate debugging and informing what behavior exactly did not match  
+the expectation of adaptive capping.
+"""
 __copyright__ = "Copyright 2025, automl.org"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
 
 class TrainMockup:
+    """
+    Class for logging the behavior of SMAC regarding calls to the run function. In particular, we log which candidates
+    are evaluated for what instances and what runtime costs have been sampled from a random distribution.
+    """
+
     def __init__(self):
         # counter for referring to evaluation number
         self.log_counter = 0
@@ -44,10 +56,14 @@ class TrainMockup:
         self.expected_behavior_violations = []
         np.random.seed(42)
 
-    def train(self, config:Configuration, instance: str, seed: int = 0):
+    def train(self, config:Configuration, instance: str, cutoff: int, seed: int = 0):
+        print("Cutoff configured: ", cutoff)
         self.log_counter += 1
         config_hash = get_config_hash(config)
         rand_perf = np.random.random_integers(low=1, high=20)
+        censored = rand_perf > cutoff
+        if censored:
+            rand_perf = cutoff + 1
 
         # check whether config needed to be rejected already
         if config_hash in self.rejected_challengers:
@@ -109,10 +125,15 @@ def get_basic_setup(train, num_configs = 10, num_instances = 10, num_trials=30):
     # generate instance set with num_instances many instances
     instances = ["i"+str(i) for i in range(num_instances)]
     # setup scenario with generated config space, instances, and the given number of trials
-    scenario = Scenario(cs, deterministic=True, n_trials=num_trials, instances=instances, seed=44)
+    scenario = Scenario(cs, deterministic=True, n_trials=num_trials, instances=instances, seed=44, adaptive_capping=True, runtime_cutoff=500)
     return AlgorithmConfigurationFacade(scenario, train)
 
-def test_incumbent_switch():
+def test_incumbent_switch() -> None:
+    """
+    Test whether the incumbents switch at the right time, i.e., whenever there is a challenger meeting the dominance
+    criteria.
+
+    """
     # remove smac3 output folder to ensure proper execution of the test
     shutil.rmtree("./smac3_output", ignore_errors=True)
     shutil.rmtree("./smac3_output_test", ignore_errors=True)
