@@ -248,6 +248,11 @@ class SuccessiveHalving(AbstractIntensifier):
 
         return True
 
+    @property
+    def uses_cutoffs(self) -> bool:
+        """If the intensifier needs to make use of cutoffs."""
+        return False
+
     def print_tracker(self) -> None:
         """Prints the number of configurations in each bracket/stage."""
         messages = []

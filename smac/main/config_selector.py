@@ -218,6 +218,7 @@ class ConfigSelector:
                 random_design=self._random_design,
             )
 
+            retrain = False
             counter = 0
             failed_counter = 0
             for config in challengers:
@@ -246,7 +247,7 @@ class ConfigSelector:
             # if we don't have enough configurations, we want to sample random configurations
             if not retrain:
                 logger.warning(
-                    "Did not find enough configuration from the acquisition function. Sampling random configurations."
+                    "Did not find enough configurations from the acquisition function. Sampling random configurations."
                 )
                 random_configs_retries = 0
                 while counter < self._retrain_after and random_configs_retries < self._max_new_config_tries:

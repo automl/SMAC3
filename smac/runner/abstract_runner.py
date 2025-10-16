@@ -112,6 +112,7 @@ class AbstractRunner(ABC):
                 instance=trial_info.instance,
                 budget=trial_info.budget,
                 seed=trial_info.seed,
+                additional_info=trial_info.additional_info,
                 **dask_data_to_scatter,
             )
         except Exception as e:
@@ -187,7 +188,8 @@ class AbstractRunner(ABC):
         instance: str | None = None,
         budget: float | None = None,
         seed: int | None = None,
-    ) -> tuple[StatusType, float | list[float], float, float, dict]:
+        additional_info: dict[str, Any] | None = None,
+    ) -> tuple[StatusType, float | list[float], float, float, dict[str, Any]]:  # noqa: D102
         """Runs the target function with a configuration on a single instance-budget-seed
         combination (aka trial).
 
@@ -201,6 +203,9 @@ class AbstractRunner(ABC):
             A positive, real-valued number representing an arbitrary limit to the target function
             handled by the target function internally.
         seed : int, defaults to None
+            Seed for the random number generator.
+        additional_info : dict
+            Further additional trial information.
 
         Returns
         -------
@@ -212,8 +217,8 @@ class AbstractRunner(ABC):
             The time the target function took to run.
         cpu_time : float
             The time the target function took on hardware to run.
-        additional_info : dict
-            All further additional trial information.
+        val_additional_info : dict
+            All further additional trial value information.
         """
         raise NotImplementedError
 

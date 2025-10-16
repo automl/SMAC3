@@ -68,6 +68,13 @@ class Scenario:
     instance_features : dict[str, list[float]] | None, defaults to None
         Instances can be associated with features. For example, meta data of the dataset (mean, var, ...) can be
         incorporated which are then further used to expand the training data of the surrogate model.
+    adaptive_capping: bool, defaults to False
+        Adaptive capping allows to preemptiveley cancel the evaluation of candidates as soon as their accumulative cost
+        exceed the cost of the current incumbent. If a runtime_cutoff is set, SMAC will allocate budgets that are capped
+        at the runtime_cutoff.
+    runtime_cutoff: int | None, defaults to None
+        A runtime cutoff can be set to limit the maximum runtime allowed for a single configuration to run solving
+        instances.
     min_budget : float | int | None, defaults to None
         The minimum budget (epochs, subset size, number of instances, ...) that is used for the optimization.
         Use this argument if you use multi-fidelity or instance optimization.
@@ -103,6 +110,9 @@ class Scenario:
     # Algorithm Configuration
     instances: list[str] | None = None
     instance_features: dict[str, list[float]] | None = None
+    adaptive_capping: bool = False
+    adaptive_capping_slackfactor: float | None = None
+    runtime_cutoff: int | None = None
 
     # Budgets
     min_budget: float | int | None = None
@@ -128,6 +138,10 @@ class Scenario:
         if self.instance_features is not None:
             instance_features = {str(instance): features for instance, features in self.instance_features.items()}
             object.__setattr__(self, "instance_features", instance_features)
+
+        # Validate that we have a runtime cutoff set if adaptive capping slackfactor is given
+        if self.adaptive_capping_slackfactor is not None and self.runtime_cutoff is None:
+            raise ValueError("If adaptive_capping_slackfactor is set, then runtime_cutoff must be set as well.")
 
         # Change directory wrt name and seed
         self._change_output_directory()

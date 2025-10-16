@@ -3,7 +3,7 @@
 
 With the ask and tell interface, we can support warmstarting SMAC. We can communicate rich
 information about the previous trials to SMAC using `TrialInfo` and `TrialValue` instances.
-For more details on ask and tell consult the [info page ask-and-tell](../../../advanced_usage/5_ask_and_tell).
+For more details on ask and tell consult the [info page ask-and-tell](../../../advanced_usage/5_ask_and_tell.html).
 """
 from __future__ import annotations
 

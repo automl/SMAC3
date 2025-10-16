@@ -207,6 +207,7 @@ nav:
     - "advanced_usage/10_continue.md"
     - "advanced_usage/11_reproducibility.md"
     - "advanced_usage/12_optimizations.md"
+    - "advanced_usage/13_adaptive_capping.md"
   # Auto generated with docs/examples_runner.py
   - Examples: "examples/"
   # Auto generated with docs/api_generator.py
