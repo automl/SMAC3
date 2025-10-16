@@ -46,6 +46,11 @@ class MaternKernel(AbstractKernel, kernels.Matern):
         X = np.atleast_2d(X)
         length_scale = kernels._check_length_scale(X, self.length_scale)
 
+        # Adjust the length scale of the Matern Kernel according to Xu et al. 2025 (https://arxiv.org/abs/2402.02746)
+        # Aka. length_scale = c * sqrt(dim(X))
+        # Here c is simply set as the provided length_scale (default: 1.0)
+        length_scale = length_scale * np.sqrt(X.shape[1])
+
         if Y is None:
             dists = scipy.spatial.distance.pdist(X / length_scale, metric="euclidean")
         else:
