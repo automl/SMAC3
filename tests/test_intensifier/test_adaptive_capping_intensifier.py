@@ -57,7 +57,6 @@ class TrainMockup:
         np.random.seed(42)
 
     def train(self, config:Configuration, instance: str, cutoff: int, seed: int = 0):
-        print("Cutoff configured: ", cutoff)
         self.log_counter += 1
         config_hash = get_config_hash(config)
         rand_perf = np.random.random_integers(low=1, high=20)
@@ -141,12 +140,6 @@ def test_incumbent_switch() -> None:
     # setup test environment
     tm = TrainMockup()
     smac = get_basic_setup(tm.train)
-
-    # activate logging
-    l: Logger = get_logger("smac.intensifier.abstract_intensifier")
-    l.setLevel(5)
-    l: Logger = get_logger("smac.intensifier.intensifier")
-    l.setLevel(10)
 
     # start smac run
     try:
