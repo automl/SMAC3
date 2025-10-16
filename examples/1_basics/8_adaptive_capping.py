@@ -47,47 +47,44 @@ class CappedProblem:
         cs.add_hyperparameters([x0, x1])
         return cs
 
-    def train(self, config: Configuration, instance:str, budget, seed: int = 0) -> float:
+    def train(self, config: Configuration, instance:str, cutoff, seed: int = 0) -> float:
         x0 = config["x0"]
         x1 = config["x1"]
 
         try:
-            with timeout(int(math.ceil(budget))):
+            with timeout(int(math.ceil(cutoff))):
                 runtime = 0.5 * x1 + 0.5 * x0 * int(instance)
                 time.sleep(runtime)
                 return runtime
         except TimeoutException as e:
-            print(f"Timeout for configuration {config} with runtime budget {budget}")
-            return budget  # FIXME: what should be returned here?
+            print(f"Timeout for configuration {config} with runtime cutoff {cutoff}")
+            return cutoff + 1
 
 
 if __name__ == '__main__':
-    from smac import HyperparameterOptimizationFacade, RunHistory
+    from smac import AlgorithmConfigurationFacade
     from smac import Scenario
-
-    from smac.intensifier import Intensifier
 
     capped_problem = CappedProblem()
 
     scenario = Scenario(
         capped_problem.configspace,
-        walltime_limit=3600,  # After 200 seconds, we stop the hyperparameter optimization
+        walltime_limit=3600,  # After 3600 seconds, we stop the hyperparameter optimization
         n_trials=500,  # Evaluate max 500 different trials
         instances=['1', '2', '3'],
-        instance_features={'1': [1], '2': [2], '3': [3]}
+        instance_features={'1': [1], '2': [2], '3': [3]},
+        adaptive_capping=True,
+        runtime_cutoff=200 # We allow an algorithm at maximum 200s to solve all instances
     )
 
     # We want to run five random configurations before starting the optimization.
-    initial_design = HyperparameterOptimizationFacade.get_initial_design(scenario, n_configs=5)
-
-    intensifier = Intensifier(scenario, runtime_cutoff=10, adaptive_capping_slackfactor=1.2)
+    initial_design = AlgorithmConfigurationFacade.get_initial_design(scenario, n_configs=5)
 
     # Create our SMAC object and pass the scenario and the train method
-    smac = HyperparameterOptimizationFacade(
+    smac = AlgorithmConfigurationFacade(
         scenario,
         capped_problem.train,
         initial_design=initial_design,
-        intensifier=intensifier,
         overwrite=True,
     )
 
@@ -96,8 +93,6 @@ if __name__ == '__main__':
 
     # Get cost of default configuration
     default_cost = smac.validate(capped_problem.configspace.get_default_configuration())
-    print(f"Default cost ({intensifier.__class__.__name__}): {default_cost}")
 
     # Let's calculate the cost of the incumbent
     incumbent_cost = smac.validate(incumbent)
-    print(f"Incumbent cost ({intensifier.__class__.__name__}): {incumbent_cost}")
