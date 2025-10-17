@@ -20,40 +20,39 @@ logger = get_logger(__name__)
 
 
 class MOLocalSearch(LocalSearch):
-    def _get_initial_points(
-        self,
-        previous_configs: list[Configuration],
-        n_points: int,
-        additional_start_points: list[tuple[float, Configuration]] | None,
-    ) -> list[Configuration]:
-        """Get initial points to start search from.
-
-        If we already have a population, add those to the initial points.
-
-        Parameters
-        ----------
-        previous_configs : list[Configuration]
-            Previous configuration (e.g., from the runhistory).
-        n_points : int
-            Number of initial points to be generated.
-        additional_start_points : list[tuple[float, Configuration]] | None
-            Additional starting points.
-
-        Returns
-        -------
-        list[Configuration]
-            A list of initial points/configurations.
-        """
-        init_points = super()._get_initial_points(
-            previous_configs=previous_configs, n_points=n_points, additional_start_points=additional_start_points
-        )
-
-        # Add population to Local search
-        # TODO where is population saved? update accordingly
-        if len(stats.population) > 0:
-            population = [runhistory.ids_config[confid] for confid in stats.population]
-            init_points = self._unique_list(itertools.chain(population, init_points))
-        return init_points
+    # def _get_initial_points(
+    #     self,
+    #     previous_configs: list[Configuration],
+    #     n_points: int,
+    #     additional_start_points: list[tuple[float, Configuration]] | None,
+    # ) -> list[Configuration]:
+    #     """Get initial points to start search from.
+    #
+    #     If we already have a population, add those to the initial points.
+    #
+    #     Parameters
+    #     ----------
+    #     previous_configs : list[Configuration]
+    #         Previous configuration (e.g., from the runhistory).
+    #     n_points : int
+    #         Number of initial points to be generated.
+    #     additional_start_points : list[tuple[float, Configuration]] | None
+    #         Additional starting points.
+    #
+    #     Returns
+    #     -------
+    #     list[Configuration]
+    #         A list of initial points/configurations.
+    #     """
+    #     init_points = super()._get_initial_points(
+    #         previous_configs=previous_configs, n_points=n_points, additional_start_points=additional_start_points
+    #     )
+    #
+    #     # Add population to Local search
+    #     if len(stats.population) > 0:
+    #         population = [runhistory.ids_config[confid] for confid in stats.population]
+    #         init_points = self._unique_list(itertools.chain(population, init_points))
+    #     return init_points
 
     def _create_sort_keys(self, costs: np.array) -> list[list[float]]:
         """Non-Dominated Sorting of Costs
@@ -72,6 +71,8 @@ class MOLocalSearch(LocalSearch):
         list[list[float]]
             Sorting sequence for lexsort
         """
+        if len(costs) == 1:
+            return [[1.0]]
         _, domination_list, _, non_domination_rank = fast_non_dominated_sorting(costs)
         domination_list = [len(i) for i in domination_list]
         sort_objectives = [domination_list, non_domination_rank]  # Last column is primary sort key!
@@ -120,7 +121,7 @@ class MOLocalAndSortedRandomSearch(LocalAndSortedRandomSearch):
             seed=seed,
         )
 
-        self.local_search = MOLocalSearch(
+        self._local_search = MOLocalSearch(
             configspace=configspace,
             acquisition_function=acquisition_function,
             challengers=challengers,
