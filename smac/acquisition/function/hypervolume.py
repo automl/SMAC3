@@ -42,6 +42,16 @@ class AbstractHVI(AbstractAcquisitionFunction):
         return "Abstract Hypervolume Improvement"
 
     def _update(self, **kwargs: Any) -> None:
+        """
+        Parameters
+        ----------
+        incumbents: list[Configuration]
+            List of incumbent configurations to compute the predicted improvement over.
+        runhistory : RunHistory
+            Needed to dynamically obtain the objective bounds used for normalisation.
+        runhistory_encoder : AbstractRunHistoryEncoder
+            Needed to dynamically obtain the objective bounds used for normalisation.
+        """
         super(AbstractHVI, self)._update(**kwargs)
 
         incumbents: list[Configuration] = kwargs.get("incumbents", None)
@@ -128,6 +138,17 @@ class PHVI(AbstractHVI):
         return "Predicted Hypervolume Improvement"
 
     def _update(self, **kwargs: Any) -> None:
+        """Update the acquisition function attributes required for calculation.
+
+        Parameters
+        ----------
+        incumbents: list[Configuration]
+            List of incumbent configurations to compute the predicted improvement over.
+        runhistory : RunHistory
+            Needed to dynamically obtain the objective bounds used for normalisation.
+        runhistory_encoder : AbstractRunHistoryEncoder
+            Needed to dynamically obtain the objective bounds used for normalisation.
+        """
         super(PHVI, self)._update(**kwargs)
         assert self.model is not None, "Did you update the AF with the model?"
         incumbents: list[Configuration] = kwargs.get("incumbents", None)

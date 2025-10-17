@@ -83,7 +83,7 @@ class EI(AbstractAcquisitionFunction):
         return meta
 
     def _update(self, **kwargs: Any) -> None:
-        """Update acsquisition function attributes
+        """Update acquisition function attributes
 
         Parameters
         ----------

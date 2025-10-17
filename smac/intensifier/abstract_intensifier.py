@@ -621,7 +621,8 @@ class AbstractIntensifier:
         if previous_incumbents == new_incumbents:  # Only happens with incumbent config #TODO JG check why this is
             self._remove_rejected_config(config)  # Remove the incumbent from the rejected config list
 
-            # TODO JG ?remove the config it is the incumbent. otherwise add the config.? However if a config is rejected, it should be possible to requeue a configuration.
+            # TODO JG ?remove the config it is the incumbent. otherwise add the config.?
+            #  However if a config is rejected, it should be possible to requeue a configuration.
             return
         elif len(previous_incumbents) == len(new_incumbents):
             # In this case, we have to determine which config replaced which incumbent and reject it

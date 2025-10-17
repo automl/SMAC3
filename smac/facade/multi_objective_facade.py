@@ -109,25 +109,19 @@ class MultiObjectiveFacade(AbstractFacade):
         )
 
     @staticmethod
-    # TODO update acquisition function with EIHV and PIHV
     def get_acquisition_function(  # type: ignore
         scenario: Scenario,
-        *,
-        xi: float = 0.0,
     ) -> AbstractHVI:
         """Returns an Expected Improvement acquisition function.
 
         Parameters
         ----------
         scenario : Scenario
-        xi : float, defaults to 0.0
-            Controls the balance between exploration and exploitation of the
-            acquisition function.
         """
         return PHVI()
 
     @staticmethod
-    def get_acquisition_maximizer(  # type: ignore
+    def  get_acquisition_maximizer(  # type: ignore
         scenario: Scenario,
     ) -> MOLocalAndSortedRandomSearch:
         """Returns local and sorted random search as acquisition maximizer."""
