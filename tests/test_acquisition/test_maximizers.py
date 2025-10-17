@@ -34,6 +34,7 @@ from smac.acquisition.maximizer import (
     LocalSearch,
     RandomSearch,
 )
+from smac.acquisition.maximizer.multi_objective_search import MOLocalSearch
 from smac.model.random_forest.random_forest import RandomForest
 from smac.runhistory.runhistory import RunHistory
 from smac.runner.abstract_runner import StatusType
@@ -476,3 +477,18 @@ def test_differential_evolution_categorical(configspace_categorical, acquisition
     de = DifferentialEvolution(configspace_categorical, acquisition_function)
 
     values = de._maximize(start_points, 1)
+
+# --------------------------------------------------------------
+# TestMOLocalSearch
+# --------------------------------------------------------------
+
+def test_mo_local_search_sort_keys(configspace, acquisition_function):
+    rs = MOLocalSearch(configspace, acquisition_function, max_steps=100)
+
+    costs = np.array([[0.0,0.0], [0.4,0.5], [0.5, 0.4], [1.0, 1.0]])
+
+    sort_keys = rs._create_sort_keys(costs)
+
+    assert len(sort_keys) == 2
+    assert np.array_equal(sort_keys[0],[3, 1, 1, 0])
+    assert np.array_equal(sort_keys[1],[0, 1, 1, 2])
