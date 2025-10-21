@@ -4,10 +4,17 @@ from typing import Any
 
 import itertools
 import time
+import warnings
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.exceptions import ForbiddenValueError
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    OrdinalHyperparameter,
+    UniformIntegerHyperparameter,
+)
+from joblib import Parallel, delayed
 
 from smac.acquisition.function import AbstractAcquisitionFunction
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
@@ -15,6 +22,7 @@ from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
 )
 from smac.utils.configspace import (
     convert_configurations_to_array,
+    get_k_exchange_neighbourhood,
     get_one_exchange_neighbourhood,
 )
 from smac.utils.logging import get_logger
@@ -45,6 +53,14 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
         reduce the overhead of SMAC.
     seed : int, defaults to 0
+    n_jobs : int, defaults to 1
+        Number of parallel jobs to use when performing local search. If 1, the search is serial.
+        If >1, multiple starting points are evaluated in parallel.
+    base_sigma: float, defaults to 2
+        Base standard deviation for sampling continous hyperparameters
+    exchange_size : int, defaults to 1
+        Number of hyperparameters to modify in each neighborhood step.
+
     """
 
     def __init__(
@@ -57,6 +73,9 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         vectorization_min_obtain: int = 2,
         vectorization_max_obtain: int = 64,
         seed: int = 0,
+        n_jobs: int = 1,
+        base_sigma: float = 0.2,
+        exchange_size: int = 1,
     ) -> None:
         super().__init__(
             configspace,
@@ -69,6 +88,9 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         self._n_steps_plateau_walk = n_steps_plateau_walk
         self._vectorization_min_obtain = vectorization_min_obtain
         self._vectorization_max_obtain = vectorization_max_obtain
+        self._n_jobs = n_jobs
+        self._base_sigma = base_sigma
+        self._exchange_size = exchange_size
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -278,173 +300,197 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         """
         assert self._acquisition_function is not None
 
+        number_of_hyperparameters = len(start_points[0].config_space.keys())
+        if self._exchange_size > number_of_hyperparameters:
+            warnings.warn(
+                f"Requested _exchange_size={self._exchange_size} exceeds the number of "
+                f"available hyperparameters ({number_of_hyperparameters}). "
+                f"Setting _exchange_size to {number_of_hyperparameters}",
+            )
+            self._exchange_size = number_of_hyperparameters
+
         # Gather data structure for starting points
         if isinstance(start_points, Configuration):
             start_points = [start_points]
 
-        candidates = start_points
-        # Compute the acquisition value of the candidates
-        num_candidates = len(candidates)
-        acq_val_candidates_ = self._acquisition_function(candidates)
+        results = Parallel(n_jobs=self._n_jobs)(delayed(self._single_local_search)(sp) for sp in start_points)
 
-        if num_candidates == 1:
-            acq_val_candidates = [acq_val_candidates_[0][0]]
-        else:
-            acq_val_candidates = [a[0] for a in acq_val_candidates_]
+        return results
+
+    def _single_local_search(self, start_point: Configuration) -> tuple[float, Configuration]:
+        """
+        Perform a local search from a single starting configuration.
+
+        The local search iteratively explores the k-exchange neighborhood of the
+        current candidate configuration. If a neighbor has a better acquisition value,
+        it becomes the new candidate. Plateau walks are used when neighbors have equal acquisition values.
+
+
+        Parameters
+        ----------
+        start_point : Configuration
+            Starting point for the search.
+
+        Returns
+        -------
+        tuple[float, Configuration]
+            Candidate with its acquisition function value. (acq value, candidate)
+        """
+        rng = np.random.RandomState(self._rng.randint(low=0, high=10000))
+
+        candidate = start_point
+        candidate_list = [candidate]
+        # Compute the acquisition value of the candidate
+        if self._acquisition_function is None:
+            raise ValueError("Acquisition function must be set before running local search.")
+
+        acq_val_candidate = self._acquisition_function(candidate_list)[0][0]
 
         # Set up additional variables required to do vectorized local search:
-        # whether the i-th local search is still running
-        active = [True] * num_candidates
-        # number of plateau walks of the i-th local search. Reaching the maximum number is the stopping criterion of
+        # whether the local search is still running
+        active = True
+        # number of plateau walks of the local search. Reaching the maximum number is the stopping criterion of
         # the local search.
-        n_no_plateau_walk = [0] * num_candidates
+        n_no_plateau_walk = 0
         # tracking the number of steps for logging purposes
-        local_search_steps = [0] * num_candidates
+        local_search_steps = 0
         # tracking the number of neighbors looked at for logging purposes
-        neighbors_looked_at = [0] * num_candidates
+        neighbors_looked_at = 0
         # tracking the number of neighbors generated for logging purposse
-        neighbors_generated = [0] * num_candidates
-        # how many neighbors were obtained for the i-th local search. Important to map the individual acquisition
+        neighbors_generated = 0
+        # how many neighbors were obtained for the local search. Important to map the individual acquisition
         # function values to the correct local search run
-        obtain_n = [self._vectorization_min_obtain] * num_candidates
+        obtain_n = self._vectorization_min_obtain
         # Tracking the time it takes to compute the acquisition function
         times = []
 
-        # Set up the neighborhood generators
-        neighborhood_iterators = []
-        for i, inc in enumerate(candidates):
-            neighborhood_iterators.append(
-                # get_one_exchange_neighbourhood implementational details:
-                # https://github.com/automl/ConfigSpace/blob/05ab3da2a06c084ba920e8e4e3f62f2e87e81442/ConfigSpace/util.pyx#L95
-                # Return all configurations in a one-exchange neighborhood.
-                #
-                #     The method is implemented as defined by:
-                #     Frank Hutter, Holger H. Hoos and Kevin Leyton-Brown
-                #     Sequential Model-Based Optimization for General Algorithm Configuration
-                #     In Proceedings of the conference on Learning and Intelligent
-                #     Optimization(LION 5)
-                get_one_exchange_neighbourhood(inc, seed=self._rng.randint(low=0, high=100000))
-            )
-            local_search_steps[i] += 1
+        local_search_steps += 1
+        neighbors_w_equal_acq: list[Configuration] = []
 
-        # Keeping track of configurations with equal acquisition value for plateau walking
-        neighbors_w_equal_acq: list[list[Configuration]] = [[] for _ in range(num_candidates)]
+        hp_names = list(candidate.config_space.keys())
 
         num_iters = 0
-        while np.any(active):
+        while active:
 
             # If the maximum number of steps is reached, stop the local search
             if num_iters is not None and num_iters == self._max_steps:
                 break
 
             num_iters += 1
+
+            # Compute standard deviation based on Regis and Shoemaker (2013)
+            # TODO: Maybe _max_steps should not be used and instead a fitting constant
+            if self._max_steps is not None:
+                sigma_t = self._base_sigma * (1 - np.log(num_iters + 1) / np.log(self._max_steps + 1))
+            else:
+                sigma_t = self._base_sigma
+
+            hp_names = list(candidate.config_space.keys())
+
+            # Set up the neighborhood generator
+            if self._exchange_size == 1:
+                neighborhood_iterator = get_one_exchange_neighbourhood(
+                    candidate,
+                    seed=rng.randint(low=0, high=100000),
+                    stdev=sigma_t,
+                )
+            elif self._exchange_size > 1:
+                neighborhood_iterator = get_k_exchange_neighbourhood(
+                    candidate,
+                    seed=rng.randint(low=0, high=100000),
+                    stdev=sigma_t,
+                    exchange_size=self._exchange_size,
+                )
+
             # Whether the i-th local search improved. When a new neighborhood is generated, this is used to determine
             # whether a step was made (improvement) or not (iterator exhausted)
-            improved = [False] * num_candidates
+            improved = False
             # Used to request a new neighborhood for the candidates of the i-th local search
-            new_neighborhood = [False] * num_candidates
+            new_neighborhood = False
+            exhausted_hp = set()
+            regen_count = {hp: 0 for hp in candidate.config_space}
 
             # gather all neighbors
             neighbors = []
-            for i, neighborhood_iterator in enumerate(neighborhood_iterators):
-                if active[i]:
-                    neighbors_for_i = []
-                    for j in range(obtain_n[i]):
-                        try:
-                            n = next(neighborhood_iterator)
-                            neighbors_generated[i] += 1
-                            neighbors_for_i.append(n)
-                        except ValueError as e:
-                            # `neighborhood_iterator` raises `ValueError` with some probability when it reaches
-                            # an invalid configuration.
-                            logger.debug(e)
-                            new_neighborhood[i] = True
-                        except StopIteration:
-                            new_neighborhood[i] = True
-                            break
-                    obtain_n[i] = len(neighbors_for_i)
-                    neighbors.extend(neighbors_for_i)
 
-            if len(neighbors) != 0:
+            for _ in range(obtain_n):
+                try:
+                    n = next(neighborhood_iterator)
+
+                    # Lists containing each hyperparameter that was changed by the neighborhood_iterator
+                    changed_hp_idx = (n.get_array() != candidate.get_array()).nonzero()[0]
+                    changed_hp_names = [hp_names[i] for i in changed_hp_idx]
+
+                    for hp_name in changed_hp_names:
+                        regen_count[hp_name] = regen_count.get(hp_name, 0) + 1
+                        node = candidate.config_space[hp_name]
+
+                        # number of possible values for this hypeparameter
+                        n_values = (
+                            len(node.choices)
+                            if isinstance(node, CategoricalHyperparameter)
+                            else node.size
+                            if isinstance(node, UniformIntegerHyperparameter)
+                            else len(node.sequence)
+                            if isinstance(node, OrdinalHyperparameter)
+                            else np.inf
+                        )
+
+                        # Stop adding neighbors that adjust this hyperparameter,
+                        # as all possible configurations were probably tried already
+                        if n_values <= 1.5 * regen_count[hp_name]:
+                            exhausted_hp.add(hp_name)
+
+                    if all(hp in exhausted_hp for hp in changed_hp_names):
+                        continue
+
+                    neighbors_generated += 1
+                    neighbors.append(n)
+                except ValueError as e:
+                    # `neighborhood_iterator` raises `ValueError` with some probability when it reaches
+                    # an invalid configuration.
+                    logger.debug(e)
+                    new_neighborhood = True
+                except StopIteration:
+                    new_neighborhood = True
+                    break
+            obtain_n = len(neighbors)
+            if len(neighbors) > 0:
                 start_time = time.time()
                 acq_val = self._acquisition_function(neighbors)
-                end_time = time.time()
-                times.append(end_time - start_time)
-                if np.ndim(acq_val.shape) == 0:
-                    acq_val = np.asarray([acq_val])
+                times.append(time.time() - start_time)
 
-                # Comparing the acquisition function of the neighbors with the acquisition value of the candidate
-                acq_index = 0
-                # Iterating the all i local searches
-                for i in range(num_candidates):
-                    if not active[i]:
-                        continue
-
-                    # And for each local search we know how many neighbors we obtained
-                    for j in range(obtain_n[i]):
-                        # The next line is only true if there was an improvement and we basically need to iterate to
-                        # the i+1-th local search
-                        if improved[i]:
-                            acq_index += 1
-                        else:
-                            neighbors_looked_at[i] += 1
-
-                            # Found a better configuration
-                            if acq_val[acq_index] > acq_val_candidates[i]:
-                                is_valid = False
-                                try:
-                                    neighbors[acq_index].check_valid_configuration()
-                                    is_valid = True
-                                except (ValueError, ForbiddenValueError) as e:
-                                    logger.debug("Local search %d: %s", i, e)
-
-                                if is_valid:
-                                    # We comment this as it just spams the log
-                                    # logger.debug(
-                                    #     "Local search %d: Switch to one of the neighbors (after %d configurations).",
-                                    #     i,
-                                    #     neighbors_looked_at[i],
-                                    # )
-                                    candidates[i] = neighbors[acq_index]
-                                    acq_val_candidates[i] = acq_val[acq_index]
-                                    new_neighborhood[i] = True
-                                    improved[i] = True
-                                    local_search_steps[i] += 1
-                                    neighbors_w_equal_acq[i] = []
-                                    obtain_n[i] = 1
-                            # Found an equally well performing configuration, keeping it for plateau walking
-                            elif acq_val[acq_index] == acq_val_candidates[i]:
-                                neighbors_w_equal_acq[i].append(neighbors[acq_index])
-
-                            acq_index += 1
-
-            # Now we check whether we need to create new neighborhoods and whether we need to increase the number of
-            # plateau walks for one of the local searches. Also disables local searches if the number of plateau walks
-            # is reached (and all being switched off is the termination criterion).
-            for i in range(num_candidates):
-                if not active[i]:
-                    continue
-
-                if obtain_n[i] == 0 or improved[i]:
-                    obtain_n[i] = 2
-                else:
-                    obtain_n[i] = obtain_n[i] * 2
-                    obtain_n[i] = min(obtain_n[i], self._vectorization_max_obtain)
-
-                if new_neighborhood[i]:
-                    if not improved[i] and n_no_plateau_walk[i] < self._n_steps_plateau_walk:
-                        if len(neighbors_w_equal_acq[i]) != 0:
-                            candidates[i] = neighbors_w_equal_acq[i][0]
-                            neighbors_w_equal_acq[i] = []
-                        n_no_plateau_walk[i] += 1
-                    if n_no_plateau_walk[i] >= self._n_steps_plateau_walk:
-                        active[i] = False
-                        continue
-
-                    neighborhood_iterators[i] = get_one_exchange_neighbourhood(
-                        candidates[i],
-                        seed=self._rng.randint(low=0, high=100000),
-                    )
+                for idx, neighbor in enumerate(neighbors):
+                    neighbors_looked_at += 1
+                    val = acq_val[idx][0]
+                    if val > acq_val_candidate:
+                        try:
+                            neighbor.check_valid_configuration()
+                            candidate = neighbor
+                            acq_val_candidate = val
+                            new_neighborhood = True
+                            improved = True
+                            local_search_steps += 1
+                            neighbors_w_equal_acq = []
+                            obtain_n = 1
+                            break
+                        except (ValueError, ForbiddenValueError) as e:
+                            logger.debug("Local search: %s", e)
+                    elif val == acq_val_candidate:
+                        neighbors_w_equal_acq.append(neighbor)
+            if obtain_n == 0 or improved:
+                obtain_n = 2
+            else:
+                obtain_n = min(obtain_n * 2, self._vectorization_max_obtain)
+            if new_neighborhood:
+                if not improved and n_no_plateau_walk < self._n_steps_plateau_walk:
+                    if len(neighbors_w_equal_acq) > 0:
+                        candidate = neighbors_w_equal_acq[0]
+                        neighbors_w_equal_acq = []
+                    n_no_plateau_walk += 1
+                if n_no_plateau_walk >= self._n_steps_plateau_walk:
+                    active = False
+                    break
 
         logger.debug(
             "Local searches took %s steps and looked at %s configurations. Computing the acquisition function in "
@@ -454,4 +500,4 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             np.mean(times),
         )
 
-        return [(a, i) for a, i in zip(acq_val_candidates, candidates)]
+        return acq_val_candidate, candidate

@@ -48,6 +48,11 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         The ratio of random samples that are taken from the user-defined ConfigurationSpace, as opposed to the uniform
         version (needs `uniform_configspace`to be defined).
     seed : int, defaults to 0
+    n_jobs_ls: int, defaults to 1
+        Number of parallel jobs used when performing local search. If 1, the search is serial.
+        If >1, multiple starting points are evaluated in parallel.
+    exchange_size_ls: int, defaults to 1
+        Number of Hyperparameters changed by one step of the Local Search
     """
 
     def __init__(
@@ -61,6 +66,8 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         seed: int = 0,
         uniform_configspace: ConfigurationSpace | None = None,
         prior_sampling_fraction: float | None = None,
+        n_jobs_ls: int = 1,
+        exchange_size_ls: int = 1,
     ) -> None:
         super().__init__(
             configspace,
@@ -98,6 +105,8 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
             max_steps=max_steps,
             n_steps_plateau_walk=n_steps_plateau_walk,
             seed=seed,
+            n_jobs=n_jobs_ls,
+            exchange_size=exchange_size_ls,
         )
 
         self._local_search_iterations = local_search_iterations
