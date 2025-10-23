@@ -32,7 +32,7 @@ class Scenario:
         Specify this argument to identify your run easily.
     output_directory : Path, defaults to Path("smac3_output")
         The directory in which to save the output. The files are saved in `./output_directory/name/seed`.
-    deterministic : bool, default=False
+    deterministic : bool, defaults to False
         If True, only one seed is passed to the target function, assuming deterministic (noise-free) behavior.
         Otherwise, multiple seeds are passed (if `n_seeds` > 1) to enable repeated evaluations.
         For non-deterministic functions, users must specify intensification parameters
