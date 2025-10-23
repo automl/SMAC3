@@ -89,7 +89,6 @@ scenario = Scenario(
     * **For Deterministic Objectives (`deterministic=True`):** Use this when repeated evaluations of the same configuration produce identical results. In this mode, each configuration is evaluated only once, and the surrogate model does not include a noise term.
     * **For Stochastic Objectives (`deterministic=False`):** Use this when the objective is noisy. Intensification parameters like `max_config_calls` and `n_seeds` must be set to enable repeated evaluations per configuration.
 
-
 !!! note
     If no `name` is given, a hash of the experiment is used. Running the same experiment again at a later time will result in exactly the same hash. This is important, because the optimization will warmstart on the preexisting evaluations, if not otherwise specified in the [Facade][smac.facade.abstract_facade].
 
