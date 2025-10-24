@@ -33,9 +33,11 @@ class Scenario:
     output_directory : Path, defaults to Path("smac3_output")
         The directory in which to save the output. The files are saved in `./output_directory/name/seed`.
     deterministic : bool, defaults to False
-        If deterministic is set to true, only one seed is passed to the target function.
-        Otherwise, multiple seeds (if n_seeds of the intensifier is greater than 1) are passed
-        to the target function to ensure generalization.
+        If True, only one seed is passed to the target function, assuming deterministic (noise-free) behavior.
+        Otherwise, multiple seeds are passed (if `n_seeds` > 1) to enable repeated evaluations.
+        For non-deterministic functions, users must specify intensification parameters
+        (e.g., `max_config_calls`, `n_seeds`) to ensure reliable performance estimates
+        and optionally model noise in the Gaussian Process surrogate.
     objectives : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
     crash_cost : float | list[float], defaults to np.inf
