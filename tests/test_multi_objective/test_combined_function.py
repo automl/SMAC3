@@ -74,38 +74,40 @@ def test_mean_aggregation(facade, make_scenario, configspace):
     RETRAIN_AFTER = 8
 
     scenario: Scenario = make_scenario(configspace, use_multi_objective=True, n_trials=N_TRIALS)
-    # TODO: Check whether different weighting affects the sampled configurations.
-    multi_objective_algorithm = WrapStrategy(MeanAggregationStrategy, scenario=scenario)
-    intensifier = Intensifier(scenario, max_config_calls=1, max_incumbents=10)
-    config_selector = ConfigSelector(scenario, retrain_after=RETRAIN_AFTER)
-    initial_design = RandomInitialDesign(scenario, n_configs=1)
+        # TODO: Check whether different weighting affects the sampled configurations.
+    weights = [[0.1,0.9], [0.5,0.5], [0.8,0.2], [1.0,0.0], [0.0,1.0], None]
+    for weight_pair in weights:
+        multi_objective_algorithm = WrapStrategy(MeanAggregationStrategy, objective_weights=weight_pair, scenario=scenario)
+        intensifier = Intensifier(scenario, max_config_calls=1, max_incumbents=10)
+        config_selector = ConfigSelector(scenario, retrain_after=RETRAIN_AFTER)
+        initial_design = RandomInitialDesign(scenario, n_configs=1)
 
-    smac = facade(
-        scenario=scenario,
-        target_function=tae,
-        multi_objective_algorithm=multi_objective_algorithm,
-        intensifier=intensifier,
-        config_selector=config_selector,
-        initial_design=initial_design,
-        overwrite=True,
-    )
-    incumbents = smac.optimize()
+        smac = facade(
+            scenario=scenario,
+            target_function=tae,
+            multi_objective_algorithm=multi_objective_algorithm,
+            intensifier=intensifier,
+            config_selector=config_selector,
+            initial_design=initial_design,
+            overwrite=True,
+        )
+        incumbents = smac.optimize()
 
-    # We sort the incumbents by their x values and then make sure that the current y is
-    # smaller than the previous one.
-    sorted_incumbents = []
-    for incumbent in incumbents:
-        x, y = func(incumbent["x"])
-        sorted_incumbents.append((x, y))
+        # We sort the incumbents by their x values and then make sure that the current y is
+        # smaller than the previous one.
+        sorted_incumbents = []
+        for incumbent in incumbents:
+            x, y = func(incumbent["x"])
+            sorted_incumbents.append((x, y))
 
-    sorted_incumbents = sorted(sorted_incumbents, key=lambda x: x[0])
-    previous_y = np.inf
-    for x, y in sorted_incumbents:
-        assert y <= previous_y
-        previous_y = y
+        sorted_incumbents = sorted(sorted_incumbents, key=lambda x: x[0])
+        previous_y = np.inf
+        for x, y in sorted_incumbents:
+            assert y <= previous_y
+            previous_y = y
 
-    # We expect N_TRIALS/RETRAIN_AFTER updates
-    assert multi_objective_algorithm._n_calls_update_on_iteration_start == int(N_TRIALS / RETRAIN_AFTER)
+        # We expect N_TRIALS/RETRAIN_AFTER updates
+        assert multi_objective_algorithm._n_calls_update_on_iteration_start == int(N_TRIALS / RETRAIN_AFTER)
 
 
 @pytest.mark.parametrize("facade", FACADES)
