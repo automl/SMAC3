@@ -138,6 +138,7 @@ class BlackBoxFacade(AbstractFacade):
                 [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cont_dims))],
                 nu=2.5,
                 operate_on=cont_dims,
+                do_autoscale_length=scenario.do_autoscale_length,
             )
         if len(cat_dims) > 0:
             ham_kernel = HammingKernel(

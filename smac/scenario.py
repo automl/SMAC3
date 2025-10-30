@@ -74,6 +74,8 @@ class Scenario:
     max_budget : float | int | None, defaults to None
         The maximum budget (epochs, subset size, number of instances, ...) that is used for the optimization.
         Use this argument if you use multi-fidelity or instance optimization.
+    do_autoscale_length : bool, defaults to False
+        If True, the length scale of the Matern kernel is automatically adjusted according to the input dimensions.
     seed : int, defaults to 0
         The seed is used to make results reproducible. If seed is -1, SMAC will generate a random seed.
     n_workers : int, defaults to 1
@@ -107,6 +109,9 @@ class Scenario:
     # Budgets
     min_budget: float | int | None = None
     max_budget: float | int | None = None
+
+    # Matern kernel
+    do_autoscale_length: bool = False
 
     # Others
     seed: int = 0
