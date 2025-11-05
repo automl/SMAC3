@@ -3,6 +3,7 @@ from smac.acquisition.function.abstract_acquisition_function import (
 )
 from smac.acquisition.function.confidence_bound import LCB
 from smac.acquisition.function.expected_improvement import EI, EIPS
+from smac.acquisition.function.hypervolume import PHVI
 from smac.acquisition.function.integrated_acquisition_function import (
     IntegratedAcquisitionFunction,
 )
@@ -11,7 +12,6 @@ from smac.acquisition.function.prior_acquisition_function import (
 )
 from smac.acquisition.function.probability_improvement import PI
 from smac.acquisition.function.thompson import TS
-from smac.acquisition.function.hypervolume import PHVI
 
 __all__ = [
     "AbstractAcquisitionFunction",
@@ -22,5 +22,5 @@ __all__ = [
     "TS",
     "PriorAcquisitionFunction",
     "IntegratedAcquisitionFunction",
-    "PHVI"
+    "PHVI",
 ]

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from ConfigSpace import Configuration
-from ipykernel.pickleutil import istype
 
 from smac.acquisition.function.hypervolume import PHVI, AbstractHVI
 from smac.acquisition.maximizer.multi_objective_search import (
@@ -60,7 +59,7 @@ class MultiObjectiveFacade(AbstractFacade):
             Number of components to keep when using PCA to reduce dimensionality of instance features.
         """
         models = []
-        objectives = scenario.objectives if istype(scenario.objectives, list) else [scenario.objectives]
+        objectives = scenario.objectives if isinstance(scenario.objectives, list) else [scenario.objectives]
         for objective in objectives:
             models.append(
                 RandomForest(

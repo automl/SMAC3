@@ -46,6 +46,7 @@ try:
         "AlgorithmConfigurationFacade",
         "RandomFacade",
         "HyperbandFacade",
+        "MultiObjectiveFacade",
         "Callback",
     ]
 except ModuleNotFoundError as e:

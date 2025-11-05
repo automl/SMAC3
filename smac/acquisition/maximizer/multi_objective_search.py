@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import itertools
-
 import numpy as np
-from ConfigSpace import Configuration, ConfigurationSpace
+from ConfigSpace import ConfigurationSpace
 from pygmo import fast_non_dominated_sorting
 
 from smac.acquisition.function import AbstractAcquisitionFunction
