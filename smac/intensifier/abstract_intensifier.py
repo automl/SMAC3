@@ -653,7 +653,6 @@ class AbstractIntensifier:
         if len(new_incumbents) > self._max_incumbents:
             all_incumbent_isb_keys = [incumbent_isb_keys for i in range(len(new_incumbents))]
             new_incumbents = self._cut_incumbents(new_incumbents, all_incumbent_isb_keys)
-            # TODO JG adjust. Other option: statistical test or HV (SMS-EMOA reduce function)
 
         self._update_trajectory(new_incumbents)
 
@@ -856,13 +855,13 @@ class AbstractIntensifier:
     #     # We use the crowding distance for that
     #     if len(new_incumbents) > self._max_incumbents:
     #         new_incumbents = self._cut_incumbents(new_incumbents, all_incumbent_isb_keys)
-    #         #TODO JG adjust. Other option: statistical test or HV (SMS-EMOA reduce function)
     #
     #     self._update_trajectory(new_incumbents)
 
     def _cut_incumbents(
         self, incumbent_ids: list[int], all_incumbent_isb_keys: list[list[InstanceSeedBudgetKey]]
     ) -> list[int]:
+        # TODO Option: sort by hypervolume
         new_incumbents = sort_by_crowding_distance(
             self.runhistory, incumbent_ids, all_incumbent_isb_keys, normalize=True
         )

@@ -19,8 +19,6 @@ __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
 
-# TODO add minimum population size?
-
 
 class MOIntensifierMixin(AbstractIntensifier):
     def _calculate_pareto_front(
@@ -35,15 +33,10 @@ class MOIntensifierMixin(AbstractIntensifier):
             config_instance_seed_budget_keys=config_instance_seed_budget_keys,
         )
 
-    # def _remove_incumbent(
-    #     self, config: Configuration, previous_incumbent_ids: list[int], new_incumbent_ids: list[int]) -> None:
-    #     # TODO adjust
-    #     raise NotImplementedError
-
     def _cut_incumbents(
         self, incumbent_ids: list[int], all_incumbent_isb_keys: list[list[InstanceSeedBudgetKey]]
     ) -> list[int]:
-        # TODO JG sort by hypervolume
+        # TODO Option: sort by hypervolume
         new_incumbents = sort_by_crowding_distance(
             self.runhistory, incumbent_ids, all_incumbent_isb_keys, normalize=True
         )
