@@ -34,7 +34,7 @@ class NewCostDominatesOldCost(AbstractIntensifier):
         config_isb_keys = self.get_instance_seed_budget_keys(config)
 
         if not hasattr(self, "_old_config_cost"):
-            self._old_config_cost: dict[Configuration, list[float]] = {}  # TODO remove configuration when done
+            self._old_config_cost: dict[Configuration, list[float]] = {}
 
         new_cost: list[float] = self.runhistory.average_cost(config, config_isb_keys)  # type: ignore[assignment]
         if config not in self._old_config_cost:
@@ -64,7 +64,7 @@ class NewCostDominatesOldCostSkipFirst(AbstractIntensifier):
         config_isb_keys = self.get_instance_seed_budget_keys(config)
 
         if not hasattr(self, "_old_config_cost"):
-            self._old_config_cost: dict[Configuration, list[float]] = {}  # TODO remove configuration when done
+            self._old_config_cost: dict[Configuration, list[float]] = {}
 
         new_cost: list[float] = self.runhistory.average_cost(config, config_isb_keys)  # type: ignore[assignment]
         if config not in self._old_config_cost:
