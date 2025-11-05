@@ -31,6 +31,7 @@ try:
         HyperbandFacade,
         HyperparameterOptimizationFacade,
         MultiFidelityFacade,
+        MultiObjectiveFacade,
         RandomFacade,
     )
     from smac.runhistory.runhistory import RunHistory

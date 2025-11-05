@@ -85,6 +85,9 @@ class AbstractHVI(AbstractAcquisitionFunction):
         ------
         hypervolume: float
         """
+        if len(self._objective_bounds) < 2:
+            return np.min(points)  # single objective
+
         # Normalize the objectives here to give equal attention to the objectives when computing the HV
         points = [normalize_costs(p, self._objective_bounds) for p in points]
         hv = pygmo.hypervolume(points)

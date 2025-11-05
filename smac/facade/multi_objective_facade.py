@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from ConfigSpace import Configuration
+from ipykernel.pickleutil import istype
 
 from smac.acquisition.function.hypervolume import PHVI, AbstractHVI
 from smac.acquisition.maximizer.multi_objective_search import (
@@ -59,7 +60,8 @@ class MultiObjectiveFacade(AbstractFacade):
             Number of components to keep when using PCA to reduce dimensionality of instance features.
         """
         models = []
-        for objective in scenario.objectives:
+        objectives = scenario.objectives if istype(scenario.objectives, list) else [scenario.objectives]
+        for objective in objectives:
             models.append(
                 RandomForest(
                     configspace=scenario.configspace,
@@ -76,7 +78,7 @@ class MultiObjectiveFacade(AbstractFacade):
                 )
             )
 
-        return MultiObjectiveModel(models=models, objectives=scenario.objectives)  # type: ignore[arg-type]
+        return MultiObjectiveModel(models=models, objectives=objectives)  # type: ignore[arg-type]
 
     @staticmethod
     def get_intensifier(  # type: ignore
@@ -121,7 +123,7 @@ class MultiObjectiveFacade(AbstractFacade):
         return PHVI()
 
     @staticmethod
-    def  get_acquisition_maximizer(  # type: ignore
+    def get_acquisition_maximizer(  # type: ignore
         scenario: Scenario,
     ) -> MOLocalAndSortedRandomSearch:
         """Returns local and sorted random search as acquisition maximizer."""
