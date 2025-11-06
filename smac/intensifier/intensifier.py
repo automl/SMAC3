@@ -7,7 +7,6 @@ from collections import defaultdict
 
 import numpy as np
 from ConfigSpace import Configuration
-from sphinx.writers.latex import UnsupportedError
 
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.runhistory import TrialInfo
@@ -446,7 +445,7 @@ class Intensifier(AbstractIntensifier):
             normalize=False,
         )
         if isinstance(inc_sum_cost_unchecked, list):
-            raise UnsupportedError(
+            raise TypeError(
                 "Incumbent sum cost should be a single value and not a list, as adaptive capping is not "
                 "supported for scenarios with multiple objectives."
             )
@@ -501,7 +500,7 @@ class Intensifier(AbstractIntensifier):
                     average_instance_cost = np.array(costs).mean()
                     inc_sum_cost += average_instance_cost
                 else:
-                    raise UnsupportedError()
+                    raise TypeError()
 
             # compute the already used runtime for the challenger across instances
             chal_sum_cost = self.runhistory.sum_cost(
