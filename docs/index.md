@@ -9,6 +9,29 @@ SMAC is a tool for algorithm configuration to optimize the parameters of arbitra
 
 SMAC3 is written in Python3 and continuously tested with Python 3.8, 3.9, and 3.10. Its Random Forest is written in C++. In the following, SMAC is representatively mentioned for SMAC3.
 
+## Ecosystem
+SMAC3 integrates with several tools in the AutoML ecosystem:
+
+### DeepCAVE
+[DeepCAVE](https://github.com/automl/DeepCAVE) is a visualisation tool for optimization that provides interactive plotting and analysis of SMAC runs.  
+Allows to efficiently generate insights for AutoML problems and brings the human back in the loop and has Interactive GUI
+
+### CARPS
+[CARPS](https://github.com/carps-ai/carps) (Configuration And Running Parallel Systems) enables easy parallelization and configuration of algorithms, with native SMAC3 support.  
+framework for benchmarking N optimization methods on M benchmarks
+lightweight interface between optimizer and benchmark
+many included HPO tasks from different task types BB, MF, MO, MOMF
+
+
+### HyperSweeper
+[HyperSweeper](https://github.com/automl/HyperSweeper) provides efficient hyperparameter optimization for large models, leveraging SMAC's capabilities.  
+for expensive objective functions, works on a cluster (slurm, joblib, ray), and evaluates functions as separate jobs
+
+### Optuna Integration
+SMAC3 is available as a sampler in [Optuna](https://optuna.org/), allowing you to use SMAC's optimization strategies within Optuna's framework.  
+
+
+
 ## Features
 
 * Open source + active maintenance
