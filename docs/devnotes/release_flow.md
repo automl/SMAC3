@@ -42,7 +42,7 @@ If you do not use `uv`, remove `uv` from the commands.
 1. Update doc link.
 1. Deploy github pages (replace version in the following command):
     ```bash
-    mike deploy "v${VERSION}" latest -u -p --title "v${VERSION} (latest)"
+    make deploy "v${VERSION}" latest -u -p --title "v${VERSION} (latest)"
     ```
 
 1. Upload to testpypi:
