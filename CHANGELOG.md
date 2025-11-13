@@ -3,9 +3,13 @@
 - Replace random forest from pyrfr with random forest from sklearn (#1246)
 - Submit trials to runners in SMBO instead of running configs directly (#937)
 - `target_function` becomes optional in Facade when using ask and tell exclusively (#946)
+- Added adaptive capping for algorithm configuration with runtime as target (#1247) 
+- Readded UCB as an acquisition function (#1255)
 
 ## Documentation
 - Ask and tell without initial design and warmstarting
+- Random forest replacement (sklearn instead of pyrfr)
+- Deterministic configuration of SMAC
 
 ## Examples
 - Add target function with additional arguments (#1134)
