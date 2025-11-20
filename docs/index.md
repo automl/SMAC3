@@ -23,7 +23,7 @@ SMAC3 integrates with several tools in the AutoML ecosystem to enhance hyperpara
 [HyperSweeper](https://github.com/automl/HyperSweeper) is designed for efficient hyperparameter optimization of large models, especially when objective functions are expensive to evaluate. It supports distributed computation on clusters (using Slurm, Joblib, or Ray) and evaluates functions as separate jobs for scalability.
 
 ### Optuna Integration
-SMAC3 is available as a sampler in [Optuna](https://optuna.org/), allowing users to leverage SMAC's optimization strategies within Optuna's flexible framework for hyperparameter search.
+SMAC3 is available as a sampler in [Optuna](https://optuna.org/), allowing users to leverage SMAC's optimization strategies within Optuna's flexible framework for hyperparameter optimization.
 
 
 ## Features
