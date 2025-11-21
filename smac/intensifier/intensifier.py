@@ -226,7 +226,7 @@ class Intensifier(AbstractIntensifier):
                         logger.debug(f"--- Finished yielding for config {incumbent_hash}.")
 
                         # We break here because we only want to intensify one more trial of one incumbent
-                        # TODO intensify until the incumbents are all of equal size (N+1 of biggest incumbent)
+                        # intensify until the incumbents are all of equal size (N+1 of biggest incumbent)
                         break
                     else:
                         # assert len(incumbent_isb_keys) == self._max_config_calls

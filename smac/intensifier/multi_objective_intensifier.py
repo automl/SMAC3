@@ -1,6 +1,3 @@
-# TODO does this work for multi-fidelity?
-# Yes, then pass a pareto front calculation function to the abstract intensifier instead of subclassing it
-
 from __future__ import annotations
 
 from ConfigSpace import Configuration
@@ -36,7 +33,7 @@ class MOIntensifierMixin(AbstractIntensifier):
     def _cut_incumbents(
         self, incumbent_ids: list[int], all_incumbent_isb_keys: list[list[InstanceSeedBudgetKey]]
     ) -> list[int]:
-        # TODO Option: sort by hypervolume
+        # Option: sort by hypervolume contribution
         new_incumbents = sort_by_crowding_distance(
             self.runhistory, incumbent_ids, all_incumbent_isb_keys, normalize=True
         )

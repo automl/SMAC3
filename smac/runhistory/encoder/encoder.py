@@ -28,8 +28,7 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
         n_cols = self._n_params
         X = np.ones([n_rows, n_cols + self._n_features]) * np.nan
 
-        # For now we keep it as 1
-        # TODO: Extend with checks for native multi-objective (return size of multi_objective_algorithm)
+        # Initialize based on chosen multi-objective format
         if self._native_multi_objective:
             y = np.ones([n_rows, self._n_objectives])
         else:

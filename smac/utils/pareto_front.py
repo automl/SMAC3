@@ -89,10 +89,10 @@ def calculate_pareto_front(
 
 def sort_by_crowding_distance(
     runhistory: RunHistory,
-    configs: list[Configuration],
+    configs: list[Configuration|int],
     config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]],
     normalize: bool = False,
-) -> list[Configuration]:
+) -> list[Configuration|int]:
     """Sorts the passed configurations by their crowding distance. Taken from
     https://github.com/anyoptimization/pymoo/blob/20abef1ade71915352217400c11ece4c2f35163e/pymoo/algorithms/nsga2.py
 

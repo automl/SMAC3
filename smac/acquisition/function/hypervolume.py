@@ -115,11 +115,6 @@ class AbstractHVI(AbstractAcquisitionFunction):
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
-        # TODO non-dominated sorting of costs. Compute EHVI only until the EHVI is not expected to improve anymore.
-        # Option 1: Supplement missing instances of population with acq. function to get predicted performance over
-        # all instances. Idea is this prevents optimizing for the initial instances which get it stuck in local optima
-        # Option 2: Only on instances of population
-        # Option 3: EVHI per instance and aggregate afterwards
         mean, var_ = self.model.predict_marginalized(X)  # Expected to be not normalized
 
         phvi = np.zeros(len(X))
