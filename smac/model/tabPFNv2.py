@@ -3,8 +3,11 @@ from __future__ import annotations
 from typing import Any
 
 import numpy as np
+import torch
 from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import PowerTransformer, StandardScaler
 from tabpfn import TabPFNRegressor
 
 from smac.model.abstract_model import AbstractModel
@@ -57,6 +60,13 @@ class TabPFNModel(AbstractModel):
         self.softmax_temperature = softmax_temperature
         self.random_state = seed
 
+        self._x_imputer = SimpleImputer(strategy="mean")
+        self._x_pt = PowerTransformer(method="yeo-johnson", standardize=False)
+        self._x_scaler = StandardScaler()
+
+        self._y_pt = PowerTransformer(method="yeo-johnson", standardize=False)
+        self._y_scaler = StandardScaler()
+
     @property
     def meta(self) -> dict[str, Any]:
         """Returns the metadata of the model.
@@ -74,16 +84,22 @@ class TabPFNModel(AbstractModel):
         return meta
 
     def _train(self, X: np.ndarray, y: np.ndarray) -> TabPFNModel:
-        y = y.flatten()
-
         self._tabpfn = self._get_tabpfn()
         if self._tabpfn is None:
             raise AssertionError("TabPFNRegressor is not initialized properly!")
-        self._tabpfn.fit(X, y)
 
-        # Set the flag
+        # Impute, transform, scale
+        X_imputed = self._x_imputer.fit_transform(X)
+        X_transformed = self._x_pt.fit_transform(X_imputed)
+        X_scaled = self._x_scaler.fit_transform(X_transformed)
+
+        y = y.flatten()
+        y_transformed = self._y_pt.fit_transform(y.reshape(-1, 1))
+        y_scaled = self._y_scaler.fit_transform(y_transformed)
+        y_scaled = y_scaled.flatten()
+
+        self._tabpfn.fit(X_scaled, y_scaled)
         self._is_trained = True
-
         return self
 
     def _predict(
@@ -101,20 +117,24 @@ class TabPFNModel(AbstractModel):
             raise ValueError("`covariance_type` can only take `diagonal` for this model.")
 
         assert self._tabpfn is not None
-        # X = self._impute_inactive(X)
 
-        out_dict = self._tabpfn.predict(X, output_type="full")
+        # Impute, transform, scale
+        X_imputed = self._x_imputer.transform(X)
+        X_transformed = self._x_pt.transform(X_imputed)
+        X_scaled = self._x_scaler.transform(X_transformed)
+
+        with torch.no_grad():
+            out_dict = self._tabpfn.predict(X_scaled, output_type="full")
 
         # Variance estimation is difficult with TabPFN, it can have very large variances
         var = out_dict["criterion"].variance(out_dict["logits"]).cpu().detach().numpy()
         var = var.flatten()
-        var = np.clip(var, np.percentile(var, 5), np.percentile(var, 95))
-        if np.isclose(var.min(), var.max()):
-            var = np.zeros_like(var)
-        else:
-            var = (var - var.min()) / (var.max() - var.min())
-        var = var + 1e-6  # Avoid zero variance
-        return out_dict["mean"], var
+        var = np.maximum(var, 1e-6)
+
+        y_pred = self._y_scaler.inverse_transform(out_dict["mean"].reshape(-1, 1))
+        y_pred = self._y_pt.inverse_transform(y_pred)
+
+        return y_pred.flatten(), var
 
     def _get_tabpfn(self) -> TabPFNRegressor:
         """Return a TabPFNRegressor instance with the specified parameters.

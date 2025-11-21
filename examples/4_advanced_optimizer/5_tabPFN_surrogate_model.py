@@ -15,6 +15,7 @@ from sklearn.model_selection import cross_val_score
 from smac.model.tabPFNv2 import TabPFNModel
 
 from smac import HyperparameterOptimizationFacade, Scenario
+from smac.acquisition.function.tabpfn_acq_fun import RiemannExpectedImprovement
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -78,7 +79,9 @@ if __name__ == "__main__":
     # We want to run the facade's default initial design, but we want to change the number
     # of initial configs to 5.
     initial_design = HyperparameterOptimizationFacade.get_initial_design(scenario, n_configs=5)
-
+    
+    acq_fun = RiemannExpectedImprovement()  # we will set the runhistory later
+    
     # Now we use SMAC to find the best hyperparameters
     smac = HyperparameterOptimizationFacade(
         scenario,
@@ -86,6 +89,7 @@ if __name__ == "__main__":
         initial_design=initial_design,
         overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state
         model=TabPFNModel(configspace=scenario.configspace, seed=scenario.seed), # use TabPFN as surrogate model
+        acquisition_function=acq_fun,  # use TabPFN-based EI as acquisition function
     )
 
     incumbent = smac.optimize()
