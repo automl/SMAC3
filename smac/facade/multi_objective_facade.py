@@ -113,7 +113,7 @@ class MultiObjectiveFacade(AbstractFacade):
     def get_acquisition_function(  # type: ignore
         scenario: Scenario,
     ) -> AbstractHVI:
-        """Returns an Expected Improvement acquisition function.
+        """Returns an Predicted Hypervolume Improvement acquisition function.
 
         Parameters
         ----------
@@ -134,7 +134,6 @@ class MultiObjectiveFacade(AbstractFacade):
         return optimizer
 
     @staticmethod
-    # TODO update initial design to LHD
     def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
@@ -171,14 +170,12 @@ class MultiObjectiveFacade(AbstractFacade):
     def get_multi_objective_algorithm(  # type: ignore
         scenario: Scenario,
     ) -> NoAggregationStrategy:
-        """Returns the mean aggregation strategy for the multi objective algorithm.
+        """Returns the mean aggregation strategy for the multi-objective algorithm. For a pure multi-objective approach
+        no aggregation strategy is needed.
 
         Parameters
         ----------
         scenario : Scenario
-        objective_weights : list[float] | None, defaults to None
-            Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
-            objectives.
         """
         return NoAggregationStrategy()
 
@@ -186,4 +183,3 @@ class MultiObjectiveFacade(AbstractFacade):
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
         """Returns the default runhistory encoder with native multi objective support enabled."""
         return RunHistoryEncoder(scenario, native_multi_objective=True, normalize=False)
-        # return RunHistoryLogEncoder(scenario, native_multi_objective=True, normalize=False)
