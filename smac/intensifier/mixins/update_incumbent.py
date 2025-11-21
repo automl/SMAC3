@@ -16,16 +16,10 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class DebugUpdate(AbstractIntensifier):
-    def _register_incumbent_update(self, **kwargs: Any) -> None:
-        if not hasattr(self, "_update_incumbent_log"):
-            self._update_incumbent_log = []
-        self._update_incumbent_log.append(kwargs)
-
-
-class NonDominatedUpdate(DebugUpdate):
+class NonDominatedUpdate(AbstractIntensifier):
     def _update_incumbent(self, config: Configuration) -> list[Configuration]:
-        """Updates the incumbent with the config (which can be the challenger)
+        """Updates the incumbent with the config (which can be the challenger). By default the configuration is added to
+        the incumbents after which they are filtered based on Pareto dominance.
 
         Parameters
         ----------
@@ -50,20 +44,14 @@ class NonDominatedUpdate(DebugUpdate):
         # _calculate_pareto_front returns only non-dominated points
         new_incumbents = self._calculate_pareto_front(rh, incumbents, all_incumbent_isb_keys)
 
-        self._register_incumbent_update(
-            config=config,
-            incumbent=self.get_incumbents(),
-            isb_keys=isb_keys,
-            new_incumbents=new_incumbents,
-            name="NonDominated",
-        )
-
         return new_incumbents
 
 
-class BootstrapUpdate(DebugUpdate):
+class BootstrapUpdate(AbstractIntensifier):
     def _update_incumbent(self, config: Configuration) -> list[Configuration]:
-        """Updates the incumbent with the config (which can be the challenger)
+        """Updates the incumbent with the config (which can be the challenger). This function performance bootstrap
+        resampling over the ISB keys and then checks for the dominance relations in each of the bootstrap resamples.
+        In case a configuration is non-dominated in 50% of the resamples, it will be considered as an incumbent.
 
         Parameters
         ----------
@@ -103,15 +91,5 @@ class BootstrapUpdate(DebugUpdate):
             probabilities >= 0.5
         ).flatten()  # Incumbent needs to be non-dominated at least 50% of the time
         new_incumbents = [incumbents[i] for i in new_incumbent_ids]
-
-        self._register_incumbent_update(
-            config=config,
-            incumbent=self.get_incumbents(),
-            isb_keys=isb_keys,
-            new_incumbents=new_incumbents,
-            name="Bootstrap",
-            probabilities=probabilities,
-            n_samples=n_samples,
-        )
 
         return new_incumbents

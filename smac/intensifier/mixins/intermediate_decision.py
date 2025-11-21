@@ -21,7 +21,9 @@ def _dominates(a: list[float], b: list[float]) -> bool:
 
 class NewCostDominatesOldCost(AbstractIntensifier):
     def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
-        """
+        """Checks if the configuration should be evaluated against the incumbent while it
+        did not run on all the trails the incumbents did. This function checks if the current configuration performance
+        improved over its performance in the previous intermediate comparison. As described in MOParamILS.
 
         Parameters
         ----------
@@ -50,7 +52,10 @@ class NewCostDominatesOldCost(AbstractIntensifier):
 
 class NewCostDominatesOldCostSkipFirst(AbstractIntensifier):
     def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
-        """Do the first comparison with the incumbent when the configuration dominates the cost after finishing
+        """Checks if the configuration should be evaluated against the incumbent while it
+        did not run on all the trails the incumbents did. This function checks if the current configuration performance
+        improved over its performance in the previous intermediate comparison. As described in MOParamILS.
+        However, the first comparison with the incumbent when the configuration dominates the cost after finishing
         its first trial.
 
         Parameters
@@ -79,7 +84,9 @@ class NewCostDominatesOldCostSkipFirst(AbstractIntensifier):
 
 class DoublingNComparison(AbstractIntensifier):
     def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
-        """
+        """Checks if the configuration should be evaluated against the incumbent while it
+        did not run on all the trails the incumbents did. This function triggers after every n^2-1 of completed
+        trails.
 
         Parameters
         ----------
@@ -91,29 +98,15 @@ class DoublingNComparison(AbstractIntensifier):
         """
         config_isb_keys = self.get_instance_seed_budget_keys(config)
 
-        # max_trigger_number = int(np.ceil(np.log2(self._max_config_calls)))
-        # trigger_points = [(2**n) - 1 for n in range(1, max_trigger_number + 1)]  # 1, 3, 7, 15, ...
-        # logger.debug(f"{trigger_points=}")
-        # logger.debug(f"{len(config_isb_keys)=}")
-        # return len(config_isb_keys) in trigger_points
-
         nkeys = len(config_isb_keys)
         return (nkeys + 1) & nkeys == 0  # checks if nkeys+1 is a power of 2 (complies with the sequence (2**n)-1)
 
 
-class Always(AbstractIntensifier):
-    def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
-        return True
-
-
-class Never(AbstractIntensifier):
-    def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
-        return False
-
-
 class DoublingNComparisonFour(AbstractIntensifier):
     def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
-        """
+        """Checks if the configuration should be evaluated against the incumbent while it
+        did not run on all the trails the incumbents did. This function triggers after every n^2-1 of completed
+        trails. However, it enforces that at least 4 trails are completed to reduce outlier noise.
 
         Parameters
         ----------
@@ -126,7 +119,39 @@ class DoublingNComparisonFour(AbstractIntensifier):
         config_isb_keys = self.get_instance_seed_budget_keys(config)
 
         max_trigger_number = int(np.ceil(np.log2(self._max_config_calls)))
-        trigger_points = [(2**n) - 1 for n in range(2, max_trigger_number + 1)]  # 1, 3, 7, 15, ...
+        trigger_points = [(2**n) - 1 for n in range(2, max_trigger_number + 1)]  # 3, 7, 15, ...
         logger.debug(f"{trigger_points=}")
         logger.debug(f"{len(config_isb_keys)=}")
         return len(config_isb_keys) in trigger_points
+
+
+class Always(AbstractIntensifier):
+    def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
+        """Checks if the configuration should be evaluated against the incumbent while it
+        did not run on all the trails the incumbents did. This function always triggers for a check.
+
+        Parameters
+        ----------
+        config: Configuration
+
+        Returns
+        -------
+        A boolean which decides if the current configuration should be compared against the incumbent.
+        """
+        return True
+
+
+class Never(AbstractIntensifier):
+    def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
+        """Checks if the configuration should be evaluated against the incumbent while it
+        did not run on all the trails the incumbents did. This function never triggers for a check.
+
+        Parameters
+        ----------
+        config: Configuration
+
+        Returns
+        -------
+        A boolean which decides if the current configuration should be compared against the incumbent.
+        """
+        return False

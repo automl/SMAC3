@@ -523,7 +523,8 @@ class AbstractIntensifier:
         return config in new_incumbents  #if False -> reject the configuration
 
     def _update_incumbent(self, config: Configuration) -> list[Configuration]:
-        """Updates the incumbent with the config (which can be the challenger)
+        """Updates the incumbent with the config (which can be the challenger). By default the configuration is added to
+        the incumbents after which they are filtered based on Pareto dominance.
 
         Parameters
         ----------
