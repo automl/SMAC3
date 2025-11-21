@@ -224,12 +224,18 @@ class AbstractIntensifier:
     @abstractmethod
     def uses_budgets(self) -> bool:
         """If the intensifier needs to make use of budgets."""
-        raise NotImplementedError
+        return False
 
     @property
     @abstractmethod
     def uses_instances(self) -> bool:
         """If the intensifier needs to make use of instances."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def uses_cutoffs(self) -> bool:
+        """If the intensifier needs to make use of cutoffs."""
         raise NotImplementedError
 
     @property
@@ -435,7 +441,6 @@ class AbstractIntensifier:
             intersection_isb_keys = set.intersection(*map(set, incumbent_isb_keys))  # type: ignore
             union_isb_keys = set.union(*map(set, incumbent_isb_keys))  # type: ignore
             incumbent_isb_keys_differences = list(union_isb_keys - intersection_isb_keys)  # type: ignore
-            # incumbent_isb_keys = list(set.difference(*map(set, incumbent_isb_keys)))  # type: ignore
 
             if len(incumbent_isb_keys_differences) == 0:
                 return []
@@ -500,7 +505,9 @@ class AbstractIntensifier:
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
         incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
-        logger.debug(f"Perform intermediate comparisons of config {config_hash} with incumbent(s) to see if it is worse")
+        logger.debug(
+            f"Perform intermediate comparisons of config {config_hash} with incumbent(s) to see if it is worse"
+        )
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
@@ -520,7 +527,7 @@ class AbstractIntensifier:
         all_incumbent_isb_keys = [config_isb_keys for _ in incumbents]
         new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
 
-        return config in new_incumbents  #if False -> reject the configuration
+        return config in new_incumbents  # if False -> reject the configuration
 
     def _update_incumbent(self, config: Configuration) -> list[Configuration]:
         """Updates the incumbent with the config (which can be the challenger). By default the configuration is added to

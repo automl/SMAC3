@@ -281,7 +281,7 @@ class ConfigSelector:
             # if we don't have enough configurations, we want to sample random configurations
             if not retrain:
                 logger.warning(
-                    "Did not find enough configuration from the acquisition function. Sampling random configurations."
+                    "Did not find enough configurations from the acquisition function. Sampling random configurations."
                 )
                 random_configs_retries = 0
                 while not retrain and random_configs_retries < self._max_new_config_tries:

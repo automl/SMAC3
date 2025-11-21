@@ -38,8 +38,7 @@ We hope you enjoy this new user experience as much as we do. 🚀
 
 This instruction is for the installation on a Linux system, for Windows and Mac and further information see the [documentation](https://automl.github.io/SMAC3/latest/1_installation/).
 
-Create a new environment with python 3.10 and make sure swig is installed either on your system or
-inside the environment. We demonstrate the installation via anaconda in the following:
+Create a new environment with python 3.10. We demonstrate the installation via anaconda in the following:
 
 Create and activate environment:
 ```
@@ -62,7 +61,7 @@ make install-dev
 starting from 2.4.0, SMAC uses random forest from [sklearn](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html)
 instead of random forest from [pyrfr](https://pypi.org/project/pyrfr/) as the default surrogate model for HPO tasks.
 However, you could still use the old pyrfr surrogate model by calling `smac.facade.old.HyperparameterOptimizationRFRFacade`
-and `smac.facade.old.MultiFidelityRFRFacade`
+and `smac.facade.old.MultiFidelityRFRFacade`.
 
 To work with pyrfr, you need to first install gcc, gxx, and swig:
 ```

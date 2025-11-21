@@ -75,7 +75,7 @@ class AbstractRunHistoryEncoder:
 
         if self._instances is not None and self._n_features == 0:
             logger.warning(
-                "We strongly encourage to use instance features when using instances.",
+                "We strongly encourage to use instance features when using instances."
                 "If no instance features are passed, the runhistory encoder can not distinguish between different "
                 "instances and therefore returns the same data points with different values, all of which are "
                 "used to train the surrogate model.\n"

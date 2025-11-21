@@ -5,6 +5,7 @@ import pytest
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensifier.intensifier import Intensifier
 from smac.main.config_selector import ConfigSelector
+from smac.runhistory import TrialInfo, TrialKey, TrialValue
 from smac.runhistory.enumerations import StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
@@ -125,7 +126,8 @@ def test_next_trials(IntensifierClass, make_scenario, configspace_small, make_co
 
     # Next, we want to check if evaluated trials are removed
     config = configspace_small.get_default_configuration()
-    runhistory.add(config=config, cost=0.5, time=0.0, instance=trials[0].instance, seed=trials[0].seed)
+    runhistory.add(config=config, cost=0.5, time=0.0, instance=trials[0].instance,
+                   seed=trials[0].seed)
 
     trials = intensifier._get_next_trials(config)
     assert len(trials) == 8
@@ -219,7 +221,14 @@ def test_intensifier(IntensifierClass, make_scenario, configspace_small, make_co
 
     # Let's mark the first trial as finished
     # The config should become an incumbent now.
-    runhistory.add(config=trial.config, cost=10, time=0.0, instance=trial.instance, seed=trial.seed, force_update=True)
+    runhistory.add(
+        config=trial.config,
+        cost=10,
+        time=0.0,
+        instance=trial.instance,
+        seed=trial.seed,
+        force_update=True
+    )
     intensifier.update_incumbents(trial.config)
     assert intensifier.get_incumbent() == trial.config
 

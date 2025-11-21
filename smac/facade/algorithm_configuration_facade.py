@@ -100,12 +100,7 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         return optimizer
 
     @staticmethod
-    def get_intensifier(
-        scenario: Scenario,
-        *,
-        max_config_calls: int = 2000,
-        max_incumbents: int = 10,
-    ) -> Intensifier:
+    def get_intensifier(scenario: Scenario, *, max_config_calls: int = 2000, max_incumbents: int = 10) -> Intensifier:
         """Returns ``Intensifier`` as intensifier. Supports budgets.
 
         Parameters
@@ -116,12 +111,7 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         max_incumbents : int, defaults to 10
             How many incumbents to keep track of in the case of multi-objective.
         """
-
-        return Intensifier(
-            scenario=scenario,
-            max_config_calls=max_config_calls,
-            max_incumbents=max_incumbents,
-        )
+        return Intensifier(scenario=scenario, max_config_calls=max_config_calls, max_incumbents=max_incumbents)
 
     @staticmethod
     def get_initial_design(  # type: ignore

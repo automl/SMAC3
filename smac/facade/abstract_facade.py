@@ -492,4 +492,7 @@ class AbstractFacade:
         if self._intensifier.uses_instances:
             arguments += ["instance"]
 
+        if self._intensifier.uses_cutoffs:
+            arguments += ["cutoff"]
+
         return arguments
