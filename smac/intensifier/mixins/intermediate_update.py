@@ -15,28 +15,12 @@ __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
 
-
-class DebugComparison(AbstractIntensifier):
-    def _register_comparison(self, **kwargs: Any) -> None:
-        logger.debug(f"Made intermediate comparison with {kwargs['name']} comparison ")
-        if not hasattr(self, "_intermediate_comparisons_log"):
-            self._intermediate_comparisons_log = []
-        self._intermediate_comparisons_log.append(kwargs)
-
-    def _get_costs_comp(self, config: Configuration) -> dict:
-        incumbents = self.get_incumbents()
-        if config not in incumbents:
-            incumbents.append(config)
-        config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        all_incumbent_isb_keys = [config_isb_keys for _ in incumbents]
-        costs = _get_costs(self.runhistory, incumbents, all_incumbent_isb_keys)
-
-        return {conf: cost for conf, cost in zip(incumbents, costs)}
-
-
-class FullIncumbentComparison(DebugComparison):
+class FullIncumbentComparison(AbstractIntensifier):
     def _intermediate_comparison(self, config: Configuration) -> bool:
-        """Compares the configuration against the incumbent
+        """ompares the configuration against the incumbent when the configuration did not run on all the trails the
+        incumbent did. By default it checks if the performance of configuration is better than the incumbent on the
+        trials it completed on so far. In case of multiple incumbents, which occurs with a multi-objetive scenario, one
+        all incumbents are considered after which the comparison is made.
 
         Parameters
         ----------
@@ -44,7 +28,7 @@ class FullIncumbentComparison(DebugComparison):
 
         Returns
         -------
-        A boolean which indicates if we should continue with this configuration.
+        A Boolean which indicates if we should continue with this configuration.
         """
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
@@ -52,9 +36,6 @@ class FullIncumbentComparison(DebugComparison):
         incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
         logger.debug(f"Perform intermediate comparions of config {config_hash} with incumbents to see if it is worse")
-        # TODO perform comparison with incumbent on current instances.
-        # Check if the config with these number of trials is part of the Pareto front
-
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
             logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
@@ -70,25 +51,17 @@ class FullIncumbentComparison(DebugComparison):
 
         # Only the trials of the challenger
         all_incumbent_isb_keys = [config_isb_keys for _ in incumbents]
-
         new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
-
-        verdict = config in new_incumbents
-        self._register_comparison(
-            config=config,
-            incumbent=self.get_incumbents(),
-            isb_keys=len(config_isb_keys),
-            costs=self._get_costs_comp(config),
-            prediction=verdict,
-            name="FullInc",
-        )
 
         return config in new_incumbents
 
 
-class SingleIncumbentComparison(DebugComparison):
+class SingleIncumbentComparison(AbstractIntensifier):
     def _intermediate_comparison(self, config: Configuration) -> bool:
-        """Compares the configuration against the incumbent
+        """Compares the configuration against the incumbent when the configuration did not run on all the trails the
+        incumbent did. By default it checks if the performance of configuration is better than the incumbent on the
+        trials it completed on so far. In case of multiple incumbents, which occurs with a multi-objetive scenario, one
+        random incumbent is sampled after which the comparison is made.
 
         Parameters
         ----------
@@ -96,7 +69,7 @@ class SingleIncumbentComparison(DebugComparison):
 
         Returns
         -------
-        A boolean which indicates if we should continue with this configuration.
+        A Boolean which indicates if we should continue with this configuration.
         """
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
@@ -108,11 +81,11 @@ class SingleIncumbentComparison(DebugComparison):
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
             logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
-            return True
+            return True # Continue
 
         # Ensure that the config is not part of the incumbent
         if config in incumbents:
-            return True
+            return True # Continue
 
         # Only compare domination between one incumbent (as relaxation measure)
         iid = self._rng.choice(len(incumbents))
@@ -120,25 +93,17 @@ class SingleIncumbentComparison(DebugComparison):
 
         # Only the trials of the challenger
         all_incumbent_isb_keys = [config_isb_keys for _ in incumbents]
-
         new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
 
-        verdict = config in new_incumbents
-        self._register_comparison(
-            config=config,
-            incumbent=self.get_incumbents(),
-            isb_keys=len(config_isb_keys),
-            costs=self._get_costs_comp(config),
-            prediction=verdict,
-            name="SingleInc",
-        )
-
-        return config in new_incumbents
+        return config in new_incumbents  #if False -> reject the configuration
 
 
-class ClosestIncumbentComparison(DebugComparison):
+class ClosestIncumbentComparison(AbstractIntensifier):
     def _intermediate_comparison(self, config: Configuration) -> bool:
-        """Compares the configuration against the incumbent
+        """Compares the configuration against the incumbent when the configuration did not run on all the trails the
+        incumbent did. By default it checks if the performance of configuration is better than the incumbent on the
+        trials it completed on so far. In case of multiple incumbents, which occurs with a multi-objetive scenario, one
+        incumbent that is closest in the objective space is chosen after which the comparison is made.
 
         Parameters
         ----------
@@ -146,7 +111,7 @@ class ClosestIncumbentComparison(DebugComparison):
 
         Returns
         -------
-        A boolean which indicates if we should continue with this configuration.
+        A Boolean which indicates if we should continue with this configuration.
         """
         config_hash = get_config_hash(config)
         incumbents = self.get_incumbents()
@@ -165,8 +130,6 @@ class ClosestIncumbentComparison(DebugComparison):
             return True
 
         # Only compare domination between one incumbent (as relaxation measure)
-        # iid = self._rng.choice(len(incumbents))
-        # TODO Normalize to determine closests?
         inc_costs = _get_costs(self.runhistory, incumbents, [config_isb_keys for _ in incumbents], normalize=True)
         conf_cost = _get_costs(self.runhistory, [config], [config_isb_keys], normalize=True)[0]
         distances = [np.linalg.norm(inc_cost - conf_cost) for inc_cost in inc_costs]
@@ -178,58 +141,10 @@ class ClosestIncumbentComparison(DebugComparison):
 
         new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
 
-        verdict = config in new_incumbents
-        self._register_comparison(
-            config=config,
-            incumbent=self.get_incumbents(),
-            isb_keys=len(config_isb_keys),
-            costs=self._get_costs_comp(config),
-            prediction=verdict,
-            name="ClosestInc",
-        )
-
         return config in new_incumbents
 
 
-# class RandomComparison(DebugComparison):
-#     def _intermediate_comparison(self, config: Configuration) -> bool:
-#         """Compares the configuration against the incumbent
-#
-#         Parameters
-#         ----------
-#         config: Configuration
-#
-#         Returns
-#         -------
-#         A boolean which indicates if we should continue with this configuration.
-#         """
-#         incumbents = self.get_incumbents()
-#         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-#         incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
-#
-#         # Check if the incumbents ran on all the ones of this config
-#         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
-#             logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
-#             return True
-#
-#         # Ensure that the config is not part of the incumbent
-#         if config in incumbents:
-#             return True
-#
-#         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-#         verdict = self._rng.random() >= 0.5
-#         self._register_comparison(
-#             config=config,
-#             incumbent=self.get_incumbents(),
-#             isb_keys=len(config_isb_keys),
-#             costs=self._get_costs_comp(config),
-#             prediction=verdict,
-#             name="Random",
-#         )
-#         return verdict
-
-
-class NoComparison(DebugComparison):
+class NoComparison(AbstractIntensifier):
     def _intermediate_comparison(self, config: Configuration) -> bool:
         """Does not perform an intermediate comparison. Is used in later developed facades.
 
@@ -239,29 +154,6 @@ class NoComparison(DebugComparison):
 
         Returns
         -------
-        A boolean which indicates if we should continue with this configuration.
+        A Boolean which indicates if we should continue with this configuration.
         """
-        incumbents = self.get_incumbents()
-        config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
-
-        # Check if the incumbents ran on all the ones of this config
-        if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
-            logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
-            return True
-
-        # Ensure that the config is not part of the incumbent
-        if config in incumbents:
-            return True
-
-        config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        verdict = True
-        self._register_comparison(
-            config=config,
-            incumbent=self.get_incumbents(),
-            isb_keys=len(config_isb_keys),
-            costs=self._get_costs_comp(config),
-            prediction=verdict,
-            name="NoComp",
-        )
-        return verdict
+        return True

@@ -58,7 +58,7 @@ class AbstractIntensifier:
         scenario: Scenario,
         n_seeds: int | None = None,
         max_config_calls: int | None = None,
-        max_incumbents: int = 10,  # TODO set in MO facade
+        max_incumbents: int = 10,
         seed: int | None = None,
     ):
         self._scenario = scenario
@@ -482,7 +482,10 @@ class AbstractIntensifier:
         return False
 
     def _intermediate_comparison(self, config: Configuration) -> bool:
-        """Compares the configuration against the incumbent
+        """Compares the configuration against the incumbent when the configuration did not run on all the trails the
+        incumbent did. By default it checks if the performance of configuration is better than the incumbent on the
+        trials it completed on so far. In case of multiple incumbents, which occurs with a multi-objetive scenario, one
+        random incumbent is sampled after which the comparison is made.
 
         Parameters
         ----------
@@ -497,30 +500,27 @@ class AbstractIntensifier:
         config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
         incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
-        logger.debug(f"Perform intermediate comparisons of config {config_hash} with incumbents to see if it is worse")
-        # TODO perform comparison with incumbent on current instances.
-        # Check if the config with these number of trials is part of the Pareto front
+        logger.debug(f"Perform intermediate comparisons of config {config_hash} with incumbent(s) to see if it is worse")
 
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
             logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
-            return True
+            return True  # Continue
 
         # Ensure that the config is not part of the incumbent
         if config in incumbents:
-            return True
+            return True  # Continue
 
-        # Only compare domination between one incumbent (as relaxation measure)
+        # Check if the config with these number of trials is part of the Pareto front
+        # Only compare domination between one randomly picked incumbent (as relaxation measure)
         iid = self._rng.choice(len(incumbents))
         incumbents = [incumbents[iid], config]
-        # incumbents.append(config)
 
         # Only the trials of the challenger
         all_incumbent_isb_keys = [config_isb_keys for _ in incumbents]
-
         new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
 
-        return config in new_incumbents
+        return config in new_incumbents  #if False -> reject the configuration
 
     def _update_incumbent(self, config: Configuration) -> list[Configuration]:
         """Updates the incumbent with the config (which can be the challenger)

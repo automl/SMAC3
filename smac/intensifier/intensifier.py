@@ -328,7 +328,9 @@ class Intensifier(AbstractIntensifier):
                     break
 
     def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
-        """
+        """Checks if the configuration should be evaluated against the incumbent while it
+        did not run on all the trails the incumbents did.By default this triggers when all N trails have completed.
+
 
         Parameters
         ----------
@@ -336,7 +338,7 @@ class Intensifier(AbstractIntensifier):
 
         Returns
         -------
-        A boolean which decides if the current configuration should be compared against the incumbent.
+        A boolean which decides if the current configuration should be compared against the incumbent. By default
         """
         config_isb_keys = self.get_instance_seed_budget_keys(config)
         config_hash = get_config_hash(config)
