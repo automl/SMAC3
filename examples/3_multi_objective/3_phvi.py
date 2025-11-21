@@ -66,7 +66,8 @@ class MLP:
 
         return cs
 
-    def train(self, config: Configuration, instance:str = "none", seed: int = 0, budget: int = 10) -> dict[str, float]:
+    @staticmethod
+    def train(config: Configuration, instance:str = "none", seed: int = 0, budget: int = 10) -> dict[str, float]:
         lr = config.get("learning_rate", "constant")
         lr_init = config.get("learning_rate_init", 0.001)
         batch_size = config.get("batch_size", 200)
@@ -158,7 +159,6 @@ if __name__ == "__main__":
         scenario,
         mlp.train,
         config_selector=config_selector,
-        logging_level=logging.DEBUG,
         overwrite=True,
     )
 
