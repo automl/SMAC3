@@ -1,15 +1,17 @@
 """ParEGO
 # Flags: doc-Runnable
 
-An example of how to use multi-objective optimization with ParEGO. Both accuracy and run-time are going to be
-optimized on the digits dataset using an MLP, and the configurations are shown in a plot, highlighting the best ones in
-a Pareto front. The red cross indicates the best configuration selected by SMAC.
+An example of how to use multi-objective optimization with PHVI for an algorithm configuration scenario.
+Both accuracy and run-time are going to be optimized on the digits dataset using an MLP, and the configurations are
+shown in a plot, highlighting the best ones in a Pareto front. The red cross indicates the best configuration selected
+by SMAC.
 
 In the optimization, SMAC evaluates the configurations on two different seeds. Therefore, the plot shows the
 mean accuracy and run-time of each configuration.
 """
 from __future__ import annotations
 
+import logging
 import time
 import warnings
 
@@ -24,20 +26,21 @@ from ConfigSpace import (
     InCondition,
     Integer,
 )
-from sklearn.datasets import load_digits
+from sklearn.datasets import load_digits, load_iris, load_wine, load_diabetes
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
-from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import Scenario
-from smac.facade.multi_objective_facade import MultiObjectiveFacade as MOfacade
+from smac.facade.multi_objective_facade import MultiObjectiveFacade as MOFacade
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
+from smac.main.config_selector import ConfigSelector
 
 digits = load_digits()
 
+instances = {"digits": load_digits(), "iris":load_iris(), "wine": load_wine(), "diabetes": load_diabetes()}
 
 class MLP:
     @property
@@ -63,7 +66,7 @@ class MLP:
 
         return cs
 
-    def train(self, config: Configuration, seed: int = 0, budget: int = 10) -> dict[str, float]:
+    def train(self, config: Configuration, instance:str = "none", seed: int = 0, budget: int = 10) -> dict[str, float]:
         lr = config.get("learning_rate", "constant")
         lr_init = config.get("learning_rate_init", 0.001)
         batch_size = config.get("batch_size", 200)
@@ -86,7 +89,7 @@ class MLP:
 
             # Returns the 5-fold cross validation accuracy
             cv = StratifiedKFold(n_splits=5, random_state=seed, shuffle=True)  # to make CV splits consistent
-            score = cross_val_score(classifier, digits.data, digits.target, cv=cv, error_score="raise")
+            score = cross_val_score(classifier, instances[instance].data, instances[instance].target, cv=cv, error_score="raise")
 
         return {
             "1 - accuracy": 1 - np.mean(score),
@@ -139,20 +142,23 @@ if __name__ == "__main__":
     scenario = Scenario(
         mlp.configspace,
         objectives=objectives,
+        instances=list(instances.keys()),
+        instance_features={inst: [float(num),]for num, inst in  enumerate(instances.keys())},
+        deterministic=False,
         walltime_limit=30,  # After 30 seconds, we stop the hyperparameter optimization
-        n_trials=200,  # Evaluate max 200 different trials
+        n_trials=2000,  # Evaluate max 200 different trials
         n_workers=1,
     )
 
-    # We want to run five random configurations before starting the optimization.
-    # initial_design = MOfacade.get_initial_design(scenario, n_configs=5)
-    # multi_objective_algorithm = ParEGO(scenario)
-    # intensifier = HPOFacade.get_intensifier(scenario, max_config_calls=2)
+    # We use the SMAC2 settings of balancing the retraining on a wallclock ratio
+    config_selector = ConfigSelector(scenario, retrain_after=None, retrain_wallclock_ratio=0.5, min_configurations=2)
 
     # Create our SMAC object and pass the scenario and the train method
-    smac = MOfacade(
+    smac = MOFacade(
         scenario,
         mlp.train,
+        config_selector=config_selector,
+        logging_level=logging.DEBUG,
         overwrite=True,
     )
 
