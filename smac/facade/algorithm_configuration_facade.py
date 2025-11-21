@@ -117,12 +117,7 @@ class AlgorithmConfigurationFacade(AbstractFacade):
             How many incumbents to keep track of in the case of multi-objective.
         """
 
-        class NewIntensifier(
-            intermediate_decision.NewCostDominatesOldCost, intermediate_update.ClosestIncumbentComparison, Intensifier
-        ):
-            pass
-
-        return NewIntensifier(
+        return Intensifier(
             scenario=scenario,
             max_config_calls=max_config_calls,
             max_incumbents=max_incumbents,

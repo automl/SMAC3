@@ -43,7 +43,7 @@ class ConfigSelector:
         How much time of the total elapsed wallclock time should be spend on retraining the surrogate model
         and the acquisition function look. Example ratio of 0.1 would result in that only 10% of the wallclock time is
         spend on retraining.
-    min_configurations: int, defaults to 2
+    min_configurations: int, defaults to 1
         The minimum number of configurations that need to yield before retraining can occur. Should be lower or equal to
         retrain_after.
     max_new_config_tries : int, defaults to 8
@@ -137,6 +137,8 @@ class ConfigSelector:
         return {
             "name": self.__class__.__name__,
             "retrain_after": self._retrain_after,
+            "retrain_wallclock_ratio": self._retrain_wallclock_ratio,
+            "min_configurations": self._min_configurations,
             "max_new_config_tries": self._max_new_config_tries,
             "min_trials": self._min_trials,
         }
@@ -212,7 +214,7 @@ class ConfigSelector:
                 continue
 
             # Check if X/Y differs from the last run, otherwise use cached results
-            start_time = time.time()
+            train_start_time = time.time()
             if self._previous_entries != Y.shape[0]:
                 self._model.train(X, Y)
 
@@ -249,9 +251,10 @@ class ConfigSelector:
 
             if self._retrain_wallclock_ratio is not None:
                 # TODO: CB: What does this actually do? Delete/clear the iterator?
-                len(challengers)  # TODO hacky: Forces actual computation of the acquisition function maximizer
+                #  --> JG: To easily measure the time needed to perform maximise, difficult otherwise due to yield
+                len(challengers)  # Forces actual computation of the acquisition function maximizer
 
-            self._acquisition_training_times.append(time.time() - start_time)
+            self._acquisition_training_times.append(time.time() - train_start_time)
 
             failed_counter = 0
             for config in challengers:
