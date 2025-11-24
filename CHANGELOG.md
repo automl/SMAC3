@@ -14,6 +14,7 @@
 
 ## Examples
 - Add target function with additional arguments (#1134)
+- Adapt parallelization example (#1214)
 
 ## Improvements
 - Submit trials to runners in SMBO instead of running configs directly (#937)
@@ -23,6 +24,7 @@
 
 ## Documentation
 - Ask and tell without initial design and warmstarting
+- Add a description of parallelization in the documentation (#1226)
 
 ## Bugfixes 
 - Ask and tell without initial design may no longer return a config from the initial design - if it is not "removed".  
