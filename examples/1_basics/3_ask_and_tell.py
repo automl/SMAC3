@@ -62,7 +62,7 @@ if __name__ == "__main__":
     )
 
     # We can ask SMAC which trials should be evaluated next
-    for _ in range(10):
+    for _ in range(30):
         info = smac.ask()
         assert info.seed is not None
 
@@ -70,6 +70,9 @@ if __name__ == "__main__":
         value = TrialValue(cost=cost, time=0.5)
 
         smac.tell(info, value)
+
+    smac.optimizer.reset()
+    #smac.optimizer.reset()
 
     # After calling ask+tell, we can still optimize
     # Note: SMAC will optimize the next 90 trials because 10 trials already have been evaluated.
