@@ -14,7 +14,8 @@ logger = get_logger(__name__)
 class RunHistoryPercentileEncoder(RunHistoryEncoder):
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transforms the response values by applying a log transformation,
-        rank-based quantile transformation, and inverse Gaussian CDF scaling."""
+        rank-based quantile transformation, and inverse Gaussian CDF scaling.
+        """
         if values.ndim > 1:
             logger.warning(
                 f"Received values with shape {values.shape}, aggregating along axis=1."
