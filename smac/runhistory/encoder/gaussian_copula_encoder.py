@@ -17,7 +17,6 @@ logger = get_logger(__name__)
 class RunHistoryGaussianCopulaEncoder(RunHistoryEncoder):
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transforms the response values by using log."""
-        # Ensure minimal value is sufficiently large
         min_log_cost = max(constants.MINIMAL_COST_FOR_LOG, 1e-10)
         
         if np.any(values <= 0):
@@ -32,12 +31,10 @@ class RunHistoryGaussianCopulaEncoder(RunHistoryEncoder):
 
         quants = (scipy.stats.rankdata(values.flatten()) - 1) / (n - 1)
 
-        # Ensure cutoff does not exceed reasonable values
         cutoff = min(0.1, 1 / (4 * np.power(n, 0.25) * np.sqrt(np.pi * log_n)))
 
         quants = np.clip(quants, a_min=cutoff, a_max=1 - cutoff)
 
-        # Inverse Gaussian CDF with proper handling of extreme quantiles
         rval = np.array([scipy.stats.norm.ppf(q) for q in quants]).reshape((-1, 1))
 
         return rval
