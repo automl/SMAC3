@@ -16,7 +16,8 @@ logger = get_logger(__name__)
 
 class RunHistoryGaussianCopulaEncoder(RunHistoryEncoder):
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transforms the response values by using log."""
+        """Transforms the response values by using log.
+        """
         min_log_cost = max(constants.MINIMAL_COST_FOR_LOG, 1e-10)
         
         if np.any(values <= 0):
