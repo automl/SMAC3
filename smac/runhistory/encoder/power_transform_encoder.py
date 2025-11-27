@@ -14,7 +14,8 @@ logger = get_logger(__name__)
 
 class RunHistoryPowerTransformEncoder(RunHistoryEncoder):
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Apply PowerTransformer (Yeo-Johnson) to response values."""
+        """Apply PowerTransformer (Yeo-Johnson) to response values.
+        """
         if values.size == 0:
             logger.debug("Received empty array for transformation.")
             return values.reshape(-1, 1)
