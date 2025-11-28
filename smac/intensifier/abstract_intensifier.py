@@ -3,6 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any, Callable, Iterator
 
+import copy
 import dataclasses
 import json
 from collections import defaultdict
@@ -93,6 +94,16 @@ class AbstractIntensifier:
         self._incumbents_changed = 0
         self._rejected_config_ids: list[int] = []
         self._trajectory: list[TrajectoryItem] = []
+
+    @property
+    def incumbents(self) -> list[Configuration]:
+        """Return the incumbents (points on the Pareto front) of the runhistory."""
+        return self._incumbents
+
+    @incumbents.setter
+    def incumbents(self, incumbents: list[Configuration]) -> None:
+        self._incumbents = incumbents
+        self.runhistory.incumbents = incumbents
 
     @property
     def meta(self) -> dict[str, Any]:
@@ -361,14 +372,14 @@ class AbstractIntensifier:
         if self._scenario.count_objectives() > 1:
             raise ValueError("Cannot get a single incumbent for multi-objective optimization.")
 
-        if len(self._incumbents) == 0:
+        if len(self.incumbents) == 0:
             return None
 
-        assert len(self._incumbents) == 1
-        return self._incumbents[0]
+        assert len(self.incumbents) == 1
+        return self.incumbents[0]
 
     def get_incumbents(self, sort_by: str | None = None) -> list[Configuration]:
-        """Returns the incumbents (points on the pareto front) of the runhistory as copy. In case of a single-objective
+        """Returns the incumbents (points on the Pareto front) of the runhistory as copy. In case of a single-objective
         optimization, only one incumbent (if is) is returned.
 
         Returns
@@ -382,11 +393,11 @@ class AbstractIntensifier:
         rh = self.runhistory
 
         if sort_by == "cost":
-            return list(sorted(self._incumbents, key=lambda config: rh._cost_per_config[rh.get_config_id(config)]))
+            return list(sorted(self.incumbents, key=lambda config: rh._cost_per_config[rh.get_config_id(config)]))
         elif sort_by == "num_trials":
-            return list(sorted(self._incumbents, key=lambda config: len(rh.get_trials(config))))
+            return list(sorted(self.incumbents, key=lambda config: len(rh.get_trials(config))))
         elif sort_by is None:
-            return list(self._incumbents)
+            return list(self.incumbents)
         else:
             raise ValueError(f"Unknown sort_by value: {sort_by}.")
 
@@ -400,11 +411,11 @@ class AbstractIntensifier:
         return self.runhistory.get_instance_seed_budget_keys(config, highest_observed_budget_only=False)
 
     def get_incumbent_instance_seed_budget_keys(self, compare: bool = False) -> list[InstanceSeedBudgetKey]:
-        """Find the lowest intersection of instance-seed-budget keys for all incumbents."""
+        """Find the intersection of instance-seed-budget keys for all incumbents."""
         incumbents = self.get_incumbents()
 
         if len(incumbents) > 0:
-            # We want to calculate the smallest set of trials that is used by all incumbents
+            # We want to calculate the largest set of trials that is used by all incumbents
             # Reason: We can not fairly compare otherwise
             incumbent_isb_keys = [self.get_instance_seed_budget_keys(incumbent, compare) for incumbent in incumbents]
             instances = list(set.intersection(*map(set, incumbent_isb_keys)))  # type: ignore
@@ -429,12 +440,12 @@ class AbstractIntensifier:
             # Compute the actual differences
             intersection_isb_keys = set.intersection(*map(set, incumbent_isb_keys))  # type: ignore
             union_isb_keys = set.union(*map(set, incumbent_isb_keys))  # type: ignore
-            incumbent_isb_keys = list(union_isb_keys - intersection_isb_keys)  # type: ignore
+            incumbent_isb_keys_differences = list(union_isb_keys - intersection_isb_keys)  # type: ignore
 
-            if len(incumbent_isb_keys) == 0:
+            if len(incumbent_isb_keys_differences) == 0:
                 return []
 
-            return incumbent_isb_keys  # type: ignore
+            return incumbent_isb_keys_differences  # type: ignore
 
         return []
 
@@ -461,62 +472,120 @@ class AbstractIntensifier:
 
         return RunHistoryCallback(self)
 
-    def update_incumbents(self, config: Configuration) -> None:
-        """Updates the incumbents. This method is called everytime a trial is added to the runhistory. Since only
-        the affected config and the current incumbents are used, this method is very efficient. Furthermore, a
-        configuration is only considered incumbent if it has a better performance on all incumbent instances.
+    def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
+        """Checks if the configuration should be evaluated against the incumbent while it
+        did not run on all the trails the incumbents did.
 
-        Crucially, if there is no incumbent (at the start) then, the first configuration assumes
-        incumbent status. For the next configuration, we need to check if the configuration
-        is better on all instances that have been evaluated for the incumbent. If this is the
-        case, then we can replace the incumbent. Otherwise, a) we need to requeue the config to
-        obtain the missing instance-seed-budget combination or b) mark this configuration as
-        inferior ("rejected") to not consider it again. The comparison behaviour is controlled by
-        self.get_instance_seed_budget_keys() and self.get_incumbent_instance_seed_budget_keys().
+        Parameters
+        ----------
+        config: Configuration
 
-        Notably, this method is written to support both multi-fidelity and multi-objective
-        optimization. While the get_instance_seed_budget_keys() method and
-        self.get_incumbent_instance_seed_budget_keys() are used for the multi-fidelity behaviour,
-        calculate_pareto_front() is used as a hard coded way to support multi-objective
-        optimization, including the single objective as special case. calculate_pareto_front()
-        is called on the set of all (in case of MO) incumbents amended with the challenger
-        configuration, provided it has a sufficient overlap in seed-instance-budget combinations.
+        Returns
+        -------
+        A boolean which decides if the current configuration should be compared against the incumbent.
+        """
+        return False
 
-        Lastly, if we have a self._max_incumbents and the pareto front provides more than this
-        specified amount, we cut the incumbents using crowding distance.
+    def _intermediate_comparison(self, config: Configuration) -> bool:
+        """Compares the configuration against the incumbent when the configuration did not run on all the trails the
+        incumbent did. By default it checks if the performance of configuration is better than the incumbent on the
+        trials it completed on so far. In case of multiple incumbents, which occurs with a multi-objetive scenario, one
+        random incumbent is sampled after which the comparison is made.
+
+        Parameters
+        ----------
+        config: Configuration
+
+        Returns
+        -------
+        A boolean which indicates if we should continue with this configuration.
+        """
+        config_hash = get_config_hash(config)
+        incumbents = self.get_incumbents()
+        config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
+        incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
+
+        logger.debug(
+            f"Perform intermediate comparisons of config {config_hash} with incumbent(s) to see if it is worse"
+        )
+
+        # Check if the incumbents ran on all the ones of this config
+        if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
+            logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
+            return True  # Continue
+
+        # Ensure that the config is not part of the incumbent
+        if config in incumbents:
+            return True  # Continue
+
+        # Check if the config with these number of trials is part of the Pareto front
+        # Only compare domination between one randomly picked incumbent (as relaxation measure)
+        iid = self._rng.choice(len(incumbents))
+        incumbents = [incumbents[iid], config]
+
+        # Only the trials of the challenger
+        all_incumbent_isb_keys = [config_isb_keys for _ in incumbents]
+        new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
+
+        return config in new_incumbents  # if False -> reject the configuration
+
+    def _update_incumbent(self, config: Configuration) -> list[Configuration]:
+        """Updates the incumbent with the config (which can be the challenger). By default the configuration is added to
+        the incumbents after which they are filtered based on Pareto dominance.
+
+        Parameters
+        ----------
+        config: Configuration
+
+        Returns
+        -------
+        A list of configurations which are the new incumbents (Pareto front).
         """
         rh = self.runhistory
 
-        # What happens if a config was rejected, but it appears again? Give it another try even if it
-        # has already been evaluated? Yes!
+        incumbents = self.get_incumbents()
 
-        # Associated trials and id
-        config_isb_keys = self.get_instance_seed_budget_keys(config)
-        config_id = rh.get_config_id(config)
+        if config not in incumbents:
+            incumbents.append(config)
+
+        isb_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
+        all_incumbent_isb_keys = [isb_keys for _ in range(len(incumbents))]
+
+        # We compare the incumbents now and only return the ones on the Pareto front
+        # _calculate_pareto_front returns only non-dominated points
+        new_incumbents = self._calculate_pareto_front(rh, incumbents, all_incumbent_isb_keys)
+        return new_incumbents
+
+    def update_incumbents(self, config: Configuration) -> None:
+        """Updates the incumbents.
+
+        This method is called everytime a trial is added to the runhistory. A configuration is only considered
+        incumbent if it has a trial on all instances/seeds/budgets the incumbent
+        has been evaluated on.
+
+        Parameters
+        ----------
+        config : Configuration
+            The configuration that was just evaluated.
+        """
+        incumbents = self.get_incumbents()
         config_hash = get_config_hash(config)
 
-        # We skip updating incumbents if no instances are available
+        config_isb_keys = self.get_instance_seed_budget_keys(config, compare=True)
+        incumbent_isb_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
+
+        # Check if config holds keys
         # Note: This is especially the case if trials of a config are still running
         # because if trials are running, the runhistory does not update the trials in the fast data structure
         if len(config_isb_keys) == 0:
             logger.debug(f"No relevant instances evaluated for config {config_hash}. Updating incumbents is skipped.")
             return
 
-        # Now we get the incumbents and see which trials have been used
-        incumbents = self.get_incumbents()
-        incumbent_ids = [rh.get_config_id(c) for c in incumbents]
-        # Find the lowest intersection of instance-seed-budget keys for all incumbents.
-        incumbent_isb_keys = self.get_incumbent_instance_seed_budget_keys()
-
-        # Save for later
-        previous_incumbents = incumbents.copy()
-        previous_incumbent_ids = incumbent_ids.copy()
-
-        # Little sanity check here for consistency
         if len(incumbents) > 0:
             assert incumbent_isb_keys is not None
             assert len(incumbent_isb_keys) > 0
 
+        # Check if incumbent exists
         # If there are no incumbents at all, we just use the new config as new incumbent
         # Problem: We can add running incumbents
         if len(incumbents) == 0:  # incumbent_isb_keys is None and len(incumbents) == 0:
@@ -526,119 +595,55 @@ class AbstractIntensifier:
             # Nothing else to do
             return
 
-        # Comparison keys
-        # This one is a bit tricky: We would have problems if we compare with budgets because we might have different
-        # scenarios (depending on the incumbent selection specified in Successive Halving).
-        # 1) Any budget/highest observed budget: We want to get rid of the budgets because if we know it is calculated
-        # on the same instance-seed already then we are ready to go. Imagine we would check for the same budgets,
-        # then the configs can not be compared although the user does not care on which budgets configurations have
-        # been evaluated.
-        # 2) Highest budget: We only want to compare the configs if they are evaluated on the highest budget.
-        # Here we do actually care about the budgets. Please see the ``get_instance_seed_budget_keys`` method from
-        # Successive Halving to get more information.
-        # Notice: compare=True only takes effect when subclass implemented it. -- e.g. in SH it will remove the budgets
-        # from the keys.
-        config_isb_comparison_keys = self.get_instance_seed_budget_keys(config, compare=True)
-        # Find the lowest intersection of instance-seed-budget keys for all incumbents.
-        config_incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
+        # Check if config isb is subset of incumbents
+        # if not all([isb_key in incumbent_isb_keys for isb_key in config_isb_keys]):
+        #     # If the config is part of the incumbents this could happen
+        #     logger.info(f"Config {config_hash} did run on more instances than the incumbent. "
+        #                   "Cannot make a proper comparison.")
+        #     return
 
-        # Now we have to check if the new config has been evaluated on the same keys as the incumbents
-        logger.debug(
-            f"Validate whether we have overlap in the keys evaluated for the challenger config "
-            f"{config_isb_comparison_keys} and the incumbent config {config_incumbent_isb_comparison_keys}. If the "
-            f"challenger is dominated, reject id."
-        )
-
-        if not self.uses_budgets and all(
-            [key in config_incumbent_isb_comparison_keys for key in config_isb_comparison_keys]
-        ):
-            logger.debug(
-                "Check on the currently evaluated instances whether the challenger is dominated by the incumbent"
-            )
-
-            # determine challenger costs
-            challenger_costs = self.runhistory.average_cost(config, config_isb_comparison_keys)
-
-            # check the list of incumbents whether any of the incumbents dominates the current challenger
-            for inc in incumbents:
-                # determine incumbent costs
-                inc_costs = self.runhistory.average_cost(inc, config_isb_comparison_keys)
-                # check dominance
-                is_dominated = not np.any(np.array([challenger_costs]) < np.array([inc_costs]))
-
-                # if challenger config is dominated by the incumbent, reject it
-                if is_dominated:
-                    logger.debug(f"Challenger config {config_hash} is dominated by incumbent {get_config_hash(inc)}.")
-                    self._add_rejected_config(config_id)
-
-        if not all([key in config_isb_comparison_keys for key in config_incumbent_isb_comparison_keys]):
-            # We can not tell if the new config is better/worse than the incumbents because it has not been
-            # evaluated on the necessary trials
-            logger.debug(
-                f"Could not compare config {config_hash} with incumbents because it's evaluated on "
-                f"different trials."
-            )
-
-            # The config has to go to a queue now as it is a challenger and a potential incumbent
+        # Config did not run on all isb keys of incumbent
+        # Now we have to check if we should continue with this configuration
+        if not set(config_isb_keys) == set(incumbent_isb_keys):
+            # Config did not run on all trials
+            if self._check_for_intermediate_comparison(config):
+                if not self._intermediate_comparison(config):
+                    logger.debug(
+                        f"Rejected config {config_hash} in an intermediate comparison on {len(config_isb_keys)} trials."
+                    )
+                    self._add_rejected_config(config)
             return
-        else:
-            # If all instances are available and the config is incumbent and even evaluated on more trials
-            # then there's nothing we can do
-            if config in incumbents and len(config_isb_keys) > len(incumbent_isb_keys):
-                logger.debug(
-                    "Config is already an incumbent but can not be compared to other incumbents because "
-                    "the others are missing trials."
-                )
-                return
 
-        # Add config to incumbents so that we compare only the new config and existing incumbents
-        if config not in incumbents:
-            incumbents.append(config)
-            incumbent_ids.append(config_id)
+        # Config did run on all isb keys of incumbent
+        # Here we really update the incumbent by:
+        # 1. Removing incumbents that are now dominated by another configuration in the incumbent
+        # 2. Add in the challenger to the incumbent
+        rh = self.runhistory
 
-        # Now we get all instance-seed-budget keys for each incumbent (they might be different when using budgets)
-        all_incumbent_isb_keys = []
-        for incumbent in incumbents:
-            all_incumbent_isb_keys.append(self.get_instance_seed_budget_keys(incumbent))
-
-        # We compare the incumbents now and only return the ones on the pareto front
-        new_incumbents = calculate_pareto_front(rh, incumbents, all_incumbent_isb_keys)
+        previous_incumbents = copy.copy(incumbents)
+        previous_incumbent_ids = [rh.get_config_id(c) for c in previous_incumbents]
+        new_incumbents = self._update_incumbent(config)
         new_incumbent_ids = [rh.get_config_id(c) for c in new_incumbents]
 
-        if len(previous_incumbents) == len(new_incumbents):
-            if previous_incumbents == new_incumbents:
-                # No changes in the incumbents, we need this clause because we can't use set difference then
-                if config_id in new_incumbent_ids:
-                    self._remove_rejected_config(config_id)
-                else:
-                    # config worse than incumbents and thus rejected
-                    self._add_rejected_config(config_id)
-                return
-            else:
-                # In this case, we have to determine which config replaced which incumbent and reject it
-                removed_incumbent_id = list(set(previous_incumbent_ids) - set(new_incumbent_ids))[0]
-                removed_incumbent_hash = get_config_hash(rh.get_config(removed_incumbent_id))
-                self._add_rejected_config(removed_incumbent_id)
+        # Update trajectory
+        if previous_incumbents == new_incumbents:  # Only happens with incumbent config
+            self._remove_rejected_config(config)  # Remove the incumbent from the rejected config list
 
-                if removed_incumbent_id == config_id:
-                    logger.debug(
-                        f"Rejected config {config_hash} because it is not better than the incumbents on "
-                        f"{len(config_isb_keys)} instances."
-                    )
-                else:
-                    self._remove_rejected_config(config_id)
-                    logger.info(
-                        f"Added config {config_hash} and rejected config {removed_incumbent_hash} as incumbent because "
-                        f"it is not better than the incumbents on {len(config_isb_keys)} instances: "
-                    )
-                    print_config_changes(rh.get_config(removed_incumbent_id), config, logger=logger)
+            return
+        elif len(previous_incumbents) == len(new_incumbents):
+            # In this case, we have to determine which config replaced which incumbent and reject it
+            # We will remove the oldest configuration (the one with the lowest id) because
+            # set orders the ids ascending.
+            self._remove_incumbent(
+                config=config, previous_incumbent_ids=previous_incumbent_ids, new_incumbent_ids=new_incumbent_ids
+            )
         elif len(previous_incumbents) < len(new_incumbents):
             # Config becomes a new incumbent; nothing is rejected in this case
-            self._remove_rejected_config(config_id)
+            self._remove_rejected_config(config)
             logger.info(
                 f"Config {config_hash} is a new incumbent. " f"Total number of incumbents: {len(new_incumbents)}."
             )
-        else:
+        else:  # len(previous_incumbents) > len(new_incumbents)
             # There might be situations that the incumbents might be removed because of updated cost information of
             # config
             for incumbent in previous_incumbents:
@@ -652,20 +657,101 @@ class AbstractIntensifier:
         # Cut incumbents: We only want to keep a specific number of incumbents
         # We use the crowding distance for that
         if len(new_incumbents) > self._max_incumbents:
-            new_incumbents = sort_by_crowding_distance(rh, new_incumbents, all_incumbent_isb_keys)
-            new_incumbents = new_incumbents[: self._max_incumbents]
-
-            # or random?
-            # idx = self._rng.randint(0, len(new_incumbents))
-            # del new_incumbents[idx]
-            # del new_incumbent_ids[idx]
-
-            logger.info(
-                f"Removed one incumbent using crowding distance because more than {self._max_incumbents} are "
-                "available."
-            )
+            all_incumbent_isb_keys = [incumbent_isb_keys for i in range(len(new_incumbents))]
+            new_incumbents = self._cut_incumbents(new_incumbents, all_incumbent_isb_keys)
 
         self._update_trajectory(new_incumbents)
+
+    def _cut_incumbents(
+        self, incumbent_ids: list[int], all_incumbent_isb_keys: list[list[InstanceSeedBudgetKey]]
+    ) -> list[int]:
+        # Feature: sort by hypervolume
+        new_incumbents = sort_by_crowding_distance(
+            self.runhistory, incumbent_ids, all_incumbent_isb_keys, normalize=True
+        )
+        new_incumbents = new_incumbents[: self._max_incumbents]
+
+        # or random?
+        # idx = self._rng.randint(0, len(new_incumbents))
+        # del new_incumbents[idx]
+        # del new_incumbent_ids[idx]
+
+        logger.info(
+            f"Removed one incumbent using crowding distance because more than {self._max_incumbents} are " "available."
+        )
+
+        return new_incumbents
+
+    def _remove_incumbent(
+        self, config: Configuration, previous_incumbent_ids: list[int], new_incumbent_ids: list[int]
+    ) -> None:
+        """Remove incumbents if population is too big
+
+        If new and old incumbents differ.
+        Remove the oldest (the one with the lowest id) from the set of new and old incumbents.
+        If the current config is not discarded, it is added to the new incumbents.
+
+        Parameters
+        ----------
+        config : Configuration
+            Newly evaluated trial
+        previous_incumbent_ids : list[int]
+            Incumbents before
+        new_incumbent_ids : list[int]
+            Incumbents considering/maybe including config
+        """
+        assert len(previous_incumbent_ids) == len(new_incumbent_ids)
+        assert previous_incumbent_ids != new_incumbent_ids
+        rh = self.runhistory
+        config_isb_keys = self.get_instance_seed_budget_keys(config)
+        config_id = rh.get_config_id(config)
+        config_hash = get_config_hash(config)
+
+        removed_incumbent_id = list(set(previous_incumbent_ids) - set(new_incumbent_ids))[0]
+        removed_incumbent_hash = get_config_hash(rh.get_config(removed_incumbent_id))
+        self._add_rejected_config(removed_incumbent_id)
+
+        if removed_incumbent_id == config_id:
+            logger.debug(
+                f"Rejected config {config_hash} because it is not better than the incumbents on "
+                f"{len(config_isb_keys)} instances."
+            )
+        else:
+            self._remove_rejected_config(config_id)
+            logger.info(
+                f"Added config {config_hash} and rejected config {removed_incumbent_hash} as incumbent because "
+                f"it is not better than the incumbents on {len(config_isb_keys)} instances: "
+            )
+            print_config_changes(rh.get_config(removed_incumbent_id), config, logger=logger)
+
+    def _calculate_pareto_front(
+        self,
+        runhistory: RunHistory,
+        configs: list[Configuration],
+        config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]],
+    ) -> list[Configuration]:
+        """Compares the passed configurations and returns only the ones on the pareto front.
+
+        Parameters
+        ----------
+        runhistory : RunHistory
+            The runhistory containing the given configurations.
+        configs : list[Configuration]
+            The configurations from which the Pareto front should be computed.
+        config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
+            The instance-seed budget keys for the configurations on the basis of which the Pareto front should be
+            computed.
+
+        Returns
+        -------
+        pareto_front : list[Configuration]
+            The pareto front computed from the given configurations.
+        """
+        return calculate_pareto_front(
+            runhistory=runhistory,
+            configs=configs,
+            config_instance_seed_budget_keys=config_instance_seed_budget_keys,
+        )
 
     @abstractmethod
     def __iter__(self) -> Iterator[TrialInfo]:
@@ -683,6 +769,36 @@ class AbstractIntensifier:
         """Sets the state of the intensifier. Used to restore the state of the intensifier when continuing a run."""
         pass
 
+    def get_save_data(self) -> dict:
+        """Returns the data that should be saved when calling ``save()``.
+
+        This includes the incumbents, trajectory,
+        rejected configurations, and the state of the intensifier.
+
+        Returns
+        -------
+        data : dict
+            The data that should be saved with keys ``incumbent_ids``, ``rejected_config_ids``,
+            ``incumbents_changed``, ``trajectory``, and ``state``.
+        """
+        incumbent_ids = []
+        for config in self.incumbents:
+            try:
+                incumbent_ids.append(self.runhistory.get_config_id(config))
+            except KeyError:
+                incumbent_ids.append(-1)  # Should not happen, but occurs sometimes with small-budget runs
+                logger.warning(f"{config} does not exist in runhistory, but is part of the incumbent!")  # noqa: E713
+
+        data = {
+            "incumbent_ids": incumbent_ids,
+            "rejected_config_ids": self._rejected_config_ids,
+            "incumbents_changed": self._incumbents_changed,
+            "trajectory": [dataclasses.asdict(item) for item in self._trajectory],
+            "state": self.get_state(),
+        }
+
+        return data
+
     def save(self, filename: str | Path) -> None:
         """Saves the current state of the intensifier. In addition to the state (retrieved by ``get_state``), this
         method also saves the incumbents and trajectory.
@@ -693,13 +809,7 @@ class AbstractIntensifier:
         assert str(filename).endswith(".json")
         filename.parent.mkdir(parents=True, exist_ok=True)
 
-        data = {
-            "incumbent_ids": [self.runhistory.get_config_id(config) for config in self._incumbents],
-            "rejected_config_ids": self._rejected_config_ids,
-            "incumbents_changed": self._incumbents_changed,
-            "trajectory": [dataclasses.asdict(item) for item in self._trajectory],
-            "state": self.get_state(),
-        }
+        data = self.get_save_data()
 
         with open(filename, "w") as fp:
             json.dump(data, fp, indent=2, cls=NumpyEncoder)
@@ -723,7 +833,7 @@ class AbstractIntensifier:
         if self._runhistory is not None:
             self.runhistory = self._runhistory
 
-        self._incumbents = [self.runhistory.get_config(config_id) for config_id in data["incumbent_ids"]]
+        self.incumbents = [self.runhistory.get_config(config_id) for config_id in data["incumbent_ids"]]
         self._incumbents_changed = data["incumbents_changed"]
         self._rejected_config_ids = data["rejected_config_ids"]
         self._trajectory = [TrajectoryItem(**item) for item in data["trajectory"]]
@@ -734,7 +844,7 @@ class AbstractIntensifier:
         config_ids = [rh.get_config_id(c) for c in configs]
         costs = [rh.average_cost(c, normalize=False) for c in configs]
 
-        self._incumbents = configs
+        self.incumbents = configs
         self._incumbents_changed += 1
         self._trajectory.append(
             TrajectoryItem(

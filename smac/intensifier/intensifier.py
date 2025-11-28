@@ -57,10 +57,15 @@ class Intensifier(AbstractIntensifier):
         max_config_calls: int = 3,
         max_incumbents: int = 10,
         retries: int = 16,
+        min_config_calls: int = 1,
         seed: int | None = None,
     ):
         super().__init__(scenario=scenario, max_config_calls=max_config_calls, max_incumbents=max_incumbents, seed=seed)
         self._retries = retries
+        self._min_config_calls = min_config_calls
+
+        if max_config_calls < min_config_calls:
+            raise ValueError("min_config_calls must be smaller or equal than max_config_calls")
 
     def reset(self) -> None:
         """Resets the internal variables of the intensifier including the queue."""
@@ -110,6 +115,7 @@ class Intensifier(AbstractIntensifier):
           queue.
         - If all incumbents are evaluated on the same trials, a new trial is added to one of the incumbents.
         - Only challengers which are not rejected/running/incumbent are intensified by N*2.
+        - If the intensifier cannot find any new trials for n _retries, exit
 
         Returns
         -------
@@ -120,6 +126,14 @@ class Intensifier(AbstractIntensifier):
 
         rh = self.runhistory
         assert self._max_config_calls is not None
+
+        is_keys = self.get_instance_seed_keys_of_interest()
+        if len(is_keys) < self._min_config_calls:
+            logger.debug(
+                f"There are less instance, seed pairs of interest than the requested minimum trails per "
+                f"configuration. Changing min_config_calls from {self._min_config_calls} to {len(is_keys)}"
+            )
+            self._min_config_calls = len(is_keys)
 
         # What if there are already trials in the runhistory? Should we queue them up?
         # Because they are part of the runhistory, they might be selected as incumbents. However, they are not
@@ -132,7 +146,7 @@ class Intensifier(AbstractIntensifier):
         if len(self._queue) == 0:
             for config in rh.get_configs():
                 hash = get_config_hash(config)
-                self._queue.append((config, 1))
+                self._queue.append((config, self._min_config_calls))
                 logger.info(f"Added config {hash} from runhistory to the intensifier queue.")
 
         fails = -1
@@ -152,7 +166,7 @@ class Intensifier(AbstractIntensifier):
             # Also, incorporate ``get_incumbent_instance_seed_budget_keys`` here because challengers are only allowed to
             # sample from the incumbent's instances
             incumbents = self.get_incumbents(sort_by="num_trials")
-            incumbent_isb_keys = self.get_incumbent_instance_seed_budget_keys()
+            incumbent_isb_keys = self.get_incumbent_instance_seed_budget_keys()  # Intersection
 
             # Check if configs in queue are still running
             all_configs_running = True
@@ -161,7 +175,7 @@ class Intensifier(AbstractIntensifier):
                     all_configs_running = False
                     break
 
-            if len(self._queue) == 0 or all_configs_running:
+            if len(self._queue) == 0 or all_configs_running:  # Incumbents
                 if len(self._queue) == 0:
                     logger.debug("Queue is empty:")
                 else:
@@ -221,6 +235,7 @@ class Intensifier(AbstractIntensifier):
                         logger.debug(f"--- Finished yielding for config {incumbent_hash}.")
 
                         # We break here because we only want to intensify one more trial of one incumbent
+                        # intensify until the incumbents are all of equal size (N+1 of biggest incumbent)
                         break
                     else:
                         # assert len(incumbent_isb_keys) == self._max_config_calls
@@ -235,7 +250,7 @@ class Intensifier(AbstractIntensifier):
                 try:
                     config = next(self.config_generator)
                     config_hash = get_config_hash(config)
-                    self._queue.append((config, 1))
+                    self._queue.append((config, self._min_config_calls))
                     logger.debug(f"--- Added a new config {config_hash} to the queue.")
 
                     # If we added a new config, then we did something in this iteration
@@ -269,6 +284,8 @@ class Intensifier(AbstractIntensifier):
                         self._queue.remove((config, N))
                         continue
 
+                    logger.debug(f"--- Config {config_hash} origin ({config.origin})")
+
                     # And then we yield as many trials as we specified N
                     # However, only the same instances as the incumbents are used
                     isk_keys: list[InstanceSeedBudgetKey] | None = None
@@ -277,38 +294,82 @@ class Intensifier(AbstractIntensifier):
 
                     # TODO: What to do if there are no incumbent instances? (Use-case: call multiple asks)
 
-                    logger.debug(f"Get next trials for config {config_hash} and budget {N} from keys {isk_keys}")
                     trials = self._get_next_trials(config, N=N, from_keys=isk_keys)
-                    logger.debug(f"--- Yielding {len(trials)} trials to evaluate config {config_hash}...")
-                    for trial in trials:
-                        fails = -1
-                        yield trial
-
-                    logger.debug(f"--- Finished yielding for config {config_hash}.")
-
-                    # Now we have to remove the config
-                    self._queue.remove((config, N))
-                    logger.debug(f"--- Removed config {config_hash} with N={N} from queue.")
-
-                    # Finally, we add the same config to the queue with a higher N
-                    # If the config was rejected by the runhistory, then it's been removed in the next iteration
-                    if N < self._max_config_calls:
-                        new_pair = (config, N * 2)
-                        if new_pair not in self._queue:
-                            logger.debug(
-                                f"--- Doubled trials of config {config_hash} to N={N*2} and added it to the queue "
-                                "again."
-                            )
-                            self._queue.append((config, N * 2))
-
-                            # Also reset fails here
+                    if len(trials) == 0:
+                        # We remove the config and do not add it back to the queue.
+                        self._queue.remove((config, N))
+                        logger.debug(
+                            f"--- No trails to evaluate for config {config_hash}. "
+                            f"Removed config {config_hash} with N={N} from queue."
+                        )
+                    else:
+                        logger.debug(f"--- Yielding {len(trials)} trials to evaluate config {config_hash}...")
+                        for trial in trials:
+                            # We need to check if the configuration has been rejected!
+                            if config in self.get_rejected_configs():
+                                logger.debug(f"--- {config_hash} was rejected so we do not run any more trials")
+                                break
                             fails = -1
-                        else:
-                            logger.debug(f"--- Config {config_hash} with N={N*2} is already in the queue.")
+                            yield trial
+
+                        logger.debug(f"--- Finished yielding for config {config_hash}.")
+
+                        # Now we have to remove the config
+                        self._queue.remove((config, N))
+                        logger.debug(f"--- Removed config {config_hash} with N={N} from queue.")
+
+                        # Finally, we add the same config to the queue with a higher N
+                        # If the config was rejected by the runhistory, then it's been removed in the next iteration
+                        if N < self._max_config_calls and config not in self.get_rejected_configs():
+                            new_pair = (config, N * 2)
+                            if new_pair not in self._queue:
+                                logger.debug(
+                                    f"--- Doubled trials of config {config_hash} to N={N*2} and added it to the queue "
+                                    "again."
+                                )
+                                self._queue.append((config, N * 2))
+
+                                # Also reset fails here
+                                fails = -1
+                            else:
+                                logger.debug(f"--- Config {config_hash} with N={N*2} is already in the queue.")
 
                     # If we are at this point, it really is important to break because otherwise, we would intensify
                     # all configs in the queue in one iteration
                     break
+
+    def _check_for_intermediate_comparison(self, config: Configuration) -> bool:
+        """Checks if the configuration should be evaluated against the incumbent while it
+        did not run on all the trails the incumbents did.By default this triggers when all N trails have completed.
+
+
+        Parameters
+        ----------
+        config: Configuration
+
+        Returns
+        -------
+        A boolean which decides if the current configuration should be compared against the incumbent. By default
+        """
+        config_isb_keys = self.get_instance_seed_budget_keys(config)
+        config_hash = get_config_hash(config)
+
+        # Do not compare very early in the process
+        if len(config_isb_keys) < 4:
+            return False
+
+        # Find N in _queue
+        N = None
+        for c, cn in self._queue:
+            if config == c:
+                N = cn
+                break
+
+        if N is None:
+            logger.debug(f"This should not happen, but config {config_hash} is not in the queue.")
+            return False
+
+        return len(config_isb_keys) == N
 
     def _get_next_trials(
         self,

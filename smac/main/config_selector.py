@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Iterator
 
 import copy
+import time
 
 import numpy as np
 from ConfigSpace import Configuration
@@ -36,8 +37,15 @@ class ConfigSelector:
 
     Parameters
     ----------
-    retrain_after : int, defaults to 8
+    retrain_after : int | None, defaults to 8
         How many configurations should be returned before the surrogate model is retrained.
+    retrain_wallclock_ratio: float | None, default to None
+        How much time of the total elapsed wallclock time should be spend on retraining the surrogate model
+        and the acquisition function look. Example ratio of 0.1 would result in that only 10% of the wallclock time is
+        spend on retraining.
+    min_configurations: int, defaults to 1
+        The minimum number of configurations that need to yield before retraining can occur. Should be lower or equal to
+        retrain_after.
     max_new_config_tries : int, defaults to 8
         How often to retry receiving a new configuration before giving up.
     min_trials: int, defaults to 1
@@ -51,7 +59,9 @@ class ConfigSelector:
         self,
         scenario: Scenario,
         *,
-        retrain_after: int = 8,
+        retrain_after: int | None = 8,
+        retrain_wallclock_ratio: float | None = None,
+        min_configurations: int = 1,
         max_new_config_tries: int = 16,
         min_trials: int = 1,
     ) -> None:
@@ -71,6 +81,8 @@ class ConfigSelector:
 
         # And other variables
         self._retrain_after = retrain_after
+        self._retrain_wallclock_ratio = retrain_wallclock_ratio
+        self._min_configurations = min_configurations
         self._previous_entries = -1
         self._predict_x_best = True
         self._min_trials = min_trials
@@ -79,9 +91,21 @@ class ConfigSelector:
         # How often to retry receiving a new configuration
         # (counter increases if the received config was already returned before)
         self._max_new_config_tries = max_new_config_tries
+        self._counter = 0
+
+        self._wallclock_start_time: float = time.time()
+        self._acquisition_training_times: list[float] = []
 
         # Processed configurations should be stored here; this is important to not return the same configuration twice
         self._processed_configs: list[Configuration] = []
+
+        # Check if there is at least one retrain condition
+        if self._retrain_after is None and self._retrain_wallclock_ratio is None:
+            raise ValueError("No retrain condition specified!")
+
+        if self._retrain_after is not None:
+            if self._retrain_after < self._min_configurations:
+                raise ValueError("retrain_after should be higher or equal to min_configurations")
 
     def _set_components(
         self,
@@ -113,6 +137,8 @@ class ConfigSelector:
         return {
             "name": self.__class__.__name__,
             "retrain_after": self._retrain_after,
+            "retrain_wallclock_ratio": self._retrain_wallclock_ratio,
+            "min_configurations": self._min_configurations,
             "max_new_config_tries": self._max_new_config_tries,
             "min_trials": self._min_trials,
         }
@@ -128,7 +154,7 @@ class ConfigSelector:
         Note
         ----
         When SMAC continues a run, processed configurations from the runhistory are ignored. For example, if the
-        intitial design configurations already have been processed, they are ignored here. After the run is
+        initial design configurations already have been processed, they are ignored here. After the run is
         continued, however, the surrogate model is trained based on the runhistory in all cases.
 
         Returns
@@ -188,6 +214,7 @@ class ConfigSelector:
                 continue
 
             # Check if X/Y differs from the last run, otherwise use cached results
+            train_start_time = time.time()
             if self._previous_entries != Y.shape[0]:
                 self._model.train(X, Y)
 
@@ -206,6 +233,9 @@ class ConfigSelector:
                     incumbent_array=x_best_array,
                     num_data=len(self._get_evaluated_configs()),
                     X=X_configurations,
+                    incumbents=self._runhistory.incumbents,
+                    runhistory=self._runhistory,
+                    runhistory_encoder=self._runhistory_encoder,
                 )
 
             # We want to cache how many entries we used because if we have the same number of entries
@@ -215,26 +245,30 @@ class ConfigSelector:
             # Now we maximize the acquisition function
             challengers = self._acquisition_maximizer.maximize(
                 previous_configs,
+                # n_points=self._retrain_after, #TODO MERGE check
                 random_design=self._random_design,
             )
 
-            retrain = False
-            counter = 0
+            if self._retrain_wallclock_ratio is not None:
+                # TODO: CB: What does this actually do? Delete/clear the iterator?
+                #  --> JG: To easily measure the time needed to perform maximise, difficult otherwise due to yield
+                len(challengers)  # Forces actual computation of the acquisition function maximizer
+
+            self._acquisition_training_times.append(time.time() - train_start_time)
+
             failed_counter = 0
             for config in challengers:
                 if config not in self._processed_configs:
-                    counter += 1
+                    self._counter += 1
                     self._processed_configs.append(config)
                     self._call_callbacks_on_end(config)
                     yield config
-                    retrain = counter == self._retrain_after
+                    retrain = self._check_for_retrain()
                     self._call_callbacks_on_start()
 
                     # We break to enforce a new iteration of the while loop (i.e. we retrain the surrogate model)
                     if retrain:
-                        logger.debug(
-                            f"Yielded {counter} configurations. Start new iteration and retrain surrogate model."
-                        )
+                        self._counter = 0
                         break
                 else:
                     failed_counter += 1
@@ -250,15 +284,15 @@ class ConfigSelector:
                     "Did not find enough configurations from the acquisition function. Sampling random configurations."
                 )
                 random_configs_retries = 0
-                while counter < self._retrain_after and random_configs_retries < self._max_new_config_tries:
+                while not retrain and random_configs_retries < self._max_new_config_tries:
                     config = self._scenario.configspace.sample_configuration()
                     if config not in self._processed_configs:
-                        counter += 1
+                        self._counter += 1
                         config.origin = "Random Search (max retries, no candidates)"
                         self._processed_configs.append(config)
                         self._call_callbacks_on_end(config)
                         yield config
-                        retrain = counter == self._retrain_after
+                        retrain = self._check_for_retrain()
                         self._call_callbacks_on_start()
                     else:
                         random_configs_retries += 1
@@ -266,6 +300,38 @@ class ConfigSelector:
                     if random_configs_retries == self._max_new_config_tries:
                         logger.warning(f"Could not return a new configuration after {random_configs_retries} retries.")
                         raise ConfigurationSpaceExhaustedException()
+
+    def _check_for_retrain(self) -> bool:
+        if self._retrain_after is not None:
+            if self._counter >= self._retrain_after:
+                logger.debug(
+                    f"Yielded {self._counter} configurations. Start new iteration and retrain surrogate model."
+                )
+                return True
+
+        if self._retrain_wallclock_ratio is not None:
+            if self._counter < self._min_configurations:
+                # Force a minimum number of configurations to be yielded despite the ratio
+                return False
+
+            # Total elapsed wallcock time
+            elapsed_time = time.time() - self._wallclock_start_time
+
+            # Total time spend on getting configurations with the surrogate model
+            acquisition_training_time = sum(self._acquisition_training_times)
+
+            # Retrain when more time has been spend
+            if acquisition_training_time / elapsed_time < self._retrain_wallclock_ratio:
+                logger.debug(
+                    f"Less than {self._retrain_wallclock_ratio:.2%} "  # noqa: E231
+                    f"({acquisition_training_time / elapsed_time:.2f}) "  # noqa: E231
+                    f"of the elapsed wallclock time ({elapsed_time:.2f}s) has "  # noqa: E231
+                    "been spend on finding new configurations "
+                    f"with the surrogate model. Start new iteration and retrain surrogate model."
+                )
+                return True
+
+        return False
 
     def _call_callbacks_on_start(self) -> None:
         for callback in self._callbacks:

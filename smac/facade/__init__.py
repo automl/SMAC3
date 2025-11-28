@@ -6,6 +6,7 @@ from smac.facade.hyperparameter_optimization_facade import (
     HyperparameterOptimizationFacade,
 )
 from smac.facade.multi_fidelity_facade import MultiFidelityFacade
+from smac.facade.multi_objective_facade import MultiObjectiveFacade
 from smac.facade.random_facade import RandomFacade
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "MultiFidelityFacade",
     "HyperbandFacade",
     "RandomFacade",
+    "MultiObjectiveFacade",
 ]

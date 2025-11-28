@@ -11,6 +11,7 @@ def _get_costs(
     runhistory: RunHistory,
     configs: list[Configuration],
     config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]],
+    normalize: bool = False,
 ) -> np.ndarray:
     """Returns the costs of the passed configurations.
 
@@ -22,6 +23,8 @@ def _get_costs(
         The configs for which the costs should be returned.
     config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
         The instance-seed budget keys for the configs for which the costs should be returned.
+    normalize: bool
+        If the costs should be normalized
 
     Returns
     -------
@@ -38,7 +41,9 @@ def _get_costs(
         # configuration
         # However, we only want to consider the config trials
         # Average cost is a list of floats (one for each objective)
-        average_cost = runhistory.average_cost(config, isb_keys, normalize=False)
+        average_cost = runhistory.average_cost(
+            config, isb_keys, normalize=normalize, run_multi_objective_algorithm=normalize
+        )
         average_costs += [average_cost]
 
     # Let's work with a numpy array for efficiency
@@ -50,7 +55,7 @@ def calculate_pareto_front(
     configs: list[Configuration],
     config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]],
 ) -> list[Configuration]:
-    """Compares the passed configurations and returns only the ones on the pareto front.
+    """Calculate pareto front based on non-dominance
 
     Parameters
     ----------
@@ -84,9 +89,10 @@ def calculate_pareto_front(
 
 def sort_by_crowding_distance(
     runhistory: RunHistory,
-    configs: list[Configuration],
+    configs: list[Configuration|int],
     config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]],
-) -> list[Configuration]:
+    normalize: bool = False,
+) -> list[Configuration|int]:
     """Sorts the passed configurations by their crowding distance. Taken from
     https://github.com/anyoptimization/pymoo/blob/20abef1ade71915352217400c11ece4c2f35163e/pymoo/algorithms/nsga2.py
 
@@ -99,13 +105,14 @@ def sort_by_crowding_distance(
         The configurations which should be sorted.
     config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
         The instance-seed budget keys for the configurations which should be sorted.
-
+    normalize: bool
+        If the costs should be normalized
     Returns
     -------
     sorted_list : list[Configuration]
         Configurations sorted by crowding distance.
     """
-    F = _get_costs(runhistory, configs, config_instance_seed_budget_keys)
+    F = _get_costs(runhistory, configs, config_instance_seed_budget_keys, normalize=normalize)
     infinity = 1e14
 
     n_points = F.shape[0]

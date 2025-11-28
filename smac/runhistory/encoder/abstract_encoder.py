@@ -32,6 +32,7 @@ class AbstractRunHistoryEncoder:
     scale_percentage : int, defaults to 5
         Scaled y-transformation use a percentile to estimate distance to optimum. Only used in some sub-classes.
     seed : int | None, defaults to none
+    native_multi_objective: bool, defaults to False
 
     Raises
     ------
@@ -46,6 +47,8 @@ class AbstractRunHistoryEncoder:
         lower_budget_states: list[StatusType] = None,
         scale_percentage: int = 5,
         seed: int | None = None,
+        native_multi_objective: bool = False,
+        normalize: bool = True,
     ) -> None:
         if considered_states is None:
             considered_states = [
@@ -85,6 +88,9 @@ class AbstractRunHistoryEncoder:
         self._percentile = np.array([np.nan] * self._n_objectives)
         self._multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None
         self._runhistory: RunHistory | None = None
+
+        self._native_multi_objective = native_multi_objective
+        self._normalize = normalize
 
     @property
     def meta(self) -> dict[str, Any]:

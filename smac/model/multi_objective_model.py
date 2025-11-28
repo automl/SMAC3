@@ -53,6 +53,8 @@ class MultiObjectiveModel(AbstractModel):
             seed=seed,
         )
 
+        self._n_features = self._models[0]._n_features  # Copy from first model
+
     @property
     def models(self) -> list[AbstractModel]:
         """The internally used surrogate models."""

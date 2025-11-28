@@ -325,8 +325,8 @@ class SMBO:
 
             # Some statistics
             logger.debug(
-                f"Remaining wallclock time: {self.remaining_walltime}; "
-                f"Remaining cpu time: {self.remaining_cputime}; "
+                f"Remaining wallclock time: {self.remaining_walltime}; "  # noqa: E702
+                f"Remaining cpu time: {self.remaining_cputime}; "  # noqa: E702
                 f"Remaining trials: {self.remaining_trials}"
             )
 
@@ -538,7 +538,7 @@ class SMBO:
                     )
                     logger.info(
                         f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current "
-                        f"one:\n{diff}"
+                        f"one:\n{diff}"  # noqa: E231
                     )
 
                     feedback = input(

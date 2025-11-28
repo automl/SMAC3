@@ -28,9 +28,11 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
         n_cols = self._n_params
         X = np.ones([n_rows, n_cols + self._n_features]) * np.nan
 
-        # For now we keep it as 1
-        # TODO: Extend for native multi-objective
-        y = np.ones([n_rows, 1])
+        # Initialize based on chosen multi-objective format
+        if self._native_multi_objective:
+            y = np.ones([n_rows, self._n_objectives])
+        else:
+            y = np.ones([n_rows, 1])
 
         # Then populate matrix
         for row, (key, run) in enumerate(trials.items()):
@@ -51,7 +53,7 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
 
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
-                y_ = normalize_costs(run.cost, self.runhistory.objective_bounds)
+                y_ = normalize_costs(run.cost, self.runhistory.objective_bounds) if self._normalize else run.cost
                 y_agg = self._multi_objective_algorithm(y_)
                 y[row] = y_agg
             else:

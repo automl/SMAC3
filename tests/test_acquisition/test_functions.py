@@ -11,10 +11,13 @@ from smac.acquisition.function import (
     TS,
     IntegratedAcquisitionFunction,
     PriorAcquisitionFunction,
+    PHVI,
 )
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
+
+from tests.fixtures.runhistory import runhistory
 
 
 class ConfigurationMock:
@@ -758,3 +761,102 @@ def test_ts_sampler():
     model = MockModelSampler()
     ts = TS()
     ts.model = model
+
+# --------------------------------------------------------------
+# Test Hypervolume
+# --------------------------------------------------------------
+
+class MockRunhistory:
+    def __init__(self,num_targets=1):
+        self.objective_bounds = [(0,1)] * num_targets
+
+class MockRunhistoryEncoder:
+    def transform_response_values(self,objective_bounds):
+        return objective_bounds
+
+class MockMOModel:
+    def __init__(self, num_targets=1, seed=0):
+        self.num_targets = num_targets
+        self._seed = seed
+        self._rng = np.random.RandomState(self._seed)
+
+    def predict_marginalized(self, X):
+        n_samples, n_features = X.shape
+        cols = np.arange(self.num_targets) % n_features  # wrap if needed
+        return X[:, cols], X[:, cols]
+
+@pytest.fixture(params=[2, 3, 5, 10], ids=lambda p: f"objectives={p}")
+def objectives(request):
+    return request.param
+
+@pytest.fixture
+def momodel(objectives):
+    return MockMOModel(num_targets=objectives)
+
+@pytest.fixture
+def phvi_acquisition_function(momodel, objectives):
+    phvi = PHVI()
+    model = MockModel(num_targets=objectives)
+    phvi.model = model
+    return phvi
+
+def test_phvi_1xD(momodel, phvi_acquisition_function, objectives):
+    model = momodel
+    phvi = phvi_acquisition_function
+    num_targets = objectives
+
+    #Create ND points on the extremes
+    incumbents = []
+    for i in range(num_targets):
+        config = [1.0]*num_targets
+        config[i] = 0.0
+        incumbents.append(ConfigurationMock(config))
+
+    phvi.update(model=model,
+                incumbents=incumbents,
+                runhistory=MockRunhistory(num_targets=num_targets),
+                runhistory_encoder=MockRunhistoryEncoder(),
+                )
+
+    # Optimal configuration
+    configurations = [ConfigurationMock([0.0] * num_targets)]
+    acq = phvi(configurations)
+    assert acq.shape == (1, 1)
+    assert acq[0][0] >= 1
+
+    # Worst configuration
+    configurations = [ConfigurationMock([1.0] * num_targets)]
+    acq = phvi(configurations)
+    assert acq.shape == (1, 1)
+    assert acq[0][0] == 0
+
+
+def test_phvi_NxD(momodel, phvi_acquisition_function, objectives):
+    model = momodel
+    phvi = phvi_acquisition_function
+    num_targets = objectives
+
+    # Create ND points on the extremes
+    incumbents = []
+    for i in range(num_targets):
+        config = [1.0] * num_targets
+        config[i] = 0.0
+        incumbents.append(ConfigurationMock(config))
+
+    phvi.update(model=model,
+                incumbents=incumbents,
+                runhistory=MockRunhistory(num_targets=num_targets),
+                runhistory_encoder=MockRunhistoryEncoder(),
+                )
+
+    configurations = [
+        ConfigurationMock([0.0]*num_targets),
+        ConfigurationMock([1.0]*num_targets),
+        ConfigurationMock([0.5]*num_targets),
+    ]
+
+    acq = phvi(configurations)
+    assert acq.shape == (3, 1)
+    assert acq[0][0] >= 1.0
+    assert np.isclose(acq[1][0], 0.0)
+    assert 0.0 < acq[2][0] < 0.5

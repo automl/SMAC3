@@ -2,29 +2,31 @@ from __future__ import annotations
 
 from ConfigSpace import Configuration
 
-from smac.acquisition.function.expected_improvement import EI
-from smac.acquisition.maximizer.local_and_random_search import (
-    LocalAndSortedRandomSearch,
+from smac.acquisition.function.hypervolume import PHVI, AbstractHVI
+from smac.acquisition.maximizer.multi_objective_search import (
+    MOLocalAndSortedRandomSearch,
 )
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.default_design import DefaultInitialDesign
 from smac.intensifier.intensifier import Intensifier
 from smac.intensifier.mixins import intermediate_decision, intermediate_update
+from smac.intensifier.multi_objective_intensifier import MOIntensifier
+from smac.model.multi_objective_model import MultiObjectiveModel
 from smac.model.random_forest.random_forest import RandomForest
-from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
+from smac.multi_objective.aggregation_strategy import NoAggregationStrategy
 from smac.random_design.probability_design import ProbabilityRandomDesign
 from smac.runhistory.encoder.encoder import RunHistoryEncoder
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 
 logger = get_logger(__name__)
 
 
-class AlgorithmConfigurationFacade(AbstractFacade):
+class MultiObjectiveFacade(AbstractFacade):
     @staticmethod
     def get_model(  # type: ignore
         scenario: Scenario,
@@ -36,7 +38,7 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         max_depth: int = 20,
         bootstrapping: bool = True,
         pca_components: int = 4,
-    ) -> RandomForest:
+    ) -> MultiObjectiveModel:
         """Returns a random forest as surrogate model.
 
         Parameters
@@ -56,43 +58,75 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         pca_components : float, defaults to 4
             Number of components to keep when using PCA to reduce dimensionality of instance features.
         """
-        return RandomForest(
-            configspace=scenario.configspace,
-            n_trees=n_trees,
-            ratio_features=ratio_features,
-            min_samples_split=min_samples_split,
-            min_samples_leaf=min_samples_leaf,
-            max_depth=max_depth,
-            bootstrapping=bootstrapping,
-            log_y=False,
-            instance_features=scenario.instance_features,
-            pca_components=pca_components,
-            seed=scenario.seed,
+        models = []
+        objectives = scenario.objectives if isinstance(scenario.objectives, list) else [scenario.objectives]
+        for objective in objectives:
+            models.append(
+                RandomForest(
+                    configspace=scenario.configspace,
+                    n_trees=n_trees,
+                    ratio_features=ratio_features,
+                    min_samples_split=min_samples_split,
+                    min_samples_leaf=min_samples_leaf,
+                    max_depth=max_depth,
+                    bootstrapping=bootstrapping,
+                    log_y=False,
+                    instance_features=scenario.instance_features,
+                    pca_components=pca_components,
+                    seed=scenario.seed,
+                )
+            )
+
+        return MultiObjectiveModel(models=models, objectives=objectives)  # type: ignore[arg-type]
+
+    @staticmethod
+    def get_intensifier(  # type: ignore
+        scenario: Scenario,
+        *,
+        max_config_calls: int = 2000,
+        max_incumbents: int = 10,
+    ) -> Intensifier:
+        """Returns ``MOIntensifier`` as intensifier. Uses the default configuration for ``race_against``.
+
+        Parameters
+        ----------
+        scenario : Scenario
+        max_config_calls : int, defaults to 2000
+            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be max evaluated
+            for a configuration.
+        max_incumbents : int, defaults to 10
+            How many incumbents to keep track of in the case of multi-objective.
+        """
+
+        class NewIntensifier(
+            intermediate_decision.NewCostDominatesOldCost, intermediate_update.ClosestIncumbentComparison, MOIntensifier
+        ):
+            pass
+
+        return NewIntensifier(
+            scenario=scenario,
+            max_config_calls=max_config_calls,
+            max_incumbents=max_incumbents,
         )
 
     @staticmethod
     def get_acquisition_function(  # type: ignore
         scenario: Scenario,
-        *,
-        xi: float = 0.0,
-    ) -> EI:
-        """Returns an Expected Improvement acquisition function.
+    ) -> AbstractHVI:
+        """Returns an Predicted Hypervolume Improvement acquisition function.
 
         Parameters
         ----------
         scenario : Scenario
-        xi : float, defaults to 0.0
-            Controls the balance between exploration and exploitation of the
-            acquisition function.
         """
-        return EI(xi=xi)
+        return PHVI()
 
     @staticmethod
     def get_acquisition_maximizer(  # type: ignore
         scenario: Scenario,
-    ) -> LocalAndSortedRandomSearch:
+    ) -> MOLocalAndSortedRandomSearch:
         """Returns local and sorted random search as acquisition maximizer."""
-        optimizer = LocalAndSortedRandomSearch(
+        optimizer = MOLocalAndSortedRandomSearch(
             scenario.configspace,
             seed=scenario.seed,
         )
@@ -100,24 +134,10 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         return optimizer
 
     @staticmethod
-    def get_intensifier(scenario: Scenario, *, max_config_calls: int = 2000, max_incumbents: int = 10) -> Intensifier:
-        """Returns ``Intensifier`` as intensifier. Supports budgets.
-
-        Parameters
-        ----------
-        max_config_calls : int, defaults to 3
-            Maximum number of configuration evaluations. Basically, how many instance-seed keys should be evaluated at
-            maximum for a configuration.
-        max_incumbents : int, defaults to 10
-            How many incumbents to keep track of in the case of multi-objective.
-        """
-        return Intensifier(scenario=scenario, max_config_calls=max_config_calls, max_incumbents=max_incumbents)
-
-    @staticmethod
     def get_initial_design(  # type: ignore
         scenario: Scenario,
         *,
-        additional_configs: list[Configuration] = None,
+        additional_configs: list[Configuration] | None = None,
     ) -> DefaultInitialDesign:
         """Returns an initial design, which returns the default configuration.
 
@@ -126,8 +146,6 @@ class AlgorithmConfigurationFacade(AbstractFacade):
         additional_configs: list[Configuration], defaults to []
             Adds additional configurations to the initial design.
         """
-        if additional_configs is None:
-            additional_configs = []
         return DefaultInitialDesign(
             scenario=scenario,
             additional_configs=additional_configs,
@@ -151,24 +169,17 @@ class AlgorithmConfigurationFacade(AbstractFacade):
     @staticmethod
     def get_multi_objective_algorithm(  # type: ignore
         scenario: Scenario,
-        *,
-        objective_weights: list[float] | None = None,
-    ) -> MeanAggregationStrategy:
-        """Returns the mean aggregation strategy for the multi objective algorithm.
+    ) -> NoAggregationStrategy:
+        """Returns the mean aggregation strategy for the multi-objective algorithm. For a pure multi-objective approach
+        no aggregation strategy is needed.
 
         Parameters
         ----------
         scenario : Scenario
-        objective_weights : list[float] | None, defaults to None
-            Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
-            objectives.
         """
-        return MeanAggregationStrategy(
-            scenario=scenario,
-            objective_weights=objective_weights,
-        )
+        return NoAggregationStrategy()
 
     @staticmethod
     def get_runhistory_encoder(scenario: Scenario) -> RunHistoryEncoder:
-        """Returns the default runhistory encoder."""
-        return RunHistoryEncoder(scenario)
+        """Returns the default runhistory encoder with native multi objective support enabled."""
+        return RunHistoryEncoder(scenario, native_multi_objective=True, normalize=False)

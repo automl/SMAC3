@@ -84,7 +84,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     @property
     def multi_objective_algorithm(self) -> AbstractMultiObjectiveAlgorithm | None:
-        """The multi-objective algorithm required to scaralize the costs in case of multi-objective."""
+        """The multi-objective algorithm required to scalarize the costs in case of multi-objective."""
         return self._multi_objective_algorithm
 
     @multi_objective_algorithm.setter
@@ -137,6 +137,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         self._objective_bounds: list[tuple[float, float]] = []
 
+        # Store incumbents. Gets updated whenever the incumbents in the
+        # intensifier are updated
+        self._incumbents: list[Configuration] = []
+
     def __contains__(self, k: object) -> bool:
         """Dictionary semantics for `k in runhistory`."""
         return k in self._data
@@ -156,6 +160,15 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def __eq__(self, other: Any) -> bool:
         """Enables to check equality of runhistory if the run is continued."""
         return self._data == other._data
+
+    @property
+    def incumbents(self) -> list[Configuration]:
+        """Return the incumbents (points on the Pareto front) of the runhistory."""
+        return self._incumbents
+
+    @incumbents.setter
+    def incumbents(self, incumbents: list[Configuration]) -> None:
+        self._incumbents = incumbents
 
     def empty(self) -> bool:
         """Check whether the RunHistory is empty.
@@ -460,6 +473,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         config: Configuration,
         instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
         normalize: bool = False,
+        run_multi_objective_algorithm: bool = False,
     ) -> float | list[float]:
         """Return the average cost of a configuration. This is the mean of costs of all instance-
         seed pairs.
@@ -490,10 +504,11 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 averaged_costs = np.mean(costs, axis=0).tolist()
 
                 if normalize:
-                    assert self.multi_objective_algorithm is not None
-                    normalized_costs = normalize_costs(averaged_costs, self._objective_bounds)
+                    averaged_costs = normalize_costs(averaged_costs, self._objective_bounds)
 
-                    return self.multi_objective_algorithm(normalized_costs)
+                if run_multi_objective_algorithm:
+                    assert self.multi_objective_algorithm is not None
+                    return self.multi_objective_algorithm(averaged_costs)
                 else:
                     return averaged_costs
 
@@ -603,6 +618,9 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     def get_config_id(self, config: Configuration) -> int:
         """Returns the configuration id from a configuration."""
+        if config not in self._config_ids:
+            logger.warning("Requested id of unknown configuration!")
+            return -1
         return self._config_ids[config]
 
     def has_config(self, config: Configuration) -> bool:
