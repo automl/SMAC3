@@ -92,6 +92,7 @@ class TabPFNModel(AbstractModel):
         X_imputed = self._x_imputer.fit_transform(X)
         X_transformed = self._x_pt.fit_transform(X_imputed)
         X_scaled = self._x_scaler.fit_transform(X_transformed)
+        X_scaled = torch.tensor(X_scaled, dtype=torch.float32)
 
         y = y.flatten()
         y_transformed = self._y_pt.fit_transform(y.reshape(-1, 1))
@@ -122,6 +123,7 @@ class TabPFNModel(AbstractModel):
         X_imputed = self._x_imputer.transform(X)
         X_transformed = self._x_pt.transform(X_imputed)
         X_scaled = self._x_scaler.transform(X_transformed)
+        X_scaled = torch.tensor(X_scaled, dtype=torch.float32)
 
         with torch.no_grad():
             out_dict = self._tabpfn.predict(X_scaled, output_type="full")
@@ -129,7 +131,14 @@ class TabPFNModel(AbstractModel):
         # Variance estimation is difficult with TabPFN, it can have very large variances
         var = out_dict["criterion"].variance(out_dict["logits"]).cpu().detach().numpy()
         var = var.flatten()
-        var = np.maximum(var, 1e-6)
+        # var = np.maximum(var, 1e-6)
+
+        var = np.clip(var, np.percentile(var, 5), np.percentile(var, 95))
+        if np.isclose(var.min(), var.max()):
+            var = np.zeros_like(var)
+        else:
+            var = (var - var.min()) / (var.max() - var.min())
+        var = var + 1e-6  # Avoid zero variance
 
         y_pred = self._y_scaler.inverse_transform(out_dict["mean"].reshape(-1, 1))
         y_pred = self._y_pt.inverse_transform(y_pred)
