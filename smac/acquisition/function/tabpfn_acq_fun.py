@@ -38,11 +38,17 @@ class RiemannExpectedImprovement(AbstractAcquisitionFunction):
         X_imputed = model._x_imputer.transform(X)
         X_transformed = model._x_pt.transform(X_imputed)
         X_scaled = model._x_scaler.transform(X_transformed)
+        X_scaled = torch.tensor(X_scaled, dtype=torch.float32)
 
         assert model._tabpfn is not None
+        logits_list = []
         with torch.no_grad():
-            pred = model._tabpfn.predict(X_scaled, output_type="full")
+            for x_feed in torch.split(X_scaled, 1000, dim=0):
+                pred = model._tabpfn.predict(x_feed, output_type="full")
+                logits_list.append(pred["logits"])
+        logits = torch.cat(logits_list, dim=0)
+        del logits_list
 
         # change sign because TabPFN maximizes by default
-        ei = pred["criterion"].ei(pred["logits"], (-1) * self._eta)
+        ei = pred["criterion"].ei(logits, (-1) * self._eta)
         return ei.cpu().numpy().reshape(-1, 1)
