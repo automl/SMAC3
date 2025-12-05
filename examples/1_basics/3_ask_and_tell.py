@@ -71,9 +71,6 @@ if __name__ == "__main__":
 
         smac.tell(info, value)
 
-    smac.optimizer.reset()
-    #smac.optimizer.reset()
-
     # After calling ask+tell, we can still optimize
     # Note: SMAC will optimize the next 90 trials because 10 trials already have been evaluated.
     # If we however choose not to call optimize; e.g. because we want to manage heavy
