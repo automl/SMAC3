@@ -369,8 +369,33 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
         hp_names = list(candidate.config_space.keys())
 
-        num_iters = 0
+        first_iteration = True
+
+        num_iters = 1
         while active:
+
+            # Compute standard deviation based on Regis and Shoemaker (2013)
+            if self._max_steps is not None:
+                sigma_t = self._base_sigma * (1 - np.log(num_iters + 1) / np.log(self._max_steps + 1))
+            else:
+                sigma_t = self._base_sigma
+
+            # Set up the neighborhood generator
+            if first_iteration:
+                if self._exchange_size == 1:
+                    neighborhood_iterator = get_one_exchange_neighbourhood(
+                        candidate,
+                        seed=rng.randint(low=0, high=100000),
+                        stdev=sigma_t,
+                    )
+                elif self._exchange_size > 1:
+                    neighborhood_iterator = get_k_exchange_neighbourhood(
+                        candidate,
+                        seed=rng.randint(low=0, high=100000),
+                        stdev=sigma_t,
+                        exchange_size=self._exchange_size,
+                    )
+                first_iteration = False
 
             # If the maximum number of steps is reached, stop the local search
             if num_iters is not None and num_iters == self._max_steps:
@@ -378,29 +403,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
             num_iters += 1
 
-            # Compute standard deviation based on Regis and Shoemaker (2013)
-            # TODO: Maybe _max_steps should not be used and instead a fitting constant
-            if self._max_steps is not None:
-                sigma_t = self._base_sigma * (1 - np.log(num_iters + 1) / np.log(self._max_steps + 1))
-            else:
-                sigma_t = self._base_sigma
-
             hp_names = list(candidate.config_space.keys())
-
-            # Set up the neighborhood generator
-            if self._exchange_size == 1:
-                neighborhood_iterator = get_one_exchange_neighbourhood(
-                    candidate,
-                    seed=rng.randint(low=0, high=100000),
-                    stdev=sigma_t,
-                )
-            elif self._exchange_size > 1:
-                neighborhood_iterator = get_k_exchange_neighbourhood(
-                    candidate,
-                    seed=rng.randint(low=0, high=100000),
-                    stdev=sigma_t,
-                    exchange_size=self._exchange_size,
-                )
 
             # Whether the i-th local search improved. When a new neighborhood is generated, this is used to determine
             # whether a step was made (improvement) or not (iterator exhausted)
@@ -491,6 +494,20 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                 if n_no_plateau_walk >= self._n_steps_plateau_walk:
                     active = False
                     break
+
+                if self._exchange_size == 1:
+                    neighborhood_iterator = get_one_exchange_neighbourhood(
+                        candidate,
+                        seed=rng.randint(low=0, high=100000),
+                        stdev=sigma_t,
+                    )
+                elif self._exchange_size > 1:
+                    neighborhood_iterator = get_k_exchange_neighbourhood(
+                        candidate,
+                        seed=rng.randint(low=0, high=100000),
+                        stdev=sigma_t,
+                        exchange_size=self._exchange_size,
+                    )
 
         logger.debug(
             "Local searches took %s steps and looked at %s configurations. Computing the acquisition function in "
