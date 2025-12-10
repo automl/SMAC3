@@ -213,12 +213,18 @@ class AbstractIntensifier:
     @abstractmethod
     def uses_budgets(self) -> bool:
         """If the intensifier needs to make use of budgets."""
-        raise NotImplementedError
+        return False
 
     @property
     @abstractmethod
     def uses_instances(self) -> bool:
         """If the intensifier needs to make use of instances."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def uses_cutoffs(self) -> bool:
+        """If the intensifier needs to make use of cutoffs."""
         raise NotImplementedError
 
     @property
@@ -530,13 +536,41 @@ class AbstractIntensifier:
         # 2) Highest budget: We only want to compare the configs if they are evaluated on the highest budget.
         # Here we do actually care about the budgets. Please see the ``get_instance_seed_budget_keys`` method from
         # Successive Halving to get more information.
-        # Noitce: compare=True only takes effect when subclass implemented it. -- e.g. in SH it
-        # will remove the budgets from the keys.
+        # Notice: compare=True only takes effect when subclass implemented it. -- e.g. in SH it will remove the budgets
+        # from the keys.
         config_isb_comparison_keys = self.get_instance_seed_budget_keys(config, compare=True)
         # Find the lowest intersection of instance-seed-budget keys for all incumbents.
         config_incumbent_isb_comparison_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
 
         # Now we have to check if the new config has been evaluated on the same keys as the incumbents
+        logger.debug(
+            f"Validate whether we have overlap in the keys evaluated for the challenger config "
+            f"{config_isb_comparison_keys} and the incumbent config {config_incumbent_isb_comparison_keys}. If the "
+            f"challenger is dominated, reject id."
+        )
+
+        if not self.uses_budgets and all(
+            [key in config_incumbent_isb_comparison_keys for key in config_isb_comparison_keys]
+        ):
+            logger.debug(
+                "Check on the currently evaluated instances whether the challenger is dominated by the incumbent"
+            )
+
+            # determine challenger costs
+            challenger_costs = self.runhistory.average_cost(config, config_isb_comparison_keys)
+
+            # check the list of incumbents whether any of the incumbents dominates the current challenger
+            for inc in incumbents:
+                # determine incumbent costs
+                inc_costs = self.runhistory.average_cost(inc, config_isb_comparison_keys)
+                # check dominance
+                is_dominated = not np.any(np.array([challenger_costs]) < np.array([inc_costs]))
+
+                # if challenger config is dominated by the incumbent, reject it
+                if is_dominated:
+                    logger.debug(f"Challenger config {config_hash} is dominated by incumbent {get_config_hash(inc)}.")
+                    self._add_rejected_config(config_id)
+
         if not all([key in config_isb_comparison_keys for key in config_incumbent_isb_comparison_keys]):
             # We can not tell if the new config is better/worse than the incumbents because it has not been
             # evaluated on the necessary trials
