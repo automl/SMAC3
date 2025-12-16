@@ -149,7 +149,7 @@ plugins:
         python:
           paths: [smac]
           # Extra objects which allow for linking to external docs
-          import:
+          paths:
             - 'https://docs.python.org/3/objects.inv'
             - 'https://numpy.org/doc/stable/objects.inv'
             - 'https://pandas.pydata.org/docs/objects.inv'
