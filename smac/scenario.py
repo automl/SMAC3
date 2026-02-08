@@ -23,71 +23,62 @@ class Scenario:
     """
     The scenario manages environment variables and therefore gives context in which frame the optimization is performed.
 
-    Parameters
-    ----------
-    configspace : ConfigurationSpace
-        The configuration space from which to sample the configurations.
-    name : str | None, defaults to None
-        The name of the run. If no name is passed, SMAC generates a hash from the meta data.
-        Specify this argument to identify your run easily.
-    output_directory : Path, defaults to Path("smac3_output")
-        The directory in which to save the output. The files are saved in `./output_directory/name/seed`.
-    deterministic : bool, defaults to False
-        If True, only one seed is passed to the target function, assuming deterministic (noise-free) behavior.
-        Otherwise, multiple seeds are passed (if `n_seeds` > 1) to enable repeated evaluations.
-        For non-deterministic functions, users must specify intensification parameters
-        (e.g., `max_config_calls`, `n_seeds`) to ensure reliable performance estimates
-        and optionally model noise in the Gaussian Process surrogate.
-    objectives : str | list[str] | None, defaults to "cost"
-        The objective(s) to optimize. This argument is required for multi-objective optimization.
-    crash_cost : float | list[float], defaults to np.inf
-        Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
-        a different cost.
-    termination_cost_threshold : float | list[float], defaults to np.inf
-        Defines a cost threshold when the optimization should stop. In case of multi-objective, each objective *must* be
-        associated with a cost. The optimization stops when all objectives crossed the threshold.
-    walltime_limit : float, defaults to np.inf
-        The maximum time in seconds that SMAC is allowed to run.
-    cputime_limit : float, defaults to np.inf
-        The maximum CPU time in seconds that SMAC is allowed to run.
-    trial_walltime_limit : float | None, defaults to None
-        The maximum time in seconds that a trial is allowed to run. If not specified,
-        no constraints are enforced. Otherwise, the process will be spawned by pynisher.
-    trial_memory_limit : int | None, defaults to None
-        The maximum memory in MB that a trial is allowed to use. If not specified,
-        no constraints are enforced. Otherwise, the process will be spawned by pynisher.
-    n_trials : int, defaults to 100
-        The maximum number of trials (combination of configuration, seed, budget, and instance, depending on the task)
-        to run.
-    use_default_config: bool, defaults to False.
-        If True, the configspace's default configuration is evaluated in the initial design.
-        For historic benchmark reasons, this is False by default.
-        Notice, that this will result in n_configs + 1 for the initial design. Respecting n_trials,
-        this will result in one fewer evaluated configuration in the optimization.
-    instances : list[str] | None, defaults to None
-        Names of the instances to use. If None, no instances are used.
-        Instances could be dataset names, seeds, subsets, etc.
-    instance_features : dict[str, list[float]] | None, defaults to None
-        Instances can be associated with features. For example, meta data of the dataset (mean, var, ...) can be
-        incorporated which are then further used to expand the training data of the surrogate model.
-    adaptive_capping: bool, defaults to False
-        Adaptive capping allows to preemptiveley cancel the evaluation of candidates as soon as their accumulative cost
-        exceed the cost of the current incumbent. If a runtime_cutoff is set, SMAC will allocate budgets that are capped
-        at the runtime_cutoff.
-    runtime_cutoff: int | None, defaults to None
-        A runtime cutoff can be set to limit the maximum runtime allowed for a single configuration to run solving
-        instances.
-    min_budget : float | int | None, defaults to None
-        The minimum budget (epochs, subset size, number of instances, ...) that is used for the optimization.
-        Use this argument if you use multi-fidelity or instance optimization.
-    max_budget : float | int | None, defaults to None
-        The maximum budget (epochs, subset size, number of instances, ...) that is used for the optimization.
-        Use this argument if you use multi-fidelity or instance optimization.
-    seed : int, defaults to 0
-        The seed is used to make results reproducible. If seed is -1, SMAC will generate a random seed.
-    n_workers : int, defaults to 1
-        The number of workers to use for parallelization. If `n_workers` is greather than 1, SMAC will use
-        Dask to parallelize the optimization.
+    Args:
+        configspace (ConfigurationSpace): The configuration space from which to sample the configurations.
+        name (str | None, optional): The name of the run. If no name is passed, SMAC generates a hash
+            from the meta data. Specify this argument to identify your run easily. Defaults to None.
+        output_directory (Path, optional): The directory in which to save the output. The files are saved
+            in `./output_directory/name/seed`. Defaults to Path("smac3_output").
+        deterministic (bool, optional): If True, only one seed is passed to the target function, assuming
+            deterministic (noise-free) behavior. Otherwise, multiple seeds are passed (if `n_seeds` > 1)
+            to enable repeated evaluations. For non-deterministic functions, users must specify
+            intensification parameters (e.g., `max_config_calls`, `n_seeds`) to ensure reliable
+            performance estimates and optionally model noise in the Gaussian Process surrogate.
+            Defaults to False.
+        objectives (str | list[str] | None, optional): The objective(s) to optimize. This argument is
+            required for multi-objective optimization. Defaults to "cost".
+        crash_cost (float | list[float], optional): Defines the cost for a failed trial. In case of
+            multi-objective, each objective can be associated with a different cost. Defaults to np.inf.
+        termination_cost_threshold (float | list[float], optional): Defines a cost threshold when the
+            optimization should stop. In case of multi-objective, each objective must be associated with
+            a cost. The optimization stops when all objectives crossed the threshold. Defaults to np.inf.
+        walltime_limit (float, optional): The maximum time in seconds that SMAC is allowed to run.
+            Defaults to np.inf.
+        cputime_limit (float, optional): The maximum CPU time in seconds that SMAC is allowed to run.
+            Defaults to np.inf.
+        trial_walltime_limit (float | None, optional): The maximum time in seconds that a trial is allowed
+            to run. If not specified, no constraints are enforced. Otherwise, the process will be spawned
+            by pynisher. Defaults to None.
+        trial_memory_limit (int | None, optional): The maximum memory in MB that a trial is allowed to use.
+            If not specified, no constraints are enforced. Otherwise, the process will be spawned by
+            pynisher. Defaults to None.
+        n_trials (int, optional): The maximum number of trials (combination of configuration, seed, budget,
+            and instance, depending on the task) to run. Defaults to 100.
+        use_default_config (bool, optional): If True, the configspace's default configuration is evaluated
+            in the initial design. For historic benchmark reasons, this is False by default. Notice, that
+            this will result in n_configs + 1 for the initial design. Respecting n_trials, this will result
+            in one fewer evaluated configuration in the optimization. Defaults to False.
+        instances (list[str] | None, optional): Names of the instances to use. If None, no instances are
+            used. Instances could be dataset names, seeds, subsets, etc. Defaults to None.
+        instance_features (dict[str, list[float]] | None, optional): Instances can be associated with
+            features. For example, meta data of the dataset (mean, var, ...) can be incorporated which are
+            then further used to expand the training data of the surrogate model. Defaults to None.
+        adaptive_capping (bool, optional): Adaptive capping allows to preemptively cancel the evaluation of
+            candidates as soon as their accumulative cost exceeds the cost of the current incumbent. If a
+            runtime_cutoff is set, SMAC will allocate budgets that are capped at the runtime_cutoff.
+            Defaults to False.
+        runtime_cutoff (int | None, optional): A runtime cutoff can be set to limit the maximum runtime
+            allowed for a single configuration to run solving instances. Defaults to None.
+        min_budget (float | int | None, optional): The minimum budget (epochs, subset size, number of
+            instances, ...) that is used for the optimization. Use this argument if you use multi-fidelity
+            or instance optimization. Defaults to None.
+        max_budget (float | int | None, optional): The maximum budget (epochs, subset size, number of
+            instances, ...) that is used for the optimization. Use this argument if you use multi-fidelity
+            or instance optimization. Defaults to None.
+        seed (int, optional): The seed is used to make results reproducible. If seed is -1, SMAC will
+            generate a random seed. Defaults to 0.
+        n_workers (int, optional): The number of workers to use for parallelization. If `n_workers` is
+            greater than 1, SMAC will use Dask to parallelize the optimization. Defaults to 1.
     """
 
     # General
