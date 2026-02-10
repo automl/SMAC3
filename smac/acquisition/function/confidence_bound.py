@@ -21,16 +21,17 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 
     Example for LCB (UCB adds the variance term instead of subtracting it):
 
-    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
+    $LCB(X) = \mu(\mathbf{X}) - \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](../../../docs/6_references).
 
     with
 
-    :math:`\beta_t = 2 \log( |D| t^2 / \beta)`
+    $\beta_t = 2 \log( |D| t^2 / \beta)$   $\text{Input space } D$
 
-    :math:`\text{Input space} D`
-    :math:`\text{Number of input dimensions} |D|`
-    :math:`\text{Number of data points} t`
-    :math:`\text{Exploration/exploitation tradeoff} \beta`
+    $\text{Number of input dimensions } |D|$
+
+    $\text{Number of data points } t$
+
+    $\text{Exploration/exploitation tradeoff } \beta$
 
     Returns -LCB(X) as the acquisition_function optimizer maximizes the acquisition value.
 
@@ -151,16 +152,19 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 class LCB(AbstractConfidenceBound):
     r"""Computes the lower confidence bound for a given x over the best so far value as acquisition value.
 
-    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
+    $LCB(X) = \mu(\mathbf{X}) - \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](/6_references/#SKKS10).
 
     with
 
-    :math:`\beta_t = 2 \log( |D| t^2 / \beta)`
+    $\beta_t = 2 \log( |D| t^2 / \beta)$
 
-    :math:`\text{Input space} D`
-    :math:`\text{Number of input dimensions} |D|`
-    :math:`\text{Number of data points} t`
-    :math:`\text{Exploration/exploitation tradeoff} \beta`
+    $\text{Input space } D$
+
+    $\text{Number of input dimensions } |D|$
+
+    $\text{Number of data points } t$
+
+    $\text{Exploration/exploitation tradeoff } \beta$
 
     Returns -LCB(X) as the acquisition_function optimizer maximizes the acquisition value.
 
@@ -192,16 +196,19 @@ class LCB(AbstractConfidenceBound):
 class UCB(AbstractConfidenceBound):
     r"""Computes the upper confidence bound for a given x over the best so far value as acquisition value.
 
-    :math:`UCB(X) = \mu(\mathbf{X}) + \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
+    $UCB(X) = \mu(\mathbf{X}) + \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](/6_references/#SKKS10).
 
     with
 
-    :math:`\beta_t = 2 \log( |D| t^2 / \beta)`
+    $\beta_t = 2 \log( |D| t^2 / \beta)$
 
-    :math:`\text{Input space} D`
-    :math:`\text{Number of input dimensions} |D|`
-    :math:`\text{Number of data points} t`
-    :math:`\text{Exploration/exploitation tradeoff} \beta`
+    $\text{Input space } D$
+
+    $\text{Number of input dimensions } |D|$
+
+    $\text{Number of data points } t$
+
+    $\text{Exploration/exploitation tradeoff } \beta$
 
     Returns -UCB(X) as the acquisition_function optimizer maximizes the acquisition value.
 
