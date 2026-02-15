@@ -3,11 +3,13 @@ from __future__ import annotations
 from typing import Any
 
 import itertools
+import multiprocessing
 import time
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.exceptions import ForbiddenValueError
+from joblib import Parallel, delayed
 
 from smac.acquisition.function import AbstractAcquisitionFunction
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
@@ -45,6 +47,8 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
         reduce the overhead of SMAC.
     seed : int, defaults to 0
+    n_jobs: int, defaults to 1
+        Number of parallel workers to use for local search evaluation
     """
 
     def __init__(
@@ -57,6 +61,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         vectorization_min_obtain: int = 2,
         vectorization_max_obtain: int = 64,
         seed: int = 0,
+        n_jobs: int = 1,
     ) -> None:
         super().__init__(
             configspace,
@@ -69,6 +74,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         self._n_steps_plateau_walk = n_steps_plateau_walk
         self._vectorization_min_obtain = vectorization_min_obtain
         self._vectorization_max_obtain = vectorization_max_obtain
+        self.n_jobs = n_jobs
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -99,6 +105,9 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         no neighbor with a higher improvement was found or the number of local steps self._n_steps_plateau_walk
         for each of the starting point is depleted.
 
+        The local search can be parallelized across multiple starting points using 'self.n_jobs'.
+        The initial starting points are evenly distributed into 'n_jobs' batches
+        so that each worker performs the search on a batch of starting points.
 
         Parameters
         ----------
@@ -115,7 +124,27 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             Final candidates.
         """
         init_points = self._get_initial_points(previous_configs, n_points, additional_start_points)
-        configs_acq = self._search(init_points)
+
+        # Find out implied number of workers for batch creation
+        # Handles negative values, 0 and too large / small values for n_jobs
+        n_cpus = multiprocessing.cpu_count()
+        n_jobs = self.n_jobs
+        # Use joblib convention to map negative n_jobs values to corresponding positive values
+        if n_jobs <= -1:
+            n_jobs = max(1, n_cpus + 1 + n_jobs)
+        # Ensure that n_jobs is at least 1 and at most len(init_points)
+        n_jobs = max(1, min(n_jobs, len(init_points)))
+
+        if n_jobs == 1:
+            configs_acq = self._search(init_points)
+        else:
+            # Distribute init_points in n_jobs batches as evenly as possible
+            k, m = divmod(len(init_points), n_jobs)
+            batches = [init_points[j * k + min(j, m) : (j + 1) * k + min(j + 1, m)] for j in range(n_jobs)]
+
+            # Run jobs using joblib parallelization
+            configs_acq = Parallel(n_jobs=n_jobs, backend="loky")(delayed(self._search)(batch) for batch in batches)
+            configs_acq = [item for sublist in configs_acq for item in sublist]
 
         # Shuffle for random tie-break
         self._rng.shuffle(configs_acq)
