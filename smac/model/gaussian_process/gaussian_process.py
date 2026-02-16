@@ -99,7 +99,7 @@ class GaussianProcess(AbstractGaussianProcess):
 
         Parameters
         ----------
-        X : np.ndarray [#samples, #hyperparameters + #features]
+        X_test : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
         Y : np.ndarray [#samples, #objectives]
             The corresponding target values.
@@ -276,9 +276,9 @@ class GaussianProcess(AbstractGaussianProcess):
 
         Parameters
         ----------
-        X : np.ndarray [#samples, #hyperparameters + #features]
+        X_test : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
-        n_funcs: int
+        n_funcs : int
             Number of function values that are drawn at each test point.
 
         Returns

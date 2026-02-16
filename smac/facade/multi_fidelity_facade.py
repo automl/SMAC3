@@ -83,14 +83,14 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         scenario : Scenario
         n_configs : int | None, defaults to None
             Number of initial configurations (disables the arguments ``n_configs_per_hyperparameter``).
-        n_configs_per_hyperparameter: int, defaults to 10
+        n_configs_per_hyperparamter: int, defaults to 10
             Number of initial configurations per hyperparameter. For example, if my configuration space covers five
-            hyperparameters and ``n_configs_per_hyperparameter`` is set to 10, then 50 initial configurations will be
+            hyperparameters and ``n_configs_per_hyperparamter`` is set to 10, then 50 initial configurations will be
             samples.
         max_ratio: float, defaults to 0.25
             Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.
             Additional configurations are not affected by this parameter.
-        additional_configs: list[Configuration], defaults to []
+        additional_configs: list[Configuration], defaults to None
             Adds additional configurations to the initial design.
         """
         if additional_configs is None:

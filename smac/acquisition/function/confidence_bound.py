@@ -21,7 +21,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 
     Example for LCB (UCB adds the variance term instead of subtracting it):
 
-    $LCB(X) = \mu(\mathbf{X}) - \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](../../../docs/6_references).
+    $LCB(X) = \mu(\mathbf{X}) - \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](../../../../6_references.md#SKKS10).
 
     with
 
@@ -152,7 +152,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 class LCB(AbstractConfidenceBound):
     r"""Computes the lower confidence bound for a given x over the best so far value as acquisition value.
 
-    $LCB(X) = \mu(\mathbf{X}) - \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](/6_references/#SKKS10).
+    $LCB(X) = \mu(\mathbf{X}) - \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](../../../../6_references.md#SKKS10).
 
     with
 
@@ -196,7 +196,7 @@ class LCB(AbstractConfidenceBound):
 class UCB(AbstractConfidenceBound):
     r"""Computes the upper confidence bound for a given x over the best so far value as acquisition value.
 
-    $UCB(X) = \mu(\mathbf{X}) + \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](/6_references/#SKKS10).
+    $UCB(X) = \mu(\mathbf{X}) + \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](../../../../6_references.md#SKKS10).
 
     with
 
