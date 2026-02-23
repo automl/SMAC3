@@ -23,11 +23,6 @@ class TS(AbstractAcquisitionFunction):
 
     $TS(X) \sim \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))$
     Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.
-
-    Parameters
-    ----------
-    xi : float, defaults to 0.0
-        TS does not require xi here, we only wants to make it consistent with other acquisition functions.
     """
 
     @property
