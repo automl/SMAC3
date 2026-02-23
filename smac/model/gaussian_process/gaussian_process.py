@@ -99,9 +99,9 @@ class GaussianProcess(AbstractGaussianProcess):
 
         Parameters
         ----------
-        X_test : np.ndarray [#samples, #hyperparameters + #features]
+        X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
-        Y : np.ndarray [#samples, #objectives]
+        y : np.ndarray [#samples, #objectives]
             The corresponding target values.
         optimize_hyperparameters: boolean
             If set to true, the hyperparameters are optimized, otherwise the default hyperparameters of the kernel are
@@ -271,12 +271,12 @@ class GaussianProcess(AbstractGaussianProcess):
 
         return mu, var
 
-    def sample_functions(self, X_test: np.ndarray, n_funcs: int = 1) -> np.ndarray:
+    def sample_functions(self, X: np.ndarray, n_funcs: int = 1) -> np.ndarray:
         """Samples F function values from the current posterior at the N specified test points.
 
         Parameters
         ----------
-        X_test : np.ndarray [#samples, #hyperparameters + #features]
+        X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
         n_funcs : int
             Number of function values that are drawn at each test point.
@@ -289,8 +289,8 @@ class GaussianProcess(AbstractGaussianProcess):
         if not self._is_trained:
             raise Exception("Model has to be trained first.")
 
-        X_test = self._impute_inactive(X_test)
-        funcs = self._gp.sample_y(X_test, n_samples=n_funcs, random_state=self._rng)
+        X = self._impute_inactive(X)
+        funcs = self._gp.sample_y(X, n_samples=n_funcs, random_state=self._rng)
 
         if self._normalize_y:
             funcs = self._untransform_y(funcs)

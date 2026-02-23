@@ -7,7 +7,7 @@ log message are still allowed through.
 """
 import logging
 import warnings
-from typing import Any, Optional
+from typing import Any
 
 import mkdocs
 import mkdocs.plugins
@@ -29,7 +29,7 @@ def on_pre_page(
     page: mkdocs.structure.pages.Page,
     config: Any,
     files: Any,
-) -> Optional[mkdocs.structure.pages.Page]:
+) -> mkdocs.structure.pages.Page | None:
     # NOTE: mkdocs says they're always normalized to be '/' seperated
     # which means this should work on windows as well.
 

@@ -3,7 +3,7 @@
 
 Adaptive capping is often used in optimization algorithms, particularly in
 scenarios where the time taken to evaluate solutions can vary significantly.
-For more details on adaptive capping, consult the [info page adaptive capping](../../advanced_usage/13_adaptive_capping.md).
+For more details on adaptive capping, consult the [info page adaptive capping](/advanced_usage/13_adaptive_capping/).
 
 """
 import math

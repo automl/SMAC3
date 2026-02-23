@@ -2,7 +2,7 @@
 # Flags: doc-Runnable
 
 An example of optimizing a simple support vector machine on the digits dataset. In contrast to the
-[simple example](../1 Basics/2_svm_cv.md), in which all cross-validation folds are executed
+[simple example](/examples/1%20Basics/2_svm_cv/), in which all cross-validation folds are executed
 at once, we use the intensification mechanism described in the original 
 [SMAC paper](https://link.springer.com/chapter/10.1007/978-3-642-25566-3_40) as also demonstrated
 by [Auto-WEKA](https://dl.acm.org/doi/10.1145/2487575.2487629). This mechanism allows us to
