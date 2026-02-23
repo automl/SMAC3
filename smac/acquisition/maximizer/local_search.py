@@ -8,6 +8,11 @@ import time
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.exceptions import ForbiddenValueError
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    OrdinalHyperparameter,
+    UniformIntegerHyperparameter,
+)
 
 from smac.acquisition.function import AbstractAcquisitionFunction
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
@@ -282,6 +287,8 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         if isinstance(start_points, Configuration):
             start_points = [start_points]
 
+        hp_names = list(start_points[0].config_space.keys())
+
         candidates = start_points
         # Compute the acquisition value of the candidates
         num_candidates = len(candidates)
@@ -330,6 +337,20 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         # Keeping track of configurations with equal acquisition value for plateau walking
         neighbors_w_equal_acq: list[list[Configuration]] = [[] for _ in range(num_candidates)]
 
+        # Track already visited hyperparameter values per local search.
+        # Only categorical, ordinal, and small discrete integer hyperparameter are tracked.
+        visited_values = []
+        for i in range(num_candidates):
+            vv: dict[str, set[Any]] = {}
+            for hp in start_points[i].config_space.values():
+                if (
+                    isinstance(hp, CategoricalHyperparameter)
+                    or isinstance(hp, OrdinalHyperparameter)
+                    or (isinstance(hp, UniformIntegerHyperparameter) and hp.size <= 100)
+                ):
+                    vv[hp.name] = set()
+            visited_values.append(vv)
+
         num_iters = 0
         while np.any(active):
 
@@ -344,6 +365,9 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             # Used to request a new neighborhood for the candidates of the i-th local search
             new_neighborhood = [False] * num_candidates
 
+            # How many neighbors were actually obtained this iteration
+            actually_obtained = [obtain_n[i] for i in range(num_candidates)]
+
             # gather all neighbors
             neighbors = []
             for i, neighborhood_iterator in enumerate(neighborhood_iterators):
@@ -352,6 +376,23 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     for j in range(obtain_n[i]):
                         try:
                             n = next(neighborhood_iterator)
+
+                            # Find out in what hyperparameter neighbor differs from candidate.
+                            diff = n.get_array() != candidates[i].get_array()
+                            changed_hp_idx = np.flatnonzero(diff)
+                            if len(changed_hp_idx) != 1:
+                                continue
+                            changed_hp_name = hp_names[changed_hp_idx[0]]
+                            # The value of differing hyperparameter.
+                            value = n[changed_hp_name]
+
+                            # Skip neighbors that modify a hyperparameter to a value
+                            # that has already been explored in this local search.
+                            if changed_hp_name in visited_values[i]:
+                                if value in visited_values[i][changed_hp_name]:
+                                    continue
+                                visited_values[i][changed_hp_name].add(value)
+
                             neighbors_generated[i] += 1
                             neighbors_for_i.append(n)
                         except ValueError as e:
@@ -361,8 +402,9 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                             new_neighborhood[i] = True
                         except StopIteration:
                             new_neighborhood[i] = True
+                            obtain_n[i] = len(neighbors_for_i)
                             break
-                    obtain_n[i] = len(neighbors_for_i)
+                    actually_obtained[i] = len(neighbors_for_i)
                     neighbors.extend(neighbors_for_i)
 
             if len(neighbors) != 0:
@@ -381,7 +423,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                         continue
 
                     # And for each local search we know how many neighbors we obtained
-                    for j in range(obtain_n[i]):
+                    for j in range(actually_obtained[i]):
                         # The next line is only true if there was an improvement and we basically need to iterate to
                         # the i+1-th local search
                         if improved[i]:
@@ -412,6 +454,9 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                                     local_search_steps[i] += 1
                                     neighbors_w_equal_acq[i] = []
                                     obtain_n[i] = 1
+                                    # Reset visited values, as we now evaluate a new candidate.
+                                    for s in visited_values[i].values():
+                                        s.clear()
                             # Found an equally well performing configuration, keeping it for plateau walking
                             elif acq_val[acq_index] == acq_val_candidates[i]:
                                 neighbors_w_equal_acq[i].append(neighbors[acq_index])
@@ -436,6 +481,9 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                         if len(neighbors_w_equal_acq[i]) != 0:
                             candidates[i] = neighbors_w_equal_acq[i][0]
                             neighbors_w_equal_acq[i] = []
+                            # Reset visited values, as we now evaluate a new candidate.
+                            for s in visited_values[i].values():
+                                s.clear()
                         n_no_plateau_walk[i] += 1
                     if n_no_plateau_walk[i] >= self._n_steps_plateau_walk:
                         active[i] = False
