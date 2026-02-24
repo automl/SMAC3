@@ -17,7 +17,7 @@ and report the results of the trial.
 
 !!! warning 
 
-    In pure ask-and-tell usage, SMAC does not hard-stop `ask()` when `n_trials` is depleted.
+    In pure ask-and-tell usage, SMAC does not hard-stop `ask()` when `n_trials` is depleted. (This is true for any kind of budget exhaustion and not only `n_trials` eg. walltime, cputime. warning logs all the budget variables in the case of exhaustion).
     This means `ask()` can still return additional trials after budget exhaustion.
     SMAC now emits a runtime warning in this case and keeps this behaviour for backward compatibility.
     If you want strict stopping in your loop, stop calling `ask()` when the optimizer reports no remaining budget (for example, `smac.optimizer.budget_exhausted` or `smac.optimizer.remaining_trials <= 0`)
