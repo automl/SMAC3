@@ -79,6 +79,7 @@ class SMBO:
         self._finished = False
         self._stop = False  # Gracefully stop SMAC
         self._callbacks: list[Callback] = []
+        self._warned_on_ask_after_budget_exhausted = False  
 
         # Stats variables
         self._start_time: float | None = None
@@ -154,6 +155,14 @@ class SMBO:
             Information about the trial (config, instance, seed, budget).
         """
         logger.debug("Calling ask...")
+
+        if self.budget_exhausted and not self._warned_on_ask_after_budget_exhausted:
+            logger.warning(
+                "ask() was called after the scenario budget was exhausted."
+                f"remaining trials: {self.remaining_trials}). "
+                "SMAC will continue returning trials for backward compatibility."
+            )
+            self._warned_on_ask_after_budget_exhausted = True
 
         for callback in self._callbacks:
             callback.on_ask_start(self)
@@ -371,6 +380,7 @@ class SMBO:
         self._used_target_function_walltime = 0
         self._used_target_function_cputime = 0
         self._finished = False
+        self._warned_on_ask_after_budget_exhausted = False
 
         # We also reset runhistory and intensifier here
         self._runhistory.reset()
