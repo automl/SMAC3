@@ -113,11 +113,11 @@ class EPMRandomForest(ForestRegressor):
         Parameters
         ----------
         n_estimators : int, default=100
-            The number of trees in the forest.
+        The number of trees in the forest.
 
-            .. versionchanged:: 0.22
-                The default value of ``n_estimators`` changed from 10 to 100
-                in 0.22.
+        .. versionchanged:: 0.22
+           The default value of ``n_estimators`` changed from 10 to 100
+           in 0.22.
 
         criterion : {"squared_error", "absolute_error", "friedman_mse", "poisson"}, \
                 default="squared_error"
