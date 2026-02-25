@@ -101,7 +101,7 @@ class GaussianProcess(AbstractGaussianProcess):
         ----------
         X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
-        y : np.ndarray [#samples, #objectives]
+        Y : np.ndarray [#samples, #objectives]
             The corresponding target values.
         optimize_hyperparameters: boolean
             If set to true, the hyperparameters are optimized, otherwise the default hyperparameters of the kernel are
@@ -276,9 +276,9 @@ class GaussianProcess(AbstractGaussianProcess):
 
         Parameters
         ----------
-        X_test : np.ndarray [#samples, #hyperparameters + #features]
+        X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
-        n_funcs : int
+        n_funcs: int
             Number of function values that are drawn at each test point.
 
         Returns

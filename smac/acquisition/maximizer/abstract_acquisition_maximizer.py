@@ -27,15 +27,10 @@ class AbstractAcquisitionMaximizer:
 
     Parameters
     ----------
-    configspace : ConfigurationSpace
-        Configuration space used for sampling.
-    acquisition_function : AbstractAcquisitionFunction | None, defaults to None
-        Acquisition function to maximize.
-    challengers : int, defaults to 5000
-        Number of configurations sampled during the optimization process. Details depend on the used maximizer.
-        Also, the number of configurations that is returned by calling `maximize`.
+    configspace : ConfigurationSpace acquisition_function : AbstractAcquisitionFunction
+    challengers : int, defaults to 5000 Number of configurations sampled during the optimization process,
+    details depend on the used maximizer. Also, the number of configurations that is returned by calling `maximize`.
     seed : int, defaults to 0
-        Random seed.
     """
 
     def __init__(

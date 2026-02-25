@@ -19,9 +19,10 @@ logger = get_logger(__name__)
 class PI(AbstractAcquisitionFunction):
     r"""Probability of Improvement
 
-    :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+}))` :math:`:=`
-    :math:`\Phi(\\frac{ \mu(\mathbf{X})-f(\mathbf{X^+}) }{ \sigma(\mathbf{X}) })`
-    with :math:`f(X^+)` as the incumbent and :math:`\Phi` the cdf of the standard normal.
+    $$
+    P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+})) := \Phi\left(\frac{ \mu(\mathbf{X})-f(\mathbf{X^+}) }{ \sigma(\mathbf{X}) }\right)
+    $$
+    with $f(X^+)$ as the incumbent and $\Phi$ the cdf of the standard normal.
 
     Parameters
     ----------

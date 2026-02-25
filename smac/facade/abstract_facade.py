@@ -347,6 +347,9 @@ class AbstractFacade:
         ----------
         config : Configuration
             Configuration to validate
+        instances : list[str] | None, defaults to None
+            Which instances to validate. If None, all instances specified in the scenario are used.
+            In case that the budget type is real-valued, this argument is ignored.
         seed : int | None, defaults to None
             If None, the seed from the scenario is used.
 

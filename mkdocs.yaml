@@ -153,7 +153,7 @@ plugins:
         python:
           paths: [smac]
           # Extra objects which allow for linking to external docs
-          inventories:
+          import:
             - 'https://docs.python.org/3/objects.inv'
             - 'https://numpy.org/doc/stable/objects.inv'
             - 'https://pandas.pydata.org/docs/objects.inv'
@@ -197,14 +197,12 @@ nav:
   - Installation: "1_installation.md"
   - Package Overview: "2_package_overview.md"
   - Getting Started: "3_getting_started.md"
-  - Minimal Example: "4_minimal_example.md"
   - Advanced Usage:
     - "advanced_usage/1_components.md"
     - "advanced_usage/2_multi_fidelity.md"
     - "advanced_usage/3_multi_objective.md"
     - "advanced_usage/4_instances.md"
     - "advanced_usage/5_ask_and_tell.md"
-    - "advanced_usage/5.1_warmstarting.md"
     - "advanced_usage/6_commandline.md"
     - "advanced_usage/7_stopping_criteria.md"
     - "advanced_usage/8_logging.md"
@@ -221,9 +219,6 @@ nav:
     - "6_references.md"
     - "7_glossary.md"
     - "8_faq.md"
-    - "9_license.md"
-    - "10_experimental.md"
-    - "images/README.md"
   # - Contributing:
   #   - "contributing/index.md"
   #   - "contributing/contributing-a-benchmark.md"

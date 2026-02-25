@@ -22,15 +22,13 @@ def check_kwarg(cls: type, kwarg_name: str) -> bool:
 
     Parameters
     ----------
-    cls : type
-        The class to inspect.
-    kwarg_name : str
-        The name of the keyword argument to check.
+        cls (type): The class to inspect.
+        kwarg_name (str): The name of the keyword argument to check.
 
     Returns
     -------
-    bool
-        True if the class's __init__ method accepts the keyword argument, otherwise False.
+        bool: True if the class's __init__ method accepts the keyword argument,
+              otherwise False.
     """
     # Get the signature of the class's __init__ method
     init_signature = inspect.signature(cls.__init__)  # type: ignore[misc]

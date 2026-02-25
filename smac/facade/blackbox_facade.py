@@ -239,7 +239,7 @@ class BlackBoxFacade(AbstractFacade):
         scenario: Scenario,
         *,
         n_configs: int | None = None,
-        n_configs_per_hyperparameter: int = 8,
+        n_configs_per_hyperparamter: int = 8,
         max_ratio: float = 0.25,
         additional_configs: list[Configuration] = None,
     ) -> SobolInitialDesign:
@@ -257,7 +257,7 @@ class BlackBoxFacade(AbstractFacade):
         max_ratio: float, defaults to 0.25
             Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.
             Additional configurations are not affected by this parameter.
-        additional_configs: list[Configuration], defaults to None
+        additional_configs: list[Configuration], defaults to []
             Adds additional configurations to the initial design.
         """
         if additional_configs is None:
@@ -265,7 +265,7 @@ class BlackBoxFacade(AbstractFacade):
         return SobolInitialDesign(
             scenario=scenario,
             n_configs=n_configs,
-            n_configs_per_hyperparameter=n_configs_per_hyperparameter,
+            n_configs_per_hyperparameter=n_configs_per_hyperparamter,
             max_ratio=max_ratio,
             additional_configs=additional_configs,
             seed=scenario.seed,
