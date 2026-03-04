@@ -21,7 +21,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 
     Example for LCB (UCB adds the variance term instead of subtracting it):
 
-    $LCB(X) = \mu(\mathbf{X}) - \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](../../../docs/6_references).
+    $LCB(X) = \mu(\mathbf{X}) - \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](/6_references/#SKKS10).
 
     with
 
