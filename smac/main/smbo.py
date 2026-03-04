@@ -66,6 +66,7 @@ class SMBO:
         runhistory: RunHistory,
         intensifier: AbstractIntensifier,
         overwrite: bool = False,
+        warn_mode: str = "warn_def",
     ):
         self._scenario = scenario
         self._configspace = scenario.configspace
@@ -74,6 +75,7 @@ class SMBO:
         self._trial_generator = iter(intensifier)
         self._runner = runner
         self._overwrite = overwrite
+        self._warn_mode = warn_mode
 
         # Internal variables
         self._finished = False
@@ -106,7 +108,9 @@ class SMBO:
     @property
     def remaining_walltime(self) -> float:
         """Subtracts the runtime configuration budget with the used wallclock time."""
-        assert self._start_time is not None
+        if self._start_time is None:
+            return self._scenario.walltime_limit
+
         return self._scenario.walltime_limit - (time.time() - self._start_time)
 
     @property
@@ -156,15 +160,25 @@ class SMBO:
         """
         logger.debug("Calling ask...")
 
-        if self.budget_exhausted and not self._warned_on_ask_after_budget_exhausted:
-            logger.warning(
+        if self.budget_exhausted:
+            message = (
                 "ask() was called after the scenario budget was exhausted."
                 f"(remaining wallclock time: {self.remaining_walltime}, "
                 f"remaining cpu time: {self.remaining_cputime}, "
                 f"remaining trials: {self.remaining_trials}). "
                 "SMAC will continue returning trials for backward compatibility."
             )
-            self._warned_on_ask_after_budget_exhausted = True
+
+            if self._warn_mode == "exception":
+                raise RuntimeError(message)
+            elif self._warn_mode == "warn_never":
+                pass
+            elif self._warn_mode == "warn_once":
+                if not self._warned_on_ask_after_budget_exhausted:
+                    logger.warning(message)
+                    self._warned_on_ask_after_budget_exhausted = True
+            elif self._warn_mode == "warn_always":
+                logger.warning(message)
 
         for callback in self._callbacks:
             callback.on_ask_start(self)
