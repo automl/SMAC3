@@ -318,6 +318,13 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
         hp_names = list(start_points[0].config_space.keys())
 
+        # Initial standard deviation used when sampling continuous neighbors.
+        stdev_init = 0.05
+        # Lower bound to prevent the search radius from collapsing.
+        stdev_min = 5e-3
+        # Upper bound to prevent the search radius from exploding.
+        stdev_max = stdev_init * 8
+
         candidates = start_points
         # Compute the acquisition value of the candidates
         num_candidates = len(candidates)
@@ -338,13 +345,19 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         local_search_steps = [0] * num_candidates
         # tracking the number of neighbors looked at for logging purposes
         neighbors_looked_at = [0] * num_candidates
-        # tracking the number of neighbors generated for logging purposse
+        # tracking the number of neighbors generated for logging purposes
         neighbors_generated = [0] * num_candidates
         # how many neighbors were obtained for the i-th local search. Important to map the individual acquisition
         # function values to the correct local search run
         obtain_n = [self._vectorization_min_obtain] * num_candidates
         # Tracking the time it takes to compute the acquisition function
         times = []
+
+        # Tracks consecutive improvements for each local search.
+        # Used to adapt the neighborhood sampling radius.
+        improvement_count = [0] * num_candidates
+        # Current neighborhood sampling standard deviation for each local search.
+        stdev = [stdev_init] * num_candidates
 
         # Set up the neighborhood generators
         neighborhood_iterators = []
@@ -359,7 +372,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                 #     Sequential Model-Based Optimization for General Algorithm Configuration
                 #     In Proceedings of the conference on Learning and Intelligent
                 #     Optimization(LION 5)
-                get_one_exchange_neighbourhood(inc, seed=self._rng.randint(low=0, high=100000))
+                get_one_exchange_neighbourhood(inc, seed=self._rng.randint(low=0, high=100000), stdev=stdev[i])
             )
             local_search_steps[i] += 1
 
@@ -506,6 +519,17 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     obtain_n[i] = min(obtain_n[i], self._vectorization_max_obtain)
 
                 if new_neighborhood[i]:
+
+                    if improved[i]:
+                        improvement_count[i] += 1
+                    else:
+                        improvement_count[i] = 0
+
+                    # Increase exploration radius if the search improves consistently.
+                    if improvement_count[i] >= 3 and n_no_plateau_walk[i] == 0:
+                        stdev[i] = min(stdev[i] * 2, stdev_max)
+                        improvement_count[i] = 0
+
                     if not improved[i] and n_no_plateau_walk[i] < self._n_steps_plateau_walk:
                         if len(neighbors_w_equal_acq[i]) != 0:
                             candidates[i] = neighbors_w_equal_acq[i][0]
@@ -514,6 +538,11 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                             for s in visited_values[i].values():
                                 s.clear()
                         n_no_plateau_walk[i] += 1
+                        # Reduce exploration radius during plateau walking to refine the
+                        # search locally around the current candidate.
+                        if n_no_plateau_walk[i] % 3 == 0:
+                            stdev[i] = max(stdev[i] * 0.5, stdev_min)
+
                     if n_no_plateau_walk[i] >= self._n_steps_plateau_walk:
                         active[i] = False
                         continue
@@ -521,6 +550,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     neighborhood_iterators[i] = get_one_exchange_neighbourhood(
                         candidates[i],
                         seed=self._rng.randint(low=0, high=100000),
+                        stdev=stdev[i],
                     )
 
         logger.debug(
