@@ -53,7 +53,18 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         reduce the overhead of SMAC.
     seed : int, defaults to 0
     n_jobs: int, defaults to 1
-        Number of parallel workers to use for local search evaluation
+        Number of parallel workers to use for local search evaluation.
+    stdev_init: float, defaults to 0.05
+        Initial standard deviation used when sampling neighbors for continuous hyperparameters during local search.
+    stdev_min: float, defaults to 5e-3
+        Minimum allowed standard deviation for neighborhood sampling.
+    stdev_max: float | None, defaults to None
+        Maximum allowed standard deviation for neighborhood sampling.
+        If None, the value is automatically set to ``stdev_init * 2**downscale_interval``.
+    upscale_thresh: int, defaults to 3
+        Number of consecutive improvements required before increasing the standard deviation.
+    downscale_interval: int, defaults to 3
+        Number of plateau walk steps between reductions of the standard deviation.
     """
 
     def __init__(
@@ -67,6 +78,11 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         vectorization_max_obtain: int = 64,
         seed: int = 0,
         n_jobs: int = 1,
+        stdev_init: float = 0.05,
+        stdev_min: float = 5e-3,
+        stdev_max: float | None = None,
+        upscale_thresh: int = 3,
+        downscale_interval: int = 3,
     ) -> None:
         super().__init__(
             configspace,
@@ -80,6 +96,11 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         self._vectorization_min_obtain = vectorization_min_obtain
         self._vectorization_max_obtain = vectorization_max_obtain
         self.n_jobs = n_jobs
+        self._stdev_init = stdev_init
+        self._stdev_min = stdev_min
+        self._stdev_max = stdev_max
+        self._upscale_thresh = upscale_thresh
+        self._downscale_interval = downscale_interval
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -90,6 +111,12 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                 "n_steps_plateau_walk": self._n_steps_plateau_walk,
                 "vectorization_min_obtain": self._vectorization_min_obtain,
                 "vectorization_max_obtain": self._vectorization_max_obtain,
+                "n_jobs": self.n_jobs,
+                "stdev_init": self._stdev_init,
+                "stdev_min": self._stdev_min,
+                "stdev_max": self._stdev_max,
+                "upscale_thresh": self._upscale_thresh,
+                "downscale_interval": self._downscale_interval,
             }
         )
 
@@ -318,12 +345,12 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
         hp_names = list(start_points[0].config_space.keys())
 
-        # Initial standard deviation used when sampling continuous neighbors.
-        stdev_init = 0.05
-        # Lower bound to prevent the search radius from collapsing.
-        stdev_min = 5e-3
-        # Upper bound to prevent the search radius from exploding.
-        stdev_max = stdev_init * 8
+        # Default upper bound ensures that downscaling during plateau walks can
+        # always bring the standard deviation back to at least stdev_init.
+        if self._stdev_max is None:
+            stdev_max = self._stdev_init * np.power(2, self._downscale_interval)
+        else:
+            stdev_max = self._stdev_max
 
         candidates = start_points
         # Compute the acquisition value of the candidates
@@ -357,7 +384,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         # Used to adapt the neighborhood sampling radius.
         improvement_count = [0] * num_candidates
         # Current neighborhood sampling standard deviation for each local search.
-        stdev = [stdev_init] * num_candidates
+        stdev = [self._stdev_init] * num_candidates
 
         # Set up the neighborhood generators
         neighborhood_iterators = []
@@ -525,8 +552,8 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     else:
                         improvement_count[i] = 0
 
-                    # Increase exploration radius if the search improves consistently.
-                    if improvement_count[i] >= 3 and n_no_plateau_walk[i] == 0:
+                    # Increase exploration radius if several consecutive improvements occur.
+                    if improvement_count[i] >= self._upscale_thresh and n_no_plateau_walk[i] == 0:
                         stdev[i] = min(stdev[i] * 2, stdev_max)
                         improvement_count[i] = 0
 
@@ -540,8 +567,8 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                         n_no_plateau_walk[i] += 1
                         # Reduce exploration radius during plateau walking to refine the
                         # search locally around the current candidate.
-                        if n_no_plateau_walk[i] % 3 == 0:
-                            stdev[i] = max(stdev[i] * 0.5, stdev_min)
+                        if n_no_plateau_walk[i] % self._downscale_interval == 0:
+                            stdev[i] = max(stdev[i] * 0.5, self._stdev_min)
 
                     if n_no_plateau_walk[i] >= self._n_steps_plateau_walk:
                         active[i] = False
