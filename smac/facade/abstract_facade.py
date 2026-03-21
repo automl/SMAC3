@@ -52,6 +52,23 @@ class AskExhaustedWarnMode(str, Enum):
 
     @classmethod
     def normalize(cls, value: "AskExhaustedWarnMode | str") -> str:
+        """Normalize and validate the warn_mode value.
+
+        Parameters
+        ----------
+        value : AskExhaustedWarnMode | str
+            The warn_mode value to normalize.
+
+        Returns
+        -------
+        str
+            The normalized warn_mode string.
+
+        Raises
+        ------
+        ValueError
+            If the provided value is not a valid warn_mode.
+        """
         if isinstance(value, cls):
             value = value.value
         allowed = {"warn_once", "warn_never", "warn_always", "exception"}
