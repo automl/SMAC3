@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from unittest.mock import patch
+
 import pytest
 
 from smac import MultiFidelityFacade, Scenario
+from smac.main.exceptions import AskAndTellBudgetExhaustedError
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -11,7 +14,12 @@ __license__ = "3-clause BSD"
 
 @pytest.fixture
 def make_facade(digits_dataset, make_sgd) -> MultiFidelityFacade:
-    def create(deterministic: bool = True, use_instances: bool = False, n_seeds: int = 1) -> MultiFidelityFacade:
+    def create(
+        deterministic: bool = True,
+        use_instances: bool = False,
+        n_seeds: int = 1,
+        warn_mode: str = "warn_always",
+    ) -> MultiFidelityFacade:
         model = make_sgd(digits_dataset)
 
         instances_kwargs = {}
@@ -37,6 +45,7 @@ def make_facade(digits_dataset, make_sgd) -> MultiFidelityFacade:
             initial_design=MultiFidelityFacade.get_initial_design(scenario, n_configs=2, max_ratio=1),
             intensifier=MultiFidelityFacade.get_intensifier(scenario, n_seeds=n_seeds),
             logging_level=0,
+            warn_mode=warn_mode,
             overwrite=True,
         )
 
@@ -170,3 +179,43 @@ def test_multiple_asks_successively(make_facade):
         # Make sure the trials are different
         assert trial_info not in info
         info += [trial_info]
+
+
+@pytest.mark.parametrize(
+    "warn_mode,n_asks,expected_warnings,expect_exception",
+    [
+        ("warn_once", 3, 1, False),
+        ("warn_never", 3, 0, False),
+        ("warn_always", 3, 3, False),
+        ("exception", 1, 0, True),
+    ],
+)
+def test_ask_after_budget_exhaustion_warn_modes(
+    make_facade, warn_mode, n_asks, expected_warnings, expect_exception
+):
+    model, smac = make_facade(deterministic=False, use_instances=True, warn_mode=warn_mode)
+
+    max_iterations = smac._scenario.n_trials * 10
+    iterations = 0
+    while smac.optimizer.remaining_trials > 0 and iterations < max_iterations:
+        info = smac.ask()
+        cost = model.train(info.config, seed=info.seed, instance=info.instance)
+        smac.tell(info, TrialValue(cost=cost, time=0.5))
+        iterations += 1
+
+    assert smac.optimizer.remaining_trials <= 0
+
+    with patch("smac.main.smbo.logger.warning") as mock_warning:
+        if expect_exception:
+            with pytest.raises(
+                AskAndTellBudgetExhaustedError,
+                match="ask\\(\\) was called after the scenario budget was exhausted",
+            ):
+                smac.ask()
+        else:
+            for _ in range(n_asks):
+                info = smac.ask()
+                cost = model.train(info.config, seed=info.seed, instance=info.instance)
+                smac.tell(info, TrialValue(cost=cost, time=0.5))
+
+    assert mock_warning.call_count == expected_warnings

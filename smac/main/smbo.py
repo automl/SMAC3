@@ -15,6 +15,7 @@ from smac.acquisition.function.abstract_acquisition_function import (
 )
 from smac.callback.callback import Callback
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.main.exceptions import AskAndTellBudgetExhaustedError
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runhistory.runhistory import RunHistory
@@ -66,7 +67,7 @@ class SMBO:
         runhistory: RunHistory,
         intensifier: AbstractIntensifier,
         overwrite: bool = False,
-        warn_mode: str = "warn_def",
+        warn_mode: str = "warn_always",
     ):
         self._scenario = scenario
         self._configspace = scenario.configspace
@@ -75,6 +76,11 @@ class SMBO:
         self._trial_generator = iter(intensifier)
         self._runner = runner
         self._overwrite = overwrite
+
+        allowed_warn_modes = {"warn_once", "warn_never", "warn_always", "exception"}
+        if warn_mode not in allowed_warn_modes:
+            raise ValueError(f"Unknown warn_mode `{warn_mode}`. Allowed: {sorted(allowed_warn_modes)}")
+
         self._warn_mode = warn_mode
 
         # Internal variables
@@ -163,14 +169,14 @@ class SMBO:
         if self.budget_exhausted:
             message = (
                 "ask() was called after the scenario budget was exhausted."
-                f"(remaining wallclock time: {self.remaining_walltime}, "
+                f" (remaining wallclock time: {self.remaining_walltime}, "
                 f"remaining cpu time: {self.remaining_cputime}, "
                 f"remaining trials: {self.remaining_trials}). "
                 "SMAC will continue returning trials for backward compatibility."
             )
 
             if self._warn_mode == "exception":
-                raise RuntimeError(message)
+                raise AskAndTellBudgetExhaustedError(message)
             elif self._warn_mode == "warn_never":
                 pass
             elif self._warn_mode == "warn_once":

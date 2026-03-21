@@ -26,3 +26,10 @@ Notice: if you are exclusively using the ask-and-tell interface and do not use `
 is responsible for the evaluation of the trials and therefore the Facade no longer will require a specified `target_algorithm` argument.
 
 Please have a look at our [ask-and-tell example](../examples/1%20Basics/3_ask_and_tell.md).
+
+You can configure post-budget `ask()` behavior with `warn_mode` in the facade:
+
+- `warn_once`: warn only on the first `ask()` call after budget exhaustion.
+- `warn_never`: never warn.
+- `warn_always`: warn on every `ask()` call after budget exhaustion.
+- `exception`: raise `AskAndTellBudgetExhaustedError` instead of returning another trial.

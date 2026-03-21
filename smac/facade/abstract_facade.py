@@ -45,7 +45,6 @@ __license__ = "3-clause BSD"
 
 
 class AskExhaustedWarnMode(str, Enum):
-    WARN_DEF = "warn_def"
     WARN_ONCE = "warn_once"
     WARN_NEVER = "warn_never"
     WARN_ALWAYS = "warn_always"
@@ -55,11 +54,9 @@ class AskExhaustedWarnMode(str, Enum):
     def normalize(cls, value: "AskExhaustedWarnMode | str") -> str:
         if isinstance(value, cls):
             value = value.value
-        if value == "warn_def":
-            return "warn_always"
         allowed = {"warn_once", "warn_never", "warn_always", "exception"}
         if value not in allowed:
-            raise ValueError(f"Unknown warn_mode `{value}`. Allowed: {sorted(allowed | {'warn_def'})}")
+            raise ValueError(f"Unknown warn_mode `{value}`. Allowed: {sorted(allowed)}")
         return value
 
 
@@ -111,9 +108,9 @@ class AbstractFacade:
         expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.
         If False is passed, SMAC will not do any customization of the logging setup and the responsibility is left
         to the user.
-    warn_mode: enum, defaults to "warn_def"
+    warn_mode: enum, defaults to "warn_always"
         The warn_mode to consider for the warning levels for trials
-        after the budget is exploited. The default is "warn_def",
+        after the budget is exploited. The default is "warn_always",
         which means that the user will get repeated warnings.
         The other values are "warn_once", "warn_never", "exception",
         which means that the user will get a warning only once,
@@ -147,7 +144,7 @@ class AbstractFacade:
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
         logging_level: int | Path | Literal[False] | None = None,
-        warn_mode: AskExhaustedWarnMode | str = "warn_def",
+        warn_mode: AskExhaustedWarnMode | str = "warn_always",
         callbacks: list[Callback] = None,
         overwrite: bool = False,
         dask_client: Client | None = None,
