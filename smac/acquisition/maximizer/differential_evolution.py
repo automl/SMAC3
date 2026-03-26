@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import inspect
 
 import numpy as np
@@ -99,6 +101,7 @@ class DifferentialEvolution(AbstractAcquisitionMaximizer):
         self,
         previous_configs: list[Configuration],
         n_points: int,
+        **kwargs: Any,
     ) -> list[tuple[float, Configuration]]:
         # n_points is not used here, but is required by the interface
 

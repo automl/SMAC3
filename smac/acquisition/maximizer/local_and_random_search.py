@@ -148,6 +148,7 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         self,
         previous_configs: list[Configuration],
         n_points: int,
+        **kwargs: Any,
     ) -> list[tuple[float, Configuration]]:
         if self._uniform_configspace is not None and self._prior_sampling_fraction is not None:
             # Get configurations sorted by acquisition function value
