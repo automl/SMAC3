@@ -627,8 +627,8 @@ class AbstractIntensifier:
 
         # Update trajectory
         if previous_incumbents == new_incumbents:  # Only happens with incumbent config
-            self._remove_rejected_config(config)  # Remove the incumbent from the rejected config list
-
+            # self._remove_rejected_config(config)  # Remove the incumbent from the rejected config list
+            self._add_rejected_config(config)  # FIXME check whether this is really what we want
             return
         elif len(previous_incumbents) == len(new_incumbents):
             # In this case, we have to determine which config replaced which incumbent and reject it

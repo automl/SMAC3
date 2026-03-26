@@ -252,7 +252,7 @@ class ConfigSelector:
             if self._retrain_wallclock_ratio is not None:
                 # TODO: CB: What does this actually do? Delete/clear the iterator?
                 #  --> JG: To easily measure the time needed to perform maximise, difficult otherwise due to yield
-                len(challengers)  # Forces actual computation of the acquisition function maximizer
+                len(list(challengers))  # Forces actual computation of the acquisition function maximizer
 
             self._acquisition_training_times.append(time.time() - train_start_time)
 
