@@ -748,6 +748,8 @@ class RandomForest(AbstractRandomForest):
 
         self._rf.fit(X, y)
 
+        self._is_trained = True
+
         return self
 
     def _predict(

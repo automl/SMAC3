@@ -26,6 +26,11 @@ class AbstractRandomForest(AbstractModel):
         self._conditional: dict[int, bool] = dict()
         self._impute_values: dict[int, float] = dict()
 
+    @property
+    def is_trained(self) -> bool:
+        """Returns whether the model is trained or not."""
+        return self._is_trained
+
     def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
         X = X.copy()
         for idx, hp in enumerate(list(self._configspace.values())):

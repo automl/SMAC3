@@ -91,8 +91,10 @@ def test_gp_train():
     fixture = np.array([0.693147, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -6.907755])
 
     model = get_gp(10, seed)
+    assert not model.is_trained
     np.testing.assert_array_almost_equal(model._kernel.theta, fixture)
     model.train(X[:10], Y[:10])
+    assert model.is_trained
     assert len(model.models) == 36
 
     for base_model in model.models:
