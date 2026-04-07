@@ -40,6 +40,11 @@ class Scenario:
         and optionally model noise in the Gaussian Process surrogate.
     objectives : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
+    objective_weights : list[float] | None, defaults to None
+        Optional preference weights for multi-objective optimization.
+        Indicate the relative importance of each objective when aggregating them
+        (e.g., using MeanAggregationStrategy or ParEGO). Must be non-negative
+        and have the same length as the number of objectives in the scenario.
     crash_cost : float | list[float], defaults to np.inf
         Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
         a different cost.
@@ -98,6 +103,7 @@ class Scenario:
 
     # Objectives
     objectives: str | list[str] = "cost"
+    objective_weights: list[float] | None = None
     crash_cost: float | list[float] = np.inf
     termination_cost_threshold: float | list[float] = np.inf
 
@@ -144,6 +150,15 @@ class Scenario:
         # Validate that we have a runtime cutoff set if adaptive capping slackfactor is given
         if self.adaptive_capping_slackfactor is not None and self.runtime_cutoff is None:
             raise ValueError("If adaptive_capping_slackfactor is set, then runtime_cutoff must be set as well.")
+
+        if self.objective_weights is not None:
+            n_objectives = self.count_objectives()
+            # Ensure one weight per objective
+            if len(self.objective_weights) != n_objectives:
+                raise ValueError("objective_weights must have the same length as objectives")
+            # Ensure weights are non-negative
+            if any(w < 0 for w in self.objective_weights):
+                raise ValueError("objective_weights must be non-negative")
 
         # Change directory wrt name and seed
         self._change_output_directory()

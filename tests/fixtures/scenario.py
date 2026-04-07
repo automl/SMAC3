@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, List, Optional
 
 import pytest
 from ConfigSpace import ConfigurationSpace
@@ -21,6 +21,7 @@ def make_scenario() -> Callable:
         n_workers: int = 1,
         n_trials: int = 100,
         use_default_config: bool = False,
+        objective_weights: Optional[List[float]] = None,
     ) -> Scenario:
         objectives = "cost"
         if use_multi_objective:
@@ -43,6 +44,7 @@ def make_scenario() -> Callable:
             name="test",
             output_directory="smac3_output_test",
             objectives=objectives,
+            objective_weights=objective_weights,
             deterministic=deterministic,
             walltime_limit=30,
             n_trials=n_trials,
