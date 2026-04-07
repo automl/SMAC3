@@ -18,6 +18,7 @@ from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.multi_objective.parego import ParEGO
 from smac.scenario import Scenario
+from dataclasses import replace
 
 FACADES = [BBFacade, HPOFacade, MFFacade, RFacade, HBFacade, ACFacade]
 
@@ -77,7 +78,8 @@ def test_mean_aggregation(facade, make_scenario, configspace):
         # TODO: Check whether different weighting affects the sampled configurations.
     weights = [[0.1,0.9], [0.5,0.5], [0.8,0.2], [1.0,0.0], [0.0,1.0], None]
     for weight_pair in weights:
-        multi_objective_algorithm = WrapStrategy(MeanAggregationStrategy, objective_weights=weight_pair, scenario=scenario)
+        scenario = replace(scenario, objective_weights=weight_pair)
+        multi_objective_algorithm = WrapStrategy(MeanAggregationStrategy, scenario=scenario)
         intensifier = Intensifier(scenario, max_config_calls=1, max_incumbents=10)
         config_selector = ConfigSelector(scenario, retrain_after=RETRAIN_AFTER)
         initial_design = RandomInitialDesign(scenario, n_configs=1)
