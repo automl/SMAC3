@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, List, Optional
 
 import pytest
 from ConfigSpace import ConfigurationSpace
@@ -21,7 +21,7 @@ def make_scenario() -> Callable:
         n_workers: int = 1,
         n_trials: int = 100,
         use_default_config: bool = False,
-        objective_weights: list[float] | None = None,
+        objective_weights: Optional[List[float]] = None,
     ) -> Scenario:
         objectives = "cost"
         if use_multi_objective:
