@@ -626,9 +626,14 @@ class AbstractIntensifier:
         new_incumbent_ids = [rh.get_config_id(c) for c in new_incumbents]
 
         # Update trajectory
-        if previous_incumbents == new_incumbents:  # Only happens with incumbent config
-            # self._remove_rejected_config(config)  # Remove the incumbent from the rejected config list
-            self._add_rejected_config(config)  # FIXME check whether this is really what we want
+        if previous_incumbents == new_incumbents:
+            if config in previous_incumbents:
+                # Config is already an incumbent and the Pareto front did not change;
+                # ensure it is not in the rejected list
+                self._remove_rejected_config(config)
+            else:
+                # Config is dominated by the incumbents; reject it
+                self._add_rejected_config(config)
             return
         elif len(previous_incumbents) == len(new_incumbents):
             # In this case, we have to determine which config replaced which incumbent and reject it
