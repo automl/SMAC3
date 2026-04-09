@@ -10,9 +10,11 @@
 - Ask and tell without initial design and warmstarting
 - Random forest replacement (sklearn instead of pyrfr)
 - Deterministic configuration of SMAC
+- Add a description of parallelization in the documentation (#1226)
 
 ## Examples
 - Add target function with additional arguments (#1134)
+- Adapt parallelization example (#1214)
 
 ## Bugfixes 
 - Ask and tell without initial design may no longer return a config from the initial design - if it is not "removed".
