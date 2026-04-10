@@ -248,6 +248,11 @@ class SuccessiveHalving(AbstractIntensifier):
 
         return True
 
+    @property
+    def uses_cutoffs(self) -> bool:
+        """If the intensifier needs to make use of cutoffs."""
+        return False
+
     def print_tracker(self) -> None:
         """Prints the number of configurations in each bracket/stage."""
         messages = []
@@ -450,7 +455,7 @@ class SuccessiveHalving(AbstractIntensifier):
                     # We stop if we don't find any configuration anymore
                     logger.warning(
                         "If you assume your configspace was not yet exhausted, try to "
-                        "increase the number of retries in the config selector."
+                        "increase the number of max_new_config_tries in the config selector."
                     )
                     return
 

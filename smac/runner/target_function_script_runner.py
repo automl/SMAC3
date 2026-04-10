@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Optional, Union
 
 import time
 from subprocess import PIPE, Popen
@@ -80,10 +80,11 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
     def run(
         self,
         config: Configuration,
-        instance: str | None = None,
-        budget: float | None = None,
-        seed: int | None = None,
-    ) -> tuple[StatusType, float | list[float], float, float, dict]:
+        instance: Optional[str] = None,
+        budget: Optional[float] = None,
+        seed: Optional[int] = None,
+        additional_info: Optional[dict[str, Any]] = None,
+    ) -> tuple[StatusType, Union[float, list[float]], float, float, dict[str, Any]]:
         """Calls the target function.
 
         Parameters
@@ -96,6 +97,8 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
             A positive, real-valued number representing an arbitrary limit to the target function
             handled by the target function internally.
         seed : int, defaults to None
+        additional_info : dict
+            All further additional trial information.
 
         Returns
         -------
@@ -107,7 +110,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
             The time the target function took to run.
         cpu_time : float
             The time the target function took on the hardware to run.
-        additional_info : dict
+        val_additional_info : dict
             All further additional trial information.
         """
         # The kwargs are passed to the target function.
@@ -127,11 +130,14 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         if "budget" in self._required_arguments:
             kwargs["budget"] = budget
 
+        if "cutoff" in self._required_arguments and additional_info is not None:
+            kwargs["cutoff"] = additional_info["cutoff"]
+
         # Presetting
         cost: float | list[float] = self._crash_cost
         runtime = 0.0
         cpu_time = runtime
-        additional_info = {}
+        val_additional_info = {}
         status = StatusType.SUCCESS
 
         # Add config arguments to the kwargs
@@ -192,10 +198,10 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
 
         # Add additional info
         if "additional_info" in outputs:
-            additional_info["additional_info"] = outputs["additional_info"]
+            val_additional_info["additional_info"] = outputs["additional_info"]
 
         if status != StatusType.SUCCESS:
-            additional_info["error"] = error
+            val_additional_info["error"] = error
 
             if cost != self._crash_cost:
                 cost = self._crash_cost
@@ -203,7 +209,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
                     "The target function crashed but returned a cost. The cost is ignored and replaced by crash cost."
                 )
 
-        return status, cost, runtime, cpu_time, additional_info
+        return status, cost, runtime, cpu_time, val_additional_info
 
     def __call__(
         self,

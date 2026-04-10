@@ -1,12 +1,11 @@
 # Installation
 ## Requirements
 
-SMAC is written in python3 and therefore requires an environment with python>=3.8.
-Furthermore, the Random Forest used in SMAC requires SWIG as a build dependency.
+SMAC is written in python3 and therefore requires an environment with python>=3.9.
 
 !!! info 
 
-    SMAC is tested on Linux and Mac machines with python >=3.8.
+    SMAC is tested on Linux and Mac machines with python >=3.9.
 
 
 ## SetUp
@@ -16,17 +15,6 @@ We recommend using Anaconda to create and activate an environment:
 ```bash
 conda create -n SMAC python=3.10
 conda activate SMAC
-```
-
-Now install swig either on the system level e.g. using the following command for Linux:
-```bash
-apt-get install swig
-```
-
-Or install swig inside of an already created conda environment using:
-
-```bash
-conda install gxx_linux-64 gcc_linux-64 swig
 ```
 
 ## Install SMAC
@@ -63,7 +51,31 @@ conda install smac
 
 Read [SMAC feedstock](https://github.com/conda-forge/smac-feedstock) for more details.
 
-## Windows (native or via WSL, experimental)
+## Running SMAC with pyrfr
+starting from 2.4.0, SMAC uses random forest from [sklearn](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html)
+instead of random forest from [pyrfr](https://pypi.org/project/pyrfr/) as the default surrogate model for HPO tasks.
+However, you could still use the old pyrfr surrogate model by calling `smac.facade.old.HyperparameterOptimizationRFRFacade`
+and `smac.facade.old.MultiFidelityRFRFacade`.
+
+The Random Forest used in SMAC requires SWIG as a build dependency. 
+You could install swig either on the system level e.g. using the following command for Linux:
+```bash
+apt-get install swig
+```
+
+Or install swig inside of an already created conda environment using:
+
+```bash
+conda install gxx_linux-64 gcc_linux-64 swig
+```
+
+And then install smac with the pyrfr option:
+```
+pip install smac[pyrfr]
+```
+
+
+### pyrfr on Windows (native or via WSL, experimental)
 
 SMAC can be installed under Windows in a WSL (Windows Subsystem for Linux). 
 You can find an instruction on how to do this here: [Experimental](./10_experimental.md).

@@ -40,8 +40,10 @@ class SMBO:
     ----------
     scenario : Scenario
         The scenario object, holding all environmental information.
-    runner : AbstractRunner
+    runner : AbstractRunner | None
         The runner (containing the target function) is called internally to judge a trial's performance.
+        In the rare case that ``optimize`` is never called and SMBO is operated with ``ask`` and ``tell`` only,
+        the runner is allowed to be None
     runhistory : Runhistory
         The runhistory stores all trials.
     intensifier : AbstractIntensifier
@@ -60,7 +62,7 @@ class SMBO:
     def __init__(
         self,
         scenario: Scenario,
-        runner: AbstractRunner,
+        runner: AbstractRunner | None,
         runhistory: RunHistory,
         intensifier: AbstractIntensifier,
         overwrite: bool = False,
@@ -290,6 +292,11 @@ class SMBO:
             callback.on_start(self)
 
         dask_data_to_scatter = {}
+        if self._runner is None:
+            raise ValueError(
+                "Runner is not set in SMBO. Likely issue is that the target_function was not set in the Facade."
+            )
+
         if isinstance(self._runner, DaskParallelRunner) and data_to_scatter is not None:
             dask_data_to_scatter = dict(data_to_scatter=self._runner._client.scatter(data_to_scatter, broadcast=True))
         elif data_to_scatter is not None:
@@ -318,8 +325,8 @@ class SMBO:
 
             # Some statistics
             logger.debug(
-                f"Remaining wallclock time: {self.remaining_walltime}; "
-                f"Remaining cpu time: {self.remaining_cputime}; "
+                f"Remaining wallclock time: {self.remaining_walltime}, "
+                f"Remaining cpu time: {self.remaining_cputime}, "
                 f"Remaining trials: {self.remaining_trials}"
             )
 
@@ -368,6 +375,7 @@ class SMBO:
         # We also reset runhistory and intensifier here
         self._runhistory.reset()
         self._intensifier.reset()
+        self._trial_generator = iter(self._intensifier)
 
     def exists(self, filename: str | Path) -> bool:
         """Checks if the files associated with the run already exist.
@@ -435,6 +443,12 @@ class SMBO:
         """Adds results from the runner to the runhistory. Although most of the functionality could be written
         in the tell method, we separate it here to make it accessible for the automatic optimization procedure only.
         """
+        if self._runner is None:
+            raise ValueError(
+                "Runner is not set in SMBO. Likely issue is that the target_function was not set "
+                "in the Facade. So we cannot query the runner for results."
+            )
+
         # Check if there is any result
         for trial_info, trial_value in self._runner.iter_results():
             # Add the results of the run to the run history
@@ -525,7 +539,7 @@ class SMBO:
                     )
                     logger.info(
                         f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current "
-                        f"one:\n{diff}"
+                        f"one: \n{diff}"
                     )
 
                     feedback = input(
@@ -578,6 +592,11 @@ class SMBO:
             The averaged cost of the configuration. In case of multi-fidelity, the cost of each objective is
             averaged.
         """
+        if self._runner is None:
+            raise ValueError(
+                "Runner is not set in SMBO. Likely issue is that the target_function was not set in the Facade."
+            )
+
         if seed is None:
             seed = self._scenario.seed
 
@@ -591,11 +610,8 @@ class SMBO:
             if trial.instance is not None:
                 kwargs["instance"] = trial.instance
 
-            # TODO: Use submit run for faster evaluation
-            # self._runner.submit_trial(trial_info=trial)
-            _, cost, _, _, _ = self._runner.run(config, **kwargs)
-            costs += [cost]
-
+            self._runner.submit_trial(trial_info=trial)
+        costs = [trial_value.cost for _, trial_value in self._runner.iter_results()]
         np_costs = np.array(costs)
         return np.mean(np_costs, axis=0)
 
