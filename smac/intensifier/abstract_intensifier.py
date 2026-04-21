@@ -25,6 +25,7 @@ from smac.runhistory.dataclasses import (
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash, print_config_changes
+from smac.utils.cost_transformer import CostTransformer
 from smac.utils.logging import get_logger
 from smac.utils.numpyencoder import NumpyEncoder
 from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
@@ -382,7 +383,22 @@ class AbstractIntensifier:
         rh = self.runhistory
 
         if sort_by == "cost":
-            return list(sorted(self._incumbents, key=lambda config: rh._cost_per_config[rh.get_config_id(config)]))
+
+            def compute_cost(config):  # type: ignore
+                raw_costs = rh.get_costs(config)
+                cost = CostTransformer.aggregate(
+                    raw_costs,
+                    method="mean",
+                    normalize=True,
+                    bounds=rh.objective_bounds,
+                    scalarize=True,
+                    algorithm=rh.multi_objective_algorithm,
+                )
+                if cost is None or np.isnan(cost):
+                    return float("inf")
+                return cost
+
+            return list(sorted(self._incumbents, key=compute_cost))
         elif sort_by == "num_trials":
             return list(sorted(self._incumbents, key=lambda config: len(rh.get_trials(config))))
         elif sort_by is None:
@@ -557,12 +573,14 @@ class AbstractIntensifier:
             )
 
             # determine challenger costs
-            challenger_costs = self.runhistory.average_cost(config, config_isb_comparison_keys)
+            raw_challenger_costs = self.runhistory.get_costs(config, config_isb_comparison_keys)
+            challenger_costs = CostTransformer.mean(raw_challenger_costs)
 
             # check the list of incumbents whether any of the incumbents dominates the current challenger
             for inc in incumbents:
                 # determine incumbent costs
-                inc_costs = self.runhistory.average_cost(inc, config_isb_comparison_keys)
+                raw_inc_costs = self.runhistory.get_costs(inc, config_isb_comparison_keys)
+                inc_costs = CostTransformer.mean(raw_inc_costs)
                 # check dominance
                 is_dominated = not np.any(np.array([challenger_costs]) < np.array([inc_costs]))
 
@@ -732,7 +750,7 @@ class AbstractIntensifier:
     def _update_trajectory(self, configs: list[Configuration]) -> None:
         rh = self.runhistory
         config_ids = [rh.get_config_id(c) for c in configs]
-        costs = [rh.average_cost(c, normalize=False) for c in configs]
+        costs = [CostTransformer.mean(rh.get_costs(c)) for c in configs]
 
         self._incumbents = configs
         self._incumbents_changed += 1

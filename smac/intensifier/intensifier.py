@@ -13,6 +13,7 @@ from smac.runhistory import TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey, InstanceSeedKey, TrialKey
 from smac.scenario import Scenario
 from smac.utils.configspace import get_config_hash
+from smac.utils.cost_transformer import CostTransformer
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -440,10 +441,8 @@ class Intensifier(AbstractIntensifier):
             )
             raise NotImplementedError("Adaptive capping is not supported for scenarios with multiple incumbents")
 
-        inc_sum_cost_unchecked = self.runhistory.sum_cost(
-            config=incumbents[0],
-            normalize=False,
-        )
+        raw_costs = self.runhistory.get_costs(incumbents[0])
+        inc_sum_cost_unchecked = CostTransformer.sum(raw_costs)
         if isinstance(inc_sum_cost_unchecked, list):
             raise TypeError(
                 "Incumbent sum cost should be a single value and not a list, as adaptive capping is not "
@@ -503,10 +502,8 @@ class Intensifier(AbstractIntensifier):
                     raise TypeError()
 
             # compute the already used runtime for the challenger across instances
-            chal_sum_cost = self.runhistory.sum_cost(
-                config=challenger,
-                instance_seed_budget_keys=chall_inst_seeds,
-            )
+            raw_costs = self.runhistory.get_costs(challenger, chall_inst_seeds)
+            chal_sum_cost = CostTransformer.sum(raw_costs)
             assert type(chal_sum_cost) == float
 
             if self._scenario.runtime_cutoff is not None:
