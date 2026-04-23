@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace
-from pygmo import fast_non_dominated_sorting
+from pymoo.util.nds.fast_non_dominated_sort import fast_non_dominated_sort
 
 from smac.acquisition.function import AbstractAcquisitionFunction
 from smac.acquisition.maximizer.local_and_random_search import (
@@ -71,8 +71,17 @@ class MOLocalSearch(LocalSearch):
         """
         if len(costs) == 1:
             return [[1.0]]
-        _, domination_list, _, non_domination_rank = fast_non_dominated_sorting(costs)
-        domination_list = [len(i) for i in domination_list]
+        fronts = fast_non_dominated_sort(costs)
+        n = len(costs)
+        non_domination_rank = np.zeros(n, dtype=int)
+        for rank, front in enumerate(fronts):
+            for idx in front:
+                non_domination_rank[idx] = rank
+        # For each point, count how many other points it dominates
+        costs_i = costs[:, np.newaxis, :]
+        costs_j = costs[np.newaxis, :, :]
+        dominates = np.all(costs_i <= costs_j, axis=2) & np.any(costs_i < costs_j, axis=2)
+        domination_list = dominates.sum(axis=1).tolist()
         sort_objectives = [domination_list, non_domination_rank]  # Last column is primary sort key!
         return sort_objectives
 

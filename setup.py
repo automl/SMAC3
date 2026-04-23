@@ -25,7 +25,7 @@ extras_require = {
         "pyrfr>=0.9.0",
     ],
     "mosmac": [
-        "pygmo"
+        "pymoo"
     ],
     "dev": [
         "setuptools",

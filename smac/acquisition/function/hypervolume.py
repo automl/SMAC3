@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import Any
 
 import numpy as np
-import pygmo
 from ConfigSpace import Configuration
+from pymoo.indicators.hv import HV
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
@@ -89,9 +89,9 @@ class AbstractHVI(AbstractAcquisitionFunction):
             return np.min(points)  # single objective
 
         # Normalize the objectives here to give equal attention to the objectives when computing the HV
-        points = [normalize_costs(p, self._objective_bounds) for p in points]
-        hv = pygmo.hypervolume(points)
-        return hv.compute(self._reference_point)
+        points = np.array([normalize_costs(p, self._objective_bounds) for p in points])
+        hv = HV(ref_point=np.array(self._reference_point))
+        return hv.do(points)
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the PHVI values and its derivatives.
@@ -194,4 +194,4 @@ class PHVI(AbstractHVI):
             hv = self.get_hypervolume(points)
             phvi[i] = hv - self._population_hv
 
-        return phvi.reshape(-1, 1)
+        return np.maximum(phvi, 0.0).reshape(-1, 1)

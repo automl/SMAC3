@@ -828,7 +828,7 @@ def test_phvi_1xD(momodel, phvi_acquisition_function, objectives):
     configurations = [ConfigurationMock([1.0] * num_targets)]
     acq = phvi(configurations)
     assert acq.shape == (1, 1)
-    assert acq[0][0] == 0
+    assert acq[0][0] == pytest.approx(0, abs=1e-10)
 
 
 def test_phvi_NxD(momodel, phvi_acquisition_function, objectives):
