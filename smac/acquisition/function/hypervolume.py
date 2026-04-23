@@ -4,7 +4,6 @@ from typing import Any
 
 import numpy as np
 from ConfigSpace import Configuration
-from pymoo.indicators.hv import HV
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
@@ -90,6 +89,12 @@ class AbstractHVI(AbstractAcquisitionFunction):
 
         # Normalize the objectives here to give equal attention to the objectives when computing the HV
         points = np.array([normalize_costs(p, self._objective_bounds) for p in points])
+        try:
+            from pymoo.indicators.hv import HV
+        except ImportError:
+            raise ImportError(
+                "pymoo is required for hypervolume computation. Install it with: pip install smac[mosmac]"
+            )
         hv = HV(ref_point=np.array(self._reference_point))
         return hv.do(points)
 

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace
-from pymoo.util.nds.fast_non_dominated_sort import fast_non_dominated_sort
 
 from smac.acquisition.function import AbstractAcquisitionFunction
 from smac.acquisition.maximizer.local_and_random_search import (
@@ -71,6 +70,10 @@ class MOLocalSearch(LocalSearch):
         """
         if len(costs) == 1:
             return [[1.0]]
+        try:
+            from pymoo.util.nds.fast_non_dominated_sort import fast_non_dominated_sort
+        except ImportError:
+            raise ImportError("pymoo is required for multi-objective search. Install it with: pip install smac[mosmac]")
         fronts = fast_non_dominated_sort(costs)
         n = len(costs)
         non_domination_rank = np.zeros(n, dtype=int)
