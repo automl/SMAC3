@@ -15,7 +15,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 !!! note
 
     This example uses the ``MultiFidelityFacade`` facade, which is the closest implementation to
-    `BOHB <https://github.com/automl/HpBandSter>`_.
+    <a href="https://github.com/automl/HpBandSter">BOHB</a>.
 """
 
 import warnings

@@ -11,6 +11,7 @@ from ConfigSpace.hyperparameters import (
     BetaIntegerHyperparameter,
     CategoricalHyperparameter,
     Constant,
+    FloatHyperparameter,
     IntegerHyperparameter,
     NormalFloatHyperparameter,
     NormalIntegerHyperparameter,
@@ -206,12 +207,13 @@ def transform_continuous_designs(
     configs : list[Configuration]
         Continuous transformed configs.
     """
-    params = configspace.get_hyperparameters()
+    params = list(configspace.values())
     for idx, param in enumerate(params):
-        if isinstance(param, IntegerHyperparameter):
-            design[:, idx] = param._inverse_transform(param._transform(design[:, idx]))
-        elif isinstance(param, NumericalHyperparameter):
-            continue
+        if isinstance(param, NumericalHyperparameter):
+            if isinstance(param, IntegerHyperparameter):
+                design[:, idx] = param.to_vector(param.to_value(design[:, idx]))
+            elif isinstance(param, NumericalHyperparameter) and not isinstance(param, IntegerHyperparameter):
+                continue
         elif isinstance(param, Constant):
             design_ = np.zeros(np.array(design.shape) + np.array((0, 1)))
             design_[:, :idx] = design[:, :idx]
@@ -243,73 +245,37 @@ def transform_continuous_designs(
     return configs
 
 
-# def check_subspace_points(
-#     X: np.ndarray,
-#     cont_dims: np.ndarray | list = [],
-#     cat_dims: np.ndarray | list = [],
-#     bounds_cont: np.ndarray | None = None,
-#     bounds_cat: list[tuple] | None = None,
-#     expand_bound: bool = False,
-# ) -> np.ndarray:
-#     """Check which points are place inside a given subspace.
+def create_uniform_configspace_copy(
+    configspace: ConfigurationSpace,
+) -> ConfigurationSpace:
+    """Creates a copy of the given configuration space with uniform transformed hyperparameters.
 
-#     Parameters
-#     ----------
-#     X: Optional[np.ndarray(N,D)],
-#         points to be checked, where D = D_cont + D_cat
-#     cont_dims: Union[np.ndarray(D_cont), List]
-#         which dimensions represent continuous hyperparameters
-#     cat_dims: Union[np.ndarray(D_cat), List]
-#         which dimensions represent categorical hyperparameters
-#     bounds_cont: optional[List[Tuple]]
-#         subspaces bounds of categorical hyperparameters, its length is the number of continuous hyperparameters
-#     bounds_cat: Optional[List[Tuple]]
-#         subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters
-#     expand_bound: bool
-#         if the bound needs to be expanded to contain more points rather than the points inside the subregion
-#     Return
-#     ----------
-#     indices_in_ss:np.ndarray(N)
-#         indices of data that included in subspaces
-#     """
-#     if len(X.shape) == 1:
-#         X = X[np.newaxis, :]
-#     if len(cont_dims) == 0 and len(cat_dims) == 0:
-#         return np.ones(X.shape[0], dtype=bool)
+    Parameters
+    ----------
+    configspace : ConfigurationSpace
+        The configuration space to be transformed.
 
-#     if len(cont_dims) > 0:
-#         if bounds_cont is None:
-#             raise ValueError("bounds_cont must be given if cont_dims provided")
+    Returns
+    -------
+    ConfigurationSpace
+        A new configuration space with uniform transformed hyperparameters.
+    """
+    configspace_name = configspace.name
+    configspace_meta = configspace.meta
+    random_state = configspace.random.get_state()
+    new_configuration_space = ConfigurationSpace(name=configspace_name, meta=configspace_meta)
+    new_configuration_space.random.set_state(random_state)
 
-#         if len(bounds_cont.shape) != 2 or bounds_cont.shape[1] != 2 or bounds_cont.shape[0] != len(cont_dims):
-#             raise ValueError(
-#                 f"bounds_cont (with shape  {bounds_cont.shape}) should be an array with shape of"
-#                 f"({len(cont_dims)}, 2)"
-#             )
-
-#         data_in_ss = np.all(X[:, cont_dims] <= bounds_cont[:, 1], axis=1) & np.all(
-#             X[:, cont_dims] >= bounds_cont[:, 0], axis=1
-#         )
-
-#         if expand_bound:
-#             bound_left = bounds_cont[:, 0] - np.min(X[data_in_ss][:, cont_dims] - bounds_cont[:, 0], axis=0)
-#             bound_right = bounds_cont[:, 1] + np.min(bounds_cont[:, 1] - X[data_in_ss][:, cont_dims], axis=0)
-#             data_in_ss = np.all(X[:, cont_dims] <= bound_right, axis=1) & np.all(X[:, cont_dims] >= bound_left,
-# axis=1)
-#     else:
-#         data_in_ss = np.ones(X.shape[0], dtype=bool)
-
-#     if len(cat_dims) == 0:
-#         return data_in_ss
-#     if bounds_cat is None:
-#         raise ValueError("bounds_cat must be given if cat_dims provided")
-
-#     if len(bounds_cat) != len(cat_dims):
-#         raise ValueError(
-#             f"bounds_cat ({len(bounds_cat)}) and cat_dims ({len(cat_dims)}) must have " f"the same number of elements"
-#         )
-
-#     for bound_cat, cat_dim in zip(bounds_cat, cat_dims):
-#         data_in_ss &= np.in1d(X[:, cat_dim], bound_cat)
-
-#     return data_in_ss
+    for hyperparameter in configspace.values():
+        if isinstance(hyperparameter, CategoricalHyperparameter):
+            new_hyperparameter = hyperparameter.to_uniform()
+        elif isinstance(hyperparameter, IntegerHyperparameter):
+            new_hyperparameter = hyperparameter.to_uniform()
+        elif isinstance(hyperparameter, FloatHyperparameter):
+            new_hyperparameter = hyperparameter.to_uniform()
+        else:
+            new_hyperparameter = hyperparameter
+        new_configuration_space.add(new_hyperparameter)
+    conditions = configspace.conditions
+    new_configuration_space.add(conditions)
+    return new_configuration_space

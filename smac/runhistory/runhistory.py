@@ -320,8 +320,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         Parameters
         ----------
-        trial : TrialInfo
+        info : TrialInfo
             The ``TrialInfo`` object of the running trial.
+        value : TrialValue
+            The ``TrialValue`` object of the running trial.
         """
         self.add(
             config=info.config,

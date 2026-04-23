@@ -21,8 +21,10 @@ class EI(AbstractAcquisitionFunction):
     balance exploration and exploitation. Expected Improvement (with or without function values in log space)
     acquisition function
 
-    :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,
-    with :math:`f(X^+)` as the best location.
+    $$
+    EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]
+    $$
+    with $f(X^+)$ as the best location.
 
     Reference for EI: Jones, D.R. and Schonlau, M. and Welch, W.J. (1998). Efficient Global Optimization of Expensive
     Black-Box Functions. Journal of Global Optimization 13, 455–492
@@ -197,8 +199,10 @@ class EI(AbstractAcquisitionFunction):
 class EIPS(EI):
     r"""Expected Improvement per Second acquisition function
 
-    :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
-    with :math:`f(X^+)` as the best location and :math:`r(x)` as runtime.
+    $$
+    EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}
+    $$
+    with $f(X^+)$ as the best location and $r(x)$ as runtime.
 
     Parameters
     ----------
