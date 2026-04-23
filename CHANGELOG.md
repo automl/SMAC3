@@ -1,3 +1,11 @@
+# 2.4.1
+## Improvements
+- Include a new multi-objective method based on hypervolume
+
+## Examples
+- An example on the new multi-objective method
+
+
 # 2.4.0
 ## Improvements
 - Replace random forest from pyrfr with random forest from sklearn (#1246)
