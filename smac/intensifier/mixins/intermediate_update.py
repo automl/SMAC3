@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
 import numpy as np
 from ConfigSpace import Configuration
 
@@ -15,9 +13,10 @@ __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
 
+
 class FullIncumbentComparison(AbstractIntensifier):
     def _intermediate_comparison(self, config: Configuration) -> bool:
-        """ompares the configuration against the incumbent when the configuration did not run on all the trails the
+        """Compares the configuration against the incumbent when the configuration did not run on all the trails the
         incumbent did. By default it checks if the performance of configuration is better than the incumbent on the
         trials it completed on so far. In case of multiple incumbents, which occurs with a multi-objetive scenario, one
         all incumbents are considered after which the comparison is made.
@@ -81,11 +80,11 @@ class SingleIncumbentComparison(AbstractIntensifier):
         # Check if the incumbents ran on all the ones of this config
         if not all([key in incumbent_isb_comparison_keys for key in config_isb_keys]):
             logger.debug("Config ran on other isb_keys than the incumbents. Should not happen.")
-            return True # Continue
+            return True  # Continue
 
         # Ensure that the config is not part of the incumbent
         if config in incumbents:
-            return True # Continue
+            return True  # Continue
 
         # Only compare domination between one incumbent (as relaxation measure)
         iid = self._rng.choice(len(incumbents))
@@ -95,7 +94,7 @@ class SingleIncumbentComparison(AbstractIntensifier):
         all_incumbent_isb_keys = [config_isb_keys for _ in incumbents]
         new_incumbents = self._calculate_pareto_front(self.runhistory, incumbents, all_incumbent_isb_keys)
 
-        return config in new_incumbents  #if False -> reject the configuration
+        return config in new_incumbents  # if False -> reject the configuration
 
 
 class ClosestIncumbentComparison(AbstractIntensifier):
