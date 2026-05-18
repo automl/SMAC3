@@ -23,14 +23,18 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
         trials: Mapping[TrialKey, TrialValue],
         store_statistics: bool = False,
     ) -> tuple[np.ndarray, np.ndarray]:
+        if len(trials) == 0:
+            X = np.empty((0, self._n_params + self._n_features))
+            y = np.empty((0, 1))
+            return X, y
+
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(trials)
         n_cols = self._n_params
         X = np.ones([n_rows, n_cols + self._n_features]) * np.nan
 
-        # For now we keep it as 1
-        # TODO: Extend for native multi-objective
-        y = np.ones([n_rows, 1])
+        n_obj = self._n_objectives
+        y_raw = np.zeros((n_rows, n_obj), dtype=float) if n_obj > 1 else np.zeros((n_rows, 1))
 
         # Then populate matrix
         for row, (key, run) in enumerate(trials.items()):
@@ -45,17 +49,38 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
             else:
                 X[row, :] = conf_vector
 
-            if self._n_objectives > 1:
-                assert self._multi_objective_algorithm is not None
-                assert isinstance(run.cost, list)
-
-                # Let's normalize y here
-                # We use the objective_bounds calculated by the runhistory
-                y_ = normalize_costs(run.cost, self.runhistory.objective_bounds)
-                y_agg = self._multi_objective_algorithm(y_)
-                y[row] = y_agg
+            if n_obj == 1:
+                y_raw[row, 0] = run.cost
             else:
-                y[row] = run.cost
+                cost = np.array(run.cost, dtype=float)
+                y_raw[row, :] = cost
+
+        finite_mask = np.isfinite(y_raw)
+
+        # compute per-objective max finite
+        max_finite = np.where(finite_mask, y_raw, -np.inf).max(axis=0)
+
+        # fail if any objective is completely invalid
+        if np.any(~finite_mask.any(axis=0)):
+            bad = np.where(~finite_mask.any(axis=0))[0]
+            raise ValueError(f"No finite values found for objectives {bad}")
+
+        # replace invalid values
+        y_raw = np.where(finite_mask, y_raw, max_finite)
+
+        y = np.zeros((n_rows, 1), dtype=float)
+
+        if n_obj == 1:
+            y = y_raw
+
+        else:
+            assert self._multi_objective_algorithm is not None
+
+            bounds = self.runhistory.objective_bounds
+
+            for row in range(n_rows):
+                y_norm = normalize_costs(y_raw[row], bounds)
+                y[row] = self._multi_objective_algorithm(y_norm)
 
         if y.size > 0:
             if store_statistics:
