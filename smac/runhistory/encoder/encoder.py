@@ -57,16 +57,14 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
 
         finite_mask = np.isfinite(y_raw)
 
-        # compute per-objective max finite
-        max_finite = np.where(finite_mask, y_raw, -np.inf).max(axis=0)
+        # Worst observed finite value per objective.
+        max_finite = np.array([self.runhistory.objective_bounds[o][1] for o in range(n_obj)], dtype=float)
 
-        # fail if any objective is completely invalid
-        if np.any(~finite_mask.any(axis=0)):
-            bad = np.where(~finite_mask.any(axis=0))[0]
-            raise ValueError(f"No finite values found for objectives {bad}")
-
-        # replace invalid values
-        y_raw = np.where(finite_mask, y_raw, max_finite)
+        # Replace inf/nan objective values (e.g. from crashed runs)
+        if not np.any(finite_mask):
+            y_raw[:] = max_finite
+        else:
+            y_raw = np.where(finite_mask, y_raw, max_finite)
 
         y = np.zeros((n_rows, 1), dtype=float)
 

@@ -65,16 +65,14 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
 
         finite_mask = np.isfinite(obj_matrix)
 
-        # compute per-objective max finite
-        max_finite = np.where(finite_mask, obj_matrix, -np.inf).max(axis=0)
+        # Worst observed finite value per objective.
+        max_finite = np.array([self.runhistory.objective_bounds[o][1] for o in range(n_obj)], dtype=float)
 
-        # fail if any objective is completely invalid
-        if np.any(~finite_mask.any(axis=0)):
-            bad = np.where(~finite_mask.any(axis=0))[0]
-            raise ValueError(f"No finite values found for objectives {bad}")
-
-        # replace invalid values
-        obj_matrix = np.where(finite_mask, obj_matrix, max_finite)
+        # Replace inf/nan objective values (e.g. from crashed runs)
+        if not np.any(finite_mask):
+            obj_matrix[:] = max_finite
+        else:
+            obj_matrix = np.where(finite_mask, obj_matrix, max_finite)
 
         # write back
         y_raw[:, :n_obj] = obj_matrix
