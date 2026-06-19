@@ -11,6 +11,7 @@ from smac.acquisition.function import (
     TS,
     IntegratedAcquisitionFunction,
     PriorAcquisitionFunction,
+    QExpectedImprovement
 )
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -611,6 +612,69 @@ def test_logei_NxD(model, acq_logei):
     assert np.isclose(acq[0][0], 1.6670107375002425)
     assert np.isclose(acq[1][0], 1.5570607606556273)
     assert np.isclose(acq[2][0], 0.6480973967332011)
+
+
+# --------------------------------------------------------------
+# Test QEI
+# --------------------------------------------------------------
+
+@pytest.fixture
+def model_qei():
+    return MockModelDual() 
+
+
+@pytest.fixture
+def acq_qei(model_qei):
+    qei = QExpectedImprovement(n_samples=1000)
+    qei.model = model_qei
+    return qei
+
+def test_qei_1xD(model, acq_qei):
+    qei = acq_qei
+    qei.update(model=model, eta=1.0)
+    configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
+    acq = qei(configurations)
+    assert acq.shape == (1, 1) # qEI gives one scalar for whole batch
+    assert 0.0 <= acq[0][0] <= 5.0  # Loose bound due to MC
+
+def test_qei_Nx1(model, acq_qei):
+    qei = acq_qei
+    qei.update(model=model, eta=1.0)
+    configurations = [
+        ConfigurationMock([0.0001]),
+        ConfigurationMock([1.0]),
+        ConfigurationMock([2.0]),
+    ]
+    acq = qei(configurations)
+    assert acq.shape == (1, 1)
+    assert 0.0 <= acq[0][0] <= 5.0
+    
+def test_qei_NxD(model, acq_qei):
+    qei = acq_qei
+    qei.update(model=model, eta=1.0)
+    configurations = [
+        ConfigurationMock([0.0, 0.0, 0.0]),
+        ConfigurationMock([0.1, 0.1, 0.1]),
+        ConfigurationMock([1.0, 1.0, 1.0]),
+    ]
+    acq = qei(configurations)
+    assert acq.shape == (1, 1)  
+    assert 0.0 <= acq[0][0] <= 5.0
+
+
+def test_log_qei_NxD(model, acq_qei):
+    qei = acq_qei
+    qei.update(model=model, eta=1.0)
+    configurations = [
+        ConfigurationMock([0.1, 0.0, 0.0]),
+        ConfigurationMock([0.1, 0.1, 0.1]),
+        ConfigurationMock([1.0, 1.0, 1.0]),
+    ]
+    acq = qei(configurations)
+    assert acq.shape == (1, 1)
+    assert 0.0 <= acq[0][0] <= 5.0
+
+
 
 
 # --------------------------------------------------------------
