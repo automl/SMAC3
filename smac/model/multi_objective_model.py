@@ -5,6 +5,7 @@ from typing import TypeVar
 import numpy as np
 
 from smac.model.abstract_model import AbstractModel
+from smac.model.surrogate_transformer import SurrogateTransformer
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -51,6 +52,17 @@ class MultiObjectiveModel(AbstractModel):
             instance_features=None,
             pca_components=None,
             seed=seed,
+        )
+        self.transformer = self.build_transformer()
+
+    def build_transformer(self, normalize_y: bool = False) -> SurrogateTransformer:  # noqa: D102
+        return SurrogateTransformer(
+            n_hps=self._n_hps,
+            n_features=self._n_features,
+            instance_features=self._instance_features,
+            impute_inactive=None,
+            normalize_y=normalize_y,
+            pca_components=None,
         )
 
     @property

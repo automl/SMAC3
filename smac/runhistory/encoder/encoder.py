@@ -63,7 +63,6 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
                 self._min_y = np.min(y, axis=0)
                 self._max_y = np.max(y, axis=0)
 
-        y = self.transform_response_values(values=y)
         return X, y
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:

@@ -178,6 +178,8 @@ class AbstractFacade:
         self._callbacks = callbacks
         self._overwrite = overwrite
 
+        self._model.set_y_transform(func=self._runhistory_encoder.transform_response_values)
+
         # Prepare the algorithm executer
         runner: AbstractRunner | None
         if isinstance(target_function, AbstractRunner) or target_function is None:

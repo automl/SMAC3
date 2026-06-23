@@ -68,9 +68,9 @@ class GaussianProcess(AbstractGaussianProcess):
             kernel=kernel,
             instance_features=instance_features,
             pca_components=pca_components,
+            normalize_y=normalize_y,
         )
 
-        self._normalize_y = normalize_y
         self._n_restarts = n_restarts
 
         # Internal variables
@@ -83,7 +83,7 @@ class GaussianProcess(AbstractGaussianProcess):
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
-        meta.update({"n_restarts": self._n_restarts, "normalize_y": self._normalize_y})
+        meta.update({"n_restarts": self._n_restarts})
 
         return meta
 
@@ -107,10 +107,6 @@ class GaussianProcess(AbstractGaussianProcess):
             If set to true, the hyperparameters are optimized, otherwise the default hyperparameters of the kernel are
             used.
         """
-        if self._normalize_y:
-            y = self._normalize(y)
-
-        X = self._impute_inactive(X)
         y = y.flatten()
 
         n_tries = 10
@@ -241,20 +237,17 @@ class GaussianProcess(AbstractGaussianProcess):
         if not self._is_trained:
             raise Exception("Model has to be trained first!")
 
-        X_test = self._impute_inactive(X)
-
         if covariance_type is None:
-            mu = self._gp.predict(X_test)
+            mu = self._gp.predict(X)
             var = None
 
-            if self._normalize_y:
-                mu = self._untransform_y(mu)
+            mu = self.transformer.untransform_y(mu)
         else:
             predict_kwargs = {"return_cov": False, "return_std": True}
             if covariance_type == "full":
                 predict_kwargs = {"return_cov": True, "return_std": False}
 
-            mu, var = self._gp.predict(X_test, **predict_kwargs)
+            mu, var = self._gp.predict(X, **predict_kwargs)
 
             if covariance_type != "full":
                 var = var**2  # Since we get standard deviation for faster computation
@@ -263,8 +256,7 @@ class GaussianProcess(AbstractGaussianProcess):
             # positive float value
             var = np.clip(var, VERY_SMALL_NUMBER, np.inf)
 
-            if self._normalize_y:
-                mu, var = self._untransform_y(mu, var)
+            mu, var = self.transformer.untransform_y(mu, var)
 
             if covariance_type == "std":
                 var = np.sqrt(var)  # Converting variance to std deviation if specified
@@ -289,11 +281,13 @@ class GaussianProcess(AbstractGaussianProcess):
         if not self._is_trained:
             raise Exception("Model has to be trained first.")
 
-        X_test = self._impute_inactive(X_test)
+        if self.transformer.impute_inactive:
+            X_test = self.transformer.impute_inactive(X_test)
+        else:
+            raise ValueError("Surrogate Transformers impute_inactive not defined")
         funcs = self._gp.sample_y(X_test, n_samples=n_funcs, random_state=self._rng)
 
-        if self._normalize_y:
-            funcs = self._untransform_y(funcs)
+        funcs = self.transformer.untransform_y(funcs)
 
         if len(funcs.shape) == 1:
             return funcs[None, :]

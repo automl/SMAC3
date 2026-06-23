@@ -741,7 +741,6 @@ class RandomForest(AbstractRandomForest):
         return meta
 
     def _train(self, X: np.ndarray, y: np.ndarray) -> RandomForest:
-        X = self._impute_inactive(X)
         y = y.flatten()
 
         self._rf = EPMRandomForest(**self._rf_opts)  # type: ignore
@@ -765,7 +764,6 @@ class RandomForest(AbstractRandomForest):
             raise ValueError("`covariance_type` can only take `diagonal` for this model.")
 
         assert self._rf is not None
-        X = self._impute_inactive(X)
         means, vars_ = self._rf.predict(X)
         return means.reshape((-1, 1)), vars_.reshape((-1, 1))
 
@@ -814,9 +812,14 @@ class RandomForest(AbstractRandomForest):
             raise ValueError("Rows in X should have %d entries but have %d!" % (len(self._bounds), X.shape[1]))
 
         assert self._rf is not None
-        X = self._impute_inactive(X)
 
         X_feat = np.asarray(list(self._instance_features.values()))
+
+        # applies PCA to X (if enabled)
+        X_feat = self.transformer.transform_instance_features(X_feat)
+        # applies inactive imputation to X
+        X = self.transformer.transform_configs(X)
+
         dat_ = self._rf.predict_marginalized_over_instances_batch(X, X_feat, self._log_y)
         dat_ = np.array(dat_)
 

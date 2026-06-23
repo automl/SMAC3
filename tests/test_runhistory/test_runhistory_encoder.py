@@ -71,36 +71,42 @@ def test_transform(runhistory, make_scenario, configspace_small, configs):
     encoder = RunHistoryLogEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
+    Y = encoder.transform_response_values(Y)
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryLogScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
+    Y = encoder.transform_response_values(Y)
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
+    Y = encoder.transform_response_values(Y)
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryInverseScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
+    Y = encoder.transform_response_values(Y)
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistorySqrtScaledEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
+    Y = encoder.transform_response_values(Y)
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
     encoder = RunHistoryEIPSEncoder(scenario=scenario, considered_states=[StatusType.SUCCESS])
     encoder.runhistory = runhistory
     X, Y = encoder.transform()
+    Y = encoder.transform_response_values(Y)
     assert Y.tolist() != Y1.tolist()
     assert ((X <= upper) & (X >= lower)).all()
 
