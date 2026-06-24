@@ -58,7 +58,7 @@ extras_require = {
         "pillow",
         "cairosvg",
         "black",                # This allows mkdocstrings to format signatures in the docs
-        "pytest",
+        "pytest<8",
         "pytest-coverage",
         "pytest-cases>=3.8.0",
     ],
