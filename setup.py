@@ -60,7 +60,7 @@ extras_require = {
         "black",                # This allows mkdocstrings to format signatures in the docs
         "pytest",
         "pytest-coverage",
-        "pytest-cases",
+        "pytest-cases>=3.8.0",
     ],
 }
 
