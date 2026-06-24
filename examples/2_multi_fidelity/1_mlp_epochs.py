@@ -79,7 +79,7 @@ class MLP:
 
         return cs
 
-    def train(self, config: Configuration, seed: int = 0, budget: int = 25) -> float:
+    def train(self, config: Configuration, seed: int = 0, instance: str = "0", budget: int = 25) -> dict[str, float]:
         # For deactivated parameters (by virtue of the conditions),
         # the configuration stores None-values.
         # This is not accepted by the MLP, so we replace them with placeholder values.
@@ -105,7 +105,7 @@ class MLP:
             cv = StratifiedKFold(n_splits=5, random_state=seed, shuffle=True)  # to make CV splits consistent
             score = cross_val_score(classifier, dataset.data, dataset.target, cv=cv, error_score="raise")
 
-        return 1 - np.mean(score)
+        return {"accuracy": 1 - np.mean(score)}
 
 
 def plot_trajectory(facades: list[AbstractFacade]) -> None:
@@ -146,9 +146,11 @@ if __name__ == "__main__":
             mlp.configspace,
             walltime_limit=60,  # After 60 seconds, we stop the hyperparameter optimization
             n_trials=500,  # Evaluate max 500 different trials
-            min_budget=1,  # Train the MLP using a hyperparameter configuration for at least 5 epochs
-            max_budget=25,  # Train the MLP using a hyperparameter configuration for at most 25 epochs
-            n_workers=8,
+            instances=[str(i) for i in range(10)],
+            objectives="accuracy",
+            # min_budget=1,  # Train the MLP using a hyperparameter configuration for at least 5 epochs
+            # max_budget=25,  # Train the MLP using a hyperparameter configuration for at most 25 epochs
+            n_workers=4,
         )
 
         # We want to run five random configurations before starting the optimization.

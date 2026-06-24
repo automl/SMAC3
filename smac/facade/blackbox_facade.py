@@ -314,7 +314,7 @@ class BlackBoxFacade(AbstractFacade):
         return RunHistoryEncoder(scenario)
 
     @staticmethod
-    def get_config_selector(
+    def get_config_selector(  # type: ignore[override]
         scenario: Scenario,
         *,
         retrain_after: int = 1,

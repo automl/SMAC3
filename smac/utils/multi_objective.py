@@ -30,6 +30,10 @@ def normalize_costs(
     costs = []
     for v, b in zip(values, bounds):
         assert not isinstance(v, list)
+
+        # limit value to bounds region
+        v = min(max(v, b[0]), b[1])
+
         p = v - b[0]
         q = b[1] - b[0]
 
