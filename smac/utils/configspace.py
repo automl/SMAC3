@@ -278,4 +278,11 @@ def create_uniform_configspace_copy(
         new_configuration_space.add(new_hyperparameter)
     conditions = configspace.conditions
     new_configuration_space.add(conditions)
+    forbiddens = configspace.forbidden_clauses
+    if forbiddens:
+        new_configuration_space.add(
+            ConfigurationSpace.substitute_hyperparameters_in_forbiddens(
+                forbiddens, new_configuration_space
+            )
+        )
     return new_configuration_space
