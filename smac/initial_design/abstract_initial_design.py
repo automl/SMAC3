@@ -43,7 +43,7 @@ class AbstractInitialDesign:
         n_configs: int | None = None,
         n_configs_per_hyperparameter: int | None = 10,
         max_ratio: float = 0.25,
-        additional_configs: list[Configuration] = None,
+        additional_configs: list[Configuration] | None = None,
         seed: int | None = None,
     ):
         self._configspace = scenario.configspace

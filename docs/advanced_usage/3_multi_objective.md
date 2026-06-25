@@ -15,6 +15,7 @@ The basic recipe is as follows:
 - Now you can optionally pass a custom multi-objective algorithm class to the SMAC
   facade (via ``multi_objective_algorithm``). In all facades, a mean aggregation strategy is used as the 
   multi-objective algorithm default.
+- If you want to use predicted hypervolume improvement, you need to use the MultiObjectiveFacade. 
 
 
 !!! warning

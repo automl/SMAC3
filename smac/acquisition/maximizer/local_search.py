@@ -91,7 +91,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             seed=seed,
         )
 
-        self._max_steps = max_steps
+        self._max_steps = max_steps if max_steps is not None else np.inf
         self._n_steps_plateau_walk = n_steps_plateau_walk
         self._vectorization_min_obtain = vectorization_min_obtain
         self._vectorization_max_obtain = vectorization_max_obtain
@@ -274,18 +274,16 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             costs = self._acquisition_function.model.predict_marginalized(conf_array)[0]
             assert len(conf_array) == len(costs), (conf_array.shape, costs.shape)
 
-            # In case of the predictive model returning the prediction for more than one objective per configuration
-            # (for example multi-objective or EIPS) it is not immediately clear how to sort according to the cost
-            # of a configuration. Therefore, we simply follow the ParEGO approach and use a random scalarization.
+            sort_objectives = [costs.flatten()]
             if len(costs.shape) == 2 and costs.shape[1] > 1:
-                weights = np.array([self._rng.rand() for _ in range(costs.shape[1])])
-                weights = weights / np.sum(weights)
-                costs = costs @ weights
+                sort_objectives = self._create_sort_keys(costs=costs)
 
             # From here: make argsort result to be random between equal values
             # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
             random = self._rng.rand(len(costs))
-            indices = np.lexsort((random.flatten(), costs.flatten()))  # Last column is primary sort key!
+
+            # Last column is primary sort key!
+            indices = np.lexsort((random.flatten(), *sort_objectives))
 
             # Cannot use zip here because the indices array cannot index the
             # rand_configs list, because the second is a pure python list
@@ -298,13 +296,59 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         else:
             additional_start_points = []
 
-        init_points_as_set: set[Configuration] = set(
-            itertools.chain(
-                previous_configs_sorted_by_cost,
-                additional_start_points,
-            )
+        candidates = itertools.chain(
+            # configs_previous_runs_sorted,
+            previous_configs_sorted_by_cost,
+            additional_start_points,
         )
-        return list(init_points_as_set)
+        init_points = self._unique_list(candidates)
+
+        return init_points
+
+    def _create_sort_keys(self, costs: np.array) -> list[list[float]]:
+        """Sort costs by random scalarization
+
+        In case of the predictive model returning the prediction for more than one objective per configuration
+        (for example multi-objective or EIPS) it is not immediately clear how to sort according to the cost
+        of a configuration. Therefore, we simply follow the ParEGO approach and use a random scalarization.
+
+        Parameters
+        ----------
+        costs : np.array
+            Cost(s) per config
+
+        Returns
+        -------
+        list[list[float]]
+            Sorting sequence for lexsort
+        """
+        weights = np.array([self._rng.rand() for _ in range(costs.shape[1])])
+        weights = weights / np.sum(weights)
+        costs = costs @ weights
+        sort_objectives = [costs.flatten()]
+        return sort_objectives
+
+    @staticmethod
+    def _unique_list(elements: list | itertools.chain) -> list:
+        """
+        Returns the list with only unique elements while remaining the list order.
+
+        Parameters
+        ----------
+        elements : list | itertools.chain
+
+        Returns
+        -------
+        A list with unique elements with preserved order
+        """
+        return_list = []
+        return_list_as_set = set()
+        for e in elements:
+            if e not in return_list_as_set:
+                return_list.append(e)
+                return_list_as_set.add(e)
+
+        return return_list
 
     def _search(
         self,
@@ -378,7 +422,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         # function values to the correct local search run
         obtain_n = [self._vectorization_min_obtain] * num_candidates
         # Tracking the time it takes to compute the acquisition function
-        times = []
+        times_per_iteration: list[float] = []
 
         # Tracks consecutive improvements for each local search.
         # Used to adapt the neighborhood sampling radius.
@@ -422,11 +466,6 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
         num_iters = 0
         while np.any(active):
-
-            # If the maximum number of steps is reached, stop the local search
-            if num_iters is not None and num_iters == self._max_steps:
-                break
-
             num_iters += 1
             # Whether the i-th local search improved. When a new neighborhood is generated, this is used to determine
             # whether a step was made (improvement) or not (iterator exhausted)
@@ -476,11 +515,15 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     actually_obtained[i] = len(neighbors_for_i)
                     neighbors.extend(neighbors_for_i)
 
+            logger.debug(
+                f"Iteration {num_iters} with {np.count_nonzero(active)} active searches and {len(neighbors)} "
+                "acquisition function calls."
+            )
             if len(neighbors) != 0:
                 start_time = time.time()
                 acq_val = self._acquisition_function(neighbors)
                 end_time = time.time()
-                times.append(end_time - start_time)
+                times_per_iteration.append(end_time - start_time)
                 if np.ndim(acq_val.shape) == 0:
                     acq_val = np.asarray([acq_val])
 
@@ -540,7 +583,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     continue
 
                 if obtain_n[i] == 0 or improved[i]:
-                    obtain_n[i] = 2
+                    obtain_n[i] = self._vectorization_min_obtain
                 else:
                     obtain_n[i] = obtain_n[i] * 2
                     obtain_n[i] = min(obtain_n[i], self._vectorization_max_obtain)
@@ -565,12 +608,18 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                             for s in visited_values[i].values():
                                 s.clear()
                         n_no_plateau_walk[i] += 1
+
                         # Reduce exploration radius during plateau walking to refine the
                         # search locally around the current candidate.
                         if n_no_plateau_walk[i] % self._downscale_interval == 0:
                             stdev[i] = max(stdev[i] * 0.5, self._stdev_min)
 
-                    if n_no_plateau_walk[i] >= self._n_steps_plateau_walk:
+                    if n_no_plateau_walk[i] >= self._n_steps_plateau_walk or local_search_steps[i] >= self._max_steps:
+                        message = f"Local search {i}: Stop search after walking {n_no_plateau_walk[i]} plateaus "
+                        message += f"after {neighbors_looked_at[i]}."
+                        if local_search_steps[i] >= self._max_steps:
+                            message += f" Reached max_steps ({self._max_steps}) of local search."
+                        logger.debug(message)
                         active[i] = False
                         continue
 
@@ -581,11 +630,12 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     )
 
         logger.debug(
-            "Local searches took %s steps and looked at %s configurations. Computing the acquisition function in "
-            "vectorized for took %f seconds on average.",
-            local_search_steps,
-            neighbors_looked_at,
-            np.mean(times),
+            f"Local searches took {local_search_steps} steps and looked at {neighbors_looked_at} configurations."
+            f"Computing the acquisition function for each search took {np.sum(times_per_iteration)/num_candidates}"
+            f"(prev {np.mean(times_per_iteration)}) seconds on average and each acquisition function call "
+            f"took {times_per_iteration/np.sum(neighbors_looked_at)} seconds on average."
+            f"In total the whole procedure took {np.sum(times_per_iteration)} seconds to look at "
+            f"{np.sum(neighbors_looked_at)} configurations."
         )
 
         return [(a, i) for a, i in zip(acq_val_candidates, candidates)]
