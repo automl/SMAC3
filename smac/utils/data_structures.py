@@ -51,7 +51,7 @@ def recursively_compare_dicts(
 
     elif isinstance(d1, list) and isinstance(d2, list):
         if len(d1) != len(d2):
-            diff += [f"{level}: len1={len(d1)}; len2={len(d2)}"]
+            diff += [f"{level}: len1={len(d1)}; len2={len(d2)}"]  # noqa: E702
             # logger.info("{:<20} len1={}; len2={}".format(level, len(d1), len(d2)))
             # logger.info("len1={}; len2={}".format(len(d1), len(d2)))
         common_len = min(len(d1), len(d2))

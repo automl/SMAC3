@@ -22,6 +22,7 @@ def make_scenario() -> Callable:
         n_trials: int = 100,
         use_default_config: bool = False,
         objective_weights: Optional[List[float]] = None,
+        walltime_limit: float = 30,
     ) -> Scenario:
         objectives = "cost"
         if use_multi_objective:
@@ -46,7 +47,7 @@ def make_scenario() -> Callable:
             objectives=objectives,
             objective_weights=objective_weights,
             deterministic=deterministic,
-            walltime_limit=30,
+            walltime_limit=walltime_limit,
             n_trials=n_trials,
             n_workers=n_workers,
             instances=instances,
