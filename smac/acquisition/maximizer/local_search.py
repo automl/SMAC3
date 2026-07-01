@@ -53,7 +53,18 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         reduce the overhead of SMAC.
     seed : int, defaults to 0
     n_jobs: int, defaults to 1
-        Number of parallel workers to use for local search evaluation
+        Number of parallel workers to use for local search evaluation.
+    stdev_init: float, defaults to 0.05
+        Initial standard deviation used when sampling neighbors for continuous hyperparameters during local search.
+    stdev_min: float, defaults to 5e-3
+        Minimum allowed standard deviation for neighborhood sampling.
+    stdev_max: float | None, defaults to None
+        Maximum allowed standard deviation for neighborhood sampling.
+        If None, the value is automatically set to ``stdev_init * 2**downscale_interval``.
+    upscale_thresh: int, defaults to 3
+        Number of consecutive improvements required before increasing the standard deviation.
+    downscale_interval: int, defaults to 3
+        Number of plateau walk steps between reductions of the standard deviation.
     """
 
     def __init__(
@@ -67,6 +78,11 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         vectorization_max_obtain: int = 64,
         seed: int = 0,
         n_jobs: int = 1,
+        stdev_init: float = 0.05,
+        stdev_min: float = 5e-3,
+        stdev_max: float | None = None,
+        upscale_thresh: int = 3,
+        downscale_interval: int = 3,
     ) -> None:
         super().__init__(
             configspace,
@@ -75,11 +91,16 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             seed=seed,
         )
 
-        self._max_steps = max_steps
+        self._max_steps = max_steps if max_steps is not None else np.inf
         self._n_steps_plateau_walk = n_steps_plateau_walk
         self._vectorization_min_obtain = vectorization_min_obtain
         self._vectorization_max_obtain = vectorization_max_obtain
         self.n_jobs = n_jobs
+        self._stdev_init = stdev_init
+        self._stdev_min = stdev_min
+        self._stdev_max = stdev_max
+        self._upscale_thresh = upscale_thresh
+        self._downscale_interval = downscale_interval
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -90,6 +111,12 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                 "n_steps_plateau_walk": self._n_steps_plateau_walk,
                 "vectorization_min_obtain": self._vectorization_min_obtain,
                 "vectorization_max_obtain": self._vectorization_max_obtain,
+                "n_jobs": self.n_jobs,
+                "stdev_init": self._stdev_init,
+                "stdev_min": self._stdev_min,
+                "stdev_max": self._stdev_max,
+                "upscale_thresh": self._upscale_thresh,
+                "downscale_interval": self._downscale_interval,
             }
         )
 
@@ -247,18 +274,16 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             costs = self._acquisition_function.model.predict_marginalized(conf_array)[0]
             assert len(conf_array) == len(costs), (conf_array.shape, costs.shape)
 
-            # In case of the predictive model returning the prediction for more than one objective per configuration
-            # (for example multi-objective or EIPS) it is not immediately clear how to sort according to the cost
-            # of a configuration. Therefore, we simply follow the ParEGO approach and use a random scalarization.
+            sort_objectives = [costs.flatten()]
             if len(costs.shape) == 2 and costs.shape[1] > 1:
-                weights = np.array([self._rng.rand() for _ in range(costs.shape[1])])
-                weights = weights / np.sum(weights)
-                costs = costs @ weights
+                sort_objectives = self._create_sort_keys(costs=costs)
 
             # From here: make argsort result to be random between equal values
             # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
             random = self._rng.rand(len(costs))
-            indices = np.lexsort((random.flatten(), costs.flatten()))  # Last column is primary sort key!
+
+            # Last column is primary sort key!
+            indices = np.lexsort((random.flatten(), *sort_objectives))
 
             # Cannot use zip here because the indices array cannot index the
             # rand_configs list, because the second is a pure python list
@@ -271,13 +296,59 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         else:
             additional_start_points = []
 
-        init_points_as_set: set[Configuration] = set(
-            itertools.chain(
-                previous_configs_sorted_by_cost,
-                additional_start_points,
-            )
+        candidates = itertools.chain(
+            # configs_previous_runs_sorted,
+            previous_configs_sorted_by_cost,
+            additional_start_points,
         )
-        return list(init_points_as_set)
+        init_points = self._unique_list(candidates)
+
+        return init_points
+
+    def _create_sort_keys(self, costs: np.array) -> list[list[float]]:
+        """Sort costs by random scalarization
+
+        In case of the predictive model returning the prediction for more than one objective per configuration
+        (for example multi-objective or EIPS) it is not immediately clear how to sort according to the cost
+        of a configuration. Therefore, we simply follow the ParEGO approach and use a random scalarization.
+
+        Parameters
+        ----------
+        costs : np.array
+            Cost(s) per config
+
+        Returns
+        -------
+        list[list[float]]
+            Sorting sequence for lexsort
+        """
+        weights = np.array([self._rng.rand() for _ in range(costs.shape[1])])
+        weights = weights / np.sum(weights)
+        costs = costs @ weights
+        sort_objectives = [costs.flatten()]
+        return sort_objectives
+
+    @staticmethod
+    def _unique_list(elements: list | itertools.chain) -> list:
+        """
+        Returns the list with only unique elements while remaining the list order.
+
+        Parameters
+        ----------
+        elements : list | itertools.chain
+
+        Returns
+        -------
+        A list with unique elements with preserved order
+        """
+        return_list = []
+        return_list_as_set = set()
+        for e in elements:
+            if e not in return_list_as_set:
+                return_list.append(e)
+                return_list_as_set.add(e)
+
+        return return_list
 
     def _search(
         self,
@@ -318,6 +389,13 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
         hp_names = list(start_points[0].config_space.keys())
 
+        # Default upper bound ensures that downscaling during plateau walks can
+        # always bring the standard deviation back to at least stdev_init.
+        if self._stdev_max is None:
+            stdev_max = self._stdev_init * np.power(2, self._downscale_interval)
+        else:
+            stdev_max = self._stdev_max
+
         candidates = start_points
         # Compute the acquisition value of the candidates
         num_candidates = len(candidates)
@@ -338,13 +416,19 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         local_search_steps = [0] * num_candidates
         # tracking the number of neighbors looked at for logging purposes
         neighbors_looked_at = [0] * num_candidates
-        # tracking the number of neighbors generated for logging purposse
+        # tracking the number of neighbors generated for logging purposes
         neighbors_generated = [0] * num_candidates
         # how many neighbors were obtained for the i-th local search. Important to map the individual acquisition
         # function values to the correct local search run
         obtain_n = [self._vectorization_min_obtain] * num_candidates
         # Tracking the time it takes to compute the acquisition function
-        times = []
+        times_per_iteration: list[float] = []
+
+        # Tracks consecutive improvements for each local search.
+        # Used to adapt the neighborhood sampling radius.
+        improvement_count = [0] * num_candidates
+        # Current neighborhood sampling standard deviation for each local search.
+        stdev = [self._stdev_init] * num_candidates
 
         # Set up the neighborhood generators
         neighborhood_iterators = []
@@ -359,7 +443,7 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                 #     Sequential Model-Based Optimization for General Algorithm Configuration
                 #     In Proceedings of the conference on Learning and Intelligent
                 #     Optimization(LION 5)
-                get_one_exchange_neighbourhood(inc, seed=self._rng.randint(low=0, high=100000))
+                get_one_exchange_neighbourhood(inc, seed=self._rng.randint(low=0, high=100000), stdev=stdev[i])
             )
             local_search_steps[i] += 1
 
@@ -382,11 +466,6 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
         num_iters = 0
         while np.any(active):
-
-            # If the maximum number of steps is reached, stop the local search
-            if num_iters is not None and num_iters == self._max_steps:
-                break
-
             num_iters += 1
             # Whether the i-th local search improved. When a new neighborhood is generated, this is used to determine
             # whether a step was made (improvement) or not (iterator exhausted)
@@ -436,11 +515,15 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     actually_obtained[i] = len(neighbors_for_i)
                     neighbors.extend(neighbors_for_i)
 
+            logger.debug(
+                f"Iteration {num_iters} with {np.count_nonzero(active)} active searches and {len(neighbors)} "
+                "acquisition function calls."
+            )
             if len(neighbors) != 0:
                 start_time = time.time()
                 acq_val = self._acquisition_function(neighbors)
                 end_time = time.time()
-                times.append(end_time - start_time)
+                times_per_iteration.append(end_time - start_time)
                 if np.ndim(acq_val.shape) == 0:
                     acq_val = np.asarray([acq_val])
 
@@ -500,12 +583,23 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                     continue
 
                 if obtain_n[i] == 0 or improved[i]:
-                    obtain_n[i] = 2
+                    obtain_n[i] = self._vectorization_min_obtain
                 else:
                     obtain_n[i] = obtain_n[i] * 2
                     obtain_n[i] = min(obtain_n[i], self._vectorization_max_obtain)
 
                 if new_neighborhood[i]:
+
+                    if improved[i]:
+                        improvement_count[i] += 1
+                    else:
+                        improvement_count[i] = 0
+
+                    # Increase exploration radius if several consecutive improvements occur.
+                    if improvement_count[i] >= self._upscale_thresh and n_no_plateau_walk[i] == 0:
+                        stdev[i] = min(stdev[i] * 2, stdev_max)
+                        improvement_count[i] = 0
+
                     if not improved[i] and n_no_plateau_walk[i] < self._n_steps_plateau_walk:
                         if len(neighbors_w_equal_acq[i]) != 0:
                             candidates[i] = neighbors_w_equal_acq[i][0]
@@ -514,21 +608,34 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                             for s in visited_values[i].values():
                                 s.clear()
                         n_no_plateau_walk[i] += 1
-                    if n_no_plateau_walk[i] >= self._n_steps_plateau_walk:
+
+                        # Reduce exploration radius during plateau walking to refine the
+                        # search locally around the current candidate.
+                        if n_no_plateau_walk[i] % self._downscale_interval == 0:
+                            stdev[i] = max(stdev[i] * 0.5, self._stdev_min)
+
+                    if n_no_plateau_walk[i] >= self._n_steps_plateau_walk or local_search_steps[i] >= self._max_steps:
+                        message = f"Local search {i}: Stop search after walking {n_no_plateau_walk[i]} plateaus "
+                        message += f"after {neighbors_looked_at[i]}."
+                        if local_search_steps[i] >= self._max_steps:
+                            message += f" Reached max_steps ({self._max_steps}) of local search."
+                        logger.debug(message)
                         active[i] = False
                         continue
 
                     neighborhood_iterators[i] = get_one_exchange_neighbourhood(
                         candidates[i],
                         seed=self._rng.randint(low=0, high=100000),
+                        stdev=stdev[i],
                     )
 
         logger.debug(
-            "Local searches took %s steps and looked at %s configurations. Computing the acquisition function in "
-            "vectorized for took %f seconds on average.",
-            local_search_steps,
-            neighbors_looked_at,
-            np.mean(times),
+            f"Local searches took {local_search_steps} steps and looked at {neighbors_looked_at} configurations."
+            f"Computing the acquisition function for each search took {np.sum(times_per_iteration)/num_candidates}"
+            f"(prev {np.mean(times_per_iteration)}) seconds on average and each acquisition function call "
+            f"took {times_per_iteration/np.sum(neighbors_looked_at)} seconds on average."
+            f"In total the whole procedure took {np.sum(times_per_iteration)} seconds to look at "
+            f"{np.sum(neighbors_looked_at)} configurations."
         )
 
         return [(a, i) for a, i in zip(acq_val_candidates, candidates)]

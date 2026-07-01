@@ -40,7 +40,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
 
     Parameters
     ----------
-    target_function : Callable
+    target_function : str
         The target function.
     scenario : Scenario
     required_arguments : list[str]
@@ -51,7 +51,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         self,
         target_function: str,
         scenario: Scenario,
-        required_arguments: list[str] = None,
+        required_arguments: list[str] | None = None,
     ):
         if required_arguments is None:
             required_arguments = []
@@ -200,7 +200,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         if "additional_info" in outputs:
             val_additional_info["additional_info"] = outputs["additional_info"]
 
-        if status != StatusType.SUCCESS:
+        if status not in [StatusType.SUCCESS, StatusType.TIMEOUT]:
             val_additional_info["error"] = error
 
             if cost != self._crash_cost:
@@ -216,7 +216,7 @@ class TargetFunctionScriptRunner(AbstractSerialRunner):
         algorithm_kwargs: dict[str, Any],
     ) -> tuple[str, str]:
         """Calls the algorithm, which is processed in the ``run`` method."""
-        cmd = [self._target_function]
+        cmd = self._target_function.split(" ")
         for k, v in algorithm_kwargs.items():
             v = str(v)
             k = str(k)
