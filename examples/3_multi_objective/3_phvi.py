@@ -104,7 +104,8 @@ def plot_pareto(smac: AbstractFacade, incumbents: list[Configuration]) -> None:
     average_pareto_costs = []
     for config in smac.runhistory.get_configs():
         # Since we use multiple seeds, we have to average them to get only one cost value pair for each configuration
-        average_cost = smac.runhistory.average_cost(config)
+        raw_costs = smac.runhistory.get_costs(config)
+        average_cost = CostTransformer.mean(raw_costs)
 
         if config in incumbents:
             average_pareto_costs += [average_cost]
