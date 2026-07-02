@@ -25,9 +25,13 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
         trials: Mapping[TrialKey, TrialValue],
         store_statistics: bool = False,
     ) -> tuple[np.ndarray, np.ndarray]:
+        n_obj = self._n_objectives
+        n_rows = len(trials)
+        y_dim = self._n_objectives if self._native_multi_objective else 1
+
         if len(trials) == 0:
             X = np.empty((0, self._n_params + self._n_features))
-            y = np.empty((0, 2))
+            y = np.empty((0, y_dim + 1))
             return X, y
 
         if store_statistics:
@@ -35,11 +39,8 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
             pass
 
         # First build nan-matrix of size #configs x #params+1
-        n_rows = len(trials)
         n_cols = self._n_params
         X = np.ones([n_rows, n_cols + self._n_features]) * np.nan
-
-        n_obj = self._n_objectives
         y_raw = np.zeros([n_rows, n_obj + 1], dtype=float)
 
         # Then populate matrix
@@ -77,8 +78,7 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
         # write back
         y_raw[:, :n_obj] = obj_matrix
 
-        y = np.zeros((n_rows, 2), dtype=float)
-
+        y = np.zeros([n_rows, y_dim + 1])
         if n_obj == 1:
             y[:, 0] = y_raw[:, 0]
             y[:, 1] = y_raw[:, -1]
@@ -89,9 +89,10 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
             bounds = self.runhistory.objective_bounds
 
             for row in range(n_rows):
-                y_norm = normalize_costs(y_raw[row, :n_obj], bounds)
-                y[row, 0] = self._multi_objective_algorithm(y_norm)
-                y[row, 1] = y_raw[row, -1]
+                time = y_raw[row, -1]
+                y_ = normalize_costs(y_raw[row, :n_obj], bounds) if self._normalize else y_raw[row, :n_obj]
+                y[row, :y_dim] = self._multi_objective_algorithm(y_)
+                y[row, -1] = time
 
         y_transformed = self.transform_response_values(values=y)
 
@@ -111,5 +112,5 @@ class RunHistoryEIPSEncoder(AbstractRunHistoryEncoder):
         np.ndarray
         """
         # We need to ensure that time remains positive after the log transform.
-        values[:, 1] = np.log(1 + values[:, 1])
+        values[:, -1] = np.log(1 + values[:, -1])
         return values

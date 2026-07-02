@@ -256,6 +256,7 @@ class ConfigSelector:
 
             self._acquisition_training_times.append(time.time() - train_start_time)
 
+            retrain = False
             failed_counter = 0
             for config in challengers:
                 if config not in self._processed_configs:
