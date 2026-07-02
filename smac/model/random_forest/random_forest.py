@@ -524,13 +524,18 @@ class EPMRandomForest(ForestRegressor):
 
     def predict(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Predict the mean and variance of X. Here mean and variances are the empirical mean and variance values from the
-        prediction results of the other trees.
+        Predict the mean and variance of X.
+
+        When cross_trees_variance is False (default), computes the full law of total variance:
+        mean(intra-leaf variances) + var(tree means), where intra-leaf variance is the variance
+        of training samples in the leaf where X falls. When cross_trees_variance is True, computes
+        only inter-tree variance (variance of tree mean predictions). For log_y=True, always uses
+        inter-tree variance on the log-transformed leaf means.
 
         Parameters
         ----------
         X: np.ndarray [#samples, #hyperparameter]
-            Input data points to be testsed.
+            Input data points to be tested.
 
         Returns
         -------
@@ -543,7 +548,18 @@ class EPMRandomForest(ForestRegressor):
         preds = self.all_trees_pred(X)
 
         means = preds.mean(axis=1)
-        vars = preds.var(axis=1)
+
+        if self.cross_trees_variance or self.log_y:
+            # Inter-tree variance: variance of per-tree mean predictions
+            vars = preds.var(axis=1)
+        else:
+            # Law of total variance: mean(intra-leaf variances) + var(tree means)
+            X_validated = self._validate_X_predict(X)
+            intra_leaf_vars = np.zeros((X_validated.shape[0], self.n_estimators), dtype=np.float64)
+            for tree_idx, tree in enumerate(self.estimators_):
+                leaf_indices = tree.apply(X_validated, check_input=False)
+                intra_leaf_vars[:, tree_idx] = tree.tree_.impurity[leaf_indices]
+            vars = intra_leaf_vars.mean(axis=1) + preds.var(axis=1)
 
         return means.reshape(-1, 1), vars.reshape(-1, 1)
 
