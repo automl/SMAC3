@@ -5,6 +5,7 @@ from logging import Logger
 from ConfigSpace import ConfigurationSpace, Configuration
 
 from smac import Scenario, AlgorithmConfigurationFacade
+from smac.runhistory import TrialInfo, TrialValue
 import numpy as np
 
 from smac.main.exceptions import ConfigurationSpaceExhaustedException
@@ -74,12 +75,11 @@ class TrainMockup:
                 if log[1] == "reject" and log[2] == config_hash:
                     reject_log = log
                     break
-
             self.expected_behavior_violations += [f"{self.log_counter}: Configuration {config_hash} was already "
                                                   f"rejected here {reject_log}"]
 
         # specify log entry (id, config hash, instance, performance)
-        log = (self.log_counter, config_hash, instance, rand_perf)
+        log = (self.log_counter, config_hash, instance, int(rand_perf))
 
         # ensure config has an entry in the log map and store observed performance, add log entry to list
         if config_hash not in self.log_map:
@@ -139,11 +139,14 @@ def test_incumbent_switch() -> None:
 
     # setup test environment
     tm = TrainMockup()
-    smac = get_basic_setup(tm.train)
+    smac = get_basic_setup(tm.train, num_configs=100)
 
     # start smac run
     try:
-        smac.optimize()
+        for i in range(20):
+            trial_info:TrialInfo = smac.ask()
+            val = tm.train(config=trial_info.config, instance=trial_info.instance, cutoff=trial_info.additional_info["cutoff"])
+            smac.tell(trial_info, TrialValue(cost=val))
     except ConfigurationSpaceExhaustedException:
         pass
 

@@ -1,31 +1,40 @@
+# 2.4.1
+## Improvements
+- Include a new multi-objective method based on hypervolume
+
+## Examples
+- An example on the new multi-objective method
+
+
 # 2.4.0
 ## Improvements
 - Replace random forest from pyrfr with random forest from sklearn (#1246)
-
-# 2.3.1
-
-## Bugfixes
-- Addressing situations where the acquisition function suggests configurations that have already been sampled in prior iterations (#1216)
-
-## Misc
-- New SMAC logo
-- Fix doc link in README
-- Rename retries to max_new_config_tries in ConfigSelector (#1207)
-
-## Examples
-- Add target function with additional arguments (#1134)
-
-## Improvements
 - Submit trials to runners in SMBO instead of running configs directly (#937)
-
-## Improvements
 - `target_function` becomes optional in Facade when using ask and tell exclusively (#946)
+- Added adaptive capping for algorithm configuration with runtime as target (#1247) 
+- Readded UCB as an acquisition function (#1255)
 
 ## Documentation
 - Ask and tell without initial design and warmstarting
+- Random forest replacement (sklearn instead of pyrfr)
+- Deterministic configuration of SMAC
+- Add a description of parallelization in the documentation (#1226)
+
+## Examples
+- Add target function with additional arguments (#1134)
+- Adapt parallelization example (#1214)
 
 ## Bugfixes 
-- Ask and tell without initial design may no longer return a config from the initial design - if it is not "removed".  
+- Ask and tell without initial design may no longer return a config from the initial design - if it is not "removed".
+- Addressing situations where the acquisition function suggests configurations that have already been sampled in prior iterations (#1216)
+
+## Misc
+- Rename retries to max_new_config_tries in ConfigSelector (#1207)
+
+# 2.3.1
+## Misc
+- New SMAC logo
+- Fix doc link in README
 
 # 2.3.0
 

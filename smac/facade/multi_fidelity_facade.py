@@ -44,7 +44,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             * None: No shuffling at all and use the instance-seed order provided by the user.
             * "shuffle_once": Shuffle the instance-seed keys once and use the same order across all runs.
             * "shuffle": Shuffles the instance-seed keys for each bracket individually.
-        incumbent_selection : str, defaults to "any_budget"
+        incumbent_selection : str, defaults to "highest_observed_budget"
             How to select the incumbent when using budgets. Can be set to:
             * "any_budget": Incumbent is the best on any budget, i.e., the best performance regardless of budget.
             * "highest_observed_budget": Incumbent is the best in the highest budget run so far.
@@ -72,7 +72,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         scenario: Scenario,
         *,
         n_configs: int | None = None,
-        n_configs_per_hyperparamter: int = 10,
+        n_configs_per_hyperparameter: int = 10,
         max_ratio: float = 0.25,
         additional_configs: list[Configuration] = None,
     ) -> RandomInitialDesign:
@@ -90,7 +90,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         max_ratio: float, defaults to 0.25
             Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.
             Additional configurations are not affected by this parameter.
-        additional_configs: list[Configuration], defaults to []
+        additional_configs: list[Configuration], defaults to None
             Adds additional configurations to the initial design.
         """
         if additional_configs is None:
@@ -98,7 +98,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
         return RandomInitialDesign(
             scenario=scenario,
             n_configs=n_configs,
-            n_configs_per_hyperparameter=n_configs_per_hyperparamter,
+            n_configs_per_hyperparameter=n_configs_per_hyperparameter,
             max_ratio=max_ratio,
             additional_configs=additional_configs,
         )
