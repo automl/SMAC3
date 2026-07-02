@@ -6,6 +6,7 @@ import pytest
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runner.abstract_runner import StatusType
 from smac.scenario import Scenario
+from dataclasses import replace
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -590,6 +591,8 @@ def test_objective_weights(scenario, runhistory, config1, config2):
     # Average cost returns us 0.5
     assert runhistory.get_cost(config1) == 0.5
 
+    scenario = replace(scenario, objective_weights=[1, 2])
+
     # If we change the weights/mo algorithm now, we expect a higher value in the second cost
-    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario, objective_weights=[1, 2])
+    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
     assert round(runhistory.get_cost(config1), 2) == 0.67
