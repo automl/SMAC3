@@ -5,6 +5,8 @@ from ConfigSpace import (
     CategoricalHyperparameter,
     ConfigurationSpace,
     Constant,
+    ForbiddenAndConjunction,
+    ForbiddenEqualsClause,
     NormalFloatHyperparameter,
     NormalIntegerHyperparameter,
     UniformFloatHyperparameter,
@@ -127,3 +129,20 @@ def test_create_uniform_configspace_copy(
 ):
     adapted_configspace = create_uniform_configspace_copy(non_uniform_configspace)
     assert adapted_configspace == uniform_configspace
+
+
+def test_create_uniform_configspace_copy_preserves_forbiddens():
+    cs = ConfigurationSpace(seed=42)
+    x = NormalFloatHyperparameter("x", mu=0.0, sigma=1.0, lower=-3.0, upper=3.0)
+    # default is "b", so the default config doesn't violate the forbidden clause
+    y = CategoricalHyperparameter("y", choices=["a", "b", "c"], default_value="b")
+    cs.add([x, y])
+    cs.add(ForbiddenAndConjunction(ForbiddenEqualsClause(x, -3.0), ForbiddenEqualsClause(y, "a")))
+
+    adapted = create_uniform_configspace_copy(cs)
+
+    assert len(adapted.forbidden_clauses) == 1
+    for _ in range(100):
+        config = adapted.sample_configuration()
+        config.check_valid_configuration()
+        assert not (config["x"] == -3.0 and config["y"] == "a")

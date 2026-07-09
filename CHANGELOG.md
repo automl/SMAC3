@@ -5,8 +5,12 @@
 ## Examples
 - An example on the new multi-objective method
 
+## Bugfixes
+- Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)
+
 
 # 2.4.0
+
 ## Improvements
 - Replace random forest from pyrfr with random forest from sklearn (#1246)
 - Submit trials to runners in SMBO instead of running configs directly (#937)
