@@ -23,18 +23,21 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
         trials: Mapping[TrialKey, TrialValue],
         store_statistics: bool = False,
     ) -> tuple[np.ndarray, np.ndarray]:
-        if len(trials) == 0:
+        n_obj = self._n_objectives
+        n_rows = len(trials)
+        y_dim = self._n_objectives if self._native_multi_objective else 1
+
+        if n_rows == 0:
             X = np.empty((0, self._n_params + self._n_features))
-            y = np.empty((0, 1))
+            y = np.empty((0, y_dim))
             return X, y
 
         # First build nan-matrix of size #configs x #params+1
-        n_rows = len(trials)
         n_cols = self._n_params
         X = np.ones([n_rows, n_cols + self._n_features]) * np.nan
 
         n_obj = self._n_objectives
-        y_raw = np.zeros((n_rows, n_obj), dtype=float) if n_obj > 1 else np.zeros((n_rows, 1))
+        y_raw = np.zeros((n_rows, n_obj), dtype=float)
 
         # Then populate matrix
         for row, (key, run) in enumerate(trials.items()):
@@ -66,19 +69,18 @@ class RunHistoryEncoder(AbstractRunHistoryEncoder):
         else:
             y_raw = np.where(finite_mask, y_raw, max_finite)
 
-        y = np.zeros((n_rows, 1), dtype=float)
+        y = np.zeros([n_rows, y_dim])
 
         if n_obj == 1:
             y = y_raw
-
         else:
             assert self._multi_objective_algorithm is not None
 
             bounds = self.runhistory.objective_bounds
 
             for row in range(n_rows):
-                y_norm = normalize_costs(y_raw[row], bounds)
-                y[row] = self._multi_objective_algorithm(y_norm)
+                y_ = normalize_costs(y_raw[row], bounds) if self._normalize else y_raw[row]
+                y[row] = self._multi_objective_algorithm(y_)
 
         if y.size > 0:
             if store_statistics:
