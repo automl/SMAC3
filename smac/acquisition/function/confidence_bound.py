@@ -10,7 +10,7 @@ from smac.acquisition.function.abstract_acquisition_function import (
 )
 from smac.utils.logging import get_logger
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2022, automl.org"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -21,16 +21,17 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 
     Example for LCB (UCB adds the variance term instead of subtracting it):
 
-    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [[SKKS10][SKKS10]]
+    $LCB(X) = \mu(\mathbf{X}) - \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](/6_references/#SKKS10).
 
     with
 
-    :math:`\beta_t = 2 \log( |D| t^2 / \beta)`
+    $\beta_t = 2 \log( |D| t^2 / \beta)$   $\text{Input space } D$
 
-    :math:`\text{Input space} D`
-    :math:`\text{Number of input dimensions} |D|`
-    :math:`\text{Number of data points} t`
-    :math:`\text{Exploration/exploitation tradeoff} \beta`
+    $\text{Number of input dimensions } |D|$
+
+    $\text{Number of data points } t$
+
+    $\text{Exploration/exploitation tradeoff } \beta$
 
     Returns -LCB(X) as the acquisition_function optimizer maximizes the acquisition value.
 
@@ -61,7 +62,9 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 
     """
 
-    def __init__(self, beta: float = 1.0, nu: float = 1.0, update_beta=True, beta_scaling_srinivas=False) -> None:
+    def __init__(
+        self, beta: float = 1.0, nu: float = 1.0, update_beta: bool = True, beta_scaling_srinivas: bool = False
+    ) -> None:
         super(AbstractConfidenceBound, self).__init__()
         self._beta: float = beta
         self._nu: float = nu
@@ -71,7 +74,7 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 
     @property
     @abstractmethod
-    def bound_type(self) -> str:
+    def bound_type(self) -> str:  # noqa: D102
         ...
 
     @property
@@ -150,16 +153,19 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
 class LCB(AbstractConfidenceBound):
     r"""Computes the lower confidence bound for a given x over the best so far value as acquisition value.
 
-    :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
+    $LCB(X) = \mu(\mathbf{X}) - \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](/6_references/#SKKS10).
 
     with
 
-    :math:`\beta_t = 2 \log( |D| t^2 / \beta)`
+    $\beta_t = 2 \log( |D| t^2 / \beta)$
 
-    :math:`\text{Input space} D`
-    :math:`\text{Number of input dimensions} |D|`
-    :math:`\text{Number of data points} t`
-    :math:`\text{Exploration/exploitation tradeoff} \beta`
+    $\text{Input space } D$
+
+    $\text{Number of input dimensions } |D|$
+
+    $\text{Number of data points } t$
+
+    $\text{Exploration/exploitation tradeoff } \beta$
 
     Returns -LCB(X) as the acquisition_function optimizer maximizes the acquisition value.
 
@@ -180,7 +186,7 @@ class LCB(AbstractConfidenceBound):
     """
 
     @property
-    def bound_type(self) -> str:
+    def bound_type(self) -> str:  # noqa: D102
         return "LCB"
 
     @property
@@ -191,16 +197,19 @@ class LCB(AbstractConfidenceBound):
 class UCB(AbstractConfidenceBound):
     r"""Computes the upper confidence bound for a given x over the best so far value as acquisition value.
 
-    :math:`UCB(X) = \mu(\mathbf{X}) + \sqrt(\beta_t)\sigma(\mathbf{X})` [SKKS10]_
+    $UCB(X) = \mu(\mathbf{X}) + \sqrt{\beta_t}\sigma(\mathbf{X})$ [SKKS10](/6_references/#SKKS10).
 
     with
 
-    :math:`\beta_t = 2 \log( |D| t^2 / \beta)`
+    $\beta_t = 2 \log( |D| t^2 / \beta)$
 
-    :math:`\text{Input space} D`
-    :math:`\text{Number of input dimensions} |D|`
-    :math:`\text{Number of data points} t`
-    :math:`\text{Exploration/exploitation tradeoff} \beta`
+    $\text{Input space } D$
+
+    $\text{Number of input dimensions } |D|$
+
+    $\text{Number of data points } t$
+
+    $\text{Exploration/exploitation tradeoff } \beta$
 
     Returns -UCB(X) as the acquisition_function optimizer maximizes the acquisition value.
 
@@ -221,7 +230,7 @@ class UCB(AbstractConfidenceBound):
     """
 
     @property
-    def bound_type(self) -> str:
+    def bound_type(self) -> str:  # noqa: D102
         return "UCB"
 
     @property

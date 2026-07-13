@@ -330,8 +330,8 @@ class SMBO:
 
             # Some statistics
             logger.debug(
-                f"Remaining wallclock time: {self.remaining_walltime}; "
-                f"Remaining cpu time: {self.remaining_cputime}; "
+                f"Remaining wallclock time: {self.remaining_walltime}, "
+                f"Remaining cpu time: {self.remaining_cputime}, "
                 f"Remaining trials: {self.remaining_trials}"
             )
 
@@ -380,6 +380,7 @@ class SMBO:
         # We also reset runhistory and intensifier here
         self._runhistory.reset()
         self._intensifier.reset()
+        self._trial_generator = iter(self._intensifier)
 
     def exists(self, filename: str | Path) -> bool:
         """Checks if the files associated with the run already exist.
@@ -543,7 +544,7 @@ class SMBO:
                     )
                     logger.info(
                         f"Found old run in `{self._scenario.output_directory}` but it is not the same as the current "
-                        f"one:\n{diff}"
+                        f"one: \n{diff}"
                     )
 
                     feedback = input(

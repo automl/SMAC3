@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable
+from typing import Any, Callable, Optional, Union
 
 import copy
 import inspect
@@ -108,11 +108,12 @@ class TargetFunctionRunner(AbstractSerialRunner):
     def run(
         self,
         config: Configuration,
-        instance: str | None = None,
-        budget: float | None = None,
-        seed: int | None = None,
+        instance: Optional[str] = None,
+        budget: Optional[float] = None,
+        seed: Optional[int] = None,
+        additional_info: Optional[dict[str, Any]] = None,
         **dask_data_to_scatter: dict[str, Any],
-    ) -> tuple[StatusType, float | list[float], float, float, dict]:
+    ) -> tuple[StatusType, Union[float, list[float]], float, float, dict[str, Any]]:
         """Calls the target function with pynisher if algorithm wall time limit or memory limit is
         set. Otherwise, the function is called directly.
 
@@ -126,6 +127,8 @@ class TargetFunctionRunner(AbstractSerialRunner):
             A positive, real-valued number representing an arbitrary limit to the target function
             handled by the target function internally.
         seed : int, defaults to None
+        additional_info : dict[str, Any] | None, defaults to None
+            Additional information to be passed to the target function.
         dask_data_to_scatter: dict[str, Any]
             This kwargs must be empty when we do not use dask! ()
             When a user scatters data from their local process to the distributed network,
@@ -145,7 +148,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
             The time the target function took to run.
         cpu_time : float
             The time the target function took on the hardware to run.
-        additional_info : dict
+        val_additional_info : dict
             All further additional trial information.
         """
         # The kwargs are passed to the target function.
@@ -161,11 +164,14 @@ class TargetFunctionRunner(AbstractSerialRunner):
         if "budget" in self._required_arguments:
             kwargs["budget"] = budget
 
+        if "cutoff" in self._required_arguments and additional_info is not None:
+            kwargs["cutoff"] = additional_info["cutoff"]
+
         # Presetting
         cost: float | list[float] = self._crash_cost
         runtime = 0.0
         cpu_time = runtime
-        additional_info = {}
+        val_additional_info = {}
         status = StatusType.CRASHED
 
         # If memory limit or walltime limit is set, we wanna use pynisher
@@ -197,19 +203,19 @@ class TargetFunctionRunner(AbstractSerialRunner):
             status = StatusType.MEMORYOUT
         except Exception as e:
             cost = np.asarray(cost).squeeze().tolist()
-            additional_info = {
+            val_additional_info = {
                 "traceback": traceback.format_exc(),
                 "error": repr(e),
             }
             status = StatusType.CRASHED
 
         if status != StatusType.SUCCESS:
-            return status, cost, runtime, cpu_time, additional_info
+            return status, cost, runtime, cpu_time, val_additional_info
 
         if isinstance(rval, tuple):
-            result, additional_info = rval
+            result, val_additional_info = rval
         else:
-            result, additional_info = rval, {}
+            result, val_additional_info = rval, {}
 
         # Do some sanity checking (for multi objective)
         error = f"Returned costs {result} does not match the number of objectives {self._objectives}."
@@ -245,7 +251,7 @@ class TargetFunctionRunner(AbstractSerialRunner):
         # We want to get either a float or a list of floats.
         cost = np.asarray(cost).squeeze().tolist()
 
-        return status, cost, runtime, cpu_time, additional_info
+        return status, cost, runtime, cpu_time, val_additional_info
 
     def __call__(
         self,
