@@ -816,6 +816,10 @@ class RandomForest(AbstractRandomForest):
         X = self._impute_inactive(X)
 
         X_feat = np.asarray(list(self._instance_features.values()))
+        if self._apply_pca:
+            X_feat = self._scaler.transform(X_feat)
+            X_feat = np.nan_to_num(X_feat)
+            X_feat = self._pca.transform(X_feat)
         dat_ = self._rf.predict_marginalized_over_instances_batch(X, X_feat, self._log_y)
         dat_ = np.array(dat_)
 
