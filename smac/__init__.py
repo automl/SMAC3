@@ -31,6 +31,7 @@ try:
         HyperbandFacade,
         HyperparameterOptimizationFacade,
         MultiFidelityFacade,
+        MultiObjectiveFacade,
         RandomFacade,
     )
     from smac.runhistory.runhistory import RunHistory
@@ -45,6 +46,7 @@ try:
         "AlgorithmConfigurationFacade",
         "RandomFacade",
         "HyperbandFacade",
+        "MultiObjectiveFacade",
         "Callback",
     ]
 except ModuleNotFoundError as e:

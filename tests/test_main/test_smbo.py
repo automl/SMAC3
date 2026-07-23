@@ -33,7 +33,7 @@ def test_termination_cost_threshold(rosenbrock):
     assert smac.validate(i) < termination_cost_threshold
 
 
-def test_termination_cost_threshold_with_fidelities(rosenbrock):
+def test_termination_cost_threshold_with_fidelities(rosenbrock, compute_cost):
     max_budget = 9
     termination_cost_threshold = 100
     scenario = Scenario(
@@ -53,7 +53,7 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock):
     counter = 0
     config = None
     for c in smac.runhistory.get_configs():
-        if smac.runhistory.get_cost(c) < termination_cost_threshold:
+        if compute_cost(smac.runhistory, c) < termination_cost_threshold:
             config = c
             counter += 1
 
