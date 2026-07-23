@@ -15,6 +15,7 @@ from smac import Callback
 from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import Scenario
 from smac.runhistory import TrialInfo, TrialValue
+from smac.utils.cost_transformer import CostTransformer
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -54,7 +55,16 @@ class CustomCallback(Callback):
             incumbent = smbo.intensifier.get_incumbent()
             assert incumbent is not None
             print(f"Current incumbent: {incumbent.get_dictionary()}")
-            print(f"Current incumbent value: {smbo.runhistory.get_cost(incumbent)}")
+            raw_costs = smbo.runhistory.get_costs(incumbent)
+            cost = CostTransformer.aggregate(
+                raw_costs,
+                method="mean",
+                normalize=True,
+                bounds=smbo.runhistory.objective_bounds,
+                scalarize=True,
+                algorithm=smbo.runhistory.multi_objective_algorithm,
+            )
+            print(f"Current incumbent value: {cost}")
             print("")
 
         if self.trials_counter == 50:

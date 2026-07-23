@@ -22,6 +22,7 @@ from smac.runner import FirstRunCrashedException
 from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.scenario import Scenario
+from smac.utils.cost_transformer import CostTransformer
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
 from smac.utils.numpyencoder import NumpyEncoder
@@ -375,6 +376,7 @@ class SMBO:
         # We also reset runhistory and intensifier here
         self._runhistory.reset()
         self._intensifier.reset()
+        self._trial_generator = iter(self._intensifier)
 
     def exists(self, filename: str | Path) -> bool:
         """Checks if the files associated with the run already exist.
@@ -469,7 +471,8 @@ class SMBO:
 
             # Gracefully end optimization if termination cost is reached
             if self._scenario.termination_cost_threshold != np.inf:
-                cost = self.runhistory.average_cost(trial_info.config)
+                raw_cost = self.runhistory.get_costs(trial_info.config)
+                cost = CostTransformer.mean(raw_cost)
 
                 if not isinstance(cost, list):
                     cost = [cost]

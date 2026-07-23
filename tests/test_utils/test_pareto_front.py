@@ -30,15 +30,15 @@ def test_crowding_distance(configspace_small):
     configs = configspace_small.sample_configuration(20)
     config_instance_seed_budget_keys = [[isb_key]] * 20
 
-    # Add points on pareto
+    # Add points on Pareto
     rh.add(configs[0], cost=[5, 5], instance=isb_key.instance, budget=isb_key.budget, seed=isb_key.seed)
     rh.add(configs[1], cost=[4, 6], instance=isb_key.instance, budget=isb_key.budget, seed=isb_key.seed)
 
-    # Add points not on pareto
+    # Add points not on Pareto
     rh.add(configs[2], cost=[5, 6], instance=isb_key.instance, budget=isb_key.budget, seed=isb_key.seed)
     rh.add(configs[3], cost=[5, 6], instance=isb_key.instance, budget=isb_key.budget, seed=isb_key.seed)
 
-    # Calculate pareto front
+    # Calculate Pareto front
     incumbents = calculate_pareto_front(rh, configs[:4], config_instance_seed_budget_keys[:4])
     sorted_configs = sort_by_crowding_distance(rh, incumbents, config_instance_seed_budget_keys[: len(incumbents)])
     # Nothing should happen if we only have two points on the pareto front

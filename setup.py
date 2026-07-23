@@ -21,6 +21,12 @@ def read_file(filepath: str) -> str:
 
 
 extras_require = {
+    "pyrfr": [
+        "pyrfr>=0.9.0",
+    ],
+    "mosmac": [
+        "pymoo"
+    ],
     "dev": [
         "setuptools",
         "types-setuptools",
@@ -52,9 +58,9 @@ extras_require = {
         "pillow",
         "cairosvg",
         "black",                # This allows mkdocstrings to format signatures in the docs
-        "pytest",
+        "pytest<8",
         "pytest-coverage",
-        "pytest-cases",
+        "pytest-cases>=3.8",
     ],
 }
 
@@ -79,8 +85,7 @@ setuptools.setup(
         "pynisher>=1.0.0",
         "ConfigSpace>=1.0.0",
         "joblib",
-        "scikit-learn>=1.1.2",
-        "pyrfr>=0.9.0",
+        "scikit-learn>=1.6.1",
         "dask[distributed]",
         "dask_jobqueue>=0.8.2",
         "emcee>=3.0.0",

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Iterable, Iterator, Mapping, cast
+from typing import Any, Iterable, Iterator, Mapping
 
 import json
 from collections import OrderedDict
@@ -21,9 +21,8 @@ from smac.runhistory.dataclasses import (
     TrialValue,
 )
 from smac.runhistory.enumerations import StatusType
-from smac.utils.configspace import get_config_hash
+from smac.utils.cost_transformer import CostTransformer
 from smac.utils.logging import get_logger
-from smac.utils.multi_objective import normalize_costs
 from smac.utils.numpyencoder import NumpyEncoder
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -33,16 +32,13 @@ logger = get_logger(__name__)
 
 
 class RunHistory(Mapping[TrialKey, TrialValue]):
-    """Container for the target function run information.
+    """Store raw trial results produced during target-function evaluations.
 
-    Most importantly, the runhistory contains an efficient mapping from each evaluated configuration to the
-    empirical cost observed on either the full instance set or a subset. The cost is the average over all
-    observed costs for one configuration:
+    Runhistory is a lookup container for trial records keyed by configuration, instance, seed, and budget.
+    It keeps the original trial metadata and raw costs exactly as received, and exposes helpers for querying,
+    serializing, and updating trial data.
 
-    * If using budgets for a single instance, only the cost on the highest observed budget is returned.
-    * If using instances as the budget, the average cost over all evaluated instances is returned.
-    * Theoretically, the runhistory object can handle instances and budgets at the same time. This is
-      neither used nor tested.
+    Any cost transformation is handled outside of RunHistory.
 
     Note
     ----
@@ -54,6 +50,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         The multi-objective algorithm is required to scalarize the costs in case of multi-objective.
     overwrite_existing_trials : bool, defaults to false
         Overwrites a trial (combination of configuration, instance, budget and seed) if it already exists.
+    n_objectives: int, defaults to -1
+        The number of objectives. If none are provided it is computed when a configuration is added to the runhistory.
     """
 
     def __init__(
@@ -84,7 +82,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     @property
     def multi_objective_algorithm(self) -> AbstractMultiObjectiveAlgorithm | None:
-        """The multi-objective algorithm required to scaralize the costs in case of multi-objective."""
+        """The multi-objective algorithm required to scalarize the costs in case of multi-objective."""
         return self._multi_objective_algorithm
 
     @multi_objective_algorithm.setter
@@ -127,15 +125,11 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         self._ids_config: dict[int, Configuration] = {}
         self._n_id = 0
 
-        # Stores cost for each configuration ID
-        self._cost_per_config: dict[int, float | list[float]] = {}
-        # Stores min cost across all budgets for each configuration ID
-        self._min_cost_per_config: dict[int, float | list[float]] = {}
-        # Maps the configuration ID to the number of runs for that configuration
-        # and is necessary for computing the moving average.
-        self._num_trials_per_config: dict[int, int] = {}
-
         self._objective_bounds: list[tuple[float, float]] = []
+
+        # Store incumbents. Gets updated whenever the incumbents in the
+        # intensifier are updated
+        self._incumbents: list[Configuration] = []
 
     def __contains__(self, k: object) -> bool:
         """Dictionary semantics for `k in runhistory`."""
@@ -156,6 +150,15 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
     def __eq__(self, other: Any) -> bool:
         """Enables to check equality of runhistory if the run is continued."""
         return self._data == other._data
+
+    @property
+    def incumbents(self) -> list[Configuration]:
+        """Return the incumbents (points on the Pareto front) of the runhistory."""
+        return self._incumbents
+
+    @incumbents.setter
+    def incumbents(self, incumbents: list[Configuration]) -> None:
+        self._incumbents = incumbents
 
     def empty(self) -> bool:
         """Check whether the RunHistory is empty.
@@ -327,8 +330,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
         Parameters
         ----------
-        trial : TrialInfo
+        info : TrialInfo
             The ``TrialInfo`` object of the running trial.
+        value : TrialValue
+            The ``TrialValue`` object of the running trial.
         """
         self.add(
             config=info.config,
@@ -363,266 +368,15 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             budget=trial.budget,
         )
 
-    def update_cost(self, config: Configuration) -> None:
-        """Stores the performance of a configuration across the instances in `self._cost_per_config`
-        and also updates `self._num_trials_per_config`.
-
-        Parameters
-        ----------
-        config: Configuration
-            configuration to update cost based on all trials in runhistory
-        """
-        config_id = self._config_ids[config]
-
-        # Removing duplicates while keeping the order
-        inst_seed_budgets = list(
-            dict.fromkeys(self.get_instance_seed_budget_keys(config, highest_observed_budget_only=True))
-        )
-        self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
-        self._num_trials_per_config[config_id] = len(inst_seed_budgets)
-
-        all_isb = list(dict.fromkeys(self.get_instance_seed_budget_keys(config, highest_observed_budget_only=False)))
-        self._min_cost_per_config[config_id] = self.min_cost(config, all_isb)
-
-    def incremental_update_cost(self, config: Configuration, cost: float | list[float]) -> None:
-        """Incrementally updates the performance of a configuration by using a moving average.
-
-        Parameters
-        ----------
-        config: Configuration
-            configuration to update cost based on all trials in runhistory
-        cost: float
-            cost of new run of config
-        """
-        config_id = self._config_ids[config]
-        n_trials = self._num_trials_per_config.get(config_id, 0)
-
-        if self._n_objectives > 1:
-            costs = np.array(cost)
-            old_costs = self._cost_per_config.get(config_id, np.array([0.0 for _ in range(self._n_objectives)]))
-            old_costs = np.array(old_costs)
-
-            new_costs = ((old_costs * n_trials) + costs) / (n_trials + 1)
-            self._cost_per_config[config_id] = new_costs.tolist()
-        else:
-            old_cost = self._cost_per_config.get(config_id, 0.0)
-
-            assert isinstance(cost, float)
-            assert isinstance(old_cost, float)
-            self._cost_per_config[config_id] = ((old_cost * n_trials) + cost) / (n_trials + 1)
-
-        self._num_trials_per_config[config_id] = n_trials + 1
-
-    def get_cost(self, config: Configuration) -> float:
-        """Returns empirical cost for a configuration. See the class docstring for how the costs are
-        computed. The costs are not re-computed, but are read from cache.
-
-        Parameters
-        ----------
-        config: Configuration
-
-        Returns
-        -------
-        cost: float
-            Computed cost for configuration
-        """
-        config_id = self._config_ids.get(config)
-
-        # Cost is always a single value (Single objective) or a list of values (Multi-objective)
-        # For example, _cost_per_config always holds the value on the highest budget
-        cost = self._cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
-
-        if self._n_objectives > 1:
-            assert isinstance(cost, list)
-            assert self.multi_objective_algorithm is not None
-
-            # We have to normalize the costs here
-            costs = normalize_costs(cost, self._objective_bounds)
-
-            # After normalization, we get the weighted average
-            return self.multi_objective_algorithm(costs)
-
-        assert isinstance(cost, float)
-        return float(cost)
-
-    def get_min_cost(self, config: Configuration) -> float:
-        """Returns the lowest empirical cost for a configuration across all trials.
-
-        See the class docstring for how the costs are computed. The costs are not re-computed
-        but are read from cache.
-
-        Parameters
-        ----------
-        config : Configuration
-
-        Returns
-        -------
-        min_cost: float
-            Computed cost for configuration
-        """
-        config_id = self._config_ids.get(config)
-        cost = self._min_cost_per_config.get(config_id, np.nan)  # type: ignore
-
-        if self._n_objectives > 1:
-            assert isinstance(cost, list)
-            assert self.multi_objective_algorithm is not None
-
-            costs = normalize_costs(cost, self._objective_bounds)
-
-            # Note: We have to mean here because we already got the min cost
-            return self.multi_objective_algorithm(costs)
-
-        assert isinstance(cost, float)
-        return float(cost)
-
-    def average_cost(
-        self,
-        config: Configuration,
-        instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
-        normalize: bool = False,
-    ) -> float | list[float]:
-        """Return the average cost of a configuration. This is the mean of costs of all instance-
-        seed pairs.
-
-        Parameters
-        ----------
-        config : Configuration
-            Configuration to calculate objective for.
-        instance_seed_budget_keys : list, optional (default=None)
-            List of tuples of instance-seeds-budget keys. If None, the runhistory is
-            queried for all trials of the given configuration.
-        normalize : bool, optional (default=False)
-            Normalizes the costs wrt. objective bounds in the multi-objective setting.
-            Only a float is returned if normalize is True. Warning: The value can change
-            over time because the objective bounds are changing. Also, the objective weights are
-            incorporated.
-
-        Returns
-        -------
-        Cost: float | list[float]
-            Average cost. In case of multiple objectives, the mean of each objective is returned.
-        """
-        costs = self._cost(config, instance_seed_budget_keys)
-        if costs:
-            if self._n_objectives > 1:
-                # Each objective is averaged separately
-                # [[100, 200], [0, 0]] -> [50, 100]
-                averaged_costs = np.mean(costs, axis=0).tolist()
-
-                if normalize:
-                    assert self.multi_objective_algorithm is not None
-                    normalized_costs = normalize_costs(averaged_costs, self._objective_bounds)
-
-                    return self.multi_objective_algorithm(normalized_costs)
-                else:
-                    return averaged_costs
-
-            return float(np.mean(costs))
-
-        return np.nan
-
-    def sum_cost(
-        self,
-        config: Configuration,
-        instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
-        normalize: bool = False,
-    ) -> float | list[float]:
-        """Return the sum of costs of a configuration. This is the sum of costs of all instance-seed
-        pairs.
-
-        Parameters
-        ----------
-        config : Configuration
-            Configuration to calculate objective for.
-        instance_seed_budget_keys : list, optional (default=None)
-            List of tuples of instance-seeds-budget keys. If None, the runhistory is
-            queried for all trials of the given configuration.
-        normalize : bool, optional (default=False)
-            Normalizes the costs wrt objective bounds in the multi-objective setting.
-            Only a float is returned if normalize is True. Warning: The value can change
-            over time because the objective bounds are changing. Also, the objective weights are
-            incorporated.
-
-        Returns
-        -------
-        sum_cost: float | list[float]
-            Sum of costs of config. In case of multiple objectives, the costs are summed up for each
-            objective individually.
-        """
-        costs = self._cost(config, instance_seed_budget_keys)
-        if costs:
-            if self._n_objectives > 1:
-                # Each objective is summed separately
-                # [[100, 200], [20, 10]] -> [120, 210]
-                summed_costs = np.sum(costs, axis=0).tolist()
-
-                if normalize:
-                    assert self.multi_objective_algorithm is not None
-                    normalized_costs = normalize_costs(summed_costs, self._objective_bounds)
-
-                    return self.multi_objective_algorithm(normalized_costs)
-                else:
-                    return summed_costs
-
-        return float(np.sum(costs))
-
-    def min_cost(
-        self,
-        config: Configuration,
-        instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
-        normalize: bool = False,
-    ) -> float | list[float]:
-        """Return the minimum cost of a configuration. This is the minimum cost of all instance-seed
-         pairs.
-
-        Warning
-        -------
-        In the case of multi-fidelity, the minimum cost per objectives is returned.
-
-        Parameters
-        ----------
-        config : Configuration
-            Configuration to calculate objective for.
-        instance_seed_budget_keys : list, optional (default=None)
-            List of tuples of instance-seeds-budget keys. If None, the runhistory is
-            queried for all trials of the given configuration.
-        normalize : bool, optional (default=False)
-            Normalizes the costs wrt objective bounds in the multi-objective setting.
-            Only a float is returned if normalize is True. Warning: The value can change
-            over time because the objective bounds are changing. Also, the objective weights are
-            incorporated.
-
-        Returns
-        -------
-        min_cost: float | list[float]
-            Minimum cost of the config. In case of multi-objective, the minimum cost per objective
-            is returned.
-        """
-        costs = self._cost(config, instance_seed_budget_keys)
-        if costs:
-            if self._n_objectives > 1:
-                # Each objective is viewed separately
-                # [[100, 200], [20, 500]] -> [20, 200]
-                min_costs = np.min(costs, axis=0).tolist()
-
-                if normalize:
-                    assert self.multi_objective_algorithm is not None
-                    normalized_costs = normalize_costs(min_costs, self._objective_bounds)
-
-                    return self.multi_objective_algorithm(normalized_costs)
-                else:
-                    return min_costs
-
-            return float(np.min(costs))
-
-        return np.nan
-
     def get_config(self, config_id: int) -> Configuration:
         """Returns the configuration from the configuration id."""
         return self._ids_config[config_id]
 
     def get_config_id(self, config: Configuration) -> int:
         """Returns the configuration id from a configuration."""
+        if config not in self._config_ids:
+            logger.warning("Requested id of unknown configuration!")
+            return -1
         return self._config_ids[config]
 
     def has_config(self, config: Configuration) -> bool:
@@ -646,7 +400,22 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         configs = list(self._config_ids.keys())
 
         if sort_by == "cost":
-            return sorted(configs, key=lambda config: self._cost_per_config[self._config_ids[config]])
+
+            def compute_cost(config):  # type: ignore
+                raw_costs = self.get_costs(config)
+                cost = CostTransformer.aggregate(
+                    raw_costs,
+                    method="mean",
+                    normalize=True,
+                    bounds=self.objective_bounds,
+                    scalarize=True,
+                    algorithm=self.multi_objective_algorithm,
+                )
+                if cost is None or np.isnan(cost):
+                    return float("inf")
+                return cost
+
+            return sorted(configs, key=compute_cost)
         elif sort_by == "num_trials":
             return sorted(configs, key=lambda config: len(self.get_trials(config)))
         elif sort_by is None:
@@ -953,30 +722,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 additional_info=value.additional_info,
             )
 
-    def update_costs(self, instances: list[str] | None = None) -> None:
-        """Computes the cost of all configurations from scratch and overwrites `self._cost_per_config`
-        and `self._num_trials_per_config` accordingly.
-
-        Parameters
-        ----------
-        instances: list[str] | None, defaults to none
-            List of instances; if given, cost is only computed wrt to this instance set.
-        """
-        self._cost_per_config = {}
-        self._num_trials_per_config = {}
-        for config, config_id in self._config_ids.items():
-            # Removing duplicates while keeping the order
-            inst_seed_budgets = list(
-                dict.fromkeys(self.get_instance_seed_budget_keys(config, highest_observed_budget_only=True))
-            )
-            if instances is not None:
-                inst_seed_budgets = list(filter(lambda x: x.instance in cast(list, instances), inst_seed_budgets))
-
-            if inst_seed_budgets:  # can be empty if never saw any trials on instances
-                self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
-                self._min_cost_per_config[config_id] = self.min_cost(config, inst_seed_budgets)
-                self._num_trials_per_config[config_id] = len(inst_seed_budgets)
-
     def _check_json_serializable(
         self,
         key: str,
@@ -1019,13 +764,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             self._objective_bounds += [(min_v, max_v)]
 
     def _add(self, k: TrialKey, v: TrialValue, status: StatusType) -> None:
-        """
-        Actual function to add new entry to data structures.
-
-        Note
-        ----
-        This method always calls `update_cost` in the multi-objective setting.
-        """
+        """Actual function to add new entry to data structures."""
         self._data[k] = v
 
         # Update objective bounds based on raw data
@@ -1063,21 +802,6 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 # Append new budget to existing inst-seed-key dict
                 self._config_id_to_isk_to_budget[k.config_id][isk].append(k.budget)
 
-            config = self._ids_config[k.config_id]
-            config_hash = get_config_hash(config)
-
-            # If budget is used, then update cost instead of incremental updates
-            if not self._overwrite_existing_trials and k.budget == 0:
-                logger.debug(f"Incremental update cost for config {config_hash}")
-                # Assumes an average across trials as cost function aggregation, this is used for
-                # algorithm configuration (incremental updates are used to save time as getting the
-                # cost for > 100 instances is high)
-                self.incremental_update_cost(config, v.cost)
-            else:
-                # This happens when budget > 0 (only successive halving and hyperband so far)
-                logger.debug(f"Update cost for config {config_hash}.")
-                self.update_cost(config)
-
         # Make TrialInfo object
         trial_info = TrialInfo(self.get_config(k.config_id), instance=k.instance, seed=k.seed, budget=k.budget)
 
@@ -1090,10 +814,11 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             if trial_info in self._running_trials:
                 self._running_trials.remove(trial_info)
 
-    def _cost(
+    def get_costs(
         self,
         config: Configuration,
         instance_seed_budget_keys: list[InstanceSeedBudgetKey] | None = None,
+        highest_observed_budget_only: bool = True,
     ) -> list[float | list[float]]:
         """Returns a list of all costs for the given config for further calculations.
         The costs are directly taken from the RunHistory data.
@@ -1105,10 +830,12 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         instance_seed_budget_keys : list, defaults to None
             List of tuples of instance-seeds-budget keys. If None, the RunHistory is
             queried for all trials of the given configuration.
+        highest_observed_budget_only : bool, defaults to True
+            Select only the highest observed budget costs for this configuration.
 
         Returns
         -------
-        costs: list[list[float] | list[list[float]]]
+        costs: list[float] | list[list[float]]
             List of all found costs. In case of multi-objective, the list contains lists.
         """
         try:
@@ -1117,7 +844,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             return []
 
         if instance_seed_budget_keys is None:
-            instance_seed_budget_keys = self.get_instance_seed_budget_keys(config, highest_observed_budget_only=True)
+            instance_seed_budget_keys = self.get_instance_seed_budget_keys(config, highest_observed_budget_only)
 
         costs = []
         for key in instance_seed_budget_keys:

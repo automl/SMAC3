@@ -5,11 +5,17 @@ from smac import HyperparameterOptimizationFacade, MultiFidelityFacade, Scenario
 
 def test_termination_cost_threshold(rosenbrock):
     termination_cost_threshold = 100
-    scenario = Scenario(rosenbrock.configspace, n_trials=200, termination_cost_threshold=termination_cost_threshold)
+    scenario = Scenario(
+        rosenbrock.configspace,
+        n_trials=200,
+        termination_cost_threshold=termination_cost_threshold,
+    )
     smac = HyperparameterOptimizationFacade(
         scenario,
         rosenbrock.train,
-        intensifier=HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=1),
+        intensifier=HyperparameterOptimizationFacade.get_intensifier(
+            scenario, max_config_calls=1
+        ),
         overwrite=True,
     )
     i = smac.optimize()
@@ -27,7 +33,7 @@ def test_termination_cost_threshold(rosenbrock):
     assert smac.validate(i) < termination_cost_threshold
 
 
-def test_termination_cost_threshold_with_fidelities(rosenbrock):
+def test_termination_cost_threshold_with_fidelities(rosenbrock, compute_cost):
     max_budget = 9
     termination_cost_threshold = 100
     scenario = Scenario(
@@ -47,7 +53,7 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock):
     counter = 0
     config = None
     for c in smac.runhistory.get_configs():
-        if smac.runhistory.get_cost(c) < termination_cost_threshold:
+        if compute_cost(smac.runhistory, c) < termination_cost_threshold:
             config = c
             counter += 1
 
@@ -55,3 +61,29 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock):
     assert config == i
     assert counter == 1
     assert smac.validate(i) < termination_cost_threshold
+
+
+def test_smbo_reset(rosenbrock):
+    scenario = Scenario(rosenbrock.configspace, n_trials=3)
+    smac = HyperparameterOptimizationFacade(
+        scenario,
+        rosenbrock.train,
+        intensifier=HyperparameterOptimizationFacade.get_intensifier(
+            scenario, max_config_calls=1
+        ),
+        overwrite=True,
+    )
+
+    smac.optimize()
+    runhistory_len_before_reset = len(smac.runhistory)
+    assert runhistory_len_before_reset == 3
+
+    smac.optimizer.reset()
+
+    assert smac.optimizer._used_target_function_walltime == 0.0
+    assert smac.optimizer._used_target_function_cputime == 0.0
+    assert len(smac.runhistory) == 0
+
+    smac.optimize()
+    runhistory_len_after_reset = len(smac.runhistory)
+    assert runhistory_len_after_reset == 3

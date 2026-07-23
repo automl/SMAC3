@@ -347,9 +347,6 @@ class AbstractFacade:
         ----------
         config : Configuration
             Configuration to validate
-        instances : list[str] | None, defaults to None
-            Which instances to validate. If None, all instances specified in the scenario are used.
-            In case that the budget type is real-valued, this argument is ignored.
         seed : int | None, defaults to None
             If None, the seed from the scenario is used.
 
@@ -427,11 +424,18 @@ class AbstractFacade:
     def get_config_selector(
         scenario: Scenario,
         *,
-        retrain_after: int = 8,
+        retrain_after: int | None = 8,
+        retrain_wallclock_ratio: int | None = None,
         retries: int = 16,
     ) -> ConfigSelector:
         """Returns the default configuration selector."""
-        return ConfigSelector(scenario, retrain_after=retrain_after, max_new_config_tries=retries)
+        return ConfigSelector(
+            scenario,
+            retrain_after=retrain_after,
+            retrain_wallclock_ratio=retrain_wallclock_ratio,
+            # retries=retries,
+            max_new_config_tries=retries,
+        )
 
     def _get_optimizer(self) -> SMBO:
         """Fills the SMBO with all the pre-initialized components."""
@@ -484,5 +488,8 @@ class AbstractFacade:
 
         if self._intensifier.uses_instances:
             arguments += ["instance"]
+
+        if self._intensifier.uses_cutoffs:
+            arguments += ["cutoff"]
 
         return arguments

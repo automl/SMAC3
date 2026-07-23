@@ -33,11 +33,18 @@ class Scenario:
     output_directory : Path, defaults to Path("smac3_output")
         The directory in which to save the output. The files are saved in `./output_directory/name/seed`.
     deterministic : bool, defaults to False
-        If deterministic is set to true, only one seed is passed to the target function.
-        Otherwise, multiple seeds (if n_seeds of the intensifier is greater than 1) are passed
-        to the target function to ensure generalization.
+        If True, only one seed is passed to the target function, assuming deterministic (noise-free) behavior.
+        Otherwise, multiple seeds are passed (if `n_seeds` > 1) to enable repeated evaluations.
+        For non-deterministic functions, users must specify intensification parameters
+        (e.g., `max_config_calls`, `n_seeds`) to ensure reliable performance estimates
+        and optionally model noise in the Gaussian Process surrogate.
     objectives : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
+    objective_weights : list[float] | None, defaults to None
+        Optional preference weights for multi-objective optimization.
+        Indicate the relative importance of each objective when aggregating them
+        (e.g., using MeanAggregationStrategy or ParEGO). Must be non-negative
+        and have the same length as the number of objectives in the scenario.
     crash_cost : float | list[float], defaults to np.inf
         Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
         a different cost.
@@ -68,6 +75,13 @@ class Scenario:
     instance_features : dict[str, list[float]] | None, defaults to None
         Instances can be associated with features. For example, meta data of the dataset (mean, var, ...) can be
         incorporated which are then further used to expand the training data of the surrogate model.
+    adaptive_capping: bool, defaults to False
+        Adaptive capping allows to preemptiveley cancel the evaluation of candidates as soon as their accumulative cost
+        exceed the cost of the current incumbent. If a runtime_cutoff is set, SMAC will allocate budgets that are capped
+        at the runtime_cutoff.
+    runtime_cutoff: int | None, defaults to None
+        A runtime cutoff can be set to limit the maximum runtime allowed for a single configuration to run solving
+        instances.
     min_budget : float | int | None, defaults to None
         The minimum budget (epochs, subset size, number of instances, ...) that is used for the optimization.
         Use this argument if you use multi-fidelity or instance optimization.
@@ -89,6 +103,7 @@ class Scenario:
 
     # Objectives
     objectives: str | list[str] = "cost"
+    objective_weights: list[float] | None = None
     crash_cost: float | list[float] = np.inf
     termination_cost_threshold: float | list[float] = np.inf
 
@@ -103,6 +118,9 @@ class Scenario:
     # Algorithm Configuration
     instances: list[str] | None = None
     instance_features: dict[str, list[float]] | None = None
+    adaptive_capping: bool = False
+    adaptive_capping_slackfactor: float | None = None
+    runtime_cutoff: int | None = None
 
     # Budgets
     min_budget: float | int | None = None
@@ -128,6 +146,19 @@ class Scenario:
         if self.instance_features is not None:
             instance_features = {str(instance): features for instance, features in self.instance_features.items()}
             object.__setattr__(self, "instance_features", instance_features)
+
+        # Validate that we have a runtime cutoff set if adaptive capping slackfactor is given
+        if self.adaptive_capping_slackfactor is not None and self.runtime_cutoff is None:
+            raise ValueError("If adaptive_capping_slackfactor is set, then runtime_cutoff must be set as well.")
+
+        if self.objective_weights is not None:
+            n_objectives = self.count_objectives()
+            # Ensure one weight per objective
+            if len(self.objective_weights) != n_objectives:
+                raise ValueError("objective_weights must have the same length as objectives")
+            # Ensure weights are non-negative
+            if any(w < 0 for w in self.objective_weights):
+                raise ValueError("objective_weights must be non-negative")
 
         # Change directory wrt name and seed
         self._change_output_directory()
