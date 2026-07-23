@@ -219,7 +219,8 @@ for trial_info, trial_value in smac.runhistory.items():
 # Iterate over all configs
 for config in smac.runhistory.get_configs():
     # Get the cost of all trials of this config
-    average_cost = smac.runhistory.average_cost(config)
+    raw_costs = smac.runhistory.get_costs(config)
+    average_cost = CostTransformer.mean(raw_costs)
 ```
 
 !!! warning

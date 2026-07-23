@@ -6,6 +6,7 @@ import pytest
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runner.abstract_runner import StatusType
 from smac.scenario import Scenario
+from smac.utils.cost_transformer import CostTransformer
 from dataclasses import replace
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -143,7 +144,7 @@ def test_add_multiple_times(scenario, runhistory, config1):
     assert list(runhistory._data.values())[0].cost == [1.0, 2.0]
 
 
-def test_full(scenario, runhistory, config1, config2, config3):
+def test_full(scenario, runhistory, config1, config2, config3, compute_cost):
     runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
     runhistory.add(
         config=config1,
@@ -153,7 +154,7 @@ def test_full(scenario, runhistory, config1, config2, config3):
     )
 
     # Only one value: Normalization goes to 1.0
-    assert runhistory.get_cost(config1) == 1.0
+    assert compute_cost(runhistory, config1) == 1.0
 
     runhistory.add(
         config=config2,
@@ -164,10 +165,10 @@ def test_full(scenario, runhistory, config1, config2, config3):
 
     # The cost of the first config must be updated
     # We would expect [0, 1] and the normalized value would be 0.5
-    assert runhistory.get_cost(config1) == 0.5
+    assert compute_cost(runhistory, config1) == 0.5
 
     # We would expect [1, 0] and the normalized value would be 0.5
-    assert runhistory.get_cost(config2) == 0.5
+    assert compute_cost(runhistory, config2) == 0.5
 
     runhistory.add(
         config=config3,
@@ -177,69 +178,58 @@ def test_full(scenario, runhistory, config1, config2, config3):
     )
 
     # [0, 1] -> 0.5
-    assert runhistory.get_cost(config1) == 0.5
+    assert compute_cost(runhistory, config1) == 0.5
 
     # [1, 0.5] -> 0.75
-    assert runhistory.get_cost(config2) == 0.75
+    assert compute_cost(runhistory, config2) == 0.75
 
     # [0.5, 0] -> 0.25
-    assert runhistory.get_cost(config3) == 0.25
+    assert compute_cost(runhistory, config3) == 0.25
 
+def test_cost_transformer(scenario):
+    algo = MeanAggregationStrategy(scenario)
 
-def test_full_update(scenario, runhistory, config1, config2):
-    runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
-    runhistory.overwrite_existing_runs = True
+    raw_costs = [
+        [10.0, 50.0],
+        [20.0, 30.0],
+        [30.0, 10.0],
+    ]
 
-    runhistory.add(
-        config=config1,
-        cost=[10, 40],
-        time=20,
-        status=StatusType.SUCCESS,
-        instance=1,
-        seed=1,
+    bounds = [(10.0, 30.0), (10.0, 50.0)]
+
+    # Aggregation only
+    result = CostTransformer.aggregate(raw_costs, method="mean")
+    assert result == pytest.approx([20.0, 30.0])
+
+    # Aggregation + normalization
+    result = CostTransformer.aggregate(
+        raw_costs,
+        method="mean",
+        normalize=True,
+        bounds=bounds,
+    )
+    # Expected:
+    # obj1: (20-10)/(30-10) = 0.5
+    # obj2: (30-10)/(50-10) = 0.5
+    assert result == pytest.approx([0.5, 0.5])
+
+    # Aggregation + normalization + scalarization
+    result = CostTransformer.aggregate(
+        raw_costs,
+        method="mean",
+        normalize=True,
+        bounds=bounds,
+        scalarize=True,
+        algorithm=algo,
     )
 
-    runhistory.add(
-        config=config1,
-        cost=[0, 100],
-        time=20,
-        status=StatusType.SUCCESS,
-        instance=2,
-        seed=2,
-    )
+    # mean of normalized values
+    assert result == pytest.approx(0.5)
 
-    runhistory.add(
-        config=config2,
-        cost=[10, 40],
-        time=20,
-        status=StatusType.SUCCESS,
-        instance=1,
-        seed=1,
-    )
+    assert CostTransformer.min(raw_costs) == pytest.approx([10.0, 10.0])
+    assert CostTransformer.sum(raw_costs) == pytest.approx([60.0, 90.0])
 
-    runhistory.add(
-        config=config2,
-        cost=[20, 80],
-        time=20,
-        status=StatusType.SUCCESS,
-        instance=2,
-        seed=2,
-    )
-
-    cost_config2 = runhistory.get_cost(config2)
-
-    runhistory.update_costs()
-    updated_cost_config2 = runhistory.get_cost(config2)
-
-    assert cost_config2 == updated_cost_config2
-
-    runhistory.update_costs(instances=[2])
-    updated_cost_config2 = runhistory.get_cost(config2)
-
-    assert updated_cost_config2 == pytest.approx(0.833, 0.001)
-
-
-def test_incremental_update(scenario, runhistory, config1):
+def test_incremental_update(scenario, runhistory, config1, compute_cost):
     runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     runhistory.add(
@@ -251,7 +241,7 @@ def test_incremental_update(scenario, runhistory, config1):
         seed=1,
     )
 
-    assert runhistory.get_cost(config1) == 1.0
+    assert compute_cost(runhistory, config1) == 1.0
 
     runhistory.add(
         config=config1,
@@ -264,7 +254,7 @@ def test_incremental_update(scenario, runhistory, config1):
 
     # We don't except moving average of 0.75 here because
     # the costs should always be updated.
-    assert runhistory.get_cost(config1) == 0.5
+    assert compute_cost(runhistory, config1) == 0.5
 
     runhistory.add(
         config=config1,
@@ -275,10 +265,10 @@ def test_incremental_update(scenario, runhistory, config1):
         seed=1,
     )
 
-    assert runhistory.get_cost(config1) == pytest.approx(0.583, 0.001)
+    assert compute_cost(runhistory, config1) == pytest.approx(0.583, 0.001)
 
 
-def test_multiple_budgets(scenario, runhistory, config1):
+def test_multiple_budgets(scenario, runhistory, config1, compute_cost):
     runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     runhistory.add(
@@ -291,7 +281,7 @@ def test_multiple_budgets(scenario, runhistory, config1):
         budget=1,
     )
 
-    assert runhistory.get_cost(config1) == 1.0
+    assert compute_cost(runhistory, config1) == 1.0
 
     # Only the higher budget gets included in the config cost
     # However, we expect that the bounds are changed
@@ -305,7 +295,7 @@ def test_multiple_budgets(scenario, runhistory, config1):
         budget=5,
     )
 
-    assert runhistory.get_cost(config1) == 0.5
+    assert compute_cost(runhistory, config1) == 0.5
 
 
 def test_get_configs_per_budget(scenario, runhistory, config1, config2, config3):
@@ -453,7 +443,7 @@ def test_bounds_on_crash(scenario, runhistory, config1, config2, config3):
     assert runhistory._objective_bounds[1] == (50, 150)
 
 
-def test_instances(scenario, runhistory, config1, config2):
+def test_instances(scenario, runhistory, config1, config2, compute_cost):
     runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     runhistory.add(
@@ -510,11 +500,11 @@ def test_instances(scenario, runhistory, config1, config2):
     assert runhistory._objective_bounds[1] == (10, 30)
 
     # Average cost returns us the cost of the latest budget
-    assert runhistory.get_cost(config1) == 0.375
-    assert runhistory.get_cost(config2) == 0.75
+    assert compute_cost(runhistory, config1) == 0.375
+    assert compute_cost(runhistory, config2) == 0.75
 
 
-def test_budgets(scenario, runhistory, config1, config2):
+def test_budgets(scenario, runhistory, config1, config2, compute_cost):
     runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
 
     runhistory.add(
@@ -562,14 +552,16 @@ def test_budgets(scenario, runhistory, config1, config2):
     assert runhistory._objective_bounds[1] == (50, 150)
 
     # Average cost returns us the cost of the latest budget
-    assert runhistory.get_cost(config1) == 0.75
-    assert runhistory.average_cost(config1), [40.0, 100.0]
+    assert compute_cost(runhistory, config1) == 0.75
+    raw_costs1 = runhistory.get_costs(config1)
+    assert CostTransformer.mean(raw_costs1) == [40.0, 100.0]
 
-    assert runhistory.get_cost(config2) == 0.5
-    assert runhistory.average_cost(config2) == [0, 150]
+    assert compute_cost(runhistory, config2) == 0.5
+    raw_costs2 = runhistory.get_costs(config2)
+    assert CostTransformer.mean(raw_costs2) == [0, 150]
 
 
-def test_objective_weights(scenario, runhistory, config1, config2):
+def test_objective_weights(scenario, runhistory, config1, config2, compute_cost):
     runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
     runhistory.add(
         config=config1,
@@ -589,10 +581,10 @@ def test_objective_weights(scenario, runhistory, config1, config2):
     assert runhistory._objective_bounds[1] == (0, 10)
 
     # Average cost returns us 0.5
-    assert runhistory.get_cost(config1) == 0.5
+    assert compute_cost(runhistory, config1) == 0.5
 
     scenario = replace(scenario, objective_weights=[1, 2])
 
     # If we change the weights/mo algorithm now, we expect a higher value in the second cost
     runhistory.multi_objective_algorithm = MeanAggregationStrategy(scenario)
-    assert round(runhistory.get_cost(config1), 2) == 0.67
+    assert round(compute_cost(runhistory, config1), 2) == 0.67

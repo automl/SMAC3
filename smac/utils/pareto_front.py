@@ -5,6 +5,7 @@ from ConfigSpace import Configuration
 
 from smac.runhistory import RunHistory
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey
+from smac.utils.cost_transformer import CostTransformer
 
 
 def _get_costs(
@@ -41,9 +42,8 @@ def _get_costs(
         # configuration
         # However, we only want to consider the config trials
         # Average cost is a list of floats (one for each objective)
-        average_cost = runhistory.average_cost(
-            config, isb_keys, normalize=normalize, run_multi_objective_algorithm=normalize
-        )
+        raw_costs = runhistory.get_costs(config, isb_keys)
+        average_cost = CostTransformer.mean(raw_costs)
         average_costs += [average_cost]
 
     # Let's work with a numpy array for efficiency
