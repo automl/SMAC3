@@ -378,7 +378,7 @@ def test_rf_with_log_y():
 
 
 def test_predict_marginalized_with_pca_instance_features():
-    #Test that predict_marginalized() works correctly when PCA is active
+    # Test that predict_marginalized() works correctly when PCA is active
     rs = np.random.RandomState(1)
 
     instance_features = {
