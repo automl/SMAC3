@@ -27,13 +27,13 @@ try:
     from smac.callback.callback import Callback
     from smac.facade import (
         AlgorithmConfigurationFacade,
+        AskExhaustedWarnMode,
         BlackBoxFacade,
         HyperbandFacade,
         HyperparameterOptimizationFacade,
         MultiFidelityFacade,
         MultiObjectiveFacade,
         RandomFacade,
-        AskExhaustedWarnMode
     )
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario import Scenario
@@ -49,8 +49,8 @@ try:
         "HyperbandFacade",
         "MultiObjectiveFacade",
         "Callback",
-        "AskExhaustedWarnMode"
-        ]
+        "AskExhaustedWarnMode",
+    ]
 except ModuleNotFoundError as e:
     print(e)
     traceback.print_exc()
