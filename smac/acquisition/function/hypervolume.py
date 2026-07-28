@@ -78,7 +78,6 @@ class AbstractHVI(AbstractAcquisitionFunction):
         ----------
         points : np.ndarray
             A 2d numpy array. 1st dimension is an entity and the 2nd dimension are the costs
-        reference_point : list
 
         Return
         ------
