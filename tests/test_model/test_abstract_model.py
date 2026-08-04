@@ -23,6 +23,16 @@ def get_X_y(cs, n_samples, n_instance_features):
 def _train(X, Y):
     return None
 
+class MyAbstractModel(AbstractModel):
+    # dummy class to ensure that the required methods are implemented
+    @property
+    def is_trained(self):
+        return self._is_trained
+
+    def _train(self, X, Y):
+        self._is_trained = True
+        return self
+
 
 def test_no_pca(configspace_small, make_scenario):
     n_instances = 100
@@ -35,7 +45,7 @@ def test_no_pca(configspace_small, make_scenario):
         n_instances=n_instances,
         n_instance_features=n_instance_features,
     )
-    model = AbstractModel(configspace_small, scenario.instance_features, pca_components=7)
+    model = MyAbstractModel(configspace_small, scenario.instance_features, pca_components=7)
     # We just overwrite the function as mock here
     model._train = _train
 
@@ -68,7 +78,7 @@ def test_pca(configspace_small, make_scenario):
         n_instances=n_instances,
         n_instance_features=n_instance_features,
     )
-    model = AbstractModel(configspace_small, scenario.instance_features, pca_components=7)
+    model = MyAbstractModel(configspace_small, scenario.instance_features, pca_components=7)
     # We just overwrite the function as mock here
     model._train = _train
 
@@ -88,3 +98,16 @@ def test_pca(configspace_small, make_scenario):
     X_test, _ = get_X_y(configspace_small, n_samples, 10)
     with pytest.raises(ValueError, match="Feature mismatch.*"):
         model.predict_marginalized(X_test)
+
+def test_abstract_model_raises_without_istrained(configspace_small):
+    class DummyModel(AbstractModel):
+        def _train(self, X: np.ndarray, Y: np.ndarray):
+            self._is_trained = True
+            return self
+
+        # @property  # -> because this code is missing, it should raise
+        # def is_trained(self) -> bool:
+        #     return self._is_trained
+
+    with pytest.raises(TypeError, match="instantiate abstract class"):
+        model = DummyModel(configspace_small)

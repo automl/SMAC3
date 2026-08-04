@@ -14,6 +14,11 @@ logger = get_logger(__name__)
 class RandomModel(AbstractModel):
     """AbstractModel which returns random values on a call to `fit`."""
 
+    @property
+    def is_trained(self) -> bool:
+        """Returns whether the model is trained or not."""
+        return self._is_trained
+
     def _train(self, X: np.ndarray, Y: np.ndarray) -> RandomModel:
         if not isinstance(X, np.ndarray):
             raise NotImplementedError("X has to be of type np.ndarray.")

@@ -176,6 +176,16 @@ def test_predict():
         assert m_hat.shape == (10, 1)
         assert v_hat.shape == (10, 1)
 
+def test_is_trained():
+    seed = 1
+    rs = np.random.RandomState(seed)
+    X, Y, n_dims = get_cont_data(rs)
+
+    model = get_gp(n_dims, seed)
+    assert not model.is_trained
+    model._train(X[:10], Y[:10], optimize_hyperparameters=False)
+    assert model.is_trained
+
 
 def test_train_do_optimize():
     # Check that do_optimize does not mess with the kernel hyperparameters given to the Gaussian process!
