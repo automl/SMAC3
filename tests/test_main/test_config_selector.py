@@ -7,6 +7,7 @@ from smac import HyperparameterOptimizationFacade, Scenario
 
 def test_exhausted_configspace():
     cs = ConfigurationSpace()
+    # The configuration space contains only 3 possible configurations.
     cs.add(Categorical("x", [1, 2, 3]))
 
     def objective_function(x, seed):
@@ -23,5 +24,7 @@ def test_exhausted_configspace():
         overwrite=True,
     )
 
-    with pytest.raises(ConfigurationSpaceExhaustedException):
-        smac.optimize()
+    smac.optimize()
+
+    # SMAC should stop gracefully after evaluating all 3 configurations.
+    assert len(smac.runhistory.get_configs()) == 3
