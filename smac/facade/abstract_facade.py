@@ -82,6 +82,8 @@ class AbstractFacade:
     multi_objective_algorithm : AbstractMultiObjectiveAlgorithm | None, defaults to None
         In case of multiple objectives, the objectives need to be interpreted so that an optimization is possible.
         The multi-objective algorithm takes care of that.
+    runhistory : RunHistory | None, defaults to None
+        The runhistory to store the trials. If None, a new runhistory is created.
     runhistory_encoder : RunHistoryEncoder | None, defaults to None
         Based on the runhistory, the surrogate model is trained. However, the data first needs to be encoded, which
         is done by the runhistory encoder. For example, inactive hyperparameters need to be encoded or cost values
@@ -119,6 +121,7 @@ class AbstractFacade:
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
+        runhistory: RunHistory | None = None,
         logging_level: int | Path | Literal[False] | None = None,
         callbacks: list[Callback] = None,
         overwrite: bool = False,
@@ -157,8 +160,9 @@ class AbstractFacade:
             config_selector = self.get_config_selector(scenario)
 
         # Initialize empty stats and runhistory object
-        n_objectives = len(scenario.objectives) if isinstance(scenario.objectives, list) else -1
-        runhistory = RunHistory(multi_objective_algorithm=multi_objective_algorithm, n_objectives=n_objectives)
+        if runhistory is None:
+            n_objectives = len(scenario.objectives) if isinstance(scenario.objectives, list) else -1
+            runhistory = RunHistory(multi_objective_algorithm=multi_objective_algorithm, n_objectives=n_objectives)
 
         # Set the seed for configuration space
         scenario.configspace.seed(scenario.seed)
