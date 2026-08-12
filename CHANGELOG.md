@@ -8,6 +8,7 @@
 
 ## Bugfixes
 - Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)
+- Apply fitted PCA preprocessing to instance features when predicting marginalized costs with `RandomForest`.
 
 
 # 2.4.0

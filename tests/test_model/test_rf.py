@@ -376,3 +376,33 @@ def test_rf_with_log_y():
     assert np.allclose(mean1, mean2)
     assert np.allclose(var1, var2)
 
+
+def test_predict_marginalized_with_pca_instance_features():
+    # Test that predict_marginalized() works correctly when PCA is active
+    rs = np.random.RandomState(1)
+
+    instance_features = {
+        f"instance-{i}": list(rs.rand(10))
+        for i in range(10)
+    }
+
+    model = RandomForest(
+        configspace=_get_cs(10),
+        instance_features=instance_features,
+        pca_components=4,
+    )
+
+    # 10 configuration dimensions + 10 instance-feature dimensions
+    X_train = rs.rand(80, 20)
+    Y_train = rs.rand(80, 1)
+    model.train(X_train, Y_train)
+
+    assert model._apply_pca
+
+    X_test = rs.rand(5, 10)
+    means, variances = model.predict_marginalized(X_test)
+
+    assert means.shape == (5, 1)
+    assert variances.shape == (5, 1)
+    assert np.isfinite(means).all()
+    assert np.isfinite(variances).all()
