@@ -27,7 +27,6 @@ try:
     from smac.callback.callback import Callback
     from smac.facade import (
         AlgorithmConfigurationFacade,
-        AskExhaustedWarnMode,
         BlackBoxFacade,
         HyperbandFacade,
         HyperparameterOptimizationFacade,
@@ -49,7 +48,6 @@ try:
         "HyperbandFacade",
         "MultiObjectiveFacade",
         "Callback",
-        "AskExhaustedWarnMode",
     ]
 except ModuleNotFoundError as e:
     print(e)

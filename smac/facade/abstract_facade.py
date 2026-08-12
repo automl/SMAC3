@@ -37,44 +37,12 @@ from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.runner.target_function_script_runner import TargetFunctionScriptRunner
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger, setup_logging
+from smac.utils.ask_and_tell import validate_warn_mode
 
 logger = get_logger(__name__)
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
-
-
-class AskExhaustedWarnMode(str, Enum):
-    WARN_ONCE = "warn_once"
-    WARN_NEVER = "warn_never"
-    WARN_ALWAYS = "warn_always"
-    EXCEPTION = "exception"
-
-    @classmethod
-    def normalize(cls, value: "AskExhaustedWarnMode | str") -> str:
-        """Normalize and validate the warn_mode value.
-
-        Parameters
-        ----------
-        value : AskExhaustedWarnMode | str
-            The warn_mode value to normalize.
-
-        Returns
-        -------
-        str
-            The normalized warn_mode string.
-
-        Raises
-        ------
-        ValueError
-            If the provided value is not a valid warn_mode.
-        """
-        if isinstance(value, cls):
-            value = value.value
-        allowed = {"warn_once", "warn_never", "warn_always", "exception"}
-        if value not in allowed:
-            raise ValueError(f"Unknown warn_mode `{value}`. Allowed: {sorted(allowed)}")
-        return value
 
 
 class AbstractFacade:
@@ -161,7 +129,7 @@ class AbstractFacade:
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
         logging_level: int | Path | Literal[False] | None = None,
-        warn_mode: AskExhaustedWarnMode | str = "warn_always",
+        warn_mode: str = "warn_always",
         callbacks: list[Callback] = None,
         overwrite: bool = False,
         dask_client: Client | None = None,
@@ -216,7 +184,7 @@ class AbstractFacade:
         self._multi_objective_algorithm = multi_objective_algorithm
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
-        self._warn_mode = AskExhaustedWarnMode.normalize(warn_mode)
+        self._warn_mode = validate_warn_mode(warn_mode)
         self._config_selector = config_selector
         self._callbacks = callbacks
         self._overwrite = overwrite

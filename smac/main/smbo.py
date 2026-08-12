@@ -27,6 +27,7 @@ from smac.utils.cost_transformer import CostTransformer
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
 from smac.utils.numpyencoder import NumpyEncoder
+from smac.constants import ASK_AND_TELL_VALID_WARN_MODES
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -78,9 +79,8 @@ class SMBO:
         self._runner = runner
         self._overwrite = overwrite
 
-        allowed_warn_modes = {"warn_once", "warn_never", "warn_always", "exception"}
-        if warn_mode not in allowed_warn_modes:
-            raise ValueError(f"Unknown warn_mode `{warn_mode}`. Allowed: {sorted(allowed_warn_modes)}")
+        if warn_mode not in ASK_AND_TELL_VALID_WARN_MODES:
+            raise ValueError(f"Unknown warn_mode `{warn_mode}`. Allowed: {sorted(ASK_AND_TELL_VALID_WARN_MODES)}")
 
         self._warn_mode = warn_mode
 
@@ -91,9 +91,12 @@ class SMBO:
         self._warned_on_ask_after_budget_exhausted = False
 
         # Stats variables
-        self._start_time: float | None = None
         self._used_target_function_walltime = 0.0
         self._used_target_function_cputime = 0.0
+
+        # Start the timer. In case of resuming an optimization process, the starting time is set by the load method
+        self._start_time: float = time.time()
+
 
         # Set walltime used method for intensifier
         self._intensifier.used_walltime = lambda: self.used_walltime  # type: ignore
@@ -115,9 +118,8 @@ class SMBO:
     @property
     def remaining_walltime(self) -> float:
         """Subtracts the runtime configuration budget with the used wallclock time."""
-        if self._start_time is None:
-            return self._scenario.walltime_limit
-
+        
+        assert self._start_time is not None
         return self._scenario.walltime_limit - (time.time() - self._start_time)
 
     @property
@@ -315,11 +317,6 @@ class SMBO:
             else:
                 return self.intensifier.get_incumbents()
 
-        # Start the timer before we do anything
-        # If we continue the optimization, the starting time is set by the load method
-        if self._start_time is None:
-            self._start_time = time.time()
-
         for callback in self._callbacks:
             callback.on_start(self)
 
@@ -404,6 +401,7 @@ class SMBO:
         self._used_target_function_cputime = 0
         self._finished = False
         self._warned_on_ask_after_budget_exhausted = False
+        self._start_time: time.time()
 
         # We also reset runhistory and intensifier here
         self._runhistory.reset()
