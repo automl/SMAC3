@@ -2,6 +2,7 @@
 
 from smac.constants import ASK_AND_TELL_VALID_WARN_MODES
 
+
 def validate_warn_mode(value: str) -> str:
     """Validate that the warn_mode value is supported.
 

@@ -14,6 +14,7 @@ from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.callback.callback import Callback
+from smac.constants import ASK_AND_TELL_VALID_WARN_MODES
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.main.exceptions import AskAndTellBudgetExhaustedError
 from smac.model.abstract_model import AbstractModel
@@ -27,7 +28,6 @@ from smac.utils.cost_transformer import CostTransformer
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
 from smac.utils.numpyencoder import NumpyEncoder
-from smac.constants import ASK_AND_TELL_VALID_WARN_MODES
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -97,7 +97,6 @@ class SMBO:
         # Start the timer. In case of resuming an optimization process, the starting time is set by the load method
         self._start_time: float = time.time()
 
-
         # Set walltime used method for intensifier
         self._intensifier.used_walltime = lambda: self.used_walltime  # type: ignore
 
@@ -118,7 +117,6 @@ class SMBO:
     @property
     def remaining_walltime(self) -> float:
         """Subtracts the runtime configuration budget with the used wallclock time."""
-        
         assert self._start_time is not None
         return self._scenario.walltime_limit - (time.time() - self._start_time)
 
@@ -401,7 +399,7 @@ class SMBO:
         self._used_target_function_cputime = 0
         self._finished = False
         self._warned_on_ask_after_budget_exhausted = False
-        self._start_time: time.time()
+        self._start_time = time.time()
 
         # We also reset runhistory and intensifier here
         self._runhistory.reset()

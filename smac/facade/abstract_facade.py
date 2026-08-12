@@ -3,7 +3,6 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any, Callable
 
-from enum import Enum
 from pathlib import Path
 
 import joblib
@@ -36,8 +35,8 @@ from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.runner.target_function_script_runner import TargetFunctionScriptRunner
 from smac.scenario import Scenario
-from smac.utils.logging import get_logger, setup_logging
 from smac.utils.ask_and_tell import validate_warn_mode
+from smac.utils.logging import get_logger, setup_logging
 
 logger = get_logger(__name__)
 
@@ -93,7 +92,7 @@ class AbstractFacade:
         expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.
         If False is passed, SMAC will not do any customization of the logging setup and the responsibility is left
         to the user.
-    warn_mode: enum, defaults to "warn_always"
+    warn_mode: str, defaults to "warn_always"
         The warn_mode to consider for the warning levels for trials
         after the budget is exploited. The default is "warn_always",
         which means that the user will get repeated warnings.
