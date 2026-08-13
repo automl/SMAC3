@@ -160,6 +160,7 @@ class Scenario:
         if self.instance_features is not None:
             instance_features = {str(instance): features for instance, features in self.instance_features.items()}
             object.__setattr__(self, "instance_features", instance_features)
+            self._check_instance_features(instance_features)
 
         # Validate that we have a runtime cutoff set if adaptive capping slackfactor is given
         if self.adaptive_capping_slackfactor is not None and self.runtime_cutoff is None:
@@ -205,6 +206,16 @@ class Scenario:
         Meta data are set when the facade is initialized.
         """
         return self._meta  # type: ignore
+
+    @staticmethod
+    def _check_instance_features(instance_features: dict[str, list[float]]) -> None:
+        """Checks whether instance features contain only finite values."""
+        for instance, features in instance_features.items():
+            if not np.isfinite(features).all():
+                raise ValueError(
+                    f"Instance features for instance '{instance}' contain non-finite values. "
+                    "Please provide finite numerical instance features before passing them to SMAC."
+                )
 
     def count_objectives(self) -> int:
         """Counts the number of objectives."""

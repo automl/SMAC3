@@ -1,6 +1,7 @@
 # 2.4.1
 ## Improvements
 - Include a new multi-objective method based on hypervolume
+- Batch model predictions when selecting the best predicted configuration.
 
 ## Examples
 - An example on the new multi-objective method
