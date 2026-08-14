@@ -4,6 +4,7 @@ import numpy as np
 from ConfigSpace import Configuration
 
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.utils.cost_transformer import CostTransformer
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2022, automl.org"
@@ -38,12 +39,13 @@ class NewCostDominatesOldCost(AbstractIntensifier):
         if not hasattr(self, "_old_config_cost"):
             self._old_config_cost: dict[Configuration, list[float]] = {}
 
-        new_cost: list[float] = self.runhistory.average_cost(config, config_isb_keys)  # type: ignore[assignment]
+        raw_costs = self.runhistory.get_costs(config, config_isb_keys)
+        new_cost: list[float] = CostTransformer.mean(raw_costs)  # type: ignore[assignment]
         if config not in self._old_config_cost:
             self._old_config_cost[config] = new_cost
             return True
 
-        old_cost: list[float] = self._old_config_cost[config]
+        old_cost = self._old_config_cost[config]
         if _dominates(new_cost, old_cost):
             self._old_config_cost[config] = new_cost
             return True
@@ -71,7 +73,8 @@ class NewCostDominatesOldCostSkipFirst(AbstractIntensifier):
         if not hasattr(self, "_old_config_cost"):
             self._old_config_cost: dict[Configuration, list[float]] = {}
 
-        new_cost: list[float] = self.runhistory.average_cost(config, config_isb_keys)  # type: ignore[assignment]
+        raw_costs = self.runhistory.get_costs(config, config_isb_keys)
+        new_cost: list[float] = CostTransformer.mean(raw_costs)  # type: ignore[assignment]
         if config not in self._old_config_cost:
             self._old_config_cost[config] = new_cost
             return False

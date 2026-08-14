@@ -69,6 +69,19 @@ class Scenario:
         For historic benchmark reasons, this is False by default.
         Notice, that this will result in n_configs + 1 for the initial design. Respecting n_trials,
         this will result in one fewer evaluated configuration in the optimization.
+    initial_design_warmstart_mode : str, defaults to "additional"
+        Controls how configurations that are already in the runhistory before the first `ask()` call
+        (e.g. because they were passed via `tell()` for warmstarting, or because a previous run is being
+        continued) relate to the initial design's own configurations:
+        * ``"additional"``: The already-evaluated configurations are treated as pure extra information.
+          The initial design is not affected and still proposes its full, configured number of
+          configurations.
+        * ``"reduce_budget"``: The already-evaluated configurations count against the initial design's
+          budget. The initial design proposes only as many additional configurations as are still
+          missing to reach its originally configured number of configurations.
+        * ``"replace"``: The already-evaluated configurations are treated as the complete initial design.
+          The initial design does not propose any additional configurations of its own; SMAC moves on
+          directly to model-based optimization.
     instances : list[str] | None, defaults to None
         Names of the instances to use. If None, no instances are used.
         Instances could be dataset names, seeds, subsets, etc.
@@ -114,6 +127,7 @@ class Scenario:
     trial_memory_limit: int | None = None
     n_trials: int = 100
     use_default_config: bool = False
+    initial_design_warmstart_mode: str = "additional"
 
     # Algorithm Configuration
     instances: list[str] | None = None
@@ -146,10 +160,18 @@ class Scenario:
         if self.instance_features is not None:
             instance_features = {str(instance): features for instance, features in self.instance_features.items()}
             object.__setattr__(self, "instance_features", instance_features)
+            self._check_instance_features(instance_features)
 
         # Validate that we have a runtime cutoff set if adaptive capping slackfactor is given
         if self.adaptive_capping_slackfactor is not None and self.runtime_cutoff is None:
             raise ValueError("If adaptive_capping_slackfactor is set, then runtime_cutoff must be set as well.")
+
+        valid_warmstart_modes = ("additional", "reduce_budget", "replace")
+        if self.initial_design_warmstart_mode not in valid_warmstart_modes:
+            raise ValueError(
+                f"`initial_design_warmstart_mode` must be one of {valid_warmstart_modes}, "
+                f"got {self.initial_design_warmstart_mode!r}."
+            )
 
         if self.objective_weights is not None:
             n_objectives = self.count_objectives()
@@ -184,6 +206,16 @@ class Scenario:
         Meta data are set when the facade is initialized.
         """
         return self._meta  # type: ignore
+
+    @staticmethod
+    def _check_instance_features(instance_features: dict[str, list[float]]) -> None:
+        """Checks whether instance features contain only finite values."""
+        for instance, features in instance_features.items():
+            if not np.isfinite(features).all():
+                raise ValueError(
+                    f"Instance features for instance '{instance}' contain non-finite values. "
+                    "Please provide finite numerical instance features before passing them to SMAC."
+                )
 
     def count_objectives(self) -> int:
         """Counts the number of objectives."""

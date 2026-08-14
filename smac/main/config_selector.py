@@ -177,8 +177,24 @@ class ConfigSelector:
         logger.debug("Search for the next configuration...")
         self._call_callbacks_on_start()
 
+        # Configurations that are already in the runhistory at this point can be related
+        # to the initial design's own configurations in different ways depending on the warmstart mode.
+        initial_design_configs = self._initial_design_configs
+        n_warmstarted = len(self._processed_configs)
+
+        if n_warmstarted > 0:
+            mode = self._scenario.initial_design_warmstart_mode
+            if mode == "reduce_budget":
+                # The already-evaluated configs count against the initial design's budget: we only
+                # propose as many (still missing) configs as are needed to reach the original budget.
+                initial_design_configs = initial_design_configs[n_warmstarted:]
+            elif mode == "replace":
+                # The already-evaluated configs *are* the complete initial design.
+                initial_design_configs = []
+            # "additional" (default): the initial design is not affected at all.
+
         # First: We return the initial configurations
-        for config in self._initial_design_configs:
+        for config in initial_design_configs:
             if config not in self._processed_configs:
                 self._processed_configs.append(config)
                 self._call_callbacks_on_end(config)
@@ -413,18 +429,13 @@ class ConfigSelector:
         """
         if self._predict_x_best:
             model = self._model
-            costs = list(
-                map(
-                    lambda x: (
-                        model.predict_marginalized(x.reshape((1, -1)))[0][0][0],  # type: ignore
-                        x,
-                    ),
-                    X,
-                )
-            )
-            costs = sorted(costs, key=lambda t: t[0])
-            x_best_array = costs[0][1]
-            best_observation = costs[0][0]
+            assert model is not None
+
+            means, _ = model.predict_marginalized(X)
+            costs = means[:, 0]
+            best_index = int(np.argmin(costs))
+            x_best_array = X[best_index]
+            best_observation = float(costs[best_index])
 
         # else:
         #    all_configs = self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)
