@@ -27,6 +27,9 @@ extras_require = {
     "mosmac": [
         "pymoo"
     ],
+    "tabpfn": [
+        "tabpfn>=8.3.0",
+    ],
     "dev": [
         "setuptools",
         "types-setuptools",
