@@ -91,4 +91,4 @@ jobs:
         uses: ./.github/actions/setup-python-env
 
       - name: Deploy documentation
-        run: uv run mkdocs gh-deploy --force
+        run: uv run properdocs gh-deploy -f mkdocs.yaml --force
