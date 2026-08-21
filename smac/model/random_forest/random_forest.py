@@ -834,3 +834,57 @@ class RandomForest(AbstractRandomForest):
             var = var.reshape((-1, 1))
 
         return mean_, var
+
+    @property
+    def supports_joint_samples(self) -> bool:  # noqa: D102
+        # Each tree of the forest is one function sample over all requested points at once, so the
+        # empirical covariance across trees is available. With instance features the predictions
+        # are marginalized over instances first, which does not preserve that structure, so we
+        # fall back to independent draws there.
+        return self._n_features == 0
+
+    def sample_joint(
+        self,
+        X: np.ndarray,
+        n_samples: int,
+        rng: np.random.Generator | np.random.RandomState,
+    ) -> np.ndarray:
+        """Draws joint function samples from the forest.
+
+        The individual trees provide ``n_trees`` function samples over the requested points. Those
+        are too few to use directly, so they are treated as an empirical Gaussian and resampled:
+        the draws come from ``N(mu, D @ D.T)`` where ``mu`` is the per-point mean over trees and
+        ``D`` holds the tree deviations scaled by ``1 / sqrt(n_trees)``. The diagonal of
+        ``D @ D.T`` is exactly the variance the forest already reports through ``predict``, so the
+        marginals of these samples agree with ``predict_marginalized`` by construction. The
+        factored form keeps the cost at ``O(#samples * n_trees * n_samples)`` and never forms an
+        ``N x N`` covariance matrix.
+
+        Parameters
+        ----------
+        X : np.ndarray [#samples, #hyperparameters]
+            Input data points.
+        n_samples : int
+            Number of joint samples to draw.
+        rng : np.random.Generator | np.random.RandomState
+            Random number generator used for the draws.
+
+        Returns
+        -------
+        samples : np.ndarray [n_samples, #samples]
+            The drawn function values, on the same scale as ``predict``.
+        """
+        if not self.supports_joint_samples:
+            return super().sample_joint(X, n_samples, rng)
+
+        assert self._rf is not None
+
+        X = self._impute_inactive(X)
+        predictions = self._rf.all_trees_pred(X)
+        n_trees = predictions.shape[1]
+
+        mean = predictions.mean(axis=1)
+        deviations = (predictions - mean[:, np.newaxis]) / np.sqrt(n_trees)
+        weights = rng.standard_normal((n_trees, n_samples))
+
+        return (mean[:, np.newaxis] + deviations @ weights).T

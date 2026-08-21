@@ -4,6 +4,9 @@ from typing import Any
 
 from ConfigSpace import Configuration, ConfigurationSpace
 
+from smac.acquisition.batch_selector.abstract_batch_selector import (
+    AbstractBatchSelector,
+)
 from smac.acquisition.function import AbstractAcquisitionFunction
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
@@ -50,6 +53,13 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
     seed : int, defaults to 0
     n_jobs_ls: int, defaults to 1
         Number of parallel workers to use for local search evaluation
+    batch_selector : AbstractBatchSelector | None, defaults to None
+        Selects which of the candidates form the next batch. See `AbstractAcquisitionMaximizer`.
+    batch_pool_size : int, defaults to 512
+        How many of the acquisition-sorted random candidates are offered to the batch selector in
+        addition to the local optima. The local search on its own returns only a handful of
+        configurations, which is too few to pick a spread-out batch from. Ignored without a
+        `batch_selector`.
     """
 
     def __init__(
@@ -64,12 +74,15 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         uniform_configspace: ConfigurationSpace | None = None,
         prior_sampling_fraction: float | None = None,
         n_jobs_ls: int = 1,
+        batch_selector: AbstractBatchSelector | None = None,
+        batch_pool_size: int = 512,
     ) -> None:
         super().__init__(
             configspace,
             acquisition_function=acquisition_function,
             challengers=challengers,
             seed=seed,
+            batch_selector=batch_selector,
         )
 
         if uniform_configspace is not None and prior_sampling_fraction is None:
@@ -107,6 +120,7 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         self._local_search_iterations = local_search_iterations
         self._prior_sampling_fraction = prior_sampling_fraction
         self._uniform_configspace = uniform_configspace
+        self._batch_pool_size = batch_pool_size
 
     @property
     def acquisition_function(self) -> AbstractAcquisitionFunction | None:  # noqa: D102
@@ -185,6 +199,18 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
         )
 
         next_configs_by_acq_value = next_configs_by_local_search
+
+        if self._batch_selector is not None:
+            # The local search returns one configuration per starting point, which is too small a
+            # pool to select a spread-out batch from. The random candidates have already been
+            # scored, so offering the best of them to the selector costs nothing.
+            seen = {config for _, config in next_configs_by_acq_value}
+            next_configs_by_acq_value += [
+                (value, config)
+                for value, config in next_configs_by_random_search_sorted[: self._batch_pool_size]
+                if config not in seen
+            ]
+
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         first_five = [f"{_[0]} ({_[1].origin})" for _ in next_configs_by_acq_value[:5]]
 

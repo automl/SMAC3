@@ -11,6 +11,9 @@ from dask.distributed import Client
 from typing_extensions import Literal
 
 import smac
+from smac.acquisition.batch_selector.abstract_batch_selector import (
+    AbstractBatchSelector,
+)
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
@@ -113,6 +116,7 @@ class AbstractFacade:
         model: AbstractModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
         acquisition_maximizer: AbstractAcquisitionMaximizer | None = None,
+        batch_selector: AbstractBatchSelector | None = None,
         initial_design: AbstractInitialDesign | None = None,
         random_design: AbstractRandomDesign | None = None,
         intensifier: AbstractIntensifier | None = None,
@@ -137,6 +141,9 @@ class AbstractFacade:
 
         if acquisition_maximizer is None:
             acquisition_maximizer = self.get_acquisition_maximizer(scenario)
+
+        if batch_selector is None:
+            batch_selector = self.get_batch_selector(scenario)
 
         if initial_design is None:
             initial_design = self.get_initial_design(scenario)
@@ -168,6 +175,7 @@ class AbstractFacade:
         self._model = model
         self._acquisition_function = acquisition_function
         self._acquisition_maximizer = acquisition_maximizer
+        self._batch_selector = batch_selector
         self._initial_design = initial_design
         self._random_design = random_design
         self._intensifier = intensifier
@@ -421,6 +429,15 @@ class AbstractFacade:
         raise NotImplementedError
 
     @staticmethod
+    def get_batch_selector(scenario: Scenario) -> AbstractBatchSelector | None:
+        """Returns the batch selector which decides which candidates form the next batch.
+
+        Returning None keeps the candidates ordered by descending acquisition value, which is what
+        SMAC has always done.
+        """
+        return None
+
+    @staticmethod
     def get_config_selector(
         scenario: Scenario,
         *,
@@ -462,6 +479,9 @@ class AbstractFacade:
         self._acquisition_function.model = self._model
         self._acquisition_maximizer.acquisition_function = self._acquisition_function
         self._intensifier.config_selector = self._config_selector
+
+        if self._batch_selector is not None:
+            self._acquisition_maximizer.batch_selector = self._batch_selector
         self._intensifier.runhistory = self._runhistory
 
     def _validate(self) -> None:

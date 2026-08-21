@@ -6,6 +6,9 @@ from typing import Any, Iterator
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 
+from smac.acquisition.batch_selector.abstract_batch_selector import (
+    AbstractBatchSelector,
+)
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
@@ -36,6 +39,10 @@ class AbstractAcquisitionMaximizer:
         Also, the number of configurations that is returned by calling `maximize`.
     seed : int, defaults to 0
         Random seed.
+    batch_selector : AbstractBatchSelector | None, defaults to None
+        Selects which of the maximized candidates form the next batch. Without one, the candidates
+        are returned ordered by descending acquisition value, which ignores that they are handed out
+        as a batch and tends to propose neighbours on the same mode.
     """
 
     def __init__(
@@ -44,12 +51,14 @@ class AbstractAcquisitionMaximizer:
         acquisition_function: AbstractAcquisitionFunction | None = None,
         challengers: int = 5000,
         seed: int = 0,
+        batch_selector: AbstractBatchSelector | None = None,
     ):
         self._configspace = configspace
         self._acquisition_function = acquisition_function
         self._challengers = challengers
         self._seed = seed
         self._rng = np.random.RandomState(seed=seed)
+        self._batch_selector = batch_selector
 
     @property
     def acquisition_function(self) -> AbstractAcquisitionFunction | None:
@@ -59,6 +68,15 @@ class AbstractAcquisitionMaximizer:
     @acquisition_function.setter
     def acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         self._acquisition_function = acquisition_function
+
+    @property
+    def batch_selector(self) -> AbstractBatchSelector | None:
+        """The batch selector used to pick the next batch from the maximized candidates."""
+        return self._batch_selector
+
+    @batch_selector.setter
+    def batch_selector(self, batch_selector: AbstractBatchSelector | None) -> None:
+        self._batch_selector = batch_selector
 
     @property
     def meta(self) -> dict[str, Any]:
@@ -72,6 +90,7 @@ class AbstractAcquisitionMaximizer:
             "acquisition_function": acquisition_function_meta,
             "challengers": self._challengers,
             "seed": self._seed,
+            "batch_selector": None if self._batch_selector is None else self._batch_selector.meta,
         }
 
     def maximize(
@@ -79,6 +98,8 @@ class AbstractAcquisitionMaximizer:
         previous_configs: list[Configuration],
         n_points: int | None = None,
         random_design: AbstractRandomDesign | None = None,
+        batch_size: int | None = None,
+        pending: list[Configuration] | None = None,
     ) -> Iterator[Configuration]:
         """Maximize acquisition function using `_maximize`, implemented by a subclass.
 
@@ -93,6 +114,12 @@ class AbstractAcquisitionMaximizer:
             Part of the returned ChallengerList such that we can interleave random configurations
             by a scheme defined by the random design. The method `random_design.next_iteration()`
             is called at the end of this function.
+        batch_size: int | None, defaults to None
+            How many configurations are handed out before the surrogate model is retrained. Only
+            used if a `batch_selector` was given.
+        pending: list[Configuration] | None, defaults to None
+            Configurations which are currently being evaluated. Only used if a `batch_selector`
+            was given.
 
         Returns
         -------
@@ -107,7 +134,21 @@ class AbstractAcquisitionMaximizer:
             # since maximize returns a tuple of acquisition value and configuration,
             # and we only need the configuration, we return the second element of the tuple
             # for each element in the list
-            return [t[1] for t in self._maximize(previous_configs, n_points)]
+            challengers = self._maximize(previous_configs, n_points)
+
+            if self._batch_selector is None:
+                return [t[1] for t in challengers]
+
+            return self._batch_selector.select(
+                candidates=[t[1] for t in challengers],
+                # Local and random search report the acquisition value as a scalar and as a
+                # one-element array respectively, so it has to be flattened before stacking.
+                acquisition_values=np.array([np.ravel(t[0])[0] for t in challengers], dtype=float),
+                batch_size=len(challengers) if batch_size is None else batch_size,
+                model=None if self._acquisition_function is None else self._acquisition_function.model,
+                acquisition_function=self._acquisition_function,
+                pending=pending,
+            )
 
         challengers = ChallengerList(
             self._configspace,

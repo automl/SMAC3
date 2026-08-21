@@ -322,3 +322,77 @@ class AbstractModel:
                 var = var.reshape((-1, 1))
 
             return mean, var
+
+    @property
+    def supports_joint_samples(self) -> bool:
+        """Whether ``sample_joint`` respects the correlations between the rows of X.
+
+        Batch selectors that derive diversity from the joint posterior (e.g. probability of
+        optimality or Thompson sampling) require this to be ``True``. If it is ``False``,
+        ``sample_joint`` still works but draws every point independently, which carries no
+        information about which candidates are redundant with each other.
+        """
+        return False
+
+    @property
+    def supports_conditioning(self) -> bool:
+        """Whether ``condition`` can fold in additional observations without refitting the model
+        hyperparameters.
+
+        Batch selectors based on pseudo-observations (fantasizing) require this to be ``True``.
+        """
+        return False
+
+    def sample_joint(
+        self,
+        X: np.ndarray,
+        n_samples: int,
+        rng: np.random.Generator | np.random.RandomState,
+    ) -> np.ndarray:
+        """Draws joint function samples over the given points.
+
+        Each returned row is one draw of the vector ``(f(x_1), ..., f(x_N))``. Whether those
+        draws carry the posterior correlation between the points depends on the concrete model;
+        see ``supports_joint_samples``. This default implementation draws every point
+        independently from its marginal predictive distribution, so the marginals are correct but
+        the correlation structure is absent.
+
+        Parameters
+        ----------
+        X : np.ndarray [#samples, #hyperparameters]
+            Input data points.
+        n_samples : int
+            Number of joint samples to draw.
+        rng : np.random.Generator | np.random.RandomState
+            Random number generator used for the draws.
+
+        Returns
+        -------
+        samples : np.ndarray [n_samples, #samples]
+            The drawn function values.
+        """
+        mean, var = self.predict_marginalized(X)
+        std = np.sqrt(np.clip(var[:, 0], self._var_threshold, np.inf))
+
+        return mean[:, 0] + std * rng.standard_normal((n_samples, X.shape[0]))
+
+    def condition(self: Self, X: np.ndarray, y: np.ndarray) -> Self:
+        """Returns a new model conditioned on additional observations.
+
+        The additional observations may be real or invented (pseudo-observations). The model
+        hyperparameters are kept fixed, so this is substantially cheaper than a full ``train``.
+        This method never mutates the model it is called on.
+
+        Parameters
+        ----------
+        X : np.ndarray [#samples, #hyperparameters + #features]
+            Input data points to add.
+        y : np.ndarray [#samples, ]
+            The corresponding target values, in the same space the model was trained on.
+
+        Returns
+        -------
+        model : Self
+            A new, conditioned model.
+        """
+        raise NotImplementedError()

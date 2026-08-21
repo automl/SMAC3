@@ -45,6 +45,10 @@ class ConfigSelector:
         the highest budgets are checked first. For example, if min_trials is three, but we find only
         two trials in the runhistory for the highest budget, we will use trials of a lower budget
         instead.
+    batch_size : int | None, defaults to None
+        How many configurations are considered to belong to one batch. Only used by a batch selector
+        on the acquisition maximizer. If not given, the larger of the number of workers and
+        ``retrain_after`` is used.
     """
 
     def __init__(
@@ -54,6 +58,7 @@ class ConfigSelector:
         retrain_after: int = 8,
         max_new_config_tries: int = 16,
         min_trials: int = 1,
+        batch_size: int | None = None,
     ) -> None:
         # Those are the configs sampled from the passed initial design
         # Selecting configurations from initial design
@@ -71,6 +76,7 @@ class ConfigSelector:
 
         # And other variables
         self._retrain_after = retrain_after
+        self._batch_size = max(scenario.n_workers, retrain_after) if batch_size is None else batch_size
         self._previous_entries = -1
         self._predict_x_best = True
         self._min_trials = min_trials
@@ -115,6 +121,7 @@ class ConfigSelector:
             "retrain_after": self._retrain_after,
             "max_new_config_tries": self._max_new_config_tries,
             "min_trials": self._min_trials,
+            "batch_size": self._batch_size,
         }
 
     def __iter__(self) -> Iterator[Configuration]:
@@ -216,6 +223,8 @@ class ConfigSelector:
             challengers = self._acquisition_maximizer.maximize(
                 previous_configs,
                 random_design=self._random_design,
+                batch_size=self._batch_size,
+                pending=self._runhistory.get_running_configs(),
             )
 
             retrain = False

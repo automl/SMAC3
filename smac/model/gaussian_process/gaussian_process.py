@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Optional, TypeVar, cast
 
+import copy
 import logging
 
 import numpy as np
@@ -299,3 +300,79 @@ class GaussianProcess(AbstractGaussianProcess):
             return funcs[None, :]
         else:
             return funcs
+
+    @property
+    def supports_joint_samples(self) -> bool:  # noqa: D102
+        # With instance features the predictions are marginalized over instances, which is not what
+        # a posterior draw over the raw inputs gives, so the correlated sampler does not apply.
+        return self._n_features == 0
+
+    @property
+    def supports_conditioning(self) -> bool:  # noqa: D102
+        return self._n_features == 0
+
+    def sample_joint(
+        self,
+        X: np.ndarray,
+        n_samples: int,
+        rng: np.random.Generator | np.random.RandomState,
+    ) -> np.ndarray:
+        """Draws joint function samples from the Gaussian process posterior.
+
+        Parameters
+        ----------
+        X : np.ndarray [#samples, #hyperparameters + #features]
+            Input data points.
+        n_samples : int
+            Number of joint samples to draw.
+        rng : np.random.Generator | np.random.RandomState
+            Ignored; the Gaussian process draws from its own random state.
+
+        Returns
+        -------
+        samples : np.ndarray [n_samples, #samples]
+            The drawn function values, on the same scale as ``predict``.
+        """
+        if not self.supports_joint_samples:
+            return super().sample_joint(X, n_samples, rng)
+
+        return np.atleast_2d(self.sample_functions(X, n_funcs=n_samples)).T
+
+    def condition(self, X: np.ndarray, y: np.ndarray) -> GaussianProcess:
+        """Returns a new Gaussian process conditioned on additional observations.
+
+        The kernel hyperparameters and the output normalization are kept fixed, so the update is a
+        single Cholesky decomposition rather than another marginal likelihood optimization. Keeping
+        the normalization fixed matters because the added observations may be invented: a
+        pseudo-observation must not be able to shift the transform underneath the acquisition
+        function.
+
+        Parameters
+        ----------
+        X : np.ndarray [#samples, #hyperparameters + #features]
+            Input data points to add.
+        y : np.ndarray [#samples, ]
+            The corresponding target values, on the same scale as ``predict`` returns.
+
+        Returns
+        -------
+        model : GaussianProcess
+            A new Gaussian process. The model this was called on is left untouched.
+        """
+        if not self._is_trained:
+            raise Exception("Model has to be trained first!")
+
+        y = np.asarray(y, dtype=float).flatten()
+        if self._normalize_y:
+            y = (y - self.mean_y_) / self.std_y_
+
+        conditioned = copy.deepcopy(self)
+
+        X_augmented = np.vstack([self._gp.X_train_, conditioned._impute_inactive(np.atleast_2d(X))])
+        y_augmented = np.concatenate([np.asarray(self._gp.y_train_).flatten(), y])
+
+        conditioned._gp = conditioned._get_gaussian_process()
+        conditioned._gp.kernel.theta = self._hypers
+        conditioned._gp.fit(X_augmented, y_augmented)
+
+        return conditioned
