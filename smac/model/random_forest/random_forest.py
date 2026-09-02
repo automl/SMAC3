@@ -11,7 +11,6 @@ from scipy.sparse import issparse
 from sklearn.ensemble._base import _partition_estimators
 from sklearn.ensemble._forest import ForestRegressor
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.tree._tree import DTYPE
 from sklearn.utils.parallel import Parallel, delayed
 from sklearn.utils.validation import check_is_fitted, validate_data
 
@@ -624,7 +623,7 @@ class EPMRandomForest(ForestRegressor):
         X = validate_data(
             self,
             X,
-            dtype=DTYPE,
+            dtype=np.float32,
             accept_sparse="csr",
             reset=False,
             ensure_all_finite=ensure_all_finite,
