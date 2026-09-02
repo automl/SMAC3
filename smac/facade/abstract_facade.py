@@ -35,6 +35,7 @@ from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.runner.target_function_script_runner import TargetFunctionScriptRunner
 from smac.scenario import Scenario
+from smac.utils.ask_and_tell import validate_warn_mode
 from smac.utils.logging import get_logger, setup_logging
 
 logger = get_logger(__name__)
@@ -91,6 +92,13 @@ class AbstractFacade:
         expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.
         If False is passed, SMAC will not do any customization of the logging setup and the responsibility is left
         to the user.
+    warn_mode: str, defaults to "warn_always"
+        The warn_mode to consider for the warning levels for trials
+        after the budget is exploited. The default is "warn_always",
+        which means that the user will get repeated warnings.
+        The other values are "warn_once", "warn_never", "exception",
+        which means that the user will get a warning only once,
+        never, or an exception, respectively.
     callbacks: list[Callback], defaults to []
         Callbacks, which are incorporated into the optimization loop.
     overwrite: bool, defaults to False
@@ -120,6 +128,7 @@ class AbstractFacade:
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
         logging_level: int | Path | Literal[False] | None = None,
+        warn_mode: str = "warn_always",
         callbacks: list[Callback] = None,
         overwrite: bool = False,
         dask_client: Client | None = None,
@@ -174,6 +183,7 @@ class AbstractFacade:
         self._multi_objective_algorithm = multi_objective_algorithm
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
+        self._warn_mode = validate_warn_mode(warn_mode)
         self._config_selector = config_selector
         self._callbacks = callbacks
         self._overwrite = overwrite
@@ -447,6 +457,7 @@ class AbstractFacade:
             runhistory=self._runhistory,
             intensifier=self._intensifier,
             overwrite=self._overwrite,
+            warn_mode=self._warn_mode,
         )
 
     def _update_dependencies(self) -> None:

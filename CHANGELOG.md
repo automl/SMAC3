@@ -1,6 +1,7 @@
 # 2.4.1
 ## Improvements
 - Include a new multi-objective method based on hypervolume
+- Added configurable `warn_mode` for ask-and-tell budget exhaustion behavior (#1197)
 - Batch model predictions when selecting the best predicted configuration.
 
 ## Examples
