@@ -9,7 +9,7 @@
 
 ## Bugfixes
 - Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)
-
+- Fix that config could be accidentally added twice to the runhistory (#1242)
 
 # 2.4.0
 
