@@ -8,7 +8,9 @@
 - An example on the new multi-objective method
 
 ## Bugfixes
+- Scikit-learn 1.9 deprecated an alias for np.float32 called DTYPE. Change removes references to deprecated alias (#1314)
 - Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)
+- Tests were failing due to an incompatibility between pytest and pytest-cases.  Pytest-cases is a dead stub, so simplest fix is to remove it.
 
 
 # 2.4.0

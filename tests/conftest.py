@@ -25,16 +25,6 @@ tests according to each avenue. See `test/test_automl` for example as the `autom
 module is quite complicated to test and all tests in a single file become difficult to
 follow and change.
 
-**pytest_cases**
-Using pytest_cases, we seperate a `case`, something that defines the state of the
-object, from the actual `test`, which tests properties of these cases.
-
-A complicated example can be seen at `test/test_automl/cases.py` where we have
-autoML instances that are classifier/regressor, fitted or not, with cv or holdout,
-or fitted with no ensemble. TODO: Easier example.
-
-Docs: https://smarie.github.io/python-pytest-cases/
-
 **Fixtures**
 All fixtures in "test/fixtures" are known in every test file. We try to make use
 of fixture `factories` which can be used to construct objects in complicated ways,
