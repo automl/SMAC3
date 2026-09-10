@@ -29,6 +29,7 @@ from smac.utils.configspace import get_config_hash, print_config_changes
 from smac.utils.cost_transformer import CostTransformer
 from smac.utils.logging import get_logger
 from smac.utils.numpyencoder import NumpyEncoder
+from smac.utils.constraints import is_feasible, total_violation
 from smac.utils.pareto_front import calculate_pareto_front, sort_by_crowding_distance
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -63,6 +64,7 @@ class AbstractIntensifier:
         seed: int | None = None,
     ):
         self._scenario = scenario
+        self._constraints = scenario.get_constraints()
         self._config_selector: ConfigSelector | None = None
         self._config_generator: Iterator[ConfigSelector] | None = None
         self._runhistory: RunHistory | None = None
@@ -564,6 +566,8 @@ class AbstractIntensifier:
         if config not in incumbents:
             incumbents.append(config)
 
+        incumbents = self._filter_feasible(incumbents)
+
         isb_keys = self.get_incumbent_instance_seed_budget_keys(compare=True)
         all_incumbent_isb_keys = [isb_keys for _ in range(len(incumbents))]
 
@@ -744,6 +748,39 @@ class AbstractIntensifier:
                 f"it is not better than the incumbents on {len(config_isb_keys)} instances: "
             )
             print_config_changes(rh.get_config(removed_incumbent_id), config, logger=logger)
+
+    def _filter_feasible(self, configs: list[Configuration]) -> list[Configuration]:
+        """Keeps only the configurations which satisfy the output constraints.
+
+        A configuration that violates a bound is not a solution, so it must not be reported as an incumbent
+        while a feasible one exists. Cost is only compared among the survivors, which is what makes the
+        reported incumbent the best *feasible* configuration rather than the best one overall.
+
+        While nothing feasible has been observed the least-violating configurations are kept, so that the
+        optimization still has an incumbent to report and to compare against.
+
+        Parameters
+        ----------
+        configs : list[Configuration]
+
+        Returns
+        -------
+        configs : list[Configuration]
+            The feasible configurations, or the least-violating ones if none is feasible.
+        """
+        if len(self._constraints) == 0 or len(configs) == 0:
+            return configs
+
+        rh = self.runhistory
+        feasible = [c for c in configs if is_feasible(self._constraints, rh.get_constraint_values(c))]
+
+        if len(feasible) > 0:
+            return feasible
+
+        violations = [total_violation(self._constraints, rh.get_constraint_values(c)) for c in configs]
+        lowest = min(violations)
+
+        return [config for config, violation in zip(configs, violations) if violation == lowest]
 
     def _calculate_pareto_front(
         self,

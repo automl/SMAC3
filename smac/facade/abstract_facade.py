@@ -14,6 +14,9 @@ import smac
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.acquisition.function.constrained_acquisition_function import (
+    ConstrainedAcquisitionFunction,
+)
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
@@ -23,6 +26,7 @@ from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.main.config_selector import ConfigSelector
 from smac.main.smbo import SMBO
 from smac.model.abstract_model import AbstractModel
+from smac.model.multi_objective_model import MultiObjectiveModel
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
@@ -134,6 +138,13 @@ class AbstractFacade:
 
         if acquisition_function is None:
             acquisition_function = self.get_acquisition_function(scenario)
+
+        if scenario.count_constraints() > 0 and not isinstance(acquisition_function, ConstrainedAcquisitionFunction):
+            acquisition_function = ConstrainedAcquisitionFunction(
+                acquisition_function=acquisition_function,
+                constraints=scenario.get_constraints(),
+                constraint_model=self.get_constraint_model(scenario),
+            )
 
         if acquisition_maximizer is None:
             acquisition_maximizer = self.get_acquisition_maximizer(scenario)
@@ -363,6 +374,24 @@ class AbstractFacade:
     def get_model(scenario: Scenario) -> AbstractModel:
         """Returns the surrogate cost model instance used in the BO loop."""
         raise NotImplementedError
+
+    @classmethod
+    def get_constraint_model(cls, scenario: Scenario) -> AbstractModel:
+        """Returns the surrogate model used for the constrained outputs.
+
+        One model is built per constraint and the predictions are presented as one multi-output model, in the
+        order the constraints are declared.
+
+        The constrained outputs are modelled on their raw observed values, because the bounds are stated in raw
+        units. A facade whose objective model expects transformed targets therefore has to override this.
+        """
+        constraints = scenario.get_constraints()
+
+        return MultiObjectiveModel(
+            models=[cls.get_model(scenario) for _ in constraints],
+            objectives=[constraint.name for constraint in constraints],
+            seed=scenario.seed,
+        )
 
     @staticmethod
     @abstractmethod

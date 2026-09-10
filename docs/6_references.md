@@ -10,6 +10,11 @@
     https://arxiv.org/pdf/2204.11051.pdf
 
 
+* [](){#GKZ+14}[GKZ+14] J. Gardner, M. Kusner, Z. Xu, K. Weinberger, J. Cunningham; 
+    Bayesian Optimization with Inequality Constraints; 
+    https://proceedings.mlr.press/v32/gardner14.html
+
+
 * [](){#Know06}[Know06] J. Knowles; 
     ParEGO: A Hybrid Algorithm with on-Line Landscape Approximation for Expensive Multiobjective Optimization Problems; 
     https://www.semanticscholar.org/paper/ParEGO%3A-a-hybrid-algorithm-with-on-line-landscape-Knowles/73b5b196b35fb23e1f908d73b787c2c2942fadb5

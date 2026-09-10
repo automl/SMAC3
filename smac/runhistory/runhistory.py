@@ -369,6 +369,44 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         """Check if the config is stored in the runhistory"""
         return config in self._config_ids
 
+    def get_constraint_values(self, config: Configuration) -> dict[str, float] | None:
+        """Returns the observed constraint values of a configuration, averaged over its trials.
+
+        Only outputs that every reporting trial of the configuration provided are returned, so a caller can tell
+        a value that was never observed from one that was.
+
+        Parameters
+        ----------
+        config : Configuration
+
+        Returns
+        -------
+        constraint_values : dict[str, float] | None
+            The averaged values, or None if no trial of this configuration reported any.
+        """
+        config_id = self._config_ids.get(config)
+        if config_id is None:
+            return None
+
+        observations: dict[str, list[float]] = {}
+        n_reporting = 0
+
+        for trial_key, trial_value in self._data.items():
+            if trial_key.config_id != config_id:
+                continue
+
+            if not trial_value.constraint_values:
+                continue
+
+            n_reporting += 1
+            for name, value in trial_value.constraint_values.items():
+                observations.setdefault(name, []).append(float(value))
+
+        if n_reporting == 0:
+            return None
+
+        return {name: float(np.mean(values)) for name, values in observations.items() if len(values) == n_reporting}
+
     def get_configs(self, sort_by: str | None = None) -> list[Configuration]:
         """Return all configurations in this RunHistory object.
 
