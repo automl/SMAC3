@@ -221,6 +221,7 @@ class SMBO:
             starttime=value.starttime,
             endtime=value.endtime,
             additional_info=value.additional_info,
+            constraint_values=value.constraint_values,
             force_update=True,  # Important to overwrite the status RUNNING
         )
 

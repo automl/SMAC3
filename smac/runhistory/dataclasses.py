@@ -104,6 +104,8 @@ class TrialValue:
     starttime : float, defaults to 0.0
     endtime : float, defaults to 0.0
     additional_info : dict[str, Any], defaults to {}
+    constraint_values : dict[str, float] | None, defaults to None
+        Observed values of the outputs constrained via ``Scenario.constraints``, keyed by output name.
     """
 
     cost: float | list[float]
@@ -113,6 +115,7 @@ class TrialValue:
     starttime: float = 0.0
     endtime: float = 0.0
     additional_info: dict[str, Any] = field(default_factory=dict)
+    constraint_values: dict[str, float] | None = None
 
 
 @dataclass(frozen=True)

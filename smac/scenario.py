@@ -13,6 +13,7 @@ import numpy as np
 from ConfigSpace import ConfigurationSpace
 
 from smac.utils.logging import get_logger
+from smac.utils.constraints import OutcomeConstraint, parse_constraints
 from smac.utils.numpyencoder import NumpyEncoder
 
 logger = get_logger(__name__)
@@ -45,6 +46,11 @@ class Scenario:
         Indicate the relative importance of each objective when aggregating them
         (e.g., using MeanAggregationStrategy or ParEGO). Must be non-negative
         and have the same length as the number of objectives in the scenario.
+    constraints : list[str] | None, defaults to None
+        Bounds on outputs of the target function, e.g. ``["latency <= 100", "accuracy >= 0.9"]``. The target
+        function has to report a value for each constrained output on every trial. Constrained outputs are
+        modelled separately from the objective and steer the search away from configurations that are predicted
+        to violate a bound; they are not themselves optimized.
     crash_cost : float | list[float], defaults to np.inf
         Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
         a different cost.
@@ -117,6 +123,7 @@ class Scenario:
     # Objectives
     objectives: str | list[str] = "cost"
     objective_weights: list[float] | None = None
+    constraints: list[str] | None = None
     crash_cost: float | list[float] = np.inf
     termination_cost_threshold: float | list[float] = np.inf
 
@@ -181,6 +188,14 @@ class Scenario:
             if any(w < 0 for w in self.objective_weights):
                 raise ValueError("objective_weights must be non-negative")
 
+        # Parsing validates the expressions; they are kept as strings so that they survive a json round trip
+        for constraint in parse_constraints(self.constraints):
+            if constraint.name in self._objective_names():
+                raise ValueError(
+                    f"{constraint.name!r} is both an objective and a constraint. An output can be optimized or "
+                    f"bounded, not both."
+                )
+
         # Change directory wrt name and seed
         self._change_output_directory()
 
@@ -212,6 +227,23 @@ class Scenario:
             return len(self.objectives)
 
         return 1
+
+    def count_constraints(self) -> int:
+        """Counts the number of output constraints."""
+        if self.constraints is None:
+            return 0
+
+        return len(self.constraints)
+
+    def get_constraints(self) -> list[OutcomeConstraint]:
+        """Returns the parsed output constraints."""
+        return parse_constraints(self.constraints)
+
+    def _objective_names(self) -> list[str]:
+        if isinstance(self.objectives, list):
+            return list(self.objectives)
+
+        return [self.objectives]
 
     def count_instance_features(self) -> int:
         """Counts the number of instance features."""

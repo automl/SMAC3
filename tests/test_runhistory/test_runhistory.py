@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import pickle
 import tempfile
@@ -326,6 +327,85 @@ def test_json_origin(configspace_small, config1):
         assert runhistory.get_configs()[0].origin == origin
 
         os.remove(path)
+
+
+def test_constraint_values_are_stored(configspace_small, config1, config2):
+    """Constraint values given to add are kept on the trial.
+
+    Adds one trial with values and one without, then reads both back off the runhistory.
+    """
+    runhistory = RunHistory()
+    runhistory.add(config=config1, cost=10, seed=1, constraint_values={"latency": 93.2})
+    runhistory.add(config=config2, cost=20, seed=1)
+
+    values = [v.constraint_values for v in runhistory._data.values()]
+
+    assert values == [{"latency": 93.2}, None]
+
+
+def test_constraint_values_survive_a_save_and_load(configspace_small, config1, config2):
+    """Constraint values round trip through the runhistory file.
+
+    Saves a runhistory holding one constrained and one unconstrained trial, reloads it, and compares.
+    """
+    runhistory = RunHistory()
+    runhistory.add(config=config1, cost=10, seed=1, constraint_values={"latency": 93.2})
+    runhistory.add(config=config2, cost=20, seed=1)
+
+    path = "tests/test_files/test_constraint_values.json"
+    runhistory.save(path)
+
+    loaded = RunHistory()
+    loaded.load(path, configspace_small)
+
+    assert [v.constraint_values for v in loaded._data.values()] == [{"latency": 93.2}, None]
+    assert len(loaded._data) == len(runhistory._data)
+
+    os.remove(path)
+
+
+def test_runhistory_written_before_constraints_still_loads(configspace_small, config1):
+    """A file from a SMAC version without constraints is still readable.
+
+    Saves a runhistory, strips the constraint field from the json the way an older version would have written
+    it, and checks the file still loads with no constraint values.
+    """
+    runhistory = RunHistory()
+    runhistory.add(config=config1, cost=10, seed=1, constraint_values={"latency": 93.2})
+
+    path = "tests/test_files/test_constraint_values_legacy.json"
+    runhistory.save(path)
+
+    with open(path) as fh:
+        raw = json.load(fh)
+
+    for entry in raw["data"]:
+        del entry["constraint_values"]
+
+    with open(path, "w") as fh:
+        json.dump(raw, fh)
+
+    loaded = RunHistory()
+    loaded.load(path, configspace_small)
+
+    assert len(loaded._data) == 1
+    assert [v.constraint_values for v in loaded._data.values()] == [None]
+
+    os.remove(path)
+
+
+def test_constraint_values_survive_an_update(configspace_small, config1):
+    """Merging one runhistory into another carries the constraint values across.
+
+    Adds a constrained trial to one runhistory, updates an empty one from it, and reads the values back.
+    """
+    source = RunHistory()
+    source.add(config=config1, cost=10, seed=1, constraint_values={"latency": 93.2})
+
+    target = RunHistory()
+    target.update(source)
+
+    assert [v.constraint_values for v in target._data.values()] == [{"latency": 93.2}]
 
 
 def add_item(

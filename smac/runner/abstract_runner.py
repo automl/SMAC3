@@ -71,6 +71,7 @@ class AbstractRunner(ABC):
 
         self._objectives = objectives
         self._n_objectives = scenario.count_objectives()
+        self._constraints = scenario.get_constraints()
 
         # We need to exapdn crash cost if the user did not do it
         if self._n_objectives > 1:
@@ -146,6 +147,8 @@ class AbstractRunner(ABC):
         if status == StatusType.CRASHED:
             cost = self._crash_cost
 
+        constraint_values = self._extract_constraint_values(additional_info)
+
         trial_value = TrialValue(
             status=status,
             cost=cost,
@@ -154,9 +157,30 @@ class AbstractRunner(ABC):
             additional_info=additional_info,
             starttime=start,
             endtime=end,
+            constraint_values=constraint_values,
         )
 
         return trial_info, trial_value
+
+    def _extract_constraint_values(self, additional_info: dict[str, Any]) -> dict[str, float] | None:
+        """Reads the constrained outputs out of the information returned alongside the cost.
+
+        A target function reports constraint values by returning ``(cost, {"latency": 93.2})``. The declared
+        constraint names are moved out of that dictionary and into ``TrialValue.constraint_values``; anything else
+        the target function returned stays in ``additional_info``.
+
+        A missing value is not an error here. A crashed trial never gets the chance to report one, and it is
+        treated as infeasible downstream.
+        """
+        if len(self._constraints) == 0:
+            return None
+
+        constraint_values = {}
+        for constraint in self._constraints:
+            if constraint.name in additional_info:
+                constraint_values[constraint.name] = float(additional_info.pop(constraint.name))
+
+        return constraint_values
 
     @property
     def meta(self) -> dict[str, Any]:

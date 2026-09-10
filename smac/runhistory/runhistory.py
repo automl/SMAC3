@@ -183,6 +183,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         starttime: float = 0.0,
         endtime: float = 0.0,
         additional_info: dict[str, Any] = None,
+        constraint_values: dict[str, float] | None = None,
         force_update: bool = False,
     ) -> None:
         """Adds a new trial to the RunHistory.
@@ -204,6 +205,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         starttime : float, defaults to 0.0
         endtime : float, defaults to 0.0
         additional_info : dict[str, Any], defaults to {}
+        constraint_values : dict[str, float] | None, defaults to None
+            Observed values of the constrained outputs, keyed by output name.
         force_update : bool, defaults to false
             Overwrites a previous trial if the trial already exists.
         """
@@ -264,6 +267,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             starttime=starttime,
             endtime=endtime,
             additional_info=additional_info,
+            constraint_values=constraint_values,
         )
 
         # Construct keys and values for the data dictionary
@@ -280,6 +284,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             ("starttime", starttime),
             ("endtime", endtime),
             ("additional_info", additional_info),
+            ("constraint_values", constraint_values),
             ("origin", config.origin),
         ):
             self._check_json_serializable(key, value, k, v)
@@ -327,6 +332,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             starttime=value.starttime,
             endtime=value.endtime,
             additional_info=value.additional_info,
+            constraint_values=value.constraint_values,
         )
 
     def add_running_trial(self, trial: TrialInfo) -> None:
@@ -551,6 +557,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                     "starttime": v.starttime,
                     "endtime": v.endtime,
                     "additional_info": v.additional_info,
+                    "constraint_values": v.constraint_values,
                 }
             )
 
@@ -649,6 +656,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 starttime=entry["starttime"],
                 endtime=entry["endtime"],
                 additional_info=entry["additional_info"],
+                constraint_values=entry.get("constraint_values"),
             )
 
         # Although adding trials should give us the same stats, the trajectory might be different
@@ -700,6 +708,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
                 seed=key.seed,
                 budget=key.budget,
                 additional_info=value.additional_info,
+                constraint_values=value.constraint_values,
             )
 
     def _check_json_serializable(
