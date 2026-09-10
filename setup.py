@@ -48,7 +48,7 @@ extras_require = {
         "flake8",
         "pre-commit",
         "pylint",
-        "mkdocs",
+        "properdocs",
         "mkdocs-material",
         "mkdocs-autorefs",
         "mkdocs-gen-files",
@@ -57,13 +57,10 @@ extras_require = {
         "mkdocs-glossary-plugin",
         "mkdocstrings[python]",
         "markdown-exec[ansi]",
-        "mike",
+        "mike>=2.2.0",
         "pillow",
         "cairosvg",
         "black",                # This allows mkdocstrings to format signatures in the docs
-        "pytest<8",
-        "pytest-coverage",
-        "pytest-cases>=3.8",
     ],
 }
 

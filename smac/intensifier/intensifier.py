@@ -9,6 +9,7 @@ import numpy as np
 from ConfigSpace import Configuration
 
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.main.exceptions import ConfigurationSpaceExhaustedException
 from smac.runhistory import TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey, InstanceSeedKey, TrialKey
 from smac.scenario import Scenario
@@ -261,6 +262,12 @@ class Intensifier(AbstractIntensifier):
                     logger.warning(
                         "If you assume your configspace was not yet exhausted, try to "
                         "increase the number of retries in the config selector."
+                    )
+                    return
+                except ConfigurationSpaceExhaustedException:
+                    logger.info(
+                        "Configuration space exhausted. No further challenger configurations "
+                        "can be generated. Finishing optimization"
                     )
                     return
             else:
