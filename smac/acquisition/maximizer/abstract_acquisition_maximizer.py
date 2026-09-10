@@ -50,6 +50,7 @@ class AbstractAcquisitionMaximizer:
         self._challengers = challengers
         self._seed = seed
         self._rng = np.random.RandomState(seed=seed)
+        self._n_evaluated_trials = 0
 
     @property
     def acquisition_function(self) -> AbstractAcquisitionFunction | None:
@@ -79,6 +80,7 @@ class AbstractAcquisitionMaximizer:
         previous_configs: list[Configuration],
         n_points: int | None = None,
         random_design: AbstractRandomDesign | None = None,
+        n_evaluated_trials: int | None = None,
     ) -> Iterator[Configuration]:
         """Maximize acquisition function using `_maximize`, implemented by a subclass.
 
@@ -93,6 +95,8 @@ class AbstractAcquisitionMaximizer:
             Part of the returned ChallengerList such that we can interleave random configurations
             by a scheme defined by the random design. The method `random_design.next_iteration()`
             is called at the end of this function.
+        n_evaluated_trials: int
+            Number of trials completed so far
 
         Returns
         -------
@@ -101,6 +105,8 @@ class AbstractAcquisitionMaximizer:
         """
         if n_points is None:
             n_points = self._challengers
+
+        self._n_evaluated_trials = n_evaluated_trials
 
         def next_configs_by_acquisition_value() -> list[Configuration]:
             assert n_points is not None

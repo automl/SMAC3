@@ -36,7 +36,7 @@ SMAC3 is available as a sampler in [Optuna](https://optuna.org/), allowing users
 * User priors
 * Parallelization, local and on a cluster with Dask
 * Multi-fidelity optimization, e.g. when we can evaluate our function with different resolutions
-* Multi-objective optimization with ParEGO
+* Multi-objective optimization with ParEGO, optionally combined with dynamic hyperparameter importance (HPI-ParEGO)
 * Optimization across many tasks (aka algorithm configuration)
 * Function to optimize can either be pythonic or called via a script
 * Easily extensible with callbacks

@@ -1,9 +1,15 @@
 # 2.4.1
 ## Improvements
 - Include a new multi-objective method based on hypervolume
+- Add `HPIRandomSearch`, an acquisition maximizer that dynamically restricts the configuration space to the
+  hyperparameters estimated to be most important (via HyperSHAP) for the current scalarization. Combined with
+  `ParEGO`, this implements HPI-ParEGO. Requires the optional `hypershap` dependency (`pip install smac[hpi]`).
+  Also works for single-objective optimization.
 
 ## Examples
 - An example on the new multi-objective method
+- An example on HPI-ParEGO
+- An example on HPIRandomSearch for single objective optimization
 
 ## Bugfixes
 - Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)

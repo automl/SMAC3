@@ -2,6 +2,7 @@ from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.acquisition.maximizer.differential_evolution import DifferentialEvolution
+from smac.acquisition.maximizer.hpi_random_search import HPIRandomSearch
 from smac.acquisition.maximizer.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
@@ -11,6 +12,7 @@ from smac.acquisition.maximizer.random_search import RandomSearch
 __all__ = [
     "AbstractAcquisitionMaximizer",
     "DifferentialEvolution",
+    "HPIRandomSearch",
     "LocalAndSortedRandomSearch",
     "LocalSearch",
     "RandomSearch",

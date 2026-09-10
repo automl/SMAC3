@@ -39,3 +39,35 @@ use the method ``get_incumbents`` in the intensifier.
 ```
 
 We show an example of how to use multi-objective with plots in our [examples](../examples/3%20Multi-Objective/1_schaffer.md).
+
+## HPI-ParEGO
+
+When using ParEGO, not every hyperparameter is necessarily important for every scalarization that is sampled during
+the search. [HPIRandomSearch][smac.acquisition.maximizer.hpi_random_search.HPIRandomSearch] implements HPI-ParEGO
+[[TWL26][TWL26]], which uses [HyperSHAP][WMFL26] on the trained surrogate model to dynamically estimate hyperparameter
+importance under the current scalarization, and restricts the search accordingly to accelerate convergence. Use it
+as the ``acquisition_maximizer`` together with ``ParEGO`` as the ``multi_objective_algorithm``:
+
+```python
+from smac import HyperparameterOptimizationFacade as HPOFacade
+from smac.acquisition.maximizer import HPIRandomSearch
+from smac.multi_objective.parego import ParEGO
+
+multi_objective_algorithm = ParEGO(scenario, reweigh=10)
+acquisition_maximizer = HPIRandomSearch(scenario.configspace, n_trials=scenario.n_trials)
+
+smac = HPOFacade(
+    scenario,
+    train_function,
+    multi_objective_algorithm=multi_objective_algorithm,
+    acquisition_maximizer=acquisition_maximizer,
+)
+```
+
+!!! note
+
+    ``HPIRandomSearch`` requires the optional ``hypershap`` dependency: ``pip install smac[hpi]``.
+
+    HPI-ParEGO uses ``reweigh=10`` on ``ParEGO`` to give the optimizer time to exploit a scalarization before resampling.
+
+See the [HPI-ParEGO example](../examples/3%20Multi-Objective/4_hpi_parego.md) for a full, runnable version.

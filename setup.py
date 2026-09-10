@@ -27,6 +27,9 @@ extras_require = {
     "mosmac": [
         "pymoo"
     ],
+    "hpi": [
+        "hypershap>=0.0.6",
+    ],
     "dev": [
         "setuptools",
         "types-setuptools",

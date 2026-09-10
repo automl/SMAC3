@@ -28,7 +28,7 @@ on:
 env:
   package-name: smac
   test-dir: tests
-  extra-requires: "[gpytorch,dev,mosmac]"
+  extra-requires: "[gpytorch,dev,mosmac,hpi]"
 
   # Arguments used for pytest
   pytest-args: >-

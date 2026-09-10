@@ -2,10 +2,20 @@ from __future__ import annotations
 
 from typing import Callable, Iterator
 
-from ConfigSpace import Configuration, ConfigurationSpace
+from ConfigSpace import Configuration, ConfigurationSpace, Constant
 
 from smac.random_design import ProbabilityRandomDesign
 from smac.random_design.abstract_random_design import AbstractRandomDesign
+
+
+class PseudoConstant(Constant):
+    """
+    Creates a Constant as Hyperparameter without checking if the value is legal to avoid errors with the
+    runhistory when the configuration space is adjusted.
+    """
+
+    def legal_value(self, value):  # noqa: D102
+        return True
 
 
 class ChallengerList(Iterator):
