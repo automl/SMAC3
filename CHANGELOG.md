@@ -2,9 +2,16 @@
 ## Improvements
 - Include a new multi-objective method based on hypervolume
 - Batch model predictions when selecting the best predicted configuration.
+- Support output constraints: bounds on measured outputs of the target function, declared as
+  `Scenario(..., constraints=["latency <= 100"])`. Each constrained output is modelled separately and the
+  acquisition function is weighted by the probability that every bound holds, following Gardner et al. 2014.
+  The reported incumbent is the best feasible configuration. Note that scenarios without an explicit `name`
+  derive it from a hash over all their fields, so adding constraints support changes that hash and existing
+  output directories will not be picked up.
 
 ## Examples
 - An example on the new multi-objective method
+- An example on output constraints
 
 ## Bugfixes
 - Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)

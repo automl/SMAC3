@@ -9,6 +9,8 @@ from smac.acquisition.maximizer.local_and_random_search import (
 from smac.facade.abstract_facade import AbstractFacade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensifier.intensifier import Intensifier
+from smac.model.abstract_model import AbstractModel
+from smac.model.multi_objective_model import MultiObjectiveModel
 from smac.model.random_forest.random_forest import RandomForest
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.random_design.probability_design import ProbabilityRandomDesign
@@ -30,6 +32,7 @@ class HyperparameterOptimizationFacade(AbstractFacade):
         min_samples_leaf: int = 1,
         max_depth: int = 2**20,
         bootstrapping: bool = True,
+        log_y: bool = True,
     ) -> RandomForest:
         """Returns a random forest as surrogate model.
 
@@ -47,9 +50,12 @@ class HyperparameterOptimizationFacade(AbstractFacade):
             The maximum depth of a single tree.
         bootstrapping : bool, defaults to True
             Enables bootstrapping.
+        log_y : bool, defaults to True
+            Whether the target values are log scaled. This matches the log scaled runhistory encoder used for the
+            objective, and has to be turned off for a model trained on raw values.
         """
         return RandomForest(
-            log_y=True,
+            log_y=log_y,
             n_trees=n_trees,
             bootstrapping=bootstrapping,
             ratio_features=ratio_features,
@@ -58,6 +64,21 @@ class HyperparameterOptimizationFacade(AbstractFacade):
             max_depth=max_depth,
             configspace=scenario.configspace,
             instance_features=scenario.instance_features,
+            seed=scenario.seed,
+        )
+
+    @classmethod
+    def get_constraint_model(cls, scenario: Scenario) -> AbstractModel:
+        """Returns a random forest per constrained output.
+
+        The objective model is paired with a log scaled runhistory encoder, but the constraint bounds are stated
+        in raw units and the observed values may be zero or negative, so the log scaling is turned off here.
+        """
+        constraints = scenario.get_constraints()
+
+        return MultiObjectiveModel(
+            models=[cls.get_model(scenario, log_y=False) for _ in constraints],
+            objectives=[constraint.name for constraint in constraints],
             seed=scenario.seed,
         )
 
