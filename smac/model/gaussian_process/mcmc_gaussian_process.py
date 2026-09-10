@@ -188,7 +188,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
                         warnings.filterwarnings("ignore", r"invalid value encountered in double_scalars.*")
                         self.p0, _, _ = sampler.run_mcmc(self.p0, self._burning_steps)
 
-                    self.burned = True
+                    self._burned = True
 
                 # Start sampling & save the current position, it will be the start point in the next iteration
                 with warnings.catch_warnings():
@@ -210,7 +210,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
                 import nuts.nuts  # type: ignore
 
                 # Perform initial fit to the data to obtain theta0
-                if not self.burned:
+                if not self._burned:
                     theta0 = self._gp.kernel.theta
                     self._burned = True
                 else:
