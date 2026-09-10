@@ -72,7 +72,7 @@ if __name__ == "__main__":
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
         classifier.configspace,
-        n_trials=50,  # We want to run max 50 trials (combination of config and seed)
+        n_trials=100, 
     )
 
     # We want to run the facade's default initial design, but we want to change the number

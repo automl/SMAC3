@@ -283,7 +283,7 @@ class HPIRandomSearch(RandomSearch):
             )
 
         shapley_values = hyper_shap.get_interaction_values_with_names(interaction_values)
-        shapley_values = {hp: value for hp, value in shapley_values.items()}
+        shapley_values = {hp[0]: value for hp, value in shapley_values.items() if len(hp) == 1}
 
         del explanation_task, hyper_shap
         return self._select_important_hps(shapley_values, threshold)
@@ -345,11 +345,11 @@ class HPIRandomSearch(RandomSearch):
         has a value for the region where it's active, so `hp` would otherwise always fall back to
         `hp.default_value` when active elsewhere. Falls back to it here too, only if `hp` was never active
         in any evaluated config.
-        
+
         Parameters
         ----------
         hp : Hyperparameter
-        
+
         Returns
         -------
         The best value for `hp` among previously evaluated configs that satisfy its parent conditions, or
