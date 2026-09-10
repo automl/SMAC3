@@ -108,6 +108,10 @@ class HPIRandomSearch(RandomSearch):
         self._configspace.seed(seed)
         self._original_cs.seed(seed)
 
+        # Used by `_incumbent_value_for` to fix inactive conditional hyperparameters.
+        self._context_configs: list[Configuration] = []
+        self._context_Y: np.ndarray = np.empty((0, 1))
+
     @property
     def meta(self) -> dict[str, Any]:
         """Return the meta-data of the created object."""
@@ -239,8 +243,10 @@ class HPIRandomSearch(RandomSearch):
             return self._original_cs.sample_configuration()
 
         X = convert_configurations_to_array(previous_configs)
-        Y = self._acquisition_function.model.predict_marginalized(X)[0]
-        return previous_configs[int(np.argmin(Y))]
+        self._context_Y = self._acquisition_function.model.predict_marginalized(X)[0]
+        self._context_configs = previous_configs
+
+        return previous_configs[int(np.argmin(self._context_Y))]
 
     def _compute_important_hps(self, reference_config: Configuration, threshold: float) -> list[str]:
         """Estimates the HyperSHAP tunability of each hyperparameter relative to ``reference_config`` on the
@@ -296,7 +302,7 @@ class HPIRandomSearch(RandomSearch):
         float
         """
         arr = config.get_array()
-        return (-1) * self.model.predict(np.array([arr]))[0][0]
+        return (-1) * self._acquisition_function.model.predict(np.array([arr]))[0][0]
 
     def _select_important_hps(self, shapley_values: dict[str, float], threshold: float) -> list[str]:
         """Greedily selects hyperparameters by descending Shapley value until their cumulative share of the total
@@ -332,6 +338,32 @@ class HPIRandomSearch(RandomSearch):
 
         return selected_hps
 
+    def _incumbent_value_for(self, hp):
+        """Best value for `hp` among previously evaluated configs that satisfy its parent conditions.
+
+        Generalizes "freeze at the incumbent" to conditional hyperparameters: the global incumbent only
+        has a value for the region where it's active, so `hp` would otherwise always fall back to
+        `hp.default_value` when active elsewhere. Falls back to it here too, only if `hp` was never active
+        in any evaluated config.
+        
+        Parameters
+        ----------
+        hp : Hyperparameter
+        
+        Returns
+        -------
+        The best value for `hp` among previously evaluated configs that satisfy its parent conditions, or
+        `hp.default_value` if none of the evaluated configs satisfy the conditions.
+        """
+        conditions = self._original_cs.parent_conditions_of[hp.name]
+        best_value, best_y = None, float("inf")
+        for cfg, y in zip(self._context_configs, self._context_Y):
+            y = float(np.asarray(y).reshape(-1)[0])
+            cfg_dict = dict(cfg)
+            if hp.name in cfg_dict and all(cond.satisfied_by_value(cfg_dict) for cond in conditions) and y < best_y:
+                best_value, best_y = cfg_dict[hp.name], y
+        return best_value if best_value is not None else hp.default_value
+
     def _reduce_configspace(self, important_hps: list[str], reference_config: Configuration) -> ConfigurationSpace:
         """Builds a reduced configuration space in which unimportant hyperparameters are fixed to their
         value in ``reference_config``. Parents of important, conditional hyperparameters are kept
@@ -349,13 +381,15 @@ class HPIRandomSearch(RandomSearch):
         reference_config : Configuration
 
         """
-        conditions = []
-        for cond in self._original_cs.conditions:
-            if cond.child.name in important_hps:
-                if cond.parent.name not in important_hps:
+        changed = True
+        while changed:
+            changed = False
+            for cond in self._original_cs.conditions:
+                if cond.child.name in important_hps and cond.parent.name not in important_hps:
                     important_hps.append(cond.parent.name)
-            if cond.parent.name in important_hps:
-                conditions.append(cond)
+                    changed = True
+
+        conditions = [cond for cond in self._original_cs.conditions if cond.parent.name in important_hps]
 
         reduced_cs = ConfigurationSpace()
         reduced_cs.random.set_state(self._original_cs.random.get_state())
@@ -367,7 +401,10 @@ class HPIRandomSearch(RandomSearch):
                 except:
                     reduced_cs.add_hyperparameter(hp)
             else:
-                fixed_value = reference_config[hp.name] if hp.name in reference_config else hp.default_value
+                if self._fixing_strategy == "incumbent":
+                    fixed_value = self._incumbent_value_for(hp)
+                else:
+                    fixed_value = reference_config[hp.name] if hp.name in reference_config else hp.default_value
                 try:
                     new_hp = PseudoConstant(hp.name, fixed_value)
                 except Exception:
