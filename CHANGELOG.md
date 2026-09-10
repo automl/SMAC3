@@ -1,4 +1,4 @@
-# 2.4.1
+# 2.4.2
 ## Improvements
 - Include a new multi-objective method based on hypervolume
 - Added configurable `warn_mode` for ask-and-tell budget exhaustion behavior (#1197)
@@ -7,14 +7,13 @@
 ## Examples
 - An example on the new multi-objective method
 
+# 2.4.1
 ## Bugfixes
 - Scikit-learn 1.9 deprecated an alias for np.float32 called DTYPE. Change removes references to deprecated alias (#1314)
-- Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)
-- Tests were failing due to an incompatibility between pytest and pytest-cases.  Pytest-cases is a dead stub, so simplest fix is to remove it.
-
+- Forbidden clauses weren't being preserved. Change fixes that and adds a test (#1306)
+- Tests were failing due to an incompatibility between pytest and pytest-cases.  Pytest-cases is a dead stub, so simplest fix is to remove 
 
 # 2.4.0
-
 ## Improvements
 - Replace random forest from pyrfr with random forest from sklearn (#1246)
 - Submit trials to runners in SMBO instead of running configs directly (#937)

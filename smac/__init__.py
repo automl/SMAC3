@@ -8,7 +8,7 @@ author = (
     "Difan Deng,\n\tCarolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter"
 )
 
-author_email = "fh@cs.uni-freiburg.de"
+author_email = "smac@ai.uni-hannover.de"
 description = "SMAC3, a Python implementation of 'Sequential Model-based Algorithm Configuration'."
 url = "https://www.automl.org/"
 project_urls = {
@@ -20,7 +20,7 @@ copyright = (
     "Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass "
     "and Frank Hutter"
 )
-version = "2.4.0"
+version = "2.4.1"
 
 
 try:
