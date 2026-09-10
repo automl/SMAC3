@@ -1,0 +1,37 @@
+smac.acquisition.function.confidence\_bound
+===========================================
+
+.. automodule:: smac.acquisition.function.confidence_bound
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      LCB
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

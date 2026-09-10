@@ -1,0 +1,37 @@
+smac.model.gaussian\_process.priors.log\_normal\_prior
+======================================================
+
+.. automodule:: smac.model.gaussian_process.priors.log_normal_prior
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      LogNormalPrior
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

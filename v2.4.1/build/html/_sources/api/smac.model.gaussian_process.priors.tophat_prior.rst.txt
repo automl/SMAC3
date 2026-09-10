@@ -1,0 +1,38 @@
+smac.model.gaussian\_process.priors.tophat\_prior
+=================================================
+
+.. automodule:: smac.model.gaussian_process.priors.tophat_prior
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      SoftTopHatPrior
+      TophatPrior
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

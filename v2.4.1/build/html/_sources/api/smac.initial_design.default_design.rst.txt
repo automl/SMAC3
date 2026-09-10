@@ -1,0 +1,37 @@
+smac.initial\_design.default\_design
+====================================
+
+.. automodule:: smac.initial_design.default_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      DefaultInitialDesign
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

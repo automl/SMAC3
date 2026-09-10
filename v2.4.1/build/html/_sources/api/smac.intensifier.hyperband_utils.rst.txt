@@ -1,0 +1,40 @@
+smac.intensifier.hyperband\_utils
+=================================
+
+.. automodule:: smac.intensifier.hyperband_utils
+
+   
+   
+   
+
+   
+   
+
+   Functions
+   ^^^^^^^^^
+
+   .. autosummary::
+   
+      determine_HB
+      determine_hyperband_for_multifidelity
+      get_n_trials_for_hyperband_multifidelity
+      print_hyperband_summary
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

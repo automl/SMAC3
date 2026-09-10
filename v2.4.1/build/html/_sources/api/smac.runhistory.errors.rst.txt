@@ -1,0 +1,37 @@
+smac.runhistory.errors
+======================
+
+.. automodule:: smac.runhistory.errors
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Exceptions
+   ^^^^^^^^^^
+
+   .. autosummary::
+   
+      NotEvaluatedError
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

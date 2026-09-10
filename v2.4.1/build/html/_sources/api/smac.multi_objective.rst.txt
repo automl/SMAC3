@@ -1,0 +1,42 @@
+﻿smac.multi\_objective
+=====================
+
+.. automodule:: smac.multi_objective
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
+
+Modules
+^^^^^^^
+
+.. autosummary::
+   :template: module.rst
+   :toctree:
+   :recursive:
+
+   abstract_multi_objective_algorithm
+   aggregation_strategy
+   parego
+

@@ -1,0 +1,521 @@
+{
+ "Callback": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.callback.callback",
+   "module_short": "smac",
+   "name": "Callback"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.callback",
+   "module_short": "smac",
+   "name": "Callback"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "Callback"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "Callback"
+  }
+ ],
+ "Configuration": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "ConfigSpace.configuration",
+   "module_short": "ConfigSpace",
+   "name": "Configuration"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "Configuration"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Mapping"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Mapping"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Collection"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Collection"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Sized"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Sized"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Iterable"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Iterable"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Container"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Container"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "Configuration"
+  }
+ ],
+ "ConfigurationSpace": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "ConfigSpace.configuration_space",
+   "module_short": "ConfigSpace",
+   "name": "ConfigurationSpace"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "ConfigurationSpace"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Mapping"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Mapping"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Collection"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Collection"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Sized"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Sized"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Iterable"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Iterable"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Container"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Container"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "ConfigurationSpace"
+  }
+ ],
+ "CustomCallback": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "CustomCallback"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.callback.callback",
+   "module_short": "smac",
+   "name": "Callback"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.callback",
+   "module_short": "smac",
+   "name": "Callback"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "Callback"
+  }
+ ],
+ "Float": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "Float"
+  }
+ ],
+ "HPOFacade": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.facade.hyperparameter_optimization_facade",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.facade.abstract_facade",
+   "module_short": "smac.facade",
+   "name": "AbstractFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac.facade",
+   "name": "AbstractFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "AbstractFacade"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade"
+  }
+ ],
+ "Rosenbrock2D": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "Rosenbrock2D"
+  }
+ ],
+ "Scenario": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.scenario",
+   "module_short": "smac",
+   "name": "Scenario"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "Scenario"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "Scenario"
+  }
+ ],
+ "TrialInfo": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.runhistory.dataclasses",
+   "module_short": "smac.runhistory",
+   "name": "TrialInfo"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.runhistory",
+   "module_short": "smac.runhistory",
+   "name": "TrialInfo"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "TrialInfo"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.runhistory",
+   "module_short": "smac.runhistory",
+   "name": "TrialInfo"
+  }
+ ],
+ "TrialValue": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.runhistory.dataclasses",
+   "module_short": "smac.runhistory",
+   "name": "TrialValue"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.runhistory",
+   "module_short": "smac.runhistory",
+   "name": "TrialValue"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "TrialValue"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.runhistory",
+   "module_short": "smac.runhistory",
+   "name": "TrialValue"
+  }
+ ],
+ "__copyright__": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
+  }
+ ],
+ "__license__": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
+  }
+ ],
+ "__name__": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
+  }
+ ],
+ "model": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "Rosenbrock2D"
+  }
+ ],
+ "model.configspace": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "Rosenbrock2D.configspace"
+  }
+ ],
+ "model.train": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "Rosenbrock2D.train"
+  }
+ ],
+ "scenario": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.scenario",
+   "module_short": "smac",
+   "name": "Scenario"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "Scenario"
+  }
+ ],
+ "smac.main.smbo.SMBO": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.main.smbo",
+   "module_short": "smac.main.smbo",
+   "name": "SMBO"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.main",
+   "module_short": "smac.main",
+   "name": "SMBO"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "SMBO"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.main.smbo",
+   "module_short": "smac.main.smbo",
+   "name": "SMBO"
+  }
+ ]
+}

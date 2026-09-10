@@ -1,0 +1,37 @@
+smac.model.multi\_objective\_model
+==================================
+
+.. automodule:: smac.model.multi_objective_model
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      MultiObjectiveModel
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

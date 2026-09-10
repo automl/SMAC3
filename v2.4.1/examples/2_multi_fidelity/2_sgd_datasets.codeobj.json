@@ -1,0 +1,1077 @@
+{
+ "Categorical": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "Categorical"
+  }
+ ],
+ "Configuration": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "ConfigSpace.configuration",
+   "module_short": "ConfigSpace",
+   "name": "Configuration"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "Configuration"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Mapping"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Mapping"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Collection"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Collection"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Sized"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Sized"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Iterable"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Iterable"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Container"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Container"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "Configuration"
+  }
+ ],
+ "ConfigurationSpace": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "ConfigSpace.configuration_space",
+   "module_short": "ConfigSpace",
+   "name": "ConfigurationSpace"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "ConfigurationSpace"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Mapping"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Mapping"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Collection"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Collection"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Sized"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Sized"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Iterable"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Iterable"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections.abc",
+   "module_short": "collections.abc",
+   "name": "Container"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "collections",
+   "module_short": "collections",
+   "name": "Container"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "ConfigurationSpace"
+  }
+ ],
+ "DigitsDataset": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "DigitsDataset"
+  }
+ ],
+ "Float": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "Float"
+  }
+ ],
+ "MFFacade": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.facade.multi_fidelity_facade",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.facade.hyperparameter_optimization_facade",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.facade.abstract_facade",
+   "module_short": "smac.facade",
+   "name": "AbstractFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac.facade",
+   "name": "AbstractFacade"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "AbstractFacade"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade"
+  }
+ ],
+ "SGD": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "SGD"
+  }
+ ],
+ "SGDClassifier": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.linear_model._stochastic_gradient",
+   "module_short": "sklearn.linear_model",
+   "name": "SGDClassifier"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.linear_model",
+   "module_short": "sklearn.linear_model",
+   "name": "SGDClassifier"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "SGDClassifier"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.linear_model._stochastic_gradient",
+   "module_short": "sklearn.linear_model._stochastic_gradient",
+   "name": "BaseSGDClassifier"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.linear_model",
+   "module_short": "sklearn.linear_model",
+   "name": "BaseSGDClassifier"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "BaseSGDClassifier"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.linear_model._base",
+   "module_short": "sklearn.linear_model._base",
+   "name": "LinearClassifierMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.linear_model",
+   "module_short": "sklearn.linear_model",
+   "name": "LinearClassifierMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "LinearClassifierMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.linear_model._stochastic_gradient",
+   "module_short": "sklearn.linear_model._stochastic_gradient",
+   "name": "BaseSGD"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.linear_model",
+   "module_short": "sklearn.linear_model",
+   "name": "BaseSGD"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "BaseSGD"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.base",
+   "module_short": "sklearn.base",
+   "name": "ClassifierMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "ClassifierMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.linear_model._base",
+   "module_short": "sklearn.linear_model._base",
+   "name": "SparseCoefMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.linear_model",
+   "module_short": "sklearn.linear_model",
+   "name": "SparseCoefMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "SparseCoefMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.base",
+   "module_short": "sklearn.base",
+   "name": "BaseEstimator"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "BaseEstimator"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils._estimator_html_repr",
+   "module_short": "sklearn.utils._estimator_html_repr",
+   "name": "_HTMLDocumentationLinkMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils",
+   "module_short": "sklearn.utils",
+   "name": "_HTMLDocumentationLinkMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "_HTMLDocumentationLinkMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils._metadata_requests",
+   "module_short": "sklearn.utils._metadata_requests",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils",
+   "module_short": "sklearn.utils",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn.linear_model",
+   "module_short": "sklearn.linear_model",
+   "name": "SGDClassifier"
+  }
+ ],
+ "Scenario": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac.scenario",
+   "module_short": "smac",
+   "name": "Scenario"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "Scenario"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "Scenario"
+  }
+ ],
+ "StratifiedKFold": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection._split",
+   "module_short": "sklearn.model_selection",
+   "name": "StratifiedKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection",
+   "module_short": "sklearn.model_selection",
+   "name": "StratifiedKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "StratifiedKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection._split",
+   "module_short": "sklearn.model_selection._split",
+   "name": "_BaseKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection",
+   "module_short": "sklearn.model_selection",
+   "name": "_BaseKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "_BaseKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection._split",
+   "module_short": "sklearn.model_selection",
+   "name": "BaseCrossValidator"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection",
+   "module_short": "sklearn.model_selection",
+   "name": "BaseCrossValidator"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "BaseCrossValidator"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils._metadata_requests",
+   "module_short": "sklearn.utils._metadata_requests",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils",
+   "module_short": "sklearn.utils",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn.model_selection",
+   "module_short": "sklearn.model_selection",
+   "name": "StratifiedKFold"
+  }
+ ],
+ "__copyright__": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
+  }
+ ],
+ "__license__": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
+  }
+ ],
+ "__name__": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
+  }
+ ],
+ "cross_val_score": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn.model_selection",
+   "module_short": "sklearn.model_selection",
+   "name": "cross_val_score"
+  }
+ ],
+ "dataset": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "DigitsDataset"
+  }
+ ],
+ "dataset.get_instance_features": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "DigitsDataset.get_instance_features"
+  }
+ ],
+ "dataset.get_instances": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "DigitsDataset.get_instances"
+  }
+ ],
+ "datasets.load_digits": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn.datasets",
+   "module_short": "sklearn.datasets",
+   "name": "load_digits"
+  }
+ ],
+ "default_cost": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "float64"
+  }
+ ],
+ "incumbent": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "ConfigSpace.configuration",
+   "module_short": "ConfigSpace",
+   "name": "Configuration"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "ConfigSpace",
+   "module_short": "ConfigSpace",
+   "name": "Configuration"
+  }
+ ],
+ "incumbent_cost": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "float64"
+  }
+ ],
+ "itertools.combinations": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "itertools",
+   "module_short": "itertools",
+   "name": "combinations"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "itertools",
+   "module_short": "itertools",
+   "name": "combinations"
+  }
+ ],
+ "model": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "SGD"
+  }
+ ],
+ "model.configspace": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "SGD.configspace"
+  }
+ ],
+ "model.configspace.get_default_configuration": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "SGD.configspace"
+  }
+ ],
+ "model.train": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "__main__",
+   "module_short": "__main__",
+   "name": "SGD.train"
+  }
+ ],
+ "np.logical_or": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ufunc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "logical_or"
+  }
+ ],
+ "np.mean": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "_ArrayFunctionDispatcher"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "mean"
+  }
+ ],
+ "np.ndarray": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  }
+ ],
+ "np.var": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "_ArrayFunctionDispatcher"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "var"
+  }
+ ],
+ "np.where": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "_ArrayFunctionDispatcher"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "where"
+  }
+ ],
+ "scenario": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.scenario",
+   "module_short": "smac",
+   "name": "Scenario"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "Scenario"
+  }
+ ],
+ "smac": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade.multi_fidelity_facade",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade"
+  }
+ ],
+ "smac.optimize": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade.multi_fidelity_facade",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade.optimize"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade.optimize"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade.optimize"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade.hyperparameter_optimization_facade",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade.optimize"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade.optimize"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade.optimize"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade.abstract_facade",
+   "module_short": "smac.facade",
+   "name": "AbstractFacade.optimize"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac.facade",
+   "name": "AbstractFacade.optimize"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "AbstractFacade.optimize"
+  }
+ ],
+ "smac.validate": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade.multi_fidelity_facade",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade.validate"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade.validate"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "MultiFidelityFacade.validate"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade.hyperparameter_optimization_facade",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade.validate"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade.validate"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "HyperparameterOptimizationFacade.validate"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade.abstract_facade",
+   "module_short": "smac.facade",
+   "name": "AbstractFacade.validate"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac.facade",
+   "module_short": "smac.facade",
+   "name": "AbstractFacade.validate"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "smac",
+   "module_short": "smac",
+   "name": "AbstractFacade.validate"
+  }
+ ],
+ "warnings.catch_warnings": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "warnings",
+   "module_short": "warnings",
+   "name": "catch_warnings"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "warnings",
+   "module_short": "warnings",
+   "name": "catch_warnings"
+  }
+ ],
+ "warnings.filterwarnings": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "warnings",
+   "module_short": "warnings",
+   "name": "filterwarnings"
+  }
+ ]
+}

@@ -1,0 +1,37 @@
+smac.model.gaussian\_process.kernels.hamming\_kernel
+====================================================
+
+.. automodule:: smac.model.gaussian_process.kernels.hamming_kernel
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      HammingKernel
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

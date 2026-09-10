@@ -1,0 +1,37 @@
+smac.model.gaussian\_process.kernels.matern\_kernel
+===================================================
+
+.. automodule:: smac.model.gaussian_process.kernels.matern_kernel
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      MaternKernel
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

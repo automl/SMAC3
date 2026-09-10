@@ -1,0 +1,37 @@
+smac.facade.hyperparameter\_optimization\_facade
+================================================
+
+.. automodule:: smac.facade.hyperparameter_optimization_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      HyperparameterOptimizationFacade
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

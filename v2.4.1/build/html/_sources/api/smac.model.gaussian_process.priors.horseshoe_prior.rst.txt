@@ -1,0 +1,37 @@
+smac.model.gaussian\_process.priors.horseshoe\_prior
+====================================================
+
+.. automodule:: smac.model.gaussian_process.priors.horseshoe_prior
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      HorseshoePrior
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+

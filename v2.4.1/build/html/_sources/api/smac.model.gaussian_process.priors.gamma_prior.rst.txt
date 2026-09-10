@@ -1,0 +1,37 @@
+smac.model.gaussian\_process.priors.gamma\_prior
+================================================
+
+.. automodule:: smac.model.gaussian_process.priors.gamma_prior
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+   Classes
+   ^^^^^^^
+
+   .. autosummary::
+   
+      GammaPrior
+   
+   
+
+   
+   
+   
+
+   
+   Interfaces
+   ^^^^^^^^^^
+   
+
+
+
+
