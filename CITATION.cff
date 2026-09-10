@@ -6,7 +6,7 @@ message: "If you used SMAC in one of your research projects, please cite us:"
 title: "SMAC3"
 date-released: "2016-08-17"
 
-url: "https://automl.github.io/SMAC3/master/index.html"
+url: "https://automl.github.io/SMAC3/latest/index.html"
 repository-code: "https://github.com/automl/SMAC3"
 
 version: "2.4.0"
