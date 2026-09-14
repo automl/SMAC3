@@ -18,6 +18,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.utils.configspace import convert_configurations_to_array
 from smac.utils.constraints import (
     OutcomeConstraint,
+    bilog,
     is_feasible,
     probability_of_feasibility,
 )
@@ -70,6 +71,9 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
     feasibility_floor : float, defaults to 1e-12
         Lowest possible value of the feasibility weight. Keeps the ranking of configurations intact when every
         probability underflows to zero.
+    transform : bool, defaults to True
+        Whether to compress the constraint residuals with :func:`bilog` before fitting. Turning this off fits
+        the raw residuals, which is the plain formulation.
     """
 
     def __init__(
@@ -78,6 +82,7 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
         constraints: list[OutcomeConstraint],
         constraint_model: AbstractModel,
         feasibility_floor: float = 1e-12,
+        transform: bool = True,
     ) -> None:
         super().__init__()
 
@@ -88,6 +93,7 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
         self._constraints = constraints
         self._constraint_model = constraint_model
         self._feasibility_floor = feasibility_floor
+        self._transform = transform
 
         # LCB and TS are negative by design, so they have to be shifted before a multiplicative weight is
         # meaningful. This mirrors how BoTorch shifts by an infeasible cost before applying its feasibility
@@ -116,6 +122,7 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
                 "constraints": [str(constraint) for constraint in self._constraints],
                 "constraint_model": self._constraint_model.meta,
                 "feasibility_floor": self._feasibility_floor,
+                "transform": self._transform,
             }
         )
 
@@ -139,7 +146,7 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
 
         if len(configs) > 0:
             X = convert_configurations_to_array(configs)
-            self._constraint_model.train(X, constraint_values)
+            self._constraint_model.train(X, self._training_targets(constraint_values))
             self._trained = True
 
         feasible_configs = [
@@ -192,6 +199,25 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
 
         return configs, averaged
 
+    def _training_targets(self, constraint_values: np.ndarray) -> np.ndarray:
+        """Turns raw observations into the residuals the constraint model is fitted on.
+
+        Working in residual space puts the feasibility boundary at zero for every constraint, whatever
+        direction it was declared in, so the models and the feasibility probability need no per-constraint
+        branching.
+        """
+        residuals = np.column_stack(
+            [
+                [constraint.residual(value) for value in constraint_values[:, index]]
+                for index, constraint in enumerate(self._constraints)
+            ]
+        )
+
+        if self._transform:
+            return bilog(residuals)
+
+        return residuals
+
     def _as_dicts(self, constraint_values: np.ndarray) -> list[dict[str, float]]:
         names = [constraint.name for constraint in self._constraints]
 
@@ -233,7 +259,7 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
             return self._acquisition_function._compute(X)
 
         means, variances = self._constraint_model.predict_marginalized(X)
-        feasibility = probability_of_feasibility(self._constraints, means, variances)
+        feasibility = probability_of_feasibility(means, variances)
 
         if not self._has_feasible:
             # Without a feasible incumbent there is no improvement to expect over, so search for a feasible

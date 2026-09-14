@@ -15,6 +15,16 @@
     https://www.auai.org/uai2014/proceedings/individuals/107.pdf
 
 
+* [](){#EP21}[EP21] D. Eriksson, M. Poloczek; 
+    Scalable Constrained Bayesian Optimization; 
+    https://proceedings.mlr.press/v130/eriksson21a.html
+
+
+* [](){#ADE+23}[ADE+23] S. Ament, S. Daulton, D. Eriksson, M. Balandat, E. Bakshy; 
+    Unexpected Improvements to Expected Improvement for Bayesian Optimization; 
+    https://arxiv.org/abs/2310.20708
+
+
 * [](){#GKZ+14}[GKZ+14] J. Gardner, M. Kusner, Z. Xu, K. Weinberger, J. Cunningham; 
     Bayesian Optimization with Inequality Constraints; 
     https://proceedings.mlr.press/v32/gardner14.html

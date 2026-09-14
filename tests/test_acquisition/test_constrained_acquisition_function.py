@@ -6,14 +6,18 @@ from ConfigSpace import ConfigurationSpace, Float
 
 from smac.acquisition.function import EI, LCB, ConstrainedAcquisitionFunction
 from smac.runhistory.runhistory import RunHistory
-from smac.utils.constraints import parse_constraints, probability_of_feasibility
+from smac.utils.constraints import bilog, parse_constraints, probability_of_feasibility
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
 class FixedModel:
-    """Surrogate returning a constant mean and variance per output, independent of the input."""
+    """Surrogate returning a constant mean and variance per output, independent of the input.
+
+    Used both as the objective model and as the constraint model; in the latter case the outputs are residuals,
+    negative when the constraint holds.
+    """
 
     def __init__(self, means: list[float], variances: list[float]):
         self.means = np.array(means, dtype=float)
@@ -79,7 +83,7 @@ def test_value_is_the_acquisition_times_the_probability_of_feasibility(configspa
     Runs the wrapper and a bare EI over the same fixed models and compares against the hand-computed product.
     """
     objective_model = FixedModel([0.5], [1.0])
-    constraint_model = FixedModel([90.0], [25.0])
+    constraint_model = FixedModel([-10.0], [25.0])   # residual: ten below the bound
 
     acquisition = _make(objective_model, constraint_model)
     acquisition.update(model=objective_model, eta=1.0, runhistory=_runhistory(configspace, [50.0]))
@@ -89,9 +93,7 @@ def test_value_is_the_acquisition_times_the_probability_of_feasibility(configspa
 
     bare = EI()
     bare.update(model=objective_model, eta=acquisition._eta)
-    expected_feasibility = probability_of_feasibility(
-        parse_constraints(["latency <= 100"]), *constraint_model.predict_marginalized(X)
-    )
+    expected_feasibility = probability_of_feasibility(*constraint_model.predict_marginalized(X))
 
     assert values == pytest.approx(bare._compute(X).reshape((-1, 1)) * (expected_feasibility + 1e-12))
     assert values.shape == (2, 1)
@@ -107,10 +109,10 @@ def test_an_infeasible_region_is_suppressed(configspace):
     runhistory = _runhistory(configspace, [50.0])
     X = np.array([[0.5]])
 
-    feasible = _make(objective_model, FixedModel([50.0], [1.0]))
+    feasible = _make(objective_model, FixedModel([-50.0], [1.0]))
     feasible.update(model=objective_model, eta=1.0, runhistory=runhistory)
 
-    infeasible = _make(objective_model, FixedModel([150.0], [1.0]))
+    infeasible = _make(objective_model, FixedModel([50.0], [1.0]))
     infeasible.update(model=objective_model, eta=1.0, runhistory=runhistory)
 
     assert infeasible._compute(X) < feasible._compute(X)
@@ -123,15 +125,13 @@ def test_without_a_feasible_observation_only_feasibility_matters(configspace):
     probability alone, ignoring the objective.
     """
     objective_model = FixedModel([0.5], [1.0])
-    constraint_model = FixedModel([90.0], [25.0])
+    constraint_model = FixedModel([-10.0], [25.0])
 
     acquisition = _make(objective_model, constraint_model)
     acquisition.update(model=objective_model, eta=1.0, runhistory=_runhistory(configspace, [150.0]))
 
     X = np.array([[0.2], [0.7]])
-    expected = probability_of_feasibility(
-        parse_constraints(["latency <= 100"]), *constraint_model.predict_marginalized(X)
-    )
+    expected = probability_of_feasibility(*constraint_model.predict_marginalized(X))
 
     assert acquisition._has_feasible is False
     assert acquisition._compute(X) == pytest.approx(expected)
@@ -161,25 +161,74 @@ def test_the_incumbent_is_the_best_feasible_one(configspace):
     runhistory.add(config=worse_but_feasible, cost=0.9, seed=0, constraint_values={"latency": 50.0})
 
     objective_model = SlopedModel([0.0], [1.0])
-    acquisition = _make(objective_model, FixedModel([50.0], [1.0]))
+    acquisition = _make(objective_model, FixedModel([-50.0], [1.0]))
     acquisition.update(model=objective_model, eta=0.0, runhistory=runhistory)
 
     assert acquisition._has_feasible is True
     assert acquisition._eta == pytest.approx(worse_but_feasible.get_array()[0])
 
 
-def test_constraint_model_trains_on_raw_values(configspace):
-    """The constraint surrogate sees the observed values in their own units.
+def test_constraint_model_trains_on_transformed_residuals(configspace):
+    """The constraint surrogate is fitted on the compressed distance to the bound, not the raw value.
 
-    Runs an update over a runhistory with known latencies and inspects what the constraint model was trained on.
+    Runs an update over a runhistory with one satisfying and one violating latency, and checks the training
+    targets are the bilog of their signed residuals, so that the boundary sits at zero.
     """
-    constraint_model = FixedModel([50.0], [1.0])
+    constraint_model = FixedModel([0.0], [1.0])
     acquisition = _make(FixedModel([0.5], [1.0]), constraint_model)
     acquisition.update(model=acquisition.model, eta=1.0, runhistory=_runhistory(configspace, [50.0, 150.0]))
 
     _, Y = constraint_model.trained_on
 
-    assert sorted(Y.ravel().tolist()) == [50.0, 150.0]
+    # residuals against "latency <= 100" are -50 (satisfied) and +50 (violated)
+    assert sorted(Y.ravel().tolist()) == pytest.approx(sorted(bilog(np.array([-50.0, 50.0])).tolist()))
+
+
+def test_the_transform_can_be_turned_off(configspace):
+    """Disabling the transform fits the untouched residuals.
+
+    Runs the same update with transform=False and checks the training targets are the plain signed residuals.
+    """
+    constraint_model = FixedModel([0.0], [1.0])
+    acquisition = ConstrainedAcquisitionFunction(
+        acquisition_function=EI(),
+        constraints=parse_constraints(["latency <= 100"]),
+        constraint_model=constraint_model,
+        transform=False,
+    )
+    acquisition.model = FixedModel([0.5], [1.0])
+    acquisition.update(model=acquisition.model, eta=1.0, runhistory=_runhistory(configspace, [50.0, 150.0]))
+
+    _, Y = constraint_model.trained_on
+
+    assert sorted(Y.ravel().tolist()) == [-50.0, 50.0]
+
+
+def test_a_lower_bound_becomes_a_negative_residual_when_satisfied(configspace):
+    """A ">=" constraint is folded into the same "residual <= 0" convention.
+
+    Fits a lower-bounded constraint on one satisfying and one violating observation and checks the signs.
+    """
+    constraint_model = FixedModel([0.0], [1.0])
+    acquisition = ConstrainedAcquisitionFunction(
+        acquisition_function=EI(),
+        constraints=parse_constraints(["accuracy >= 0.9"]),
+        constraint_model=constraint_model,
+        transform=False,
+    )
+    acquisition.model = FixedModel([0.5], [1.0])
+
+    runhistory = RunHistory()
+    for i, accuracy in enumerate([0.95, 0.80]):
+        configspace.seed(i)
+        runhistory.add(config=configspace.sample_configuration(), cost=0.5, seed=0,
+                       constraint_values={"accuracy": accuracy})
+
+    acquisition.update(model=acquisition.model, eta=1.0, runhistory=runhistory)
+
+    _, Y = constraint_model.trained_on
+
+    assert sorted(Y.ravel().tolist()) == pytest.approx([-0.05, 0.10])
 
 
 def test_trials_without_constraint_values_are_not_trained_on(configspace):
@@ -187,13 +236,13 @@ def test_trials_without_constraint_values_are_not_trained_on(configspace):
 
     Mixes reporting and non-reporting trials in a runhistory and checks only the reporting ones were used.
     """
-    constraint_model = FixedModel([50.0], [1.0])
+    constraint_model = FixedModel([0.0], [1.0])
     acquisition = _make(FixedModel([0.5], [1.0]), constraint_model)
     acquisition.update(model=acquisition.model, eta=1.0, runhistory=_runhistory(configspace, [50.0, None, 150.0]))
 
     _, Y = constraint_model.trained_on
 
-    assert sorted(Y.ravel().tolist()) == [50.0, 150.0]
+    assert Y.shape[0] == 2
 
 
 def test_falls_back_to_the_bare_acquisition_without_any_observation(configspace):
@@ -202,7 +251,7 @@ def test_falls_back_to_the_bare_acquisition_without_any_observation(configspace)
     Updates over an empty runhistory and checks the value matches the unwrapped acquisition function.
     """
     objective_model = FixedModel([0.5], [1.0])
-    acquisition = _make(objective_model, FixedModel([50.0], [1.0]))
+    acquisition = _make(objective_model, FixedModel([-50.0], [1.0]))
     acquisition.update(model=objective_model, eta=1.0, runhistory=RunHistory())
 
     X = np.array([[0.2]])
@@ -236,7 +285,7 @@ def test_meta_describes_the_wrapping(configspace):
 
     Reads meta off a constructed wrapper and checks the constraint expressions round trip as strings.
     """
-    acquisition = _make(FixedModel([0.5], [1.0]), FixedModel([50.0], [1.0]))
+    acquisition = _make(FixedModel([0.5], [1.0]), FixedModel([-50.0], [1.0]))
     meta = acquisition.meta
 
     assert meta["name"] == "ConstrainedAcquisitionFunction"

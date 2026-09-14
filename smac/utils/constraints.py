@@ -4,7 +4,7 @@ import re
 from dataclasses import dataclass
 
 import numpy as np
-from scipy.stats import norm
+from scipy.special import log_ndtr
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -46,12 +46,20 @@ class OutcomeConstraint:
     def __str__(self) -> str:
         return f"{self.name} {self.op} {self.bound}"
 
+    def residual(self, value: float) -> float:
+        """Signed distance of a value from the bound, negative when the constraint holds.
+
+        Expressing both directions as "residual <= 0" lets the surrogate, the feasibility probability and the
+        violation all share one convention, with the bound and the direction folded into the residual.
+        """
+        if self.op == LEQ:
+            return value - self.bound
+
+        return self.bound - value
+
     def is_satisfied(self, value: float) -> bool:
         """Whether an observed value satisfies this constraint."""
-        if self.op == LEQ:
-            return value <= self.bound
-
-        return value >= self.bound
+        return self.residual(value) <= 0.0
 
     def violation(self, value: float) -> float:
         """How far an observed value falls outside the bound.
@@ -59,10 +67,7 @@ class OutcomeConstraint:
         Returns 0.0 for a satisfied constraint and a positive amount otherwise. Used to rank configurations while
         no feasible one has been observed.
         """
-        if self.op == LEQ:
-            return max(0.0, value - self.bound)
-
-        return max(0.0, self.bound - value)
+        return max(0.0, self.residual(value))
 
 
 def parse_constraint(expression: str) -> OutcomeConstraint:
@@ -206,17 +211,50 @@ def total_violation(constraints: list[OutcomeConstraint], values: dict[str, floa
     return violation
 
 
-def probability_of_feasibility(
-    constraints: list[OutcomeConstraint],
-    means: np.ndarray,
-    variances: np.ndarray,
-) -> np.ndarray:
-    """Probability that all constraints hold, under a Gaussian belief about each constrained output.
+def bilog(residuals: np.ndarray) -> np.ndarray:
+    r"""Compresses constraint residuals around the feasibility boundary.
 
-    For an upper bound this is $\\Phi((bound - \\mu) / \\sigma)$ and for a lower bound
-    $\\Phi((\\mu - bound) / \\sigma)$. The constrained outputs are assumed to be independent of each other and of
-    the objective, so the individual probabilities multiply. That independence assumption is what makes the
-    feasibility-weighted acquisition function equal to the constrained expected improvement of Gardner et al.
+    $$
+    \text{bilog}(r) = \text{sign}(r) \log(1 + |r|)
+    $$
+
+    See "Scalable Constrained Bayesian Optimization" by David Eriksson and Matthias Poloczek
+    [[EP21][EP21]]. The transform magnifies values near zero and flattens extreme ones, which is what a
+    constraint model wants: its accuracy only matters near the boundary, and a single wildly violating
+    observation should not dominate the fit. Constraint values are raw measurements and routinely span orders
+    of magnitude, so this matters in practice.
+
+    The transform is strictly increasing and maps 0 to 0, so it leaves feasibility unchanged: a residual is
+    non-positive exactly when its transform is.
+
+    Parameters
+    ----------
+    residuals : np.ndarray
+        Signed distances from the bound, as returned by ``OutcomeConstraint.residual``.
+
+    Returns
+    -------
+    transformed : np.ndarray
+    """
+    residuals = np.asarray(residuals, dtype=float)
+
+    return np.sign(residuals) * np.log1p(np.abs(residuals))
+
+
+def inverse_bilog(transformed: np.ndarray) -> np.ndarray:
+    """Maps transformed residuals back to their original units."""
+    transformed = np.asarray(transformed, dtype=float)
+
+    return np.sign(transformed) * np.expm1(np.abs(transformed))
+
+
+def probability_of_feasibility(means: np.ndarray, variances: np.ndarray) -> np.ndarray:
+    r"""Probability that every constraint holds, given a Gaussian belief about each residual.
+
+    The predictions are residuals, so a constraint is satisfied exactly when its residual is non-positive and
+    the probability is $\Phi(-\mu / \sigma)$ regardless of the direction of the original bound. Residuals are
+    assumed independent of each other and of the objective, which is the assumption that makes the
+    feasibility-weighted acquisition function equal the constrained expected improvement.
 
     Note
     ----
@@ -226,17 +264,35 @@ def probability_of_feasibility(
 
     Parameters
     ----------
-    constraints : list[OutcomeConstraint]
-        The constraints, in the same column order as ``means`` and ``variances``.
     means : np.ndarray [N, K]
-        Predicted mean of each constrained output.
+        Predicted mean residual of each constraint.
     variances : np.ndarray [N, K]
-        Predicted variance of each constrained output.
+        Predicted variance of each residual.
 
     Returns
     -------
     probabilities : np.ndarray [N, 1]
         Probability that every constraint is satisfied.
+    """
+    return np.exp(log_probability_of_feasibility(means, variances))
+
+
+def log_probability_of_feasibility(means: np.ndarray, variances: np.ndarray) -> np.ndarray:
+    r"""Log of :func:`probability_of_feasibility`, summed rather than multiplied.
+
+    The product underflows to exactly zero once enough constraints are unlikely, which destroys the ranking the
+    acquisition maximizer depends on. Accumulating $\log \Phi$ with a stable implementation avoids that, and
+    is what "Unexpected Improvements to Expected Improvement for Bayesian Optimization" by Sebastian Ament et
+    al. [[ADE+23][ADE+23]] recommends.
+
+    Parameters
+    ----------
+    means : np.ndarray [N, K]
+    variances : np.ndarray [N, K]
+
+    Returns
+    -------
+    log_probabilities : np.ndarray [N, 1]
     """
     means = np.atleast_2d(means)
     variances = np.atleast_2d(variances)
@@ -244,30 +300,16 @@ def probability_of_feasibility(
     if means.shape != variances.shape:
         raise ValueError(f"Means of shape {means.shape} do not match variances of shape {variances.shape}.")
 
-    if means.shape[1] != len(constraints):
-        raise ValueError(f"Got {means.shape[1]} predicted outputs for {len(constraints)} constraints.")
-
-    # A non-positive variance means the surrogate is certain; the comparison then degenerates to a step function,
-    # which np.where below applies directly instead of dividing by zero.
+    # A non-positive variance means the surrogate is certain; the comparison then degenerates to a step
+    # function, which is applied directly instead of dividing by zero.
     stds = np.sqrt(np.clip(variances, 0.0, None))
+    certain = stds <= 0.0
+    safe_stds = np.where(certain, 1.0, stds)
 
-    probabilities = np.ones((means.shape[0], 1))
-    for index, constraint in enumerate(constraints):
-        mean = means[:, index]
-        std = stds[:, index]
+    feasible_when_certain = np.where(means <= 0.0, 0.0, -np.inf)
+    log_probabilities = np.where(certain, feasible_when_certain, log_ndtr(-means / safe_stds))
 
-        if constraint.op == LEQ:
-            slack = constraint.bound - mean
-        else:
-            slack = mean - constraint.bound
-
-        certain = std <= 0.0
-        safe_std = np.where(certain, 1.0, std)
-        probability = np.where(certain, (slack >= 0.0).astype(float), norm.cdf(slack / safe_std))
-
-        probabilities *= probability.reshape((-1, 1))
-
-    return probabilities
+    return log_probabilities.sum(axis=1).reshape((-1, 1))
 
 
 def _is_finite(value: float) -> bool:
