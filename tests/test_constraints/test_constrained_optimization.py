@@ -137,31 +137,44 @@ def test_an_all_infeasible_run_still_reports_an_incumbent():
 
 
 @pytest.mark.parametrize("facade", FACADES)
-def test_constrained_runs_default_to_the_logarithmic_form(facade):
-    """Declaring a constraint switches the default acquisition function to its log form.
+def test_the_default_acquisition_function_is_unchanged_by_constraints(facade):
+    """Declaring a constraint wraps the usual acquisition function rather than replacing it.
 
-    Builds a constrained and an unconstrained facade and inspects which acquisition function each installed.
+    Builds a constrained facade and checks the wrapped function is still the facade's own default, so that
+    adding a bound does not silently change how the objective is traded off.
     """
-    constrained = Scenario(
+    scenario = Scenario(
         _configspace(0), constraints=["slack >= 1.0"], n_trials=10, output_directory=tempfile.mkdtemp()
     )
-    unconstrained = Scenario(_configspace(0), n_trials=10, output_directory=tempfile.mkdtemp())
 
-    with_constraints = facade(constrained, target, overwrite=True, logging_level=60)
-    without_constraints = facade(unconstrained, target, overwrite=True, logging_level=60)
+    smac = facade(scenario, target, overwrite=True, logging_level=60)
+    inner = smac._acquisition_function._acquisition_function
 
-    assert isinstance(with_constraints._acquisition_function._acquisition_function, LogEI)
-    assert with_constraints._acquisition_function.log is True
+    assert isinstance(inner, EI) and not isinstance(inner, LogEI)
+    assert smac._acquisition_function.log is False
 
-    # The unconstrained default is deliberately left alone
-    assert isinstance(without_constraints._acquisition_function, EI)
+
+@pytest.mark.parametrize("facade", FACADES)
+def test_the_logarithmic_form_can_be_opted_into(facade):
+    """LogEI is available for constrained runs by passing it explicitly.
+
+    Supplies LogEI to a constrained facade and checks the wrapper switches to log-space weighting.
+    """
+    scenario = Scenario(
+        _configspace(0), constraints=["slack >= 1.0"], n_trials=10, output_directory=tempfile.mkdtemp()
+    )
+
+    smac = facade(scenario, target, acquisition_function=LogEI(), overwrite=True, logging_level=60)
+
+    assert isinstance(smac._acquisition_function._acquisition_function, LogEI)
+    assert smac._acquisition_function.log is True
 
 
 @pytest.mark.parametrize("facade", FACADES)
 def test_an_explicit_acquisition_function_is_not_substituted(facade):
-    """Passing an acquisition function explicitly overrides the log default.
+    """Passing an acquisition function explicitly is respected, tuning included.
 
-    Supplies a plain EI to a constrained facade and checks it survives, tuning included.
+    Supplies a plain EI with a non-default xi to a constrained facade and checks it survives untouched.
     """
     scenario = Scenario(
         _configspace(0), constraints=["slack >= 1.0"], n_trials=10, output_directory=tempfile.mkdtemp()
@@ -172,4 +185,3 @@ def test_an_explicit_acquisition_function_is_not_substituted(facade):
 
     assert isinstance(inner, EI) and not isinstance(inner, LogEI)
     assert inner._xi == 0.07
-    assert smac._acquisition_function.log is False

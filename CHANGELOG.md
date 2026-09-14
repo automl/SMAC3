@@ -18,9 +18,11 @@
   negative; `PriorAcquisitionFunction` and `ConstrainedAcquisitionFunction` add their weights in log space
   rather than multiplying. Acquisition maximizers only compare values, so ranking is unaffected.
 - Constraint surrogates are now fitted on bilog-compressed residuals (Eriksson and Poloczek 2021) rather than
-  raw observations, concentrating model accuracy near the feasibility boundary. Constrained runs default to
-  `LogEI`, so the feasibility weighting is a sum of log probabilities and no longer underflows as constraints
-  are added.
+  raw observations, concentrating model accuracy near the feasibility boundary.
+- Passing `LogEI` to a constrained run weights it as a sum of log probabilities, which does not underflow as
+  constraints are added. This is opt-in: the default acquisition function is unchanged, because the benefit
+  only appears once the feasibility product actually underflows, which a handful of constraints does not
+  reach.
 
 ## Examples
 - An example on the new multi-objective method
