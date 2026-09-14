@@ -10,6 +10,11 @@
     https://arxiv.org/pdf/2204.11051.pdf
 
 
+* [](){#GSA14}[GSA14] M. Gelbart, J. Snoek, R. Adams; 
+    Bayesian Optimization with Unknown Constraints; 
+    https://www.auai.org/uai2014/proceedings/individuals/107.pdf
+
+
 * [](){#GKZ+14}[GKZ+14] J. Gardner, M. Kusner, Z. Xu, K. Weinberger, J. Cunningham; 
     Bayesian Optimization with Inequality Constraints; 
     https://proceedings.mlr.press/v32/gardner14.html

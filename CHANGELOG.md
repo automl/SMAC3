@@ -4,8 +4,9 @@
 - Batch model predictions when selecting the best predicted configuration.
 - Support output constraints: bounds on measured outputs of the target function, declared as
   `Scenario(..., constraints=["latency <= 100"])`. Each constrained output is modelled separately and the
-  acquisition function is weighted by the probability that every bound holds, following Gardner et al. 2014.
-  The reported incumbent is the best feasible configuration. Note that scenarios without an explicit `name`
+  acquisition function is weighted by the probability that every bound holds, following Gelbart et al. 2014
+  and Gardner et al. 2014. The reported incumbent is the best feasible configuration, and while no feasible
+  configuration is known the search maximizes the probability of feasibility alone. Note that scenarios without an explicit `name`
   derive it from a hash over all their fields, so adding constraints support changes that hash and existing
   output directories will not be picked up.
 

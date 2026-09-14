@@ -39,20 +39,23 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
     a_{c}(\mathbf{X}) = a(\mathbf{X}) \prod_i P(y_i(\mathbf{X}) \text{ satisfies constraint } i)
     $$
 
-    See "Bayesian Optimization with Inequality Constraints" by Jacob Gardner et al. [[GKZ+14][GKZ+14]] for
-    further details.
+    See "Bayesian Optimization with Unknown Constraints" by Michael Gelbart et al. [[GSA14][GSA14]], which
+    calls this constraint weighted expected improvement, and "Bayesian Optimization with Inequality
+    Constraints" by Jacob Gardner et al. [[GKZ+14][GKZ+14]], which derives the same criterion independently.
 
     Weighting rather than penalizing keeps the objective model clean: a penalty would make the surrogate fit a
     cliff that is not a feature of the objective, degrading its predictions inside the feasible region as well,
     and would discard the measured value that locates the boundary.
 
-    Two details make the difference between this working and not:
+    Two further details, both from [[GSA14][GSA14]], make the difference between this working and not:
 
-    * The incumbent handed to the wrapped acquisition function is the best *feasible* one. The unconstrained
-      incumbent is over-optimistic, because the best configuration seen so far may well violate a bound.
-    * While nothing feasible has been observed there is no improvement to expect over, so the acquisition
-      function degenerates to the probability of feasibility alone until the first feasible configuration
-      turns up.
+    * The incumbent handed to the wrapped acquisition function is the best *feasible* one: section 1.2 takes
+      the target to be "the minimum expected value of the objective such that the probabilistic constraints
+      are satisfied". The unconstrained incumbent is over-optimistic, because the best configuration seen so
+      far may well violate a bound.
+    * While nothing feasible has been observed the criterion is undefined, since the target does not exist.
+      Section 3.2 drops the objective there and maximizes the probability of feasibility alone, "until it is
+      satisfied somewhere".
 
     Parameters
     ----------
