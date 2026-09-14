@@ -6,7 +6,7 @@ import pytest
 from ConfigSpace import ConfigurationSpace, Float
 
 from smac import BlackBoxFacade, HyperparameterOptimizationFacade, Scenario
-from smac.acquisition.function import EI, ConstrainedAcquisitionFunction
+from smac.acquisition.function import EI, ConstrainedAcquisitionFunction, LogEI
 from smac.utils.constraints import is_feasible
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -134,3 +134,42 @@ def test_an_all_infeasible_run_still_reports_an_incumbent():
 
     assert incumbent is not None
     assert not is_feasible(smac.scenario.get_constraints(), smac.runhistory.get_constraint_values(incumbent))
+
+
+@pytest.mark.parametrize("facade", FACADES)
+def test_constrained_runs_default_to_the_logarithmic_form(facade):
+    """Declaring a constraint switches the default acquisition function to its log form.
+
+    Builds a constrained and an unconstrained facade and inspects which acquisition function each installed.
+    """
+    constrained = Scenario(
+        _configspace(0), constraints=["slack >= 1.0"], n_trials=10, output_directory=tempfile.mkdtemp()
+    )
+    unconstrained = Scenario(_configspace(0), n_trials=10, output_directory=tempfile.mkdtemp())
+
+    with_constraints = facade(constrained, target, overwrite=True, logging_level=60)
+    without_constraints = facade(unconstrained, target, overwrite=True, logging_level=60)
+
+    assert isinstance(with_constraints._acquisition_function._acquisition_function, LogEI)
+    assert with_constraints._acquisition_function.log is True
+
+    # The unconstrained default is deliberately left alone
+    assert isinstance(without_constraints._acquisition_function, EI)
+
+
+@pytest.mark.parametrize("facade", FACADES)
+def test_an_explicit_acquisition_function_is_not_substituted(facade):
+    """Passing an acquisition function explicitly overrides the log default.
+
+    Supplies a plain EI to a constrained facade and checks it survives, tuning included.
+    """
+    scenario = Scenario(
+        _configspace(0), constraints=["slack >= 1.0"], n_trials=10, output_directory=tempfile.mkdtemp()
+    )
+
+    smac = facade(scenario, target, acquisition_function=EI(xi=0.07), overwrite=True, logging_level=60)
+    inner = smac._acquisition_function._acquisition_function
+
+    assert isinstance(inner, EI) and not isinstance(inner, LogEI)
+    assert inner._xi == 0.07
+    assert smac._acquisition_function.log is False

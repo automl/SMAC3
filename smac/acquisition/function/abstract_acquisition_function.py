@@ -29,6 +29,17 @@ class AbstractAcquisitionFunction:
         raise NotImplementedError
 
     @property
+    def log(self) -> bool:
+        """Whether the returned values are logarithms of the acquisition value.
+
+        A log-valued acquisition function ranks configurations identically to its plain counterpart, since the
+        logarithm is increasing, but stays informative where the plain value underflows to zero. Its values are
+        negative, so a wrapper that weights an acquisition function has to add its weight in log space rather
+        than multiply.
+        """
+        return False
+
+    @property
     def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {
@@ -109,6 +120,8 @@ class AbstractAcquisitionFunction:
         Returns
         -------
         np.ndarray [N,1]
-            Acquisition function values wrt X.
+            Acquisition function values wrt X. Larger is better. The values are non-negative unless ``log`` is
+            set, in which case they are logarithms and therefore negative; either way only their order matters
+            to the acquisition maximizer.
         """
         raise NotImplementedError

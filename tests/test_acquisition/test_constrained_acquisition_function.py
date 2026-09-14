@@ -4,9 +4,14 @@ import numpy as np
 import pytest
 from ConfigSpace import ConfigurationSpace, Float
 
-from smac.acquisition.function import EI, LCB, ConstrainedAcquisitionFunction
+from smac.acquisition.function import EI, LCB, ConstrainedAcquisitionFunction, LogEI
 from smac.runhistory.runhistory import RunHistory
-from smac.utils.constraints import bilog, parse_constraints, probability_of_feasibility
+from smac.utils.constraints import (
+    bilog,
+    log_probability_of_feasibility,
+    parse_constraints,
+    probability_of_feasibility,
+)
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -291,3 +296,134 @@ def test_meta_describes_the_wrapping(configspace):
     assert meta["name"] == "ConstrainedAcquisitionFunction"
     assert meta["constraints"] == ["latency <= 100.0"]
     assert meta["acquisition_function"]["name"] == "EI"
+
+
+def _log_make(objective_model, constraint_model, constraints=None):
+    acquisition = ConstrainedAcquisitionFunction(
+        acquisition_function=LogEI(),
+        constraints=parse_constraints(constraints or ["latency <= 100"]),
+        constraint_model=constraint_model,
+    )
+    acquisition.model = objective_model
+
+    return acquisition
+
+
+def test_a_log_inner_function_makes_the_wrapper_logarithmic(configspace):
+    """The wrapper reports the space it is working in so that callers can compose correctly.
+
+    Reads the log flag off wrappers around LogEI and around EI.
+    """
+    assert _log_make(FixedModel([0.5], [1.0]), FixedModel([-50.0], [1.0])).log is True
+    assert _make(FixedModel([0.5], [1.0]), FixedModel([-50.0], [1.0])).log is False
+
+
+def test_log_weighting_adds_instead_of_multiplying(configspace):
+    """In log space the feasibility weight is a sum of log probabilities.
+
+    Compares the wrapper against LogEI plus the log feasibility computed independently.
+    """
+    objective_model = FixedModel([0.5], [1.0])
+    constraint_model = FixedModel([-10.0], [25.0])
+
+    acquisition = _log_make(objective_model, constraint_model)
+    acquisition.update(model=objective_model, eta=1.0, runhistory=_runhistory(configspace, [50.0]))
+
+    X = np.array([[0.2], [0.7]])
+
+    bare = LogEI()
+    bare.update(model=objective_model, eta=acquisition._eta)
+    expected = bare._compute(X).reshape((-1, 1)) + log_probability_of_feasibility(
+        *constraint_model.predict_marginalized(X)
+    )
+
+    assert acquisition._compute(X) == pytest.approx(expected)
+
+
+def test_log_and_plain_weighting_rank_the_same_when_nothing_underflows(configspace):
+    """The log form is the same criterion, not a different one.
+
+    Ranks candidates predicted at a spread of residuals under both forms and compares the orderings.
+    """
+
+    class SlopedConstraint(FixedModel):
+        def predict_marginalized(self, X):
+            return (X[:, :1] * 40.0) - 20.0, np.full((X.shape[0], 1), 4.0)
+
+    objective_model = FixedModel([0.5], [1.0])
+    X = np.linspace(0.0, 1.0, 25).reshape((-1, 1))
+    runhistory = _runhistory(configspace, [50.0])
+
+    plain = _make(objective_model, SlopedConstraint([0.0], [1.0]))
+    plain.update(model=objective_model, eta=1.0, runhistory=runhistory)
+
+    logged = _log_make(objective_model, SlopedConstraint([0.0], [1.0]))
+    logged.update(model=objective_model, eta=1.0, runhistory=runhistory)
+
+    assert np.array_equal(
+        np.argsort(plain._compute(X).reshape(-1)), np.argsort(logged._compute(X).reshape(-1))
+    )
+
+
+def test_log_weighting_survives_what_the_product_cannot(configspace):
+    """Many unlikely constraints flatten the plain product to zero; the log form keeps ranking.
+
+    Predicts sixty residuals six sigma outside their bounds, with one candidate strictly closer to feasible
+    than the other, and checks the plain form ties them while the log form separates them.
+    """
+    constraints = [f"c{i} <= 0" for i in range(60)]
+
+    class Hopeless(FixedModel):
+        def predict_marginalized(self, X):
+            # the first candidate is nearer the boundary than the second, in every constraint
+            residuals = np.where(X[:, :1] < 0.5, 6.0, 7.0)
+
+            return np.tile(residuals, (1, 60)), np.ones((X.shape[0], 60))
+
+    objective_model = FixedModel([0.5], [1.0])
+    X = np.array([[0.2], [0.8]])
+
+    runhistory = RunHistory()
+    configspace.seed(0)
+    runhistory.add(
+        config=configspace.sample_configuration(),
+        cost=0.5,
+        seed=0,
+        constraint_values={f"c{i}": -1.0 for i in range(60)},
+    )
+
+    plain = ConstrainedAcquisitionFunction(EI(), parse_constraints(constraints), Hopeless([0.0], [1.0]))
+    plain.model = objective_model
+    plain.update(model=objective_model, eta=1.0, runhistory=runhistory)
+
+    logged = ConstrainedAcquisitionFunction(LogEI(), parse_constraints(constraints), Hopeless([0.0], [1.0]))
+    logged.model = objective_model
+    logged.update(model=objective_model, eta=1.0, runhistory=runhistory)
+
+    plain_values = plain._compute(X).reshape(-1)
+    log_values = logged._compute(X).reshape(-1)
+
+    # The product has underflowed, so the two candidates are indistinguishable
+    assert plain_values[0] == plain_values[1]
+
+    assert np.all(np.isfinite(log_values))
+    assert log_values[0] > log_values[1]
+
+
+def test_the_log_fallback_is_the_log_probability_of_feasibility(configspace):
+    """With nothing feasible the log wrapper returns log feasibility, not feasibility.
+
+    Builds a runhistory whose only trial violates the bound and compares against the log probability directly.
+    """
+    objective_model = FixedModel([0.5], [1.0])
+    constraint_model = FixedModel([-10.0], [25.0])
+
+    acquisition = _log_make(objective_model, constraint_model)
+    acquisition.update(model=objective_model, eta=1.0, runhistory=_runhistory(configspace, [150.0]))
+
+    X = np.array([[0.2], [0.7]])
+
+    assert acquisition._has_feasible is False
+    assert acquisition._compute(X) == pytest.approx(
+        log_probability_of_feasibility(*constraint_model.predict_marginalized(X))
+    )

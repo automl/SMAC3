@@ -10,6 +10,18 @@
   derive it from a hash over all their fields, so adding constraints support changes that hash and existing
   output directories will not be picked up.
 
+- Add `LogEI`, the logarithm of expected improvement, following Ament et al. 2023. It ranks configurations
+  exactly as `EI` does but keeps discriminating where expected improvement underflows to zero and leaves the
+  acquisition maximizer a flat surface to search. Note this is distinct from `EI(log=True)`, which is ordinary
+  expected improvement for log scaled *target values*.
+- Acquisition functions may now report `log=True` to declare that they return logarithms. Such values are
+  negative; `PriorAcquisitionFunction` and `ConstrainedAcquisitionFunction` add their weights in log space
+  rather than multiplying. Acquisition maximizers only compare values, so ranking is unaffected.
+- Constraint surrogates are now fitted on bilog-compressed residuals (Eriksson and Poloczek 2021) rather than
+  raw observations, concentrating model accuracy near the feasibility boundary. Constrained runs default to
+  `LogEI`, so the feasibility weighting is a sum of log probabilities and no longer underflows as constraints
+  are added.
+
 ## Examples
 - An example on the new multi-objective method
 - An example on output constraints

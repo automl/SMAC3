@@ -17,6 +17,8 @@ from smac.acquisition.function.abstract_acquisition_function import (
 from smac.acquisition.function.constrained_acquisition_function import (
     ConstrainedAcquisitionFunction,
 )
+from smac.acquisition.function.expected_improvement import EI, EIPS
+from smac.acquisition.function.log_expected_improvement import LogEI
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
@@ -138,6 +140,10 @@ class AbstractFacade:
 
         if acquisition_function is None:
             acquisition_function = self.get_acquisition_function(scenario)
+
+            # Only the default is substituted; an explicitly passed acquisition function is wrapped as given.
+            if scenario.count_constraints() > 0:
+                acquisition_function = self.get_constrained_acquisition_function(scenario, acquisition_function)
 
         if scenario.count_constraints() > 0 and not isinstance(acquisition_function, ConstrainedAcquisitionFunction):
             acquisition_function = ConstrainedAcquisitionFunction(
@@ -374,6 +380,25 @@ class AbstractFacade:
     def get_model(scenario: Scenario) -> AbstractModel:
         """Returns the surrogate cost model instance used in the BO loop."""
         raise NotImplementedError
+
+    @staticmethod
+    def get_constrained_acquisition_function(
+        scenario: Scenario, acquisition_function: AbstractAcquisitionFunction
+    ) -> AbstractAcquisitionFunction:
+        """Returns the acquisition function to weight by feasibility.
+
+        Constrained runs default to the logarithmic form, because weighting multiplies one small number by
+        another: the feasibility probability shrinks with every constraint, and expected improvement is already
+        near zero over most of the space late in a run. In log space that product is a sum and the ranking
+        survives. See [[ADE+23][ADE+23]].
+
+        Only the default is replaced. An acquisition function passed to the facade explicitly is wrapped as
+        given, logarithmic or not.
+        """
+        if isinstance(acquisition_function, EI) and not isinstance(acquisition_function, EIPS):
+            return LogEI(xi=acquisition_function._xi)
+
+        return acquisition_function
 
     @classmethod
     def get_constraint_model(cls, scenario: Scenario) -> AbstractModel:

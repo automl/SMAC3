@@ -82,6 +82,10 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         return f"Prior Acquisition Function ({self._acquisition_function.__class__.__name__})"
 
     @property
+    def log(self) -> bool:  # noqa: D102
+        return self._acquisition_function.log
+
+    @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
         meta.update(
@@ -223,6 +227,14 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         np.ndarray [N, 1]
             Prior-weighted acquisition function values of X
         """
+        prior_values = self._compute_prior(X) + self._prior_floor
+        decay = self._decay_beta / (self._iteration_number + 1)
+
+        if self._acquisition_function.log:
+            # The weight has to be applied in the same space as the acquisition value, so the product becomes
+            # a sum. This also keeps the weighting meaningful where the plain value would have underflowed.
+            return self._acquisition_function._compute(X) + decay * np.log(prior_values)
+
         if self._rescale:
             # for TS and UCB, we need to scale the function values to not run into issues
             # of negative values or issues of varying magnitudes (here, they are both)
@@ -231,7 +243,4 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         else:
             acq_values = self._acquisition_function._compute(X)
 
-        prior_values = self._compute_prior(X) + self._prior_floor
-        decayed_prior_values = np.power(prior_values, self._decay_beta / (self._iteration_number + 1))
-
-        return acq_values * decayed_prior_values
+        return acq_values * np.power(prior_values, decay)

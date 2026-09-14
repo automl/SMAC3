@@ -20,6 +20,7 @@ from smac.utils.constraints import (
     OutcomeConstraint,
     bilog,
     is_feasible,
+    log_probability_of_feasibility,
     probability_of_feasibility,
 )
 from smac.utils.logging import get_logger
@@ -47,6 +48,11 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
     Weighting rather than penalizing keeps the objective model clean: a penalty would make the surrogate fit a
     cliff that is not a feature of the objective, degrading its predictions inside the feasible region as well,
     and would discard the measured value that locates the boundary.
+
+    When the wrapped acquisition function is logarithmic, the weighting is applied as a sum of log
+    probabilities rather than a product. The product underflows to exactly zero once enough constraints are
+    unlikely, which leaves every candidate tied and the maximizer with nothing to climb; this is the
+    constrained case of [[ADE+23][ADE+23]].
 
     Two further details, both from [[GSA14][GSA14]], make the difference between this working and not:
 
@@ -112,6 +118,10 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
     @property
     def name(self) -> str:  # noqa: D102
         return f"Constrained Acquisition Function ({self._acquisition_function.__class__.__name__})"
+
+    @property
+    def log(self) -> bool:  # noqa: D102
+        return self._acquisition_function.log
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -259,6 +269,17 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
             return self._acquisition_function._compute(X)
 
         means, variances = self._constraint_model.predict_marginalized(X)
+
+        if self.log:
+            # Weighting becomes a sum, and the feasibility floor is unnecessary: the product it protected
+            # against underflowing is never formed.
+            log_feasibility = log_probability_of_feasibility(means, variances)
+
+            if not self._has_feasible:
+                return log_feasibility
+
+            return self._acquisition_function._compute(X).reshape((-1, 1)) + log_feasibility
+
         feasibility = probability_of_feasibility(means, variances)
 
         if not self._has_feasible:

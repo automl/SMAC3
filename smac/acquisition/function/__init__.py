@@ -7,6 +7,7 @@ from smac.acquisition.function.constrained_acquisition_function import (
 )
 from smac.acquisition.function.expected_improvement import EI, EIPS
 from smac.acquisition.function.hypervolume import PHVI
+from smac.acquisition.function.log_expected_improvement import LogEI
 from smac.acquisition.function.integrated_acquisition_function import (
     IntegratedAcquisitionFunction,
 )
@@ -22,6 +23,7 @@ __all__ = [
     "PI",
     "EI",
     "EIPS",
+    "LogEI",
     "TS",
     "PriorAcquisitionFunction",
     "IntegratedAcquisitionFunction",
