@@ -28,7 +28,7 @@ extras_require = {
         "pymoo"
     ],
     "hpi": [
-        "hypershap>=0.0.6",
+        "hypershap>=0.0.6; python_version>='3.10'",
     ],
     "dev": [
         "setuptools",
