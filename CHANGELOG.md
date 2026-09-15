@@ -1,25 +1,16 @@
 ## Improvements
+- Include a new multi-objective method based on hypervolume
+- Added configurable `warn_mode` for ask-and-tell budget exhaustion behavior (#1197)
+- Batch model predictions when selecting the best predicted configuration.
 - Add `HPIRandomSearch`, an acquisition maximizer that dynamically restricts the configuration space to the
   hyperparameters estimated to be most important (via HyperSHAP) for the current scalarization. Combined with
   `ParEGO`, this implements HPI-ParEGO. Requires the optional `hypershap` dependency (`pip install smac[hpi]`).
   Also works for single-objective optimization.
 
-
-## Examples
-- An example on HPI-ParEGO
-- An example on HPIRandomSearch for single objective optimization
-
-## Bugfixes
-
-
-# 2.4.1
-## Improvements
-- Include a new multi-objective method based on hypervolume
-- Added configurable `warn_mode` for ask-and-tell budget exhaustion behavior (#1197)
-- Batch model predictions when selecting the best predicted configuration.
-
 ## Examples
 - An example on the new multi-objective method
+- An example on HPI-ParEGO
+- An example on HPIRandomSearch for single objective optimization
 
 ## Bugfixes
 - Scikit-learn 1.9 deprecated an alias for np.float32 called DTYPE. Change removes references to deprecated alias (#1314)

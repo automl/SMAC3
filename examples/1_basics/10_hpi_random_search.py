@@ -15,6 +15,7 @@ from sklearn.model_selection import cross_val_score
 
 from smac import HyperparameterOptimizationFacade, Scenario
 from smac.acquisition.maximizer import HPIRandomSearch
+from smac.main.config_selector import ConfigSelector
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -78,6 +79,8 @@ if __name__ == "__main__":
     # We want to run the facade's default initial design, but we want to change the number
     # of initial configs to 5.
     initial_design = HyperparameterOptimizationFacade.get_initial_design(scenario, n_configs=5)
+    
+    config_selector = ConfigSelector(scenario, retrain_after=2)
 
     # HPIRandomSearch replaces the default acquisition maximizer.
     acquisition_maximizer = HPIRandomSearch(
@@ -88,6 +91,7 @@ if __name__ == "__main__":
     smac = HyperparameterOptimizationFacade(
         scenario,
         classifier.train,
+        config_selector=config_selector,
         initial_design=initial_design,
         acquisition_maximizer=acquisition_maximizer,
         overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state

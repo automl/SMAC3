@@ -36,6 +36,7 @@ from smac.acquisition.maximizer import HPIRandomSearch
 from smac.facade.abstract_facade import AbstractFacade
 from smac.multi_objective.parego import ParEGO
 from smac.utils.cost_transformer import CostTransformer
+from smac.main.config_selector import ConfigSelector
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -151,8 +152,9 @@ if __name__ == "__main__":
 
     # We want to run five random configurations before starting the optimization.
     initial_design = HPOFacade.get_initial_design(scenario, n_configs=5)
-    # HPI-ParEGO uses reweigh=10 to give the optimizer time to exploit a scalarization before resampling new weights.
-    multi_objective_algorithm = ParEGO(scenario, reweigh=10)
+    # HPI-ParEGO uses reweigh of 10 (retrain * reweigh) to give the optimizer time to exploit a scalarization before resampling new weights.
+    config_selector = ConfigSelector(scenario, retrain_after=2)
+    multi_objective_algorithm = ParEGO(scenario, reweigh=5)
     intensifier = HPOFacade.get_intensifier(scenario, max_config_calls=2)
 
     # HPI-ParEGO only differs from plain ParEGO in the acquisition maximizer: instead of considering the whole
@@ -165,6 +167,7 @@ if __name__ == "__main__":
         scenario,
         mlp.train,
         initial_design=initial_design,
+        config_selector=config_selector,
         multi_objective_algorithm=multi_objective_algorithm,
         intensifier=intensifier,
         acquisition_maximizer=acquisition_maximizer,

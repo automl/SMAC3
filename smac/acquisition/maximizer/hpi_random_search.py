@@ -170,15 +170,12 @@ class HPIRandomSearch(RandomSearch):
         if len(important_hps) > 0:
             self._reduce_configspace(important_hps, reference_config)
 
-        try:
-            configs = (
-                self._configspace.sample_configuration(n_points)
-                if n_points > 1
-                else [self._configspace.sample_configuration()]
-            )
-            configs = self._drop_forbidden(configs)
-        except:
-            configs = []
+        configs = (
+            self._configspace.sample_configuration(n_points)
+            if n_points > 1
+            else [self._configspace.sample_configuration()]
+        )
+        configs = self._drop_forbidden(configs)
 
         if len(configs) < min(2, n_points):
             logger.info(
@@ -335,7 +332,7 @@ class HPIRandomSearch(RandomSearch):
             if value > min_contribution:
                 selected_hps.append(hp)
                 cum_sum += value
-
+        logger.info(f"Important hyperparameters: {selected_hps}.")
         return selected_hps
 
     def _incumbent_value_for(self, hp):
@@ -398,7 +395,7 @@ class HPIRandomSearch(RandomSearch):
             if hp.name in important_hps:
                 try:
                     reduced_cs.add(hp)
-                except:
+                except Exception:
                     reduced_cs.add_hyperparameter(hp)
             else:
                 if self._fixing_strategy == "incumbent":
@@ -412,7 +409,7 @@ class HPIRandomSearch(RandomSearch):
                     new_hp = hp
                 try:
                     reduced_cs.add(new_hp)
-                except:
+                except Exception:
                     reduced_cs.add_hyperparameter(new_hp)
 
         reduced_cs.add(conditions)
