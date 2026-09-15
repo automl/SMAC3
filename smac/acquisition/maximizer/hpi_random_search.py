@@ -3,9 +3,12 @@ from __future__ import annotations
 from typing import Any
 
 import copy
+import random
+
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.exceptions import ForbiddenValueError
+from ConfigSpace.hyperparameters import Hyperparameter
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
@@ -14,7 +17,6 @@ from smac.acquisition.maximizer.helpers import PseudoConstant
 from smac.acquisition.maximizer.random_search import RandomSearch
 from smac.utils.configspace import convert_configurations_to_array
 from smac.utils.logging import get_logger
-import random
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -72,7 +74,7 @@ class HPIRandomSearch(RandomSearch):
         challengers: int = 5000,
         seed: int = 0,
         n_trials: int | None = None,
-        threshold: float | list[float] = [0.0, 0.8, 0.0],
+        threshold: float | list[float] | None = None,
         fixing_strategy: str = "incumbent",
         random_prob: float = 0.1,
     ) -> None:
@@ -82,6 +84,9 @@ class HPIRandomSearch(RandomSearch):
             challengers=challengers,
             seed=seed,
         )
+
+        if threshold is None:
+            threshold = [0.0, 0.8, 0.0]
 
         if fixing_strategy not in ("incumbent", "default", "random"):
             raise ValueError(
@@ -239,6 +244,8 @@ class HPIRandomSearch(RandomSearch):
         if self._fixing_strategy == "random":
             return self._original_cs.sample_configuration()
 
+        assert self._acquisition_function is not None and self._acquisition_function.model is not None
+
         X = convert_configurations_to_array(previous_configs)
         self._context_Y = self._acquisition_function.model.predict_marginalized(X)[0]
         self._context_configs = previous_configs
@@ -298,6 +305,8 @@ class HPIRandomSearch(RandomSearch):
         -------
         float
         """
+        assert self._acquisition_function is not None and self._acquisition_function.model is not None
+
         arr = config.get_array()
         return (-1) * self._acquisition_function.model.predict(np.array([arr]))[0][0]
 
@@ -335,7 +344,7 @@ class HPIRandomSearch(RandomSearch):
         logger.info(f"Important hyperparameters: {selected_hps}.")
         return selected_hps
 
-    def _incumbent_value_for(self, hp):
+    def _incumbent_value_for(self, hp: Hyperparameter) -> Any:
         """Best value for `hp` among previously evaluated configs that satisfy its parent conditions.
 
         Generalizes "freeze at the incumbent" to conditional hyperparameters: the global incumbent only
@@ -405,7 +414,7 @@ class HPIRandomSearch(RandomSearch):
                 try:
                     new_hp = PseudoConstant(hp.name, fixed_value)
                 except Exception:
-                    logger.debug(f"Could not fix hp '{hp.name}'; keeping it tunable.")
+                    logger.debug(f"Could not fix hp '{hp.name}', keeping it tunable.")
                     new_hp = hp
                 try:
                     reduced_cs.add(new_hp)

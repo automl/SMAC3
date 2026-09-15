@@ -50,7 +50,7 @@ class AbstractAcquisitionMaximizer:
         self._challengers = challengers
         self._seed = seed
         self._rng = np.random.RandomState(seed=seed)
-        self._n_evaluated_trials = 0
+        self._n_evaluated_trials: int | None = 0
 
     @property
     def acquisition_function(self) -> AbstractAcquisitionFunction | None:

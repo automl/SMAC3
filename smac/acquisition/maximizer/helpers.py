@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Iterator
+from typing import Any, Callable, Iterator
 
 from ConfigSpace import Configuration, ConfigurationSpace, Constant
 
@@ -14,7 +14,7 @@ class PseudoConstant(Constant):
     runhistory when the configuration space is adjusted.
     """
 
-    def legal_value(self, value):  # noqa: D102
+    def legal_value(self, value: Any) -> bool:  # noqa: D102
         return True
 
 
