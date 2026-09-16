@@ -127,9 +127,9 @@ class ConfigSelector:
         self._callbacks = callbacks if callbacks is not None else []
 
         self._initial_design_configs = initial_design.select_configurations()
-        if len(self._initial_design_configs) == 0:
-            # raise RuntimeError("SMAC needs initial configurations to work.")
-            logger.warning("No initial configurations were sampled.")
+        if not isinstance(self._initial_design_configs, Iterator) and len(self._initial_design_configs) == 0:
+            raise RuntimeError("SMAC needs initial configurations to work.")
+        # logger.warning("No initial configurations were sampled.")
 
     @property
     def meta(self) -> dict[str, Any]:
