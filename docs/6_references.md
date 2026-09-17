@@ -18,3 +18,13 @@
 * [](){#SKKS10}[SKKS10] N. Srinivas, S. M. Kakade, A. Krause, M. Seeger; 
     Gaussian Process Optimization in the Bandit Setting: No Regret and Experimental Design; 
     https://arxiv.org/pdf/0912.3995.pdf
+
+
+* [](){#WMFL26}[WMFL26] M. Wever, M. Muschalik, F. Fumagalli, M. Lindauer;
+ HyperSHAP: Shapley values and interactions for explaining hyperparameter optimization;
+ https://ojs.aaai.org/index.php/AAAI/article/view/39898
+
+
+* [](){#TSL26}[TWL26] D. Theodorakopoulos, M. Wever, M. Lindauer; 
+    Dynamic Hyperparameter Importance for Efficient Multi-Objective Optimization; 
+    https://arxiv.org/pdf/2601.03166
