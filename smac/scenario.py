@@ -12,6 +12,7 @@ from pathlib import Path
 import numpy as np
 from ConfigSpace import ConfigurationSpace
 
+from smac.constants import INITIAL_DESIGN_VALID_DIAGNOSTICS_MODES
 from smac.utils.logging import get_logger
 from smac.utils.numpyencoder import NumpyEncoder
 
@@ -82,6 +83,26 @@ class Scenario:
         * ``"replace"``: The already-evaluated configurations are treated as the complete initial design.
           The initial design does not propose any additional configurations of its own; SMAC moves on
           directly to model-based optimization.
+    initial_design_diagnostics : str, defaults to "warn"
+        Controls early diagnostics on the initial design evaluations. Once every initial design
+        configuration has been evaluated at least once, SMAC can check whether the collected data
+        carries any feedback signal for the surrogate model:
+
+        * all configurations failed, i.e. the target function or pipeline is likely broken,
+        * some configurations failed, which is reported as a count so that the user can react, or
+        * all successful configurations share the same cost, i.e. the metric or the search space is
+          likely misconfigured (this can also be a legitimate plateau).
+
+        A configuration counts as failed only if none of its evaluations succeeded.
+
+        Possible values:
+
+        * ``"off"``: No diagnostics are performed. This is the historic behaviour.
+        * ``"warn"`` (default): A warning is logged for each detected case; the optimization
+          continues. Nothing but the log output changes compared to ``"off"``.
+        * ``"abort"``: A warning is logged and the optimization is stopped gracefully if the initial
+          design carries no feedback signal, i.e. if all configurations failed or all of them
+          perform identically. Partial failures are only ever warned about.
     instances : list[str] | None, defaults to None
         Names of the instances to use. If None, no instances are used.
         Instances could be dataset names, seeds, subsets, etc.
@@ -128,6 +149,7 @@ class Scenario:
     n_trials: int = 100
     use_default_config: bool = False
     initial_design_warmstart_mode: str = "additional"
+    initial_design_diagnostics: str = "warn"
 
     # Algorithm Configuration
     instances: list[str] | None = None
@@ -171,6 +193,13 @@ class Scenario:
             raise ValueError(
                 f"`initial_design_warmstart_mode` must be one of {valid_warmstart_modes}, "
                 f"got {self.initial_design_warmstart_mode!r}."
+            )
+
+        if self.initial_design_diagnostics not in INITIAL_DESIGN_VALID_DIAGNOSTICS_MODES:
+            raise ValueError(
+                f"`initial_design_diagnostics` must be one of "
+                f"{sorted(INITIAL_DESIGN_VALID_DIAGNOSTICS_MODES)}, "
+                f"got {self.initial_design_diagnostics!r}."
             )
 
         if self.objective_weights is not None:

@@ -18,6 +18,7 @@ from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.callback.callback import Callback
+from smac.callback.initial_design_diagnostics_callback import InitialDesignDiagnosticsCallback
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.main.config_selector import ConfigSelector
@@ -137,6 +138,13 @@ class AbstractFacade:
 
         if callbacks is None:
             callbacks = []
+
+        # Early diagnostics on the initial design are opt-in via the scenario. We prepend the
+        # callback so that a degenerate initial design is reported before user callbacks run.
+        if scenario.initial_design_diagnostics != "off":
+            callbacks = [
+                InitialDesignDiagnosticsCallback(mode=scenario.initial_design_diagnostics)
+            ] + callbacks
 
         if model is None:
             model = self.get_model(scenario)
