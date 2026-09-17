@@ -1,5 +1,9 @@
 # 2.4.1
 ## Improvements
+- Early diagnostics on the initial design evaluations: SMAC now reports when all configurations
+  failed, when some of them failed, or when all of them perform identically, and can abort the run
+  when the initial design carries no feedback signal for the surrogate model. Controlled via
+  `Scenario.initial_design_diagnostics` (`"off"` | `"warn"` (default) | `"abort"`) (#1320)
 - Include a new multi-objective method based on hypervolume
 - Added configurable `warn_mode` for ask-and-tell budget exhaustion behavior (#1197)
 - Batch model predictions when selecting the best predicted configuration.
@@ -8,6 +12,11 @@
 - An example on the new multi-objective method
 
 ## Bugfixes
+- Remove the dead `FirstRunCrashedException` safeguard in `SMBO._add_results`: its condition
+  (`runhistory.finished == 0`) was checked *after* `tell()` had already incremented that counter and
+  could therefore never hold. The unused `FirstRunCrashedException` and
+  `TargetAlgorithmAbortException` classes were removed along with it; the initial design diagnostics
+  replace them (#1320)
 - Scikit-learn 1.9 deprecated an alias for np.float32 called DTYPE. Change removes references to deprecated alias (#1314)
 - Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)
 - Tests were failing due to an incompatibility between pytest and pytest-cases.  Pytest-cases is a dead stub, so simplest fix is to remove it.
