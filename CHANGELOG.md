@@ -1,4 +1,4 @@
-# 2.4.1
+# 2.4.2
 ## Improvements
 - Early diagnostics on the initial design evaluations: SMAC now reports when all configurations
   failed, when some of them failed, or when all of them perform identically, and can abort the run
@@ -11,6 +11,7 @@
 ## Examples
 - An example on the new multi-objective method
 
+# 2.4.1
 ## Bugfixes
 - Remove the dead `FirstRunCrashedException` safeguard in `SMBO._add_results`: its condition
   (`runhistory.finished == 0`) was checked *after* `tell()` had already incremented that counter and
@@ -18,12 +19,10 @@
   `TargetAlgorithmAbortException` classes were removed along with it; the initial design diagnostics
   replace them (#1320)
 - Scikit-learn 1.9 deprecated an alias for np.float32 called DTYPE. Change removes references to deprecated alias (#1314)
-- Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)
-- Tests were failing due to an incompatibility between pytest and pytest-cases.  Pytest-cases is a dead stub, so simplest fix is to remove it.
-
+- Forbidden clauses weren't being preserved. Change fixes that and adds a test (#1306)
+- Tests were failing due to an incompatibility between pytest and pytest-cases.  Pytest-cases is a dead stub, so simplest fix is to remove 
 
 # 2.4.0
-
 ## Improvements
 - Replace random forest from pyrfr with random forest from sklearn (#1246)
 - Submit trials to runners in SMBO instead of running configs directly (#937)
