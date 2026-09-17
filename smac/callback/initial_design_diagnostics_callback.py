@@ -74,7 +74,9 @@ class InitialDesignDiagnosticsCallback(Callback):
 
     def on_start(self, smbo: SMBO) -> None:
         """Remembers which configurations belong to the initial design."""
-        self._expected_configs = list(smbo.intensifier._config_selector._initial_design_configs)
+        config_selector = smbo.intensifier._config_selector
+        assert config_selector is not None
+        self._expected_configs = list(config_selector._initial_design_configs)
 
     def on_tell_end(self, smbo: SMBO, info: TrialInfo, value: TrialValue) -> bool | None:
         """Checks the initial design evaluations once they are complete.
@@ -143,9 +145,7 @@ class InitialDesignDiagnosticsCallback(Callback):
         # the already-evaluated configurations *are* the initial design -- we fall back to
         # everything the runhistory holds at this point.
         config_ids = [
-            runhistory.get_config_id(config)
-            for config in self._expected_configs
-            if runhistory.has_config(config)
+            runhistory.get_config_id(config) for config in self._expected_configs if runhistory.has_config(config)
         ]
 
         # A single configuration is not enough evidence to judge a whole run, so if the initial
