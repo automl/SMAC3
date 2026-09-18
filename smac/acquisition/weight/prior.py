@@ -150,7 +150,7 @@ class ConfigSpacePrior(AbstractInputPrior):
             if resolution is not None and isinstance(hyperparameter, FloatHyperparameter):
                 values = values * discretize_pdf(hyperparameter, column, resolution)
             else:
-                values = values * hyperparameter._pdf(column[:, np.newaxis])
+                values = values * density_of(hyperparameter, column)
 
         return values
 
@@ -162,6 +162,22 @@ class ConfigSpacePrior(AbstractInputPrior):
             return [self._configspace.sample_configuration()]
 
         return list(self._configspace.sample_configuration(size=n))
+
+
+def density_of(hyperparameter: Hyperparameter, X_col: np.ndarray) -> np.ndarray:
+    """Evaluates the density of one hyperparameter on the vectorized representation.
+
+    Returns
+    -------
+    np.ndarray [N, 1]
+    """
+    # `_pdf` still works but is deprecated. It is kept as a fallback for objects which only offer it.
+    density = getattr(hyperparameter, "pdf_vector", None)
+
+    if density is not None:
+        return np.asarray(density(X_col), dtype=float).reshape((-1, 1))
+
+    return np.asarray(hyperparameter._pdf(X_col[:, np.newaxis]), dtype=float).reshape((-1, 1))
 
 
 def discretize_pdf(hyperparameter: FloatHyperparameter, X_col: np.ndarray, number_of_bins: int) -> np.ndarray:
@@ -189,7 +205,7 @@ def discretize_pdf(hyperparameter: FloatHyperparameter, X_col: np.ndarray, numbe
     if number_of_bins < 1:
         raise ValueError(f"The number of bins must be at least one, got {number_of_bins}.")
 
-    pdf_values = hyperparameter._pdf(X_col[:, np.newaxis])
+    pdf_values = density_of(hyperparameter, X_col)
 
     lower, upper = (0.0, hyperparameter.get_max_density())
     bin_values = np.linspace(lower, upper, number_of_bins)

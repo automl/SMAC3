@@ -11,6 +11,7 @@ from smac.acquisition.weight import (
     PriorWeight,
     discretize_pdf,
 )
+from smac.acquisition.weight.prior import density_of
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -55,7 +56,7 @@ def test_the_density_is_the_product_over_hyperparameters(search_space, prior_spa
 
     expected = np.ones((len(X), 1))
     for hyperparameter, column in zip(hyperparameters, X.T):
-        expected = expected * hyperparameter._pdf(column[:, np.newaxis])
+        expected = expected * density_of(hyperparameter, column)
 
     assert prior.pdf(X) == pytest.approx(expected)
     assert prior.pdf(X).shape == (len(X), 1)
