@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any, Mapping
+
 import hashlib
 import logging
 from functools import partial
@@ -12,6 +14,7 @@ from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
     Constant,
     FloatHyperparameter,
+    Hyperparameter,
     IntegerHyperparameter,
     NormalFloatHyperparameter,
     NormalIntegerHyperparameter,
@@ -284,3 +287,131 @@ def create_uniform_configspace_copy(
             ConfigurationSpace.substitute_hyperparameters_in_forbiddens(forbiddens, new_configuration_space)
         )
     return new_configuration_space
+
+
+def create_prior_configspace_copy(
+    configspace: ConfigurationSpace,
+    prior: Mapping[str, Any],
+    *,
+    std_denominator: float = 4.0,
+    categorical_weight: float = 0.8,
+) -> ConfigurationSpace:
+    """Creates a copy of the given configuration space with a prior placed on the given values.
+
+    The dual of `create_uniform_configspace_copy`: where that one strips the distributions off a search space,
+    this one puts them on. It turns a user saying "I think a learning rate around 0.01 works" into something the
+    acquisition function can be weighted by.
+
+    Numerical hyperparameters become normal hyperparameters centred on the given value, with a standard deviation
+    of their range divided by ``std_denominator``; categorical and ordinal ones get ``categorical_weight`` on the
+    named choice and the remainder spread evenly over the others.
+
+    A hyperparameter which does not appear in ``prior``, or whose value there is `None`, keeps its uniform
+    distribution. That is how a belief about part of the search space is stated: name only the part you have an
+    opinion about, and the rest contributes a constant factor to the density.
+
+    Note the width of the belief is a single knob here. A user who wants different widths per hyperparameter
+    should build the configuration space directly.
+
+    Parameters
+    ----------
+    configspace : ConfigurationSpace
+        The search space to place the prior on.
+    prior : Mapping[str, Any]
+        The believed values, by hyperparameter name.
+    std_denominator : float, defaults to 4.0
+        The range of a numerical hyperparameter is divided by this to get the standard deviation. Larger values
+        make a sharper belief.
+    categorical_weight : float, defaults to 0.8
+        Probability given to the named choice of a categorical or ordinal hyperparameter. One would make every
+        other choice impossible up to the prior floor, so the default leaves room to recover from a wrong belief.
+
+    Returns
+    -------
+    ConfigurationSpace
+        A copy of the search space carrying the prior.
+    """
+    if std_denominator <= 0:
+        raise ValueError(f"The standard deviation denominator must be positive, got {std_denominator}.")
+
+    if not 0 < categorical_weight <= 1:
+        raise ValueError(f"The categorical weight must be in (0, 1], got {categorical_weight}.")
+
+    unknown = set(prior) - {hyperparameter.name for hyperparameter in configspace.values()}
+    if unknown:
+        raise ValueError(f"The prior names hyperparameters which are not in the search space: {sorted(unknown)}.")
+
+    new_configuration_space = ConfigurationSpace(name=configspace.name, meta=configspace.meta)
+    new_configuration_space.random.set_state(configspace.random.get_state())
+
+    for hyperparameter in configspace.values():
+        value = prior.get(hyperparameter.name)
+
+        if value is None:
+            new_configuration_space.add(hyperparameter)
+            continue
+
+        new_configuration_space.add(_place_prior(hyperparameter, value, std_denominator, categorical_weight))
+
+    conditions = configspace.conditions
+    new_configuration_space.add(conditions)
+
+    forbiddens = configspace.forbidden_clauses
+    if forbiddens:
+        new_configuration_space.add(
+            ConfigurationSpace.substitute_hyperparameters_in_forbiddens(forbiddens, new_configuration_space)
+        )
+
+    return new_configuration_space
+
+
+def _place_prior(
+    hyperparameter: Hyperparameter,
+    value: Any,
+    std_denominator: float,
+    categorical_weight: float,
+) -> Hyperparameter:
+    """Returns a copy of one hyperparameter with a belief about its value placed on it."""
+    if isinstance(hyperparameter, (CategoricalHyperparameter, OrdinalHyperparameter)):
+        choices = list(hyperparameter.choices if hasattr(hyperparameter, "choices") else hyperparameter.sequence)
+
+        if value not in choices:
+            raise ValueError(f"The prior for {hyperparameter.name!r} is {value!r}, which is not one of {choices}.")
+
+        rest = (1 - categorical_weight) / (len(choices) - 1) if len(choices) > 1 else 0.0
+        weights = [categorical_weight if choice == value else rest for choice in choices]
+
+        return CategoricalHyperparameter(
+            name=hyperparameter.name,
+            choices=choices,
+            default_value=hyperparameter.default_value,
+            weights=weights,
+            meta=hyperparameter.meta,
+        )
+
+    if isinstance(hyperparameter, (FloatHyperparameter, IntegerHyperparameter)):
+        lower = hyperparameter.lower
+        upper = hyperparameter.upper
+
+        if not lower <= value <= upper:
+            raise ValueError(f"The prior for {hyperparameter.name!r} is {value}, which is outside [{lower}, {upper}].")
+
+        sigma = (upper - lower) / std_denominator
+        kind = (
+            NormalFloatHyperparameter
+            if isinstance(hyperparameter, FloatHyperparameter)
+            else NormalIntegerHyperparameter
+        )
+
+        return kind(
+            name=hyperparameter.name,
+            lower=lower,
+            upper=upper,
+            mu=value,
+            sigma=sigma,
+            log=hyperparameter.log,
+            meta=hyperparameter.meta,
+        )
+
+    # A constant, or anything else without a distribution to place: nothing to believe about it.
+    return hyperparameter
