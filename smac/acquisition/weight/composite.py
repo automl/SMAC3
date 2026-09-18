@@ -159,6 +159,17 @@ class CompositeWeight(AbstractAcquisitionWeight):
         """Removes every member."""
         self._members.clear()
 
+    @property
+    def model(self) -> AbstractModel | None:  # noqa: D102
+        return self._model
+
+    @model.setter
+    def model(self, model: AbstractModel) -> None:
+        self._model = model
+
+        for weight in tuple(self._members.values()):
+            weight.model = model
+
     def update(self, model: AbstractModel, **kwargs: Any) -> None:  # noqa: D102
         self._last_update = dict(kwargs)
         super().update(model, **kwargs)
@@ -205,3 +216,61 @@ class CompositeWeight(AbstractAcquisitionWeight):
             eta = weight.adjust_eta(eta)
 
         return eta
+
+
+class PriorEnsemble(CompositeWeight):
+    r"""Several user beliefs about where the optimum lies, each fading from when it was supplied.
+
+    $$w(\mathbf{X}) = \sum_m \pi_m(\mathbf{X})^{\beta_m / (t - t_{0,m} + 1)}$$
+
+    See "Dynamic Priors in Bayesian Optimization for Hyperparameter Optimization" by Lukas Fehring et al.
+    [[FWS+25][FWS+25]] for further details.
+
+    Beliefs are summed rather than multiplied, so that the ensemble reads as "any of these regions is worth a
+    look". Multiplying would let two beliefs pointing at different regions cancel each other out, which is the
+    wrong answer when a user names a second promising region without retracting the first.
+
+    Be aware of what summing implies as beliefs age: a fully decayed belief contributes about one everywhere,
+    while a freshly supplied sharp belief contributes far less than one almost everywhere, so a pile of stale
+    beliefs can drown out the newest and most informative one. `prune_exponent` drops beliefs whose exponent has
+    fallen below a threshold, and `combination="max"` lets the most enthusiastic belief decide instead.
+
+    Parameters
+    ----------
+    priors : Sequence[AbstractAcquisitionWeight] | Mapping[str, AbstractAcquisitionWeight] | None, defaults to None
+        The initial beliefs.
+    combination : {"sum", "product", "max"}, defaults to "sum"
+        How the beliefs are combined.
+    prune_exponent : float | None, defaults to None
+        Drop a belief once its decay exponent falls below this. `None` keeps every belief forever, which is what
+        the formula above says.
+    """
+
+    def __init__(
+        self,
+        priors: Sequence[AbstractAcquisitionWeight] | Mapping[str, AbstractAcquisitionWeight] | None = None,
+        *,
+        combination: Combination = "sum",
+        prune_exponent: float | None = None,
+    ) -> None:
+        self._prune_exponent = prune_exponent
+
+        super().__init__(priors, combination=combination)
+
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"prune_exponent": self._prune_exponent})
+
+        return meta
+
+    def _update(self, **kwargs: Any) -> None:
+        super()._update(**kwargs)
+
+        if self._prune_exponent is None:
+            return
+
+        for key, weight in list(self._members.items()):
+            if weight.decay(weight.steps) < self._prune_exponent:
+                logger.debug(f"Dropping the prior {key!r}, whose influence has decayed away.")
+                self.remove(key)

@@ -3,14 +3,17 @@ from __future__ import annotations
 from typing import Any
 
 import numpy as np
-from ConfigSpace import Configuration
 from ConfigSpace.hyperparameters import FloatHyperparameter
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.model.abstract_model import AbstractModel
-from smac.model.random_forest.abstract_random_forest import AbstractRandomForest
+from smac.acquisition.function.weighted_acquisition_function import (
+    WeightedAcquisitionFunction,
+)
+from smac.acquisition.weight.composite import PriorEnsemble
+from smac.acquisition.weight.decay import PolynomialDecay
+from smac.acquisition.weight.prior import PriorWeight, discretize_pdf
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -19,11 +22,15 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class PriorAcquisitionFunction(AbstractAcquisitionFunction):
+class PriorAcquisitionFunction(WeightedAcquisitionFunction):
     r"""Weight the acquisition function with a user-defined prior over the optimum.
 
     See "piBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization" by Carl
     Hvarfner et al. [[HSSL22][HSSL22]] for further details.
+
+    This is a `WeightedAcquisitionFunction` carrying a single `PriorWeight`, which is where the mechanism lives
+    and where it is documented. Reach for `WeightedAcquisitionFunction` directly when the acquisition function
+    should carry more than one prior, or a prior alongside output constraints.
 
     Parameters
     ----------
@@ -48,24 +55,18 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         discretize: bool = False,
         discrete_bins_factor: float = 10.0,
     ):
-        super().__init__()
-        self._acquisition_function: AbstractAcquisitionFunction = acquisition_function
-        self._functions: list[AbstractAcquisitionFunction] = []
-        self._eta: float | None = None
+        prior = PriorWeight(
+            decay=PolynomialDecay(beta=decay_beta),
+            floor=prior_floor,
+            # False here means "decide by the surrogate model", which is what this class has always done.
+            discretize=True if discretize else None,
+            discrete_bins_factor=discrete_bins_factor,
+        )
 
-        self._hyperparameters: dict[Any, Configuration] | None = None
+        super().__init__(acquisition_function, [PriorEnsemble([prior])])
+
+        self._prior = prior
         self._decay_beta = decay_beta
-        self._prior_floor = prior_floor
-        self._discretize = discretize
-        self._discrete_bins_factor = discrete_bins_factor
-
-        # Acquisition functions which are negative by construction have to be rescaled to assure positiveness and
-        # correct magnitude before the prior is multiplied in.
-        self._rescale = self._acquisition_function.requires_rescaling
-
-        # Variables needed to adapt the weighting of the prior
-        self._initial_design_size = None
-        self._iteration_number = 0
 
     @property
     def name(self) -> str:  # noqa: D102
@@ -73,85 +74,52 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
-        meta = super().meta
-        meta.update(
-            {
-                "acquisition_function": self._acquisition_function.meta,
-                "decay_beta": self._decay_beta,
-                "prior_floor": self._prior_floor,
-                "discretize": self._discretize,
-                "discrete_bins_factor": self._discrete_bins_factor,
-            }
-        )
-
-        return meta
+        # Deliberately not the metadata of the weighted acquisition function: this dictionary ends up in the name
+        # of the output directory, and changing it would keep existing runs from being continued.
+        return {
+            "name": self.__class__.__name__,
+            "acquisition_function": self._acquisition_function.meta,
+            "decay_beta": self._decay_beta,
+            "prior_floor": self._prior_floor,
+            "discretize": self._discretize,
+            "discrete_bins_factor": self._discrete_bins_factor,
+        }
 
     @property
-    def model(self) -> AbstractModel | None:  # noqa: D102
-        return self._model
+    def prior(self) -> PriorWeight:
+        """The weight carrying the user prior."""
+        return self._prior
 
-    @model.setter
-    def model(self, model: AbstractModel) -> None:
-        self._model = model
-        self._hyperparameters = model._configspace.get_hyperparameters_dict()
+    @property
+    def _prior_floor(self) -> float:
+        return self._prior._floor
 
-        if isinstance(model, AbstractRandomForest):
-            if not self._discretize:
-                logger.warning("Discretizing the prior for random forest models.")
-                self._discretize = True
+    @property
+    def _discretize(self) -> bool:
+        return bool(self._prior._discretize)
 
-    def _update(self, **kwargs: Any) -> None:
-        """Update the acquisition function attributes required for calculation.
+    @property
+    def _discrete_bins_factor(self) -> float:
+        return self._prior._discrete_bins_factor
 
-        Parameters
-        ----------
-        eta : float
-            Current incumbent value.
-        """
-        assert "eta" in kwargs
+    @property
+    def _initial_design_size(self) -> int | None:
+        return self._prior.t0
 
-        # Compute intiial design size
-        if self._initial_design_size is None:
-            self._initial_design_size = kwargs["num_data"]
+    @property
+    def _iteration_number(self) -> int:
+        return self._prior.steps
 
-        self._iteration_number = kwargs["num_data"] - self._initial_design_size
-        self._eta = kwargs["eta"]
+    @property
+    def _hyperparameters(self) -> dict[str, Any] | None:
+        if self._prior.prior is None:
+            return None
 
-        assert self.model is not None
-        self._acquisition_function.update(model=self.model, **kwargs)
+        return {name: None for name in self._prior.prior.hyperparameter_names}
 
     def _compute_prior(self, X: np.ndarray) -> np.ndarray:
-        """Compute the prior-weighted acquisition function values, where the prior on each
-        parameter is multiplied by a decay factor controlled by the parameter decay_beta and
-        the iteration number. Multivariate priors are not supported, for now.
-
-        Parameters
-        ----------
-        X: np.ndarray [N, D]
-            The input points where the user-specified prior should be evaluated. The dimensionality of X is (N, D),
-            with N as the number of points to evaluate at and D is the number of dimensions of one X.
-
-        Returns
-        -------
-        np.ndarray [N, 1]
-            The user prior over the optimum for values of X.
-        """
-        assert self._hyperparameters is not None
-
-        prior_values = np.ones((len(X), 1))
-        # iterate over the hyperparmeters (alphabetically sorted) and the columns, which come
-        # in the same order
-        for parameter, X_col in zip(self._hyperparameters.values(), X.T):
-            if self._discretize and isinstance(parameter, FloatHyperparameter):
-                assert self._discrete_bins_factor is not None
-                number_of_bins = int(
-                    np.ceil(self._discrete_bins_factor * self._decay_beta / (self._iteration_number + 1))
-                )
-                prior_values *= self._compute_discretized_pdf(parameter, X_col, number_of_bins)
-            else:
-                prior_values *= parameter._pdf(X_col[:, np.newaxis])
-
-        return prior_values
+        """The prior density at X, before the floor and the decay are applied."""
+        return self._prior._compute(X)
 
     def _compute_discretized_pdf(
         self,
@@ -159,69 +127,5 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         X_col: np.ndarray,
         number_of_bins: int,
     ) -> np.ndarray:
-        """Discretize (bins) prior values on continous a specific continous parameter
-        to an increasingly coarse discretization determined by the prior decay parameter.
-
-        Parameters
-        ----------
-        hyperparameter : FloatHyperparameter
-            A float hyperparameter that, due to using a random forest surrogate, must have its prior discretized.
-        X_col: np.ndarray [N, ]
-            The input points where the acquisition function should be evaluated. The dimensionality of X is (N, ),
-            with N as the number of points to evaluate for the specific hyperparameter.
-        number_of_bins : int
-            The number of unique values allowed on the discretized version of the pdf.
-
-        Returns
-        -------
-        np.ndarray [N, 1]
-            The user prior over the optimum for the parameter at hand.
-        """
-        # Evaluates the actual pdf on all the relevant points
-        # Replace deprecated method
-        pdf_values = hyperparameter._pdf(X_col[:, np.newaxis])
-
-        # Retrieves the largest value of the pdf in the domain
-        lower, upper = (0, hyperparameter.get_max_density())
-
-        # Creates the bins (the possible discrete options of the pdf)
-        bin_values = np.linspace(lower, upper, number_of_bins)
-
-        # Generates an index (bin) for each evaluated point
-        bin_indices = np.clip(
-            np.round((pdf_values - lower) * number_of_bins / (upper - lower)), 0, number_of_bins - 1
-        ).astype(int)
-
-        # Gets the actual value for each point
-        prior_values = bin_values[bin_indices]
-
-        return prior_values
-
-    def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Compute the prior-weighted acquisition function values, where the prior on each
-        parameter is multiplied by a decay factor controlled by the parameter decay_beta and
-        the iteration number. Multivariate priors are not supported, for now.
-
-        Parameters
-        ----------
-        X: np.ndarray [N, D]
-            The input points where the acquisition function should be evaluated. The dimensionality of X is (N, D),
-            with N as the number of points to evaluate at and D is the number of dimensions of one X.
-
-        Returns
-        -------
-        np.ndarray [N, 1]
-            Prior-weighted acquisition function values of X
-        """
-        if self._rescale:
-            # for TS and UCB, we need to scale the function values to not run into issues
-            # of negative values or issues of varying magnitudes (here, they are both)
-            # negative by design and just flipping the sign leads to picking the worst point)
-            acq_values = np.clip(self._acquisition_function._compute(X) + self._eta, 0, np.inf)
-        else:
-            acq_values = self._acquisition_function._compute(X)
-
-        prior_values = self._compute_prior(X) + self._prior_floor
-        decayed_prior_values = np.power(prior_values, self._decay_beta / (self._iteration_number + 1))
-
-        return acq_values * decayed_prior_values
+        """Coarsens the density of a continuous hyperparameter. See `smac.acquisition.weight.prior`."""
+        return discretize_pdf(hyperparameter, X_col, number_of_bins)
