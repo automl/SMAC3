@@ -61,6 +61,11 @@ class AbstractAcquisitionMaximizer:
         self._acquisition_function = acquisition_function
 
     @property
+    def rng(self) -> np.random.RandomState:
+        """The random state the maximizer draws with."""
+        return self._rng
+
+    @property
     def meta(self) -> dict[str, Any]:
         """Return the meta-data of the created object."""
         acquisition_function_meta = None

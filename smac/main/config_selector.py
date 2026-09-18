@@ -498,7 +498,7 @@ class ConfigSelector:
             model=self._model,
             runhistory=self._runhistory,
             incumbent=self._incumbent(),
-            rng=self._acquisition_maximizer._rng,
+            rng=self._acquisition_maximizer.rng,
         ):
             return None
 
