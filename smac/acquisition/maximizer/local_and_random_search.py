@@ -148,10 +148,8 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
     def supports_sampling_spaces(self) -> bool:  # noqa: D102
         return True
 
-    def add_sampling_space(  # noqa: D102
-        self, key: str, configspace: ConfigurationSpace, weight: float | None = None
-    ) -> None:
-        self._random_search.add_sampling_space(key, configspace, weight)
+    def add_sampling_space(self, key: str, source: Any, weight: float | None = None) -> None:  # noqa: D102
+        self._random_search.add_sampling_space(key, source, weight)
 
     def remove_sampling_space(self, key: str) -> None:  # noqa: D102
         self._random_search.remove_sampling_space(key)

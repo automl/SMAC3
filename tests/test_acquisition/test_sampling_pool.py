@@ -128,6 +128,37 @@ def test_a_plain_random_search_does_not_take_extra_spaces(search_space, prior_sp
     assert sorted(search.sampling_pool.sources) == ["default", "prior"]
 
 
+def test_a_prior_can_be_sampled_from_directly(search_space, prior_space):
+    """The pool holds anything that can produce configurations, not only a configuration space."""
+    from smac.acquisition.weight import ConfigSpacePrior
+
+    pool = SamplingPool(search_space, default_weight=0.0)
+    pool.add("prior", ConfigSpacePrior(prior_space), weight=1.0)
+
+    drawn = pool.sample(5)
+
+    assert len(drawn) == 5
+    assert all(0.8 < config["a"] < 1.0 for config in drawn)
+
+
+def test_a_prior_with_no_sampler_contributes_nothing(search_space):
+    class Unsamplable:
+        def sample(self, n, rng=None):
+            return None
+
+    pool = SamplingPool(search_space, default_weight=0.0)
+    pool.add("prior", Unsamplable(), weight=1.0)
+
+    assert pool.sample(5) == []
+
+
+def test_something_that_cannot_be_sampled_from_is_rejected(search_space):
+    pool = SamplingPool(search_space)
+
+    with pytest.raises(TypeError, match="neither a configuration space"):
+        pool.add("prior", object())
+
+
 def test_a_maximizer_that_cannot_sample_from_a_prior_says_so(search_space, prior_space):
     """Silently never sampling from a supplied prior would be worse than failing."""
     search = LocalSearch(configspace=search_space, acquisition_function=Acquisition())

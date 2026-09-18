@@ -136,8 +136,8 @@ class AbstractAcquisitionMaximizer:
         """Whether candidates can be drawn from configuration spaces other than the search space."""
         return False
 
-    def add_sampling_space(self, key: str, configspace: ConfigurationSpace, weight: float | None = None) -> None:
-        """Draws part of the candidates from the given configuration space from now on.
+    def add_sampling_space(self, key: str, source: Any, weight: float | None = None) -> None:
+        """Draws part of the candidates from the given configuration space, or prior, from now on.
 
         Raises for a maximizer which cannot do this, so that a user prior supplied during a run fails loudly
         rather than silently never being sampled from.

@@ -72,13 +72,11 @@ class RandomSearch(AbstractAcquisitionMaximizer):
     def supports_sampling_spaces(self) -> bool:  # noqa: D102
         return self._sampling_pool is not None
 
-    def add_sampling_space(  # noqa: D102
-        self, key: str, configspace: ConfigurationSpace, weight: float | None = None
-    ) -> None:
+    def add_sampling_space(self, key: str, source: Any, weight: float | None = None) -> None:  # noqa: D102
         if self._sampling_pool is None:
             self._sampling_pool = SamplingPool(self._configspace, seed=self._seed)
 
-        self._sampling_pool.add(key, configspace, weight if weight is not None else 1.0)
+        self._sampling_pool.add(key, source, weight if weight is not None else 1.0)
 
     def remove_sampling_space(self, key: str) -> None:  # noqa: D102
         if self._sampling_pool is None:

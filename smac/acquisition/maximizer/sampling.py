@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Mapping
+from typing import Any, Mapping, Protocol
 
 from dataclasses import dataclass
 
@@ -17,11 +17,48 @@ logger = get_logger(__name__)
 DEFAULT_SOURCE = "default"
 
 
+class Sampler(Protocol):
+    """Anything candidates can be drawn from.
+
+    Both a `ConfigurationSpace` and a user prior can produce configurations, and the pool does not care which it
+    is holding. A prior with no tractable sampler returns `None` and simply contributes no candidates.
+    """
+
+    def sample(self, n: int, rng: np.random.RandomState | None = None) -> list[Configuration] | None:
+        """Draws `n` configurations."""
+        ...
+
+
+class ConfigSpaceSampler:
+    """Draws candidates from a configuration space."""
+
+    def __init__(self, configspace: ConfigurationSpace) -> None:
+        self.configspace = configspace
+
+    def sample(self, n: int, rng: np.random.RandomState | None = None) -> list[Configuration] | None:
+        """Draws `n` configurations from the configuration space."""
+        if n == 1:
+            return [self.configspace.sample_configuration()]
+
+        return list(self.configspace.sample_configuration(size=n))
+
+
+def as_sampler(source: Sampler | ConfigurationSpace) -> Sampler:
+    """Returns something candidates can be drawn from, wrapping a configuration space if that is what was given."""
+    if isinstance(source, ConfigurationSpace):
+        return ConfigSpaceSampler(source)
+
+    if not hasattr(source, "sample"):
+        raise TypeError(f"{source!r} is neither a configuration space nor something that can be sampled from.")
+
+    return source
+
+
 @dataclass(frozen=True)
 class SamplingSource:
-    """One configuration space to draw candidates from, and how much of the budget it gets."""
+    """One place to draw candidates from, and how much of the budget it gets."""
 
-    configspace: ConfigurationSpace
+    sampler: Sampler
     weight: float = 1.0
 
 
@@ -46,12 +83,18 @@ class SamplingPool:
         Random seed, used to break ties when splitting the budget.
     """
 
-    def __init__(self, default: ConfigurationSpace, *, default_weight: float = 1.0, seed: int = 0) -> None:
+    def __init__(
+        self,
+        default: Sampler | ConfigurationSpace,
+        *,
+        default_weight: float = 1.0,
+        seed: int = 0,
+    ) -> None:
         if default_weight < 0:
             raise ValueError(f"A sampling weight must not be negative, got {default_weight}.")
 
         self._sources: dict[str, SamplingSource] = {
-            DEFAULT_SOURCE: SamplingSource(configspace=default, weight=default_weight)
+            DEFAULT_SOURCE: SamplingSource(sampler=as_sampler(default), weight=default_weight)
         }
         self._seed = seed
         self._rng = np.random.RandomState(seed=seed)
@@ -70,15 +113,15 @@ class SamplingPool:
             "weights": {key: source.weight for key, source in self._sources.items()},
         }
 
-    def add(self, key: str, configspace: ConfigurationSpace, weight: float = 1.0) -> None:
-        """Registers a configuration space to draw part of the candidates from."""
+    def add(self, key: str, source: Sampler | ConfigurationSpace, weight: float = 1.0) -> None:
+        """Registers a configuration space, or a prior, to draw part of the candidates from."""
         if key == DEFAULT_SOURCE:
             raise ValueError(f"The key {DEFAULT_SOURCE!r} is reserved for the search space itself.")
 
         if weight < 0:
             raise ValueError(f"A sampling weight must not be negative, got {weight}.")
 
-        self._sources[key] = SamplingSource(configspace=configspace, weight=weight)
+        self._sources[key] = SamplingSource(sampler=as_sampler(source), weight=weight)
 
     def remove(self, key: str) -> None:
         """Removes a previously registered source."""
@@ -98,7 +141,7 @@ class SamplingPool:
         if weight < 0:
             raise ValueError(f"A sampling weight must not be negative, got {weight}.")
 
-        self._sources[key] = SamplingSource(configspace=self._sources[key].configspace, weight=weight)
+        self._sources[key] = SamplingSource(sampler=self._sources[key].sampler, weight=weight)
 
     def counts(self, n: int) -> dict[str, int]:
         """Splits `n` candidates across the sources, proportionally to their weights.
@@ -139,12 +182,12 @@ class SamplingPool:
             if count <= 0:
                 continue
 
-            configspace = self._sources[key].configspace
-            drawn = (
-                [configspace.sample_configuration()]
-                if count == 1
-                else list(configspace.sample_configuration(size=count))
-            )
+            drawn = self._sources[key].sampler.sample(count, self._rng)
+
+            if drawn is None:
+                # A prior with no tractable sampler. It still weights the acquisition function.
+                logger.debug(f"The sampling source {key!r} cannot be sampled from; it contributes no candidates.")
+                continue
 
             for configuration in drawn:
                 configuration.origin = f"Acquisition Function Maximizer: Random Search ({key})"
