@@ -18,6 +18,10 @@ from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
+from smac.acquisition.weight.acceptance import (
+    AbstractPriorAcceptancePolicy,
+    AcceptAllPriors,
+)
 from smac.acquisition.weight.composite import PriorEnsemble
 from smac.acquisition.weight.decay import DecaySchedule, PolynomialDecay
 from smac.acquisition.weight.prior import (
@@ -102,6 +106,10 @@ class ConfigSelector:
         # though no new trial has been reported since the last update.
         self._acquisition_needs_update = True
         self._force_retrain = False
+
+        # Judges a user belief stated during a run. Accepts everything, so that nobody pays for a safeguard they
+        # did not ask for.
+        self._prior_acceptance_policy: AbstractPriorAcceptancePolicy = AcceptAllPriors()
         self._min_trials = min_trials
         self._considered_budgets: list[float | int | None] = [None]
 
@@ -443,8 +451,9 @@ class ConfigSelector:
         *,
         key: str | None = None,
         decay: DecaySchedule | None = None,
+        acceptance_policy: AbstractPriorAcceptancePolicy | None = None,
         sampling_weight: float | None = None,
-    ) -> str:
+    ) -> str | None:
         """Adds a user belief about where the optimum lies to the acquisition function.
 
         Safe to call at any time, including from a callback and between ``ask`` and ``tell``. The belief is
@@ -461,23 +470,39 @@ class ConfigSelector:
         decay : DecaySchedule | None, defaults to None
             How the belief fades. Defaults to the piBO schedule with a decay factor of ``n_trials`` / 10. Ignored
             when a `PriorWeight` is passed, which carries its own.
+        acceptance_policy : AbstractPriorAcceptancePolicy | None, defaults to None
+            Judges whether the belief is plausible enough to act on. Defaults to the policy set on this config
+            selector, which accepts everything unless it has been changed.
         sampling_weight : float | None, defaults to None
             Share of the acquisition function maximizer's candidates to draw from the belief, relative to the
             search space itself.
 
         Returns
         -------
-        str
-            The key the belief is registered under.
+        str | None
+            The key the belief is registered under, or `None` if the acceptance policy rejected it, in which case
+            nothing was changed.
         """
         assert self._acquisition_function is not None
         assert self._acquisition_maximizer is not None
 
         weight = self._as_prior_weight(prior, decay)
-        weight.anchor(self._current_num_data())
 
         if weight.prior is not None:
             weight.prior.validate_against(self._scenario.configspace)
+
+        policy = acceptance_policy if acceptance_policy is not None else self._prior_acceptance_policy
+        if not policy.accept(
+            weight,
+            configspace=self._scenario.configspace,
+            model=self._model,
+            runhistory=self._runhistory,
+            incumbent=self._incumbent(),
+            rng=self._acquisition_maximizer._rng,
+        ):
+            return None
+
+        weight.anchor(self._current_num_data())
 
         weighted = self._ensure_weighted()
 
@@ -494,6 +519,22 @@ class ConfigSelector:
         logger.info(f"Added the user prior {key!r}, anchored at trial {weight.t0}.")
 
         return key
+
+    @property
+    def prior_acceptance_policy(self) -> AbstractPriorAcceptancePolicy:
+        """Judges whether a stated belief is plausible enough to act on. Accepts everything by default."""
+        return self._prior_acceptance_policy
+
+    @prior_acceptance_policy.setter
+    def prior_acceptance_policy(self, policy: AbstractPriorAcceptancePolicy) -> None:
+        self._prior_acceptance_policy = policy
+
+    def _incumbent(self) -> Configuration | None:
+        """The best configuration so far, if there is one."""
+        if self._runhistory is None or len(self._runhistory.incumbents) == 0:
+            return None
+
+        return self._runhistory.incumbents[0]
 
     def remove_prior(self, key: str) -> None:
         """Removes a previously added user belief.

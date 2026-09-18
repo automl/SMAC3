@@ -14,6 +14,7 @@ from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
+from smac.acquisition.weight.acceptance import AbstractPriorAcceptancePolicy
 from smac.acquisition.weight.decay import DecaySchedule
 from smac.acquisition.weight.prior import AbstractInputPrior, PriorWeight
 from smac.callback.callback import Callback
@@ -118,8 +119,9 @@ class SMBO:
         *,
         key: str | None = None,
         decay: DecaySchedule | None = None,
+        acceptance_policy: AbstractPriorAcceptancePolicy | None = None,
         sampling_weight: float | None = None,
-    ) -> str:
+    ) -> str | None:
         """Adds a user belief about where the optimum lies to a running optimization.
 
         Beliefs may be stated at any point, including from a callback and between ``ask`` and ``tell``, and each
@@ -138,20 +140,26 @@ class SMBO:
             Key to register the belief under, so that it can be removed later. Generated if not given.
         decay : DecaySchedule | None, defaults to None
             How the belief fades. Defaults to the piBO schedule with a decay factor of ``n_trials`` / 10.
+        acceptance_policy : AbstractPriorAcceptancePolicy | None, defaults to None
+            Judges whether the belief is plausible enough to act on. Accepts everything by default.
         sampling_weight : float | None, defaults to None
             Share of the acquisition function maximizer's candidates to draw from the belief.
 
         Returns
         -------
-        str
-            The key the belief is registered under.
+        str | None
+            The key the belief is registered under, or `None` if the acceptance policy rejected it.
         """
         key = self.config_selector.add_prior(
             prior,
             key=key,
             decay=decay,
+            acceptance_policy=acceptance_policy,
             sampling_weight=sampling_weight,
         )
+
+        if key is None:
+            return None
 
         for callback in self._callbacks:
             callback.on_prior_added(self, key, self.priors[key])

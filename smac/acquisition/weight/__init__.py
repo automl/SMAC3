@@ -1,4 +1,9 @@
 from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
+from smac.acquisition.weight.acceptance import (
+    AbstractPriorAcceptancePolicy,
+    AcceptAllPriors,
+    IncumbentComparisonPolicy,
+)
 from smac.acquisition.weight.composite import CompositeWeight, PriorEnsemble
 from smac.acquisition.weight.decay import (
     DECAY_SHAPES,
@@ -18,6 +23,9 @@ from smac.acquisition.weight.prior import (
 
 __all__ = [
     "AbstractAcquisitionWeight",
+    "AbstractPriorAcceptancePolicy",
+    "AcceptAllPriors",
+    "IncumbentComparisonPolicy",
     "CompositeWeight",
     "PriorEnsemble",
     "FeasibilityWeight",

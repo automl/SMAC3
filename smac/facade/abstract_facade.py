@@ -21,6 +21,7 @@ from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
+from smac.acquisition.weight.acceptance import AbstractPriorAcceptancePolicy
 from smac.acquisition.weight.decay import DecaySchedule
 from smac.acquisition.weight.prior import AbstractInputPrior, PriorWeight
 from smac.callback.callback import Callback
@@ -311,8 +312,9 @@ class AbstractFacade:
         *,
         key: str | None = None,
         decay: DecaySchedule | None = None,
+        acceptance_policy: AbstractPriorAcceptancePolicy | None = None,
         sampling_weight: float | None = None,
-    ) -> str:
+    ) -> str | None:
         """Adds a user belief about where the optimum lies to a running optimization.
 
         Beliefs may be stated at any point, and each fades from when it was stated rather than from the start of
@@ -326,15 +328,23 @@ class AbstractFacade:
             Key to register the belief under, so that it can be removed later.
         decay : DecaySchedule | None, defaults to None
             How the belief fades.
+        acceptance_policy : AbstractPriorAcceptancePolicy | None, defaults to None
+            Judges whether the belief is plausible enough to act on. Accepts everything by default.
         sampling_weight : float | None, defaults to None
             Share of the acquisition function maximizer's candidates to draw from the belief.
 
         Returns
         -------
-        str
-            The key the belief is registered under.
+        str | None
+            The key the belief is registered under, or `None` if the acceptance policy rejected it.
         """
-        return self._optimizer.add_prior(prior, key=key, decay=decay, sampling_weight=sampling_weight)
+        return self._optimizer.add_prior(
+            prior,
+            key=key,
+            decay=decay,
+            acceptance_policy=acceptance_policy,
+            sampling_weight=sampling_weight,
+        )
 
     def remove_prior(self, key: str) -> None:
         """Removes a user belief from a running optimization."""
