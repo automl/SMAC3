@@ -1,20 +1,24 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Mapping
 
 import json
 import time
 from pathlib import Path
 
 import numpy as np
-from ConfigSpace import Configuration
+from ConfigSpace import Configuration, ConfigurationSpace
 from numpy import ndarray
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
+from smac.acquisition.weight.decay import DecaySchedule
+from smac.acquisition.weight.prior import AbstractInputPrior, PriorWeight
 from smac.callback.callback import Callback
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.main.config_selector import ConfigSelector
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runhistory.runhistory import RunHistory
@@ -102,6 +106,76 @@ class SMBO:
     def intensifier(self) -> AbstractIntensifier:
         """The run history, which is filled with all information during the optimization process."""
         return self._intensifier
+
+    @property
+    def config_selector(self) -> ConfigSelector:
+        """The config selector, which handles the surrogate model and the acquisition function."""
+        return self._intensifier.config_selector
+
+    def add_prior(
+        self,
+        prior: PriorWeight | AbstractInputPrior | ConfigurationSpace | Mapping[str, Any],
+        *,
+        key: str | None = None,
+        decay: DecaySchedule | None = None,
+        sampling_weight: float | None = None,
+    ) -> str:
+        """Adds a user belief about where the optimum lies to a running optimization.
+
+        Beliefs may be stated at any point, including from a callback and between ``ask`` and ``tell``, and each
+        one fades from when it was stated rather than from the start of the run. See "Dynamic Priors in Bayesian
+        Optimization for Hyperparameter Optimization" by Lukas Fehring et al. [[FWS+25][FWS+25]].
+
+        The belief takes effect on the next configuration asked for: the acquisition function is updated even
+        though no new trial has been reported, and the candidates ranked before the belief arrived are discarded.
+
+        Parameters
+        ----------
+        prior : PriorWeight | AbstractInputPrior | ConfigurationSpace | Mapping[str, Any]
+            The belief. The simplest form is a mapping of hyperparameter names to believed values; only the
+            hyperparameters named are given a belief.
+        key : str | None, defaults to None
+            Key to register the belief under, so that it can be removed later. Generated if not given.
+        decay : DecaySchedule | None, defaults to None
+            How the belief fades. Defaults to the piBO schedule with a decay factor of ``n_trials`` / 10.
+        sampling_weight : float | None, defaults to None
+            Share of the acquisition function maximizer's candidates to draw from the belief.
+
+        Returns
+        -------
+        str
+            The key the belief is registered under.
+        """
+        key = self.config_selector.add_prior(
+            prior,
+            key=key,
+            decay=decay,
+            sampling_weight=sampling_weight,
+        )
+
+        for callback in self._callbacks:
+            callback.on_prior_added(self, key, self.priors[key])
+
+        return key
+
+    def remove_prior(self, key: str) -> None:
+        """Removes a user belief from a running optimization.
+
+        Parameters
+        ----------
+        key : str
+            The key the belief was registered under.
+        """
+        prior = self.priors[key]
+        self.config_selector.remove_prior(key)
+
+        for callback in self._callbacks:
+            callback.on_prior_removed(self, key, prior)
+
+    @property
+    def priors(self) -> Mapping[str, AbstractAcquisitionWeight]:
+        """The user beliefs currently weighting the acquisition function, by key."""
+        return self.config_selector.priors
 
     @property
     def remaining_walltime(self) -> float:

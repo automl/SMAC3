@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from ConfigSpace import Configuration
 
 import smac
@@ -43,6 +45,14 @@ class Callback:
         """Called after the intensification asks for new configurations. Essentially, this callback is called
         before the surrogate model is trained and before the acquisition function is called.
         """
+        pass
+
+    def on_prior_added(self, smbo: smac.main.smbo.SMBO, key: str, prior: Any) -> None:
+        """Called after a user belief about where the optimum lies was added to the acquisition function."""
+        pass
+
+    def on_prior_removed(self, smbo: smac.main.smbo.SMBO, key: str, prior: Any) -> None:
+        """Called after a user belief was removed from the acquisition function."""
         pass
 
     def on_ask_start(self, smbo: smac.main.smbo.SMBO) -> None:

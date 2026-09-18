@@ -1,18 +1,29 @@
 from __future__ import annotations
 
-from typing import Any, Iterator
+from typing import Any, Iterator, Mapping
 
 import copy
 import time
 
 import numpy as np
-from ConfigSpace import Configuration
+from ConfigSpace import Configuration, ConfigurationSpace
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.acquisition.function.weighted_acquisition_function import (
+    WeightedAcquisitionFunction,
+)
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
+)
+from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
+from smac.acquisition.weight.composite import PriorEnsemble
+from smac.acquisition.weight.decay import DecaySchedule, PolynomialDecay
+from smac.acquisition.weight.prior import (
+    AbstractInputPrior,
+    ConfigSpacePrior,
+    PriorWeight,
 )
 from smac.callback.callback import Callback
 from smac.initial_design import AbstractInitialDesign
@@ -22,6 +33,7 @@ from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
+from smac.utils.configspace import create_prior_configspace_copy
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -424,6 +436,179 @@ class ConfigSelector:
             ),
             np.empty(shape=[0, 0]),
         )
+
+    def add_prior(
+        self,
+        prior: PriorWeight | AbstractInputPrior | ConfigurationSpace | Mapping[str, Any],
+        *,
+        key: str | None = None,
+        decay: DecaySchedule | None = None,
+        sampling_weight: float | None = None,
+    ) -> str:
+        """Adds a user belief about where the optimum lies to the acquisition function.
+
+        Safe to call at any time, including from a callback and between ``ask`` and ``tell``. The belief is
+        anchored at the current trial count, so one supplied late in a run arrives at full strength rather than
+        inheriting the exponent an older belief has already decayed to.
+
+        Parameters
+        ----------
+        prior : PriorWeight | AbstractInputPrior | ConfigurationSpace | Mapping[str, Any]
+            The belief. A mapping of hyperparameter names to believed values is turned into a configuration space
+            carrying a prior; a configuration space is read as one directly.
+        key : str | None, defaults to None
+            Key to register the belief under, so that it can be replaced or removed later. Generated if not given.
+        decay : DecaySchedule | None, defaults to None
+            How the belief fades. Defaults to the piBO schedule with a decay factor of ``n_trials`` / 10. Ignored
+            when a `PriorWeight` is passed, which carries its own.
+        sampling_weight : float | None, defaults to None
+            Share of the acquisition function maximizer's candidates to draw from the belief, relative to the
+            search space itself.
+
+        Returns
+        -------
+        str
+            The key the belief is registered under.
+        """
+        assert self._acquisition_function is not None
+        assert self._acquisition_maximizer is not None
+
+        weight = self._as_prior_weight(prior, decay)
+        weight.anchor(self._current_num_data())
+
+        if weight.prior is not None:
+            weight.prior.validate_against(self._scenario.configspace)
+
+        weighted = self._ensure_weighted()
+
+        ensemble = weighted.get_weight(PriorEnsemble)
+        if ensemble is None:
+            ensemble = PriorEnsemble()
+            weighted.add_weight(ensemble)
+
+        key = ensemble.add(weight, key=key)
+
+        self._add_sampling_space(key, weight, sampling_weight)
+        self.invalidate_acquisition()
+
+        logger.info(f"Added the user prior {key!r}, anchored at trial {weight.t0}.")
+
+        return key
+
+    def remove_prior(self, key: str) -> None:
+        """Removes a previously added user belief.
+
+        Parameters
+        ----------
+        key : str
+            The key the belief was registered under.
+        """
+        assert self._acquisition_function is not None
+        assert self._acquisition_maximizer is not None
+
+        ensemble = self.priors_ensemble
+        if ensemble is None:
+            raise KeyError(f"No user prior is registered under the key {key!r}.")
+
+        ensemble.remove(key)
+
+        if self._acquisition_maximizer.supports_sampling_spaces:
+            try:
+                self._acquisition_maximizer.remove_sampling_space(key)
+            except KeyError:
+                # The belief could not be sampled from, so it never contributed candidates.
+                pass
+
+        self.invalidate_acquisition()
+
+        logger.info(f"Removed the user prior {key!r}.")
+
+    @property
+    def priors(self) -> Mapping[str, AbstractAcquisitionWeight]:
+        """The user beliefs currently weighting the acquisition function, by key."""
+        ensemble = self.priors_ensemble
+
+        return {} if ensemble is None else ensemble.members
+
+    @property
+    def priors_ensemble(self) -> PriorEnsemble | None:
+        """The weight collecting the user beliefs, if there is one."""
+        if not isinstance(self._acquisition_function, WeightedAcquisitionFunction):
+            return None
+
+        return self._acquisition_function.get_weight(PriorEnsemble)
+
+    def _as_prior_weight(
+        self,
+        prior: PriorWeight | AbstractInputPrior | ConfigurationSpace | Mapping[str, Any],
+        decay: DecaySchedule | None,
+    ) -> PriorWeight:
+        """Turns whatever the caller supplied into a prior weight."""
+        if isinstance(prior, PriorWeight):
+            if decay is not None:
+                raise ValueError("A PriorWeight carries its own decay schedule; do not pass one as well.")
+
+            return prior
+
+        if decay is None:
+            # The empirically founded default from piBO.
+            decay = PolynomialDecay(beta=self._scenario.n_trials / 10)
+
+        if isinstance(prior, ConfigurationSpace):
+            return PriorWeight(ConfigSpacePrior(prior), decay)
+
+        if isinstance(prior, AbstractInputPrior):
+            return PriorWeight(prior, decay)
+
+        if isinstance(prior, Mapping):
+            configspace = create_prior_configspace_copy(self._scenario.configspace, prior)
+
+            return PriorWeight(ConfigSpacePrior(configspace), decay)
+
+        raise TypeError(f"Cannot read {prior!r} as a user prior over the optimum.")
+
+    def _add_sampling_space(self, key: str, weight: PriorWeight, sampling_weight: float | None) -> None:
+        """Lets the acquisition function maximizer draw part of its candidates from the belief."""
+        assert self._acquisition_maximizer is not None
+
+        if weight.prior is None or weight.prior.sample(1) is None:
+            logger.debug(f"The user prior {key!r} cannot be sampled from; it only weights the acquisition function.")
+
+            return
+
+        if not self._acquisition_maximizer.supports_sampling_spaces:
+            logger.warning(
+                f"{self._acquisition_maximizer.__class__.__name__} cannot sample from a user prior, so the "
+                f"prior {key!r} only weights the acquisition function. A sharply peaked prior may then never be "
+                "reached by the candidates that are ranked."
+            )
+
+            return
+
+        self._acquisition_maximizer.add_sampling_space(key, weight.prior, sampling_weight)
+
+    def _ensure_weighted(self) -> WeightedAcquisitionFunction:
+        """Returns the acquisition function as a weighted one, wrapping it in place if it is not one yet.
+
+        A belief may be stated during a run that started without one, so the wrapper cannot be required to have
+        been installed up front. The maximizer is re-pointed at the wrapper, because it scores the object it was
+        given rather than looking it up.
+        """
+        assert self._acquisition_function is not None
+        assert self._acquisition_maximizer is not None
+
+        if isinstance(self._acquisition_function, WeightedAcquisitionFunction):
+            return self._acquisition_function
+
+        weighted = WeightedAcquisitionFunction(self._acquisition_function)
+
+        if self._model is not None:
+            weighted.model = self._model
+
+        self._acquisition_function = weighted
+        self._acquisition_maximizer.acquisition_function = weighted
+
+        return weighted
 
     def invalidate_acquisition(self, force_retrain: bool = True) -> None:
         """Marks the acquisition function as out of date.

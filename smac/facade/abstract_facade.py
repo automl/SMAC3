@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
 
 from pathlib import Path
 
 import joblib
-from ConfigSpace import Configuration
+from ConfigSpace import Configuration, ConfigurationSpace
 from dask.distributed import Client
 from typing_extensions import Literal
 
@@ -20,6 +20,9 @@ from smac.acquisition.function.weighted_acquisition_function import (
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
+from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
+from smac.acquisition.weight.decay import DecaySchedule
+from smac.acquisition.weight.prior import AbstractInputPrior, PriorWeight
 from smac.callback.callback import Callback
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
@@ -301,6 +304,46 @@ class AbstractFacade:
     def ask(self) -> TrialInfo:
         """Asks the intensifier for the next trial."""
         return self._optimizer.ask()
+
+    def add_prior(
+        self,
+        prior: PriorWeight | AbstractInputPrior | ConfigurationSpace | Mapping[str, Any],
+        *,
+        key: str | None = None,
+        decay: DecaySchedule | None = None,
+        sampling_weight: float | None = None,
+    ) -> str:
+        """Adds a user belief about where the optimum lies to a running optimization.
+
+        Beliefs may be stated at any point, and each fades from when it was stated rather than from the start of
+        the run, so one stated late arrives at full strength. See `SMBO.add_prior`.
+
+        Parameters
+        ----------
+        prior : PriorWeight | AbstractInputPrior | ConfigurationSpace | Mapping[str, Any]
+            The belief. The simplest form is a mapping of hyperparameter names to believed values.
+        key : str | None, defaults to None
+            Key to register the belief under, so that it can be removed later.
+        decay : DecaySchedule | None, defaults to None
+            How the belief fades.
+        sampling_weight : float | None, defaults to None
+            Share of the acquisition function maximizer's candidates to draw from the belief.
+
+        Returns
+        -------
+        str
+            The key the belief is registered under.
+        """
+        return self._optimizer.add_prior(prior, key=key, decay=decay, sampling_weight=sampling_weight)
+
+    def remove_prior(self, key: str) -> None:
+        """Removes a user belief from a running optimization."""
+        self._optimizer.remove_prior(key)
+
+    @property
+    def priors(self) -> Mapping[str, AbstractAcquisitionWeight]:
+        """The user beliefs currently weighting the acquisition function, by key."""
+        return self._optimizer.priors
 
     def tell(self, info: TrialInfo, value: TrialValue, save: bool = True) -> None:
         """Adds the result of a trial to the runhistory and updates the intensifier.
