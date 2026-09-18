@@ -8,10 +8,12 @@ from smac.acquisition.weight.decay import (
     PolynomialDecay,
     get_decay_schedule,
 )
+from smac.acquisition.weight.feasibility import FeasibilityWeight
 
 __all__ = [
     "AbstractAcquisitionWeight",
     "CompositeWeight",
+    "FeasibilityWeight",
     "DecaySchedule",
     "NoDecay",
     "PolynomialDecay",
