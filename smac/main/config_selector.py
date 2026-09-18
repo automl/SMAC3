@@ -495,7 +495,7 @@ class ConfigSelector:
         if not policy.accept(
             weight,
             configspace=self._scenario.configspace,
-            model=self._model,
+            model=self._trained_model(),
             runhistory=self._runhistory,
             incumbent=self._incumbent(),
             rng=self._acquisition_maximizer.rng,
@@ -528,6 +528,18 @@ class ConfigSelector:
     @prior_acceptance_policy.setter
     def prior_acceptance_policy(self, policy: AbstractPriorAcceptancePolicy) -> None:
         self._prior_acceptance_policy = policy
+
+    def _trained_model(self) -> AbstractModel | None:
+        """The surrogate model, or `None` while it has not been fitted to anything yet.
+
+        A model object exists from the start of the run, but asking an unfitted one to predict raises. An
+        acceptance policy is handed `None` in that case, which it reads as having no ground to judge on -
+        which is exactly the situation.
+        """
+        if self._model is None or self._previous_entries <= 0:
+            return None
+
+        return self._model
 
     def _incumbent(self) -> Configuration | None:
         """The best configuration so far, if there is one."""

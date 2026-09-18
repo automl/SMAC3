@@ -110,6 +110,23 @@ def test_nothing_is_rejected_before_anything_is_known():
     )
 
 
+def test_a_belief_stated_before_the_model_is_fitted_is_accepted():
+    """The model object exists from the start; asking an unfitted one to predict raises.
+
+    This is the case a run actually hits - a belief stated at the end of the initial design, before the
+    surrogate has been trained even once.
+    """
+    smac = _smac()
+    selector = smac.optimizer.config_selector
+
+    assert selector._model is not None, "the model object exists from the start"
+    assert selector._trained_model() is None, "but it has not been fitted to anything"
+
+    key = smac.add_prior({"x0": 0.0, "x1": 0.0}, acceptance_policy=IncumbentComparisonPolicy())
+
+    assert key is not None
+
+
 def test_the_threshold_decides():
     smac = _smac()
     _warm_up(smac)
