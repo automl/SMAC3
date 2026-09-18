@@ -13,8 +13,17 @@
 - An example on the new multi-objective method
 - An example on output constraints
 
+- Unify the multiplicative weighting of the acquisition function: `WeightedAcquisitionFunction` applies a list of
+  `AbstractAcquisitionWeight`s to any acquisition function. `PriorAcquisitionFunction` and
+  `ConstrainedAcquisitionFunction` are now thin wrappers over it, so a user prior over the optimum and output
+  constraints can be used together. Wrapping one in the other is no longer necessary, and is refused: both would
+  shift the values of a confidence bound by the incumbent.
+
 ## Bugfixes
 - Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)
+- `PriorAcquisitionFunction` did not rescale UCB, which is negative by construction just like LCB, inverting the
+  ranking wherever the prior was informative. Whether an acquisition function needs rescaling is now a property of
+  the acquisition function itself.
 
 
 # 2.4.0

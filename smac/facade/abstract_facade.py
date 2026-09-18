@@ -14,8 +14,8 @@ import smac
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.acquisition.function.constrained_acquisition_function import (
-    ConstrainedAcquisitionFunction,
+from smac.acquisition.function.weighted_acquisition_function import (
+    ensure_feasibility_weight,
 )
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
@@ -139,8 +139,10 @@ class AbstractFacade:
         if acquisition_function is None:
             acquisition_function = self.get_acquisition_function(scenario)
 
-        if scenario.count_constraints() > 0 and not isinstance(acquisition_function, ConstrainedAcquisitionFunction):
-            acquisition_function = ConstrainedAcquisitionFunction(
+        if scenario.count_constraints() > 0:
+            # Adds the feasibility weight to whatever the acquisition function already carries, rather than
+            # wrapping it again: two wrappers would each shift the values of a confidence bound by the incumbent.
+            acquisition_function = ensure_feasibility_weight(
                 acquisition_function=acquisition_function,
                 constraints=scenario.get_constraints(),
                 constraint_model=self.get_constraint_model(scenario),

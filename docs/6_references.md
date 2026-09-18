@@ -10,6 +10,11 @@
     https://arxiv.org/pdf/2204.11051.pdf
 
 
+* [](){#FWS+25}[FWS+25] Lukas Fehring, Marcel Wever, Maximilian Spliethöver, Leona Hennig, Henning Wachsmuth, Marius Lindauer; 
+    Dynamic Priors in Bayesian Optimization for Hyperparameter Optimization; 
+    https://arxiv.org/abs/2511.02570
+
+
 * [](){#GKZ+14}[GKZ+14] J. Gardner, M. Kusner, Z. Xu, K. Weinberger, J. Cunningham; 
     Bayesian Optimization with Inequality Constraints; 
     https://proceedings.mlr.press/v32/gardner14.html

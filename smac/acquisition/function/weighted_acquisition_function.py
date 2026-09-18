@@ -8,7 +8,9 @@ from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
+from smac.acquisition.weight.feasibility import FeasibilityWeight
 from smac.model.abstract_model import AbstractModel
+from smac.utils.constraints import OutcomeConstraint
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -180,3 +182,58 @@ class WeightedAcquisitionFunction(AbstractAcquisitionFunction):
             values = values * weight(X)
 
         return values
+
+
+def ensure_feasibility_weight(
+    acquisition_function: AbstractAcquisitionFunction,
+    constraints: list[OutcomeConstraint],
+    constraint_model: AbstractModel,
+    feasibility_floor: float = 1e-12,
+) -> AbstractAcquisitionFunction:
+    """Makes sure the given acquisition function is weighted by the probability that the constraints hold.
+
+    An acquisition function which already carries weights - a user prior over the optimum, say - gains one more,
+    so that the two mechanisms end up side by side in one wrapper. A plain acquisition function is wrapped in a
+    `ConstrainedAcquisitionFunction`, which is what the constraints-only case has always produced and what keeps
+    its metadata, and therefore the name of its output directory, unchanged.
+
+    Parameters
+    ----------
+    acquisition_function : AbstractAcquisitionFunction
+        The acquisition function to weight.
+    constraints : list[OutcomeConstraint]
+        The constraints to enforce.
+    constraint_model : AbstractModel
+        Surrogate model for the constrained outputs.
+    feasibility_floor : float, defaults to 1e-12
+        Lowest possible value of the feasibility weight.
+
+    Returns
+    -------
+    AbstractAcquisitionFunction
+        The weighted acquisition function.
+    """
+    from smac.acquisition.function.constrained_acquisition_function import (
+        ConstrainedAcquisitionFunction,
+    )
+
+    if isinstance(acquisition_function, WeightedAcquisitionFunction):
+        if acquisition_function.get_weight(FeasibilityWeight) is not None:
+            return acquisition_function
+
+        acquisition_function.add_weight(
+            FeasibilityWeight(
+                constraints=constraints,
+                constraint_model=constraint_model,
+                floor=feasibility_floor,
+            )
+        )
+
+        return acquisition_function
+
+    return ConstrainedAcquisitionFunction(
+        acquisition_function=acquisition_function,
+        constraints=constraints,
+        constraint_model=constraint_model,
+        feasibility_floor=feasibility_floor,
+    )
