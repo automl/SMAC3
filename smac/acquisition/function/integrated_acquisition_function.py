@@ -52,6 +52,10 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         return f"Integrated Acquisition Function ({self._acquisition_function.__class__.__name__})"
 
     @property
+    def requires_rescaling(self) -> bool:  # noqa: D102
+        return self._acquisition_function.requires_rescaling
+
+    @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
         meta.update({"acquisition_function": self._acquisition_function.meta})

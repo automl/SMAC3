@@ -82,6 +82,12 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
         return "Confidence Bound"
 
     @property
+    def requires_rescaling(self) -> bool:  # noqa: D102
+        # Both bounds return -(m + sign * sqrt(nu * beta_t) * std), so an upper bound is just as negative as a
+        # lower one.
+        return True
+
+    @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
         meta = super().meta
         meta.update({"beta": self._beta, "nu": self._nu})

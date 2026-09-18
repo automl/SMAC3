@@ -9,11 +9,6 @@ from ConfigSpace.hyperparameters import FloatHyperparameter
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.acquisition.function.confidence_bound import LCB
-from smac.acquisition.function.integrated_acquisition_function import (
-    IntegratedAcquisitionFunction,
-)
-from smac.acquisition.function.thompson import TS
 from smac.model.abstract_model import AbstractModel
 from smac.model.random_forest.abstract_random_forest import AbstractRandomForest
 from smac.utils.logging import get_logger
@@ -64,14 +59,9 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self._discretize = discretize
         self._discrete_bins_factor = discrete_bins_factor
 
-        # check if the acquisition function is LCB or TS - then the acquisition function values
-        # need to be rescaled to assure positiveness & correct magnitude
-        if isinstance(self._acquisition_function, IntegratedAcquisitionFunction):
-            acquisition_type = self._acquisition_function._acquisition_function
-        else:
-            acquisition_type = self._acquisition_function
-
-        self._rescale = isinstance(acquisition_type, (LCB, TS))
+        # Acquisition functions which are negative by construction have to be rescaled to assure positiveness and
+        # correct magnitude before the prior is multiplied in.
+        self._rescale = self._acquisition_function.requires_rescaling
 
         # Variables needed to adapt the weighting of the prior
         self._initial_design_size = None

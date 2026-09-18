@@ -29,6 +29,11 @@ class TS(AbstractAcquisitionFunction):
     def name(self) -> str:  # noqa: D102
         return "Thompson Sampling"
 
+    @property
+    def requires_rescaling(self) -> bool:  # noqa: D102
+        # Returns the negated sample, so that the maximizer minimizes the cost.
+        return True
+
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Sample a new value from a gaussian distribution whose mean and covariance values are given by model.
 

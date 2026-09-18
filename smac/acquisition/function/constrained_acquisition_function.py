@@ -8,11 +8,6 @@ from ConfigSpace import Configuration
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.acquisition.function.confidence_bound import AbstractConfidenceBound
-from smac.acquisition.function.integrated_acquisition_function import (
-    IntegratedAcquisitionFunction,
-)
-from smac.acquisition.function.thompson import TS
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.configspace import convert_configurations_to_array
@@ -86,15 +81,10 @@ class ConstrainedAcquisitionFunction(AbstractAcquisitionFunction):
         self._constraint_model = constraint_model
         self._feasibility_floor = feasibility_floor
 
-        # LCB and TS are negative by design, so they have to be shifted before a multiplicative weight is
-        # meaningful. This mirrors how BoTorch shifts by an infeasible cost before applying its feasibility
-        # weight.
-        if isinstance(acquisition_function, IntegratedAcquisitionFunction):
-            acquisition_type = acquisition_function._acquisition_function
-        else:
-            acquisition_type = acquisition_function
-
-        self._rescale = isinstance(acquisition_type, (AbstractConfidenceBound, TS))
+        # Acquisition functions which are negative by construction have to be shifted before a multiplicative
+        # weight is meaningful. This mirrors how BoTorch shifts by an infeasible cost before applying its
+        # feasibility weight.
+        self._rescale = acquisition_function.requires_rescaling
 
         self._eta: float | None = None
         self._has_feasible = False

@@ -29,6 +29,17 @@ class AbstractAcquisitionFunction:
         raise NotImplementedError
 
     @property
+    def requires_rescaling(self) -> bool:
+        """Whether the acquisition values are negative by construction.
+
+        Such an acquisition function has to be shifted by the incumbent value before a multiplicative weight can be
+        applied to it: multiplying a negative value by a weight in [0, 1] moves it *up*, so the weight would favour
+        exactly the points it is supposed to discourage. Confidence bounds and Thompson sampling are negative by
+        design, because the maximizer maximizes and they describe a cost.
+        """
+        return False
+
+    @property
     def meta(self) -> dict[str, Any]:
         """Returns the meta data of the created object."""
         return {

@@ -288,8 +288,8 @@ def prior_floor():
 
 
 def test_prior_init_ei(prior_model, acquisition_function, beta):
-    acq_ei = acquisition_function
-    paf = PriorAcquisitionFunction(prior_model, acq_ei, beta)
+    paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
+    paf.update(model=prior_model, eta=1, num_data=1)
     assert paf._rescale is False
 
 
