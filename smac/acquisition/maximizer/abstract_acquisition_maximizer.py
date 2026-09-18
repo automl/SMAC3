@@ -120,6 +120,37 @@ class AbstractAcquisitionMaximizer:
 
         return challengers
 
+    def _sample_configurations(self, n_points: int) -> list[Configuration]:
+        """Draws random candidate configurations.
+
+        Subclasses which can draw from more than one configuration space - a user prior over the optimum, say -
+        override this.
+        """
+        if n_points > 1:
+            return list(self._configspace.sample_configuration(size=n_points))
+
+        return [self._configspace.sample_configuration()]
+
+    @property
+    def supports_sampling_spaces(self) -> bool:
+        """Whether candidates can be drawn from configuration spaces other than the search space."""
+        return False
+
+    def add_sampling_space(self, key: str, configspace: ConfigurationSpace, weight: float | None = None) -> None:
+        """Draws part of the candidates from the given configuration space from now on.
+
+        Raises for a maximizer which cannot do this, so that a user prior supplied during a run fails loudly
+        rather than silently never being sampled from.
+        """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} cannot sample from additional configuration spaces. A user prior would "
+            "still weight the acquisition function, but no candidates would be drawn from it."
+        )
+
+    def remove_sampling_space(self, key: str) -> None:
+        """Stops drawing candidates from a previously added configuration space."""
+        raise NotImplementedError(f"{self.__class__.__name__} cannot sample from additional configuration spaces.")
+
     @abstractmethod
     def _maximize(
         self,

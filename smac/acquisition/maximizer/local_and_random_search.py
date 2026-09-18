@@ -10,12 +10,15 @@ from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
 )
 from smac.acquisition.maximizer.local_search import LocalSearch
 from smac.acquisition.maximizer.random_search import RandomSearch
+from smac.acquisition.maximizer.sampling import SamplingPool
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
+
+UNIFORM_SOURCE = "uniform"
 
 
 class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
@@ -76,24 +79,20 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
             prior_sampling_fraction = 0.5
         if uniform_configspace is None and prior_sampling_fraction is not None:
             raise ValueError("If `prior_sampling_fraction` is given, `uniform_configspace` must be defined.")
-        if uniform_configspace is not None and prior_sampling_fraction is not None:
-            self._prior_random_search = RandomSearch(
-                acquisition_function=acquisition_function,
-                configspace=configspace,
-                seed=seed,
-            )
 
-            self._uniform_random_search = RandomSearch(
-                acquisition_function=acquisition_function,
-                configspace=uniform_configspace,
-                seed=seed,
-            )
-        else:
-            self._random_search = RandomSearch(
-                configspace=configspace,
-                acquisition_function=acquisition_function,
-                seed=seed,
-            )
+        sampling_pool: SamplingPool | None = None
+        if uniform_configspace is not None and prior_sampling_fraction is not None:
+            # `configspace` carries the distributions here, and `uniform_configspace` is the same space stripped
+            # of them, so the two spaces are just two sources with a fixed split of the candidate budget.
+            sampling_pool = SamplingPool(configspace, default_weight=prior_sampling_fraction, seed=seed)
+            sampling_pool.add(UNIFORM_SOURCE, uniform_configspace, weight=1 - prior_sampling_fraction)
+
+        self._random_search = RandomSearch(
+            configspace=configspace,
+            acquisition_function=acquisition_function,
+            seed=seed,
+            sampling_pool=sampling_pool,
+        )
 
         self._local_search = LocalSearch(
             configspace=configspace,
@@ -116,11 +115,7 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
     @acquisition_function.setter
     def acquisition_function(self, acquisition_function: AbstractAcquisitionFunction) -> None:
         self._acquisition_function = acquisition_function
-        if self._uniform_configspace is not None:
-            self._prior_random_search._acquisition_function = acquisition_function
-            self._uniform_random_search._acquisition_function = acquisition_function
-        else:
-            self._random_search._acquisition_function = acquisition_function
+        self._random_search._acquisition_function = acquisition_function
         self._local_search._acquisition_function = acquisition_function
 
     @property
@@ -134,46 +129,45 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionMaximizer):
                 }
             )
         else:
+            # The two searches were configured identically apart from the space they sampled, which never
+            # appeared here. Reporting the one that replaced them twice keeps the metadata, and therefore the
+            # name of the output directory, unchanged for runs configured this way.
+            random_search_meta = {key: value for key, value in self._random_search.meta.items()}
+            random_search_meta.pop("sampling_pool", None)
             meta.update(
                 {
-                    "prior_random_search": self._prior_random_search.meta,
-                    "uniform_random_search": self._uniform_random_search.meta,
+                    "prior_random_search": random_search_meta,
+                    "uniform_random_search": random_search_meta,
                     "local_search": self._local_search.meta,
                 }
             )
 
         return meta
 
+    @property
+    def supports_sampling_spaces(self) -> bool:  # noqa: D102
+        return True
+
+    def add_sampling_space(  # noqa: D102
+        self, key: str, configspace: ConfigurationSpace, weight: float | None = None
+    ) -> None:
+        self._random_search.add_sampling_space(key, configspace, weight)
+
+    def remove_sampling_space(self, key: str) -> None:  # noqa: D102
+        self._random_search.remove_sampling_space(key)
+
     def _maximize(
         self,
         previous_configs: list[Configuration],
         n_points: int,
     ) -> list[tuple[float, Configuration]]:
-        if self._uniform_configspace is not None and self._prior_sampling_fraction is not None:
-            # Get configurations sorted by acquisition function value
-            next_configs_by_prior_random_search_sorted = self._prior_random_search._maximize(
-                previous_configs,
-                round(n_points * self._prior_sampling_fraction),
-                _sorted=True,
-            )
-
-            # Get configurations sorted by acquisition function value
-            next_configs_by_uniform_random_search_sorted = self._uniform_random_search._maximize(
-                previous_configs,
-                round(n_points * (1 - self._prior_sampling_fraction)),
-                _sorted=True,
-            )
-            next_configs_by_random_search_sorted = (
-                next_configs_by_uniform_random_search_sorted + next_configs_by_prior_random_search_sorted
-            )
-            next_configs_by_random_search_sorted.sort(reverse=True, key=lambda x: x[0])
-        else:
-            # Get configurations sorted by acquisition function value
-            next_configs_by_random_search_sorted = self._random_search._maximize(
-                previous_configs=previous_configs,
-                n_points=n_points,
-                _sorted=True,
-            )
+        # Get configurations sorted by acquisition function value. The random search splits the budget across
+        # whatever spaces it has been given to sample from.
+        next_configs_by_random_search_sorted = self._random_search._maximize(
+            previous_configs=previous_configs,
+            n_points=n_points,
+            _sorted=True,
+        )
 
         # Choose the best self._local_search_iterations random configs to start the local search, and choose only
         # incumbent from previous configs
