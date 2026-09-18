@@ -85,6 +85,11 @@ class ConfigSelector:
         self._min_configurations = min_configurations
         self._previous_entries = -1
         self._predict_x_best = True
+
+        # Set when the acquisition function is changed from outside, so that it is brought up to date even
+        # though no new trial has been reported since the last update.
+        self._acquisition_needs_update = True
+        self._force_retrain = False
         self._min_trials = min_trials
         self._considered_budgets: list[float | int | None] = [None]
 
@@ -231,9 +236,14 @@ class ConfigSelector:
 
             # Check if X/Y differs from the last run, otherwise use cached results
             train_start_time = time.time()
-            if self._previous_entries != Y.shape[0]:
+            data_changed = self._previous_entries != Y.shape[0]
+
+            if data_changed:
                 self._model.train(X, Y)
 
+            # The acquisition function is also updated when it was changed from outside without new data
+            # arriving, which is how a user prior supplied during a run takes effect.
+            if data_changed or self._acquisition_needs_update:
                 x_best_array: np.ndarray | None = None
                 if incumbent_value is not None:
                     best_observation = incumbent_value
@@ -247,12 +257,14 @@ class ConfigSelector:
                     model=self._model,
                     eta=best_observation,
                     incumbent_array=x_best_array,
-                    num_data=len(self._get_evaluated_configs()),
+                    num_data=self._current_num_data(),
                     X=X_configurations,
                     incumbents=self._runhistory.incumbents,
                     runhistory=self._runhistory,
                     runhistory_encoder=self._runhistory_encoder,
                 )
+
+                self._acquisition_needs_update = False
 
             # We want to cache how many entries we used because if we have the same number of entries
             # we don't need to train the next time
@@ -319,6 +331,14 @@ class ConfigSelector:
                         raise ConfigurationSpaceExhaustedException()
 
     def _check_for_retrain(self) -> bool:
+        if self._force_retrain:
+            # The challengers still queued were ranked by an acquisition function which has since changed, so
+            # they no longer reflect what the search should try next.
+            self._force_retrain = False
+            logger.debug("The acquisition function changed. Start a new iteration and rank the challengers again.")
+
+            return True
+
         if self._retrain_after is not None:
             if self._counter >= self._retrain_after:
                 logger.debug(
@@ -404,6 +424,34 @@ class ConfigSelector:
             ),
             np.empty(shape=[0, 0]),
         )
+
+    def invalidate_acquisition(self, force_retrain: bool = True) -> None:
+        """Marks the acquisition function as out of date.
+
+        Call this after changing the acquisition function from outside, so that it is updated on the next
+        iteration even though no new trial has been reported. With ``force_retrain``, the challengers already
+        ranked are discarded as well and the maximizer runs again, so that the change takes effect on the very
+        next configuration rather than up to ``retrain_after`` configurations later.
+
+        Note an intensifier holding trials of its own may still hand out a queued one first.
+
+        Parameters
+        ----------
+        force_retrain : bool, defaults to True
+            Whether to also discard the challengers ranked before the change.
+        """
+        self._acquisition_needs_update = True
+
+        if force_retrain:
+            self._force_retrain = True
+
+    def _current_num_data(self) -> int:
+        """The number of finished trials, as the acquisition function counts them.
+
+        This is the quantity handed to ``update`` as ``num_data``, so anything anchored against it - the decay of
+        a user prior, say - is measured in the same units as the decay itself.
+        """
+        return len(self._get_evaluated_configs())
 
     def _get_evaluated_configs(self) -> list[Configuration]:
         assert self._runhistory is not None
