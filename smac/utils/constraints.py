@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any, Mapping
+
 import re
 from dataclasses import dataclass
 
@@ -268,6 +270,41 @@ def probability_of_feasibility(
         probabilities *= probability.reshape((-1, 1))
 
     return probabilities
+
+
+def extract_constraint_values(
+    constraints: list[OutcomeConstraint], values: Mapping[str, Any]
+) -> dict[str, float] | None:
+    """Reads the constrained outputs out of the information returned alongside the cost.
+
+    A target function reports constraint values by returning ``(cost, {"latency": 93.2})``, and that dictionary
+    reaches SMAC as ``additional_info`` whether the target function was run by SMAC itself or by the caller of
+    ``tell``. This picks the declared names out of it.
+
+    A missing value is not an error. A crashed trial never gets the chance to report one, and it is treated as
+    infeasible downstream.
+
+    Parameters
+    ----------
+    constraints : list[OutcomeConstraint]
+        The declared constraints, as parsed from ``Scenario.constraints``.
+    values : Mapping[str, Any]
+        What the target function returned alongside the cost.
+
+    Returns
+    -------
+    dict[str, float] | None
+        The observed values of the constrained outputs, or ``None`` if no constraints are declared.
+    """
+    if len(constraints) == 0:
+        return None
+
+    constraint_values = {}
+    for constraint in constraints:
+        if constraint.name in values:
+            constraint_values[constraint.name] = float(values[constraint.name])
+
+    return constraint_values
 
 
 def _is_finite(value: float) -> bool:

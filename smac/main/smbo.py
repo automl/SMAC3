@@ -27,6 +27,7 @@ from smac.runner import FirstRunCrashedException
 from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.scenario import Scenario
+from smac.utils.constraints import extract_constraint_values
 from smac.utils.cost_transformer import CostTransformer
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
@@ -291,6 +292,20 @@ class SMBO:
         if self._intensifier.uses_budgets and info.budget is None:
             raise ValueError("Passed budget is None but intensifier requires budgets.")
 
+        additional_info = value.additional_info
+        constraint_values = value.constraint_values
+
+        if constraint_values is None:
+            # The trial was run by the caller rather than by our own runner, so nothing has picked the constrained
+            # outputs out of what the target function returned yet. Unlike the runner, which owns its dictionary,
+            # this one belongs to the caller - so read from a copy and leave theirs alone.
+            constraints = self._scenario.get_constraints()
+            if len(constraints) > 0:
+                additional_info = dict(additional_info)
+                constraint_values = extract_constraint_values(constraints, additional_info)
+                for name in constraint_values or {}:
+                    additional_info.pop(name)
+
         self._runhistory.add(
             config=info.config,
             cost=value.cost,
@@ -302,8 +317,8 @@ class SMBO:
             budget=info.budget,
             starttime=value.starttime,
             endtime=value.endtime,
-            additional_info=value.additional_info,
-            constraint_values=value.constraint_values,
+            additional_info=additional_info,
+            constraint_values=constraint_values,
             force_update=True,  # Important to overwrite the status RUNNING
         )
 

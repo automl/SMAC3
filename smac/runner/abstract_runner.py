@@ -15,6 +15,7 @@ from ConfigSpace import Configuration
 
 from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.scenario import Scenario
+from smac.utils.constraints import extract_constraint_values
 from smac.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -163,22 +164,17 @@ class AbstractRunner(ABC):
         return trial_info, trial_value
 
     def _extract_constraint_values(self, additional_info: dict[str, Any]) -> dict[str, float] | None:
-        """Reads the constrained outputs out of the information returned alongside the cost.
+        """Moves the constrained outputs out of the information returned alongside the cost.
 
-        A target function reports constraint values by returning ``(cost, {"latency": 93.2})``. The declared
-        constraint names are moved out of that dictionary and into ``TrialValue.constraint_values``; anything else
-        the target function returned stays in ``additional_info``.
-
-        A missing value is not an error here. A crashed trial never gets the chance to report one, and it is
-        treated as infeasible downstream.
+        The dictionary belongs to this runner, so the constrained outputs are removed from it rather than copied:
+        they live in ``TrialValue.constraint_values`` from here on, and anything else the target function returned
+        stays in ``additional_info``.
         """
-        if len(self._constraints) == 0:
-            return None
+        constraint_values = extract_constraint_values(self._constraints, additional_info)
 
-        constraint_values = {}
-        for constraint in self._constraints:
-            if constraint.name in additional_info:
-                constraint_values[constraint.name] = float(additional_info.pop(constraint.name))
+        if constraint_values is not None:
+            for name in constraint_values:
+                additional_info.pop(name)
 
         return constraint_values
 
