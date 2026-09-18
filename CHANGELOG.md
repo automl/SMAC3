@@ -8,16 +8,24 @@
   The reported incumbent is the best feasible configuration. Note that scenarios without an explicit `name`
   derive it from a hash over all their fields, so adding constraints support changes that hash and existing
   output directories will not be picked up.
-
-## Examples
-- An example on the new multi-objective method
-- An example on output constraints
-
 - Unify the multiplicative weighting of the acquisition function: `WeightedAcquisitionFunction` applies a list of
   `AbstractAcquisitionWeight`s to any acquisition function. `PriorAcquisitionFunction` and
   `ConstrainedAcquisitionFunction` are now thin wrappers over it, so a user prior over the optimum and output
   constraints can be used together. Wrapping one in the other is no longer necessary, and is refused: both would
   shift the values of a confidence bound by the incumbent.
+- Support user priors stated during a run, following Fehring et al. 2025: `smac.add_prior({"learning_rate": 0.01})`
+  at any point, `smac.remove_prior(key)` to withdraw one. Each belief decays from the trial at which it was
+  stated, so one stated late arrives at full strength; beliefs accumulate and are summed. Candidates are drawn
+  from each belief as well as ranked by it, and `IncumbentComparisonPolicy` optionally checks a belief against the
+  surrogate before acting on it.
+- Acquisition maximizers can draw candidates from several configuration spaces at once.
+- The acquisition function is updated when it is changed from outside, even if no new trial has been reported
+  since the last update.
+
+## Examples
+- An example on the new multi-objective method
+- An example on output constraints
+- An example on stating user priors during a run
 
 ## Bugfixes
 - Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)

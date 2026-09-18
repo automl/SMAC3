@@ -72,6 +72,10 @@ a bunch of different acquisition functions (Lower Confidence Bound, Expected Imp
 Thompson, integrated acquisition functions and prior acquisition functions). We refer to literature 
 for more information about acquisition functions.
 
+An acquisition function can also be multiplied by one or more weights, which is how user priors over the optimum
+and output constraints steer the search without changing what the surrogate believes about the objective. See
+[Steering the Search](14_priors_and_constraints.md).
+
 !!! note
     The acquisition function calculates the acquisition value for each configuration. However, the configurations
     are provided by the acquisition maximizer. Therefore, the acquisition maximizer is responsible for receiving
