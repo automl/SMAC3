@@ -11,7 +11,9 @@ from smac.runhistory.runhistory import RunHistory
 from smac.utils.configspace import convert_configurations_to_array
 from smac.utils.constraints import (
     OutcomeConstraint,
+    bilog,
     is_feasible,
+    log_probability_of_feasibility,
     probability_of_feasibility,
 )
 from smac.utils.logging import get_logger
@@ -52,11 +54,14 @@ class FeasibilityWeight(AbstractAcquisitionWeight):
         The constraints to enforce, as parsed from ``Scenario.constraints``.
     constraint_model : AbstractModel
         Surrogate model for the constrained outputs, predicting one column per constraint in the order the
-        constraints are given. It is trained on the raw observed values, because the bounds are stated in raw
-        units, and is therefore kept separate from the objective's own model and encoder.
+        constraints are given. It is fitted on *residuals* rather than the raw observations - see
+        `_training_targets` - and is kept separate from the objective's own model and encoder.
     floor : float, defaults to 1e-12
-        Lowest possible value of the weight. Keeps the ranking of configurations intact when every probability
-        underflows to zero.
+        Lowest possible value of the weight in linear space, which keeps the ranking of configurations intact
+        when every probability underflows to zero. No floor is applied in log space; see `log_floor`.
+    transform : bool, defaults to True
+        Compress the residuals with `bilog` before fitting. Turning this off fits the residuals as measured,
+        which lets one wild violation set the length scales for a boundary that lives near zero.
     """
 
     def __init__(
@@ -65,6 +70,7 @@ class FeasibilityWeight(AbstractAcquisitionWeight):
         constraint_model: AbstractModel,
         *,
         floor: float = 1e-12,
+        transform: bool = True,
     ) -> None:
         super().__init__(floor=floor)
 
@@ -75,6 +81,7 @@ class FeasibilityWeight(AbstractAcquisitionWeight):
 
         # Not to be confused with `self.model`, which is the surrogate model of the objective.
         self._constraint_model = constraint_model
+        self._transform = transform
 
         self._trained = False
         self._has_feasible = False
@@ -91,6 +98,7 @@ class FeasibilityWeight(AbstractAcquisitionWeight):
             {
                 "constraints": [str(constraint) for constraint in self._constraints],
                 "constraint_model": self._constraint_model.meta,
+                "transform": self._transform,
             }
         )
 
@@ -122,7 +130,7 @@ class FeasibilityWeight(AbstractAcquisitionWeight):
 
         if len(configs) > 0:
             X = convert_configurations_to_array(configs)
-            self._constraint_model.train(X, constraint_values)
+            self._constraint_model.train(X, self._training_targets(constraint_values))
             self._trained = True
 
         feasible_configs = [
@@ -187,10 +195,59 @@ class FeasibilityWeight(AbstractAcquisitionWeight):
 
         return float(np.min(means[:, 0]))
 
+    def _training_targets(self, constraint_values: np.ndarray) -> np.ndarray:
+        """Turns raw observations into the targets the constraint model is fitted on.
+
+        Two transformations, in order, and each removes a branch further down.
+
+        **Residuals.** A constraint is declared in either direction, but its residual is negative exactly when
+        it holds whichever way it was written. Folding the bound and the direction into the target puts every
+        feasibility boundary at zero, which is why `probability_of_feasibility` needs no constraint list and
+        no per-constraint branching: it is $\\Phi(-\\mu/\\sigma)$ for all of them.
+
+        **`bilog`.** Constraint values are raw measurements and routinely span orders of magnitude, so a
+        single wild violation otherwise dictates the length scales for a bound that lives near zero - a 90
+        second outlier against a 100 millisecond limit. `bilog` magnifies the region near the boundary and
+        flattens the extremes, which is exactly where a constraint model's accuracy does and does not matter
+        [[EP21][EP21]]. It is strictly increasing and maps zero to zero, so feasibility itself is untouched:
+        a residual is non-positive exactly when its transform is.
+        """
+        residuals = np.column_stack(
+            [
+                [constraint.residual(value) for value in constraint_values[:, index]]
+                for index, constraint in enumerate(self._constraints)
+            ]
+        )
+
+        return bilog(residuals) if self._transform else residuals
+
+    @property
+    def log_floor(self) -> float:
+        """No floor in log space. See `AbstractAcquisitionWeight.log_floor`.
+
+        A constraint states a fact about the problem rather than a belief about it, so there is nothing here
+        to recover from and no reason to stop it saying that a region is hopeless by five hundred orders of
+        magnitude. `log_probability_of_feasibility` is accurate that far out, and the sum it enters never
+        underflows, so flooring would throw away a true answer to guard against a failure that cannot occur.
+        """
+        return -np.inf
+
     def _compute(self, X: np.ndarray) -> np.ndarray:  # noqa: D102
         means, variances = self._constraint_model.predict_marginalized(X)
 
-        return probability_of_feasibility(self._constraints, means, variances)
+        return probability_of_feasibility(means, variances)
+
+    def _compute_log(self, X: np.ndarray) -> np.ndarray:
+        """The log probability directly, rather than the logarithm of the probability.
+
+        The difference is the whole reason the log path exists. `probability_of_feasibility` underflows to
+        exactly zero once enough constraints are unlikely, and `log(0)` is `-inf` for every such point, so
+        the ranking among them is lost precisely where the search most needs it. Accumulating $\\log \\Phi$
+        through `log_ndtr` keeps them ordered.
+        """
+        means, variances = self._constraint_model.predict_marginalized(X)
+
+        return log_probability_of_feasibility(means, variances)
 
     def is_active(self) -> bool:
         """Whether any constrained output has been observed yet."""

@@ -19,6 +19,7 @@ from smac.acquisition.function.weighted_acquisition_function import (
 )
 from smac.acquisition.weight import FeasibilityWeight, PriorEnsemble
 from smac.utils.constraints import is_feasible, parse_constraints
+from smac.acquisition.function.abstract_acquisition_function import AcquisitionScale
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -98,8 +99,8 @@ def test_the_acquisition_values_are_shifted_exactly_once():
     """Nesting the two wrappers used to shift a confidence bound by the incumbent twice."""
     weighted = ensure_feasibility_weight(PriorAcquisitionFunction(LCB(), decay_beta=2.0), _constraints(), Model())
 
-    assert weighted._rescale is True
-    assert weighted.acquisition_function.requires_rescaling is True
+    assert weighted._scale is AcquisitionScale.SIGNED
+    assert weighted.acquisition_function.value_scale is AcquisitionScale.SIGNED
     assert isinstance(weighted.acquisition_function, LCB)
 
 

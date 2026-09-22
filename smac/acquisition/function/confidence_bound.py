@@ -7,6 +7,7 @@ import numpy as np
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
+    AcquisitionScale,
 )
 from smac.utils.logging import get_logger
 
@@ -82,10 +83,10 @@ class AbstractConfidenceBound(AbstractAcquisitionFunction):
         return "Confidence Bound"
 
     @property
-    def requires_rescaling(self) -> bool:  # noqa: D102
+    def value_scale(self) -> AcquisitionScale:  # noqa: D102
         # Both bounds return -(m + sign * sqrt(nu * beta_t) * std), so an upper bound is just as negative as a
         # lower one.
-        return True
+        return AcquisitionScale.SIGNED
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102

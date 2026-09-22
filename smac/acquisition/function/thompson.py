@@ -4,6 +4,7 @@ import numpy as np
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
+    AcquisitionScale,
 )
 from smac.utils.logging import get_logger
 
@@ -30,9 +31,9 @@ class TS(AbstractAcquisitionFunction):
         return "Thompson Sampling"
 
     @property
-    def requires_rescaling(self) -> bool:  # noqa: D102
+    def value_scale(self) -> AcquisitionScale:  # noqa: D102
         # Returns the negated sample, so that the maximizer minimizes the cost.
-        return True
+        return AcquisitionScale.SIGNED
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Sample a new value from a gaussian distribution whose mean and covariance values are given by model.

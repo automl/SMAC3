@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
+from enum import Enum
 from typing import Any
 
 import numpy as np
@@ -17,6 +18,41 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
+class AcquisitionScale(str, Enum):
+    r"""What an acquisition function's values mean, and so how a weight combines with them.
+
+    A weight - the probability that an output constraint holds, a user's belief about where the optimum is -
+    is a non-negative factor that should make a configuration look better or worse. Which arithmetic achieves
+    that depends entirely on what the acquisition values are, and getting it wrong is silent: the search keeps
+    running and steers the wrong way.
+
+    Three conventions are in use, and they are exhaustive and mutually exclusive, which is why this is one
+    property rather than a set of flags. Two booleans would admit "logarithmic *and* signed", which describes
+    nothing, and would leave every wrapper to decide what that meant.
+
+    ``LINEAR``
+        Non-negative, proportional to how good a configuration looks. Expected improvement, probability of
+        improvement. A weight **multiplies**: $a(x) \cdot w(x)$.
+
+    ``LOG``
+        Logarithms of the above, so negative, and ordered identically because the logarithm is increasing.
+        `LogEI` [[ADE+23][ADE+23]]. A weight **adds its own logarithm**: $\log a(x) + \log w(x)$. This is the
+        convention that survives a sharp weight - a belief narrow enough drives $a(x) \cdot w(x)$ to exactly
+        zero across most of the space in floating point, leaving the maximizer a flat surface to climb, while
+        the sum stays finite and ordered.
+
+    ``SIGNED``
+        Negative by construction, because the quantity described is a cost and the maximizer maximizes.
+        Confidence bounds, Thompson sampling. Multiplying these by a weight in $[0, 1]$ moves them *up*, so a
+        weight would favour exactly what it is meant to discourage. The values are **shifted by the incumbent
+        first** and then multiplied, which puts them back on the linear convention.
+    """
+
+    LINEAR = "linear"
+    LOG = "log"
+    SIGNED = "signed"
+
+
 class AbstractAcquisitionFunction:
     """Abstract base class for acquisition function."""
 
@@ -29,15 +65,14 @@ class AbstractAcquisitionFunction:
         raise NotImplementedError
 
     @property
-    def requires_rescaling(self) -> bool:
-        """Whether the acquisition values are negative by construction.
+    def value_scale(self) -> AcquisitionScale:
+        """What the returned values mean, and therefore how a weight combines with them.
 
-        Such an acquisition function has to be shifted by the incumbent value before a multiplicative weight can be
-        applied to it: multiplying a negative value by a weight in [0, 1] moves it *up*, so the weight would favour
-        exactly the points it is supposed to discourage. Confidence bounds and Thompson sampling are negative by
-        design, because the maximizer maximizes and they describe a cost.
+        Everything that wraps an acquisition function to reweight it - an output constraint, a user prior -
+        has to know this before it can touch a value, and the three answers call for three different
+        arithmetic. See `AcquisitionScale`.
         """
-        return False
+        return AcquisitionScale.LINEAR
 
     @property
     def meta(self) -> dict[str, Any]:
@@ -120,6 +155,8 @@ class AbstractAcquisitionFunction:
         Returns
         -------
         np.ndarray [N,1]
-            Acquisition function values wrt X.
+            Acquisition function values wrt X. Larger is better. What the numbers themselves mean - and so how
+            anything weighting them has to combine with them - is declared by ``value_scale``; either way only
+            their order matters to the acquisition maximizer.
         """
         raise NotImplementedError

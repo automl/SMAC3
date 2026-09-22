@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Iterable, Literal, Mapping, Sequence
 
 import numpy as np
+from scipy.special import logsumexp
 
 from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
 from smac.acquisition.weight.decay import DecaySchedule
@@ -184,19 +185,45 @@ class CompositeWeight(AbstractAcquisitionWeight):
         return [weight for weight in tuple(self._members.values()) if weight.is_active()]
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
+        return self._combine(X, log=False)
+
+    def _compute_log(self, X: np.ndarray) -> np.ndarray:
+        """The combination performed in log space, rather than its logarithm taken afterwards.
+
+        Taking `log(_compute(X))` would form the very products and sums the logarithm exists to avoid, so the
+        rule itself is translated instead. Each rule has exactly one image under the logarithm:
+
+        ============  ==================
+        combination   in log space
+        ============  ==================
+        ``sum``       ``logsumexp``
+        ``product``   ``sum``
+        ``max``       ``max``
+        ============  ==================
+
+        The middle row is the one worth pausing on, and the reason this is a translated rule rather than a
+        shared one: a *product* of weights becomes a *sum* of logarithms, so a composite that multiplies and
+        one that adds swap places here. Reusing `_compute`'s branch names in log space would silently give
+        every ensemble the wrong rule.
+        """
+        return self._combine(X, log=True)
+
+    def _combine(self, X: np.ndarray, *, log: bool) -> np.ndarray:
         active = self._active_members()
 
+        # One everywhere, whose logarithm is zero: a composite with nothing to say must leave whatever it is
+        # combined with exactly as it was, in either space.
         if len(active) == 0:
-            return np.ones((X.shape[0], 1))
+            return np.zeros((X.shape[0], 1)) if log else np.ones((X.shape[0], 1))
 
         # Each member floors and decays itself before the combination: that is what lets members which arrived at
         # different times carry different amounts of influence.
-        values = np.concatenate([weight(X).reshape((-1, 1)) for weight in active], axis=1)
+        values = np.concatenate([weight(X, log=log).reshape((-1, 1)) for weight in active], axis=1)
 
         if self._combination == "sum":
-            combined = np.sum(values, axis=1)
+            combined = logsumexp(values, axis=1) if log else np.sum(values, axis=1)
         elif self._combination == "product":
-            combined = np.prod(values, axis=1)
+            combined = np.sum(values, axis=1) if log else np.prod(values, axis=1)
         else:
             combined = np.max(values, axis=1)
 

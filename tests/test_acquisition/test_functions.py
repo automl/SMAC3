@@ -3,6 +3,8 @@ from typing import Any
 import numpy as np
 import pytest
 
+from smac.acquisition.function.abstract_acquisition_function import AcquisitionScale
+
 from smac.acquisition.function import (
     EI,
     EIPS,
@@ -290,13 +292,13 @@ def prior_floor():
 def test_prior_init_ei(prior_model, acquisition_function, beta):
     paf = PriorAcquisitionFunction(acquisition_function=acquisition_function, decay_beta=beta)
     paf.update(model=prior_model, eta=1, num_data=1)
-    assert paf._rescale is False
+    assert paf._scale is AcquisitionScale.LINEAR
 
 
 def test_prior_init_ts(prior_model, acq_ts, beta):
     paf = PriorAcquisitionFunction(acquisition_function=acq_ts, decay_beta=beta)
     paf.update(model=prior_model, eta=1, num_data=1)
-    assert paf._rescale is True
+    assert paf._scale is AcquisitionScale.SIGNED
 
 
 def test_prior_update(prior_model, acquisition_function, beta):

@@ -89,6 +89,22 @@ class AbstractAcquisitionWeight:
         return self._decay
 
     @property
+    def log_floor(self) -> float:
+        """The floor to apply in log space, as a logarithm. `-inf` means none.
+
+        Separate from `floor` because the floor does not mean the same thing in both spaces, and a single
+        number cannot serve both. In linear space it stops a weight collapsing to exactly zero, which would
+        make every point below it tie regardless of how the acquisition function ranked them. In log space
+        nothing collapses, so a floor there only discards information - which is right for a belief, whose
+        floor exists so a mistaken user can be recovered from, and wrong for a fact like feasibility, which
+        should be free to say that a region is hopeless by many orders of magnitude.
+
+        The default mirrors `floor`, which is the conservative reading; a weight that wants no floor in log
+        space overrides this and says why.
+        """
+        return -np.inf if self._floor <= 0.0 else float(np.log(self._floor))
+
+    @property
     def steps(self) -> int:
         """Number of trials since the weight was anchored, as of the last update."""
         return self._steps
@@ -117,8 +133,56 @@ class AbstractAcquisitionWeight:
         """Returns the number of trials since the weight was anchored. Zero for a weight which does not decay."""
         return 0
 
-    def __call__(self, X: np.ndarray) -> np.ndarray:
-        """Computes the floored and decayed weight.
+    def __call__(self, X: np.ndarray, *, log: bool = False) -> np.ndarray:
+        """Computes the floored and decayed weight, or its logarithm.
+
+        One method rather than two, because the two differ only in which arithmetic expresses the same
+        quantity: the decay raises the weight to a power, and the logarithm of that is the power times the
+        logarithm. A second method would be the same decision written twice, and a weight that overrode one
+        and not the other would be silently inconsistent.
+
+        Parameters
+        ----------
+        X : np.ndarray [N, D]
+            The points to evaluate the weight at.
+        log : bool, defaults to False
+            Return $\\log w(\\mathbf{X})$ instead of $w(\\mathbf{X})$, for an acquisition function whose own
+            values are logarithms. This is not a convenience: a sharp weight underflows to exactly zero in
+            the linear form long before its logarithm stops being representable, and a weight that is zero
+            everywhere ranks nothing.
+
+        Returns
+        -------
+        np.ndarray [N, 1]
+            The weight of X, non-negative; or its logarithm, which is not.
+        """
+        exponent = self._decay(self._steps)
+
+        if log:
+            # Floored in log space rather than by flooring the value and taking its logarithm, because the
+            # value is exactly what may have underflowed: log(0 + floor) would report the floor as though it
+            # were the answer, discarding a perfectly representable -5000 to report -27.6.
+            raw = np.asarray(self._compute_log(X), dtype=float).reshape((-1, 1))
+            floor = self.log_floor
+            floored = raw if floor == -np.inf else np.maximum(raw, floor)
+
+            return floored if exponent == 1.0 else exponent * floored
+
+        raw = np.asarray(self._compute(X), dtype=float).reshape((-1, 1))
+
+        if exponent == 1.0:
+            return raw + self._floor
+
+        return np.power(raw + self._floor, exponent)
+
+    def _compute_log(self, X: np.ndarray) -> np.ndarray:
+        """Computes the logarithm of the raw weight, before the floor and the decay are applied.
+
+        The default takes the logarithm of `_compute`, which is correct but only as good as the value it is
+        given: a weight that has already underflowed to zero reports `-inf` here, having lost the very
+        distinctions the logarithm exists to preserve. A weight whose logarithm has a stable closed form -
+        a Gaussian probability through `log_ndtr`, say - should override this and compute it directly. That
+        is the whole benefit, so the override is the point rather than an optimization.
 
         Parameters
         ----------
@@ -128,15 +192,10 @@ class AbstractAcquisitionWeight:
         Returns
         -------
         np.ndarray [N, 1]
-            Non-negative weight of X.
+            Logarithm of the raw weight of X.
         """
-        raw = np.asarray(self._compute(X), dtype=float).reshape((-1, 1))
-        exponent = self._decay(self._steps)
-
-        if exponent == 1.0:
-            return raw + self._floor
-
-        return np.power(raw + self._floor, exponent)
+        with np.errstate(divide="ignore"):
+            return np.log(np.asarray(self._compute(X), dtype=float).reshape((-1, 1)))
 
     @abstractmethod
     def _compute(self, X: np.ndarray) -> np.ndarray:

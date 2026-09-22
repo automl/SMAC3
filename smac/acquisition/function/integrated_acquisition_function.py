@@ -8,6 +8,7 @@ import numpy as np
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
+    AcquisitionScale,
 )
 from smac.model.abstract_model import AbstractModel
 from smac.utils.logging import get_logger
@@ -52,8 +53,8 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         return f"Integrated Acquisition Function ({self._acquisition_function.__class__.__name__})"
 
     @property
-    def requires_rescaling(self) -> bool:  # noqa: D102
-        return self._acquisition_function.requires_rescaling
+    def value_scale(self) -> AcquisitionScale:  # noqa: D102
+        return self._acquisition_function.value_scale
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102

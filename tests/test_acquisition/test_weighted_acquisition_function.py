@@ -4,6 +4,7 @@ import pytest
 from smac.acquisition.function import EI, LCB, WeightedAcquisitionFunction
 from smac.acquisition.weight import CompositeWeight, NoDecay, PolynomialDecay
 from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
+from smac.acquisition.function.abstract_acquisition_function import AcquisitionScale
 
 
 class ConstantWeight(AbstractAcquisitionWeight):
@@ -37,8 +38,8 @@ class LinearAcquisition(EI):
     """An acquisition function whose values are the first column of X, so they are trivial to predict."""
 
     @property
-    def requires_rescaling(self):
-        return False
+    def value_scale(self):
+        return AcquisitionScale.LINEAR
 
     def _update(self, **kwargs):
         pass
@@ -51,8 +52,8 @@ class NegativeAcquisition(LinearAcquisition):
     """Negative by construction, like a confidence bound."""
 
     @property
-    def requires_rescaling(self):
-        return True
+    def value_scale(self):
+        return AcquisitionScale.SIGNED
 
 
 class Model:
@@ -199,8 +200,8 @@ def test_a_weight_can_be_found_by_its_type():
 
 
 def test_a_weighted_acquisition_function_never_needs_rescaling():
-    assert WeightedAcquisitionFunction(LCB()).requires_rescaling is False
-    assert WeightedAcquisitionFunction(EI()).requires_rescaling is False
+    assert WeightedAcquisitionFunction(LCB()).value_scale is AcquisitionScale.LINEAR
+    assert WeightedAcquisitionFunction(EI()).value_scale is AcquisitionScale.LINEAR
 
 
 def test_the_floor_is_applied_before_the_decay(X):

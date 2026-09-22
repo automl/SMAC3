@@ -6,6 +6,7 @@ import numpy as np
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
+    AcquisitionScale,
 )
 from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
 from smac.acquisition.weight.feasibility import FeasibilityWeight
@@ -22,13 +23,21 @@ W = TypeVar("W", bound=AbstractAcquisitionWeight)
 
 
 class WeightedAcquisitionFunction(AbstractAcquisitionFunction):
-    r"""An acquisition function multiplied by a list of non-negative weights.
+    r"""An acquisition function combined with a list of non-negative weights.
 
-    $$a_w(\mathbf{X}) = a(\mathbf{X}) \prod_i w_i(\mathbf{X})$$
+    $$a_w(\mathbf{X}) = a(\mathbf{X}) \prod_i w_i(\mathbf{X})
+      \qquad\text{or}\qquad
+      \log a_w(\mathbf{X}) = \log a(\mathbf{X}) + \sum_i \log w_i(\mathbf{X})$$
 
     This is how SMAC steers the search without touching the surrogate model of the objective: output constraints
     contribute the probability that their bounds hold, user priors over the optimum contribute a density, and both
     only reweight how interesting each configuration looks.
+
+    Which of the two forms applies is decided by the wrapped function's `value_scale`, in one place, for every
+    weight at once. That matters more than it looks: a belief sharp enough drives the product to exactly zero
+    across the whole search space in floating point, and a maximizer handed a flat zero has nothing to climb,
+    while the sum stays finite and ordered. A `SIGNED` acquisition function is shifted onto the linear
+    convention first, so all three conventions leave here as one.
 
     Holding the weights in a list rather than nesting one wrapper inside another is what makes them compose.
     Nested wrappers each shift the acquisition values of a confidence bound by the incumbent, so the shift is
@@ -59,7 +68,7 @@ class WeightedAcquisitionFunction(AbstractAcquisitionFunction):
 
         self._acquisition_function = acquisition_function
         self._weights: list[AbstractAcquisitionWeight] = list(weights) if weights is not None else []
-        self._rescale = acquisition_function.requires_rescaling
+        self._scale = acquisition_function.value_scale
         self._eta: float | None = None
 
     @property
@@ -79,9 +88,14 @@ class WeightedAcquisitionFunction(AbstractAcquisitionFunction):
         return meta
 
     @property
-    def requires_rescaling(self) -> bool:  # noqa: D102
-        # The weighted values are non-negative, whether or not the wrapped function needed shifting.
-        return False
+    def value_scale(self) -> AcquisitionScale:
+        """The convention the *weighted* values follow, which need not be the wrapped one's.
+
+        A signed acquisition function is shifted onto the linear convention before it is weighted, so what
+        comes out is linear whatever went in. A logarithmic one stays logarithmic, because its weights were
+        added in log space rather than multiplied out of it.
+        """
+        return AcquisitionScale.LOG if self._scale is AcquisitionScale.LOG else AcquisitionScale.LINEAR
 
     @property
     def acquisition_function(self) -> AbstractAcquisitionFunction:
@@ -169,17 +183,26 @@ class WeightedAcquisitionFunction(AbstractAcquisitionFunction):
             # rescaling, which clips at zero and would change the ranking for no reason.
             return self._acquisition_function._compute(X)
 
-        if any(weight.suppresses_acquisition() for weight in active):
+        log = self._scale is AcquisitionScale.LOG
+        suppressed = any(weight.suppresses_acquisition() for weight in active)
+
+        if suppressed:
             # The acquisition function has nothing to say, so let the weights rank the candidates on their own.
-            values = np.ones((X.shape[0], 1))
-        elif self._rescale:
-            assert self._eta is not None
-            values = np.clip(self._acquisition_function._compute(X).reshape((-1, 1)) + self._eta, 0, np.inf)
+            # The identity differs by space: one multiplies, zero adds.
+            values = np.zeros((X.shape[0], 1)) if log else np.ones((X.shape[0], 1))
         else:
             values = self._acquisition_function._compute(X).reshape((-1, 1))
 
+            if self._scale is AcquisitionScale.SIGNED:
+                assert self._eta is not None
+                values = np.clip(values + self._eta, 0, np.inf)
+
+        # The one place the three conventions are resolved. Origin of this design note: the same decision
+        # used to live in every wrapper that weighted anything - once for constraints, once for priors - which
+        # is two chances to get it wrong and two places to fix it. There is one of each now.
         for weight in active:
-            values = values * weight(X)
+            contribution = weight(X, log=log)
+            values = values + contribution if log else values * contribution
 
         return values
 

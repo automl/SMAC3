@@ -49,8 +49,10 @@ class ConstrainedAcquisitionFunction(WeightedAcquisitionFunction):
         The constraints to enforce, as parsed from ``Scenario.constraints``.
     constraint_model : AbstractModel
         Surrogate model for the constrained outputs, predicting one column per constraint in the order the
-        constraints are given. It is trained on the raw observed values, because the bounds are stated in raw
-        units, and is therefore kept separate from the objective's own model and encoder.
+        constraints are given. It is fitted on *residuals* rather than the raw observations - see
+        `FeasibilityWeight._training_targets` - and is kept separate from the objective's own model and encoder.
+    transform : bool, defaults to True
+        Compress the constraint residuals with `bilog` before fitting. See `FeasibilityWeight`.
     feasibility_floor : float, defaults to 1e-12
         Lowest possible value of the feasibility weight. Keeps the ranking of configurations intact when every
         probability underflows to zero.
@@ -62,6 +64,7 @@ class ConstrainedAcquisitionFunction(WeightedAcquisitionFunction):
         constraints: list[OutcomeConstraint],
         constraint_model: AbstractModel,
         feasibility_floor: float = 1e-12,
+        transform: bool = True,
     ) -> None:
         if len(constraints) == 0:
             raise ValueError("A constrained acquisition function needs at least one constraint.")
@@ -70,6 +73,7 @@ class ConstrainedAcquisitionFunction(WeightedAcquisitionFunction):
             constraints=constraints,
             constraint_model=constraint_model,
             floor=feasibility_floor,
+            transform=transform,
         )
 
         super().__init__(acquisition_function, [feasibility])

@@ -4,8 +4,9 @@
 - Batch model predictions when selecting the best predicted configuration.
 - Support output constraints: bounds on measured outputs of the target function, declared as
   `Scenario(..., constraints=["latency <= 100"])`. Each constrained output is modelled separately and the
-  acquisition function is weighted by the probability that every bound holds, following Gardner et al. 2014.
-  The reported incumbent is the best feasible configuration. Note that scenarios without an explicit `name`
+  acquisition function is weighted by the probability that every bound holds, following Gelbart et al. 2014
+  and Gardner et al. 2014. The reported incumbent is the best feasible configuration, and while no feasible
+  configuration is known the search maximizes the probability of feasibility alone. Note that scenarios without an explicit `name`
   derive it from a hash over all their fields, so adding constraints support changes that hash and existing
   output directories will not be picked up.
 - Unify the multiplicative weighting of the acquisition function: `WeightedAcquisitionFunction` applies a list of
@@ -21,6 +22,20 @@
 - Acquisition maximizers can draw candidates from several configuration spaces at once.
 - The acquisition function is updated when it is changed from outside, even if no new trial has been reported
   since the last update.
+
+- Add `LogEI`, the logarithm of expected improvement, following Ament et al. 2023. It ranks configurations
+  exactly as `EI` does but keeps discriminating where expected improvement underflows to zero and leaves the
+  acquisition maximizer a flat surface to search. Note this is distinct from `EI(log=True)`, which is ordinary
+  expected improvement for log scaled *target values*.
+- Acquisition functions may now report `log=True` to declare that they return logarithms. Such values are
+  negative; `PriorAcquisitionFunction` and `ConstrainedAcquisitionFunction` add their weights in log space
+  rather than multiplying. Acquisition maximizers only compare values, so ranking is unaffected.
+- Constraint surrogates are now fitted on bilog-compressed residuals (Eriksson and Poloczek 2021) rather than
+  raw observations, concentrating model accuracy near the feasibility boundary.
+- Passing `LogEI` to a constrained run weights it as a sum of log probabilities, which does not underflow as
+  constraints are added. This is opt-in: the default acquisition function is unchanged, because the benefit
+  only appears once the feasibility product actually underflows, which a handful of constraints does not
+  reach.
 
 ## Examples
 - An example on the new multi-objective method

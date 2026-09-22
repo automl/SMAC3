@@ -6,7 +6,10 @@ from scipy.stats import norm
 
 from smac.utils.constraints import (
     OutcomeConstraint,
+    bilog,
+    inverse_bilog,
     is_feasible,
+    log_probability_of_feasibility,
     parse_constraint,
     parse_constraints,
     probability_of_feasibility,
@@ -154,56 +157,89 @@ def test_total_violation_of_a_missing_value_is_infinite():
     assert total_violation(constraints, {"latency": 1e9}) < float("inf")
 
 
-def test_probability_of_feasibility_matches_the_normal_cdf():
-    """The upper-bound probability is the normal CDF of the standardised slack.
+def test_bilog_is_monotone_and_fixes_the_boundary():
+    """The transform preserves ordering and leaves the feasibility boundary where it was.
 
-    Predicts three means around a bound with a known variance and compares against norm.cdf by hand.
+    Transforms residuals spanning three orders of magnitude on both sides of zero and checks the result is
+    strictly increasing and maps 0 to 0, which is what keeps feasibility verdicts unchanged.
     """
-    constraints = parse_constraints(["latency <= 100"])
-    means = np.array([[100.0], [90.0], [120.0]])
+    residuals = np.array([-1000.0, -5.0, -1e-6, 0.0, 1e-6, 5.0, 1000.0])
+
+    transformed = bilog(residuals)
+
+    assert transformed[3] == 0.0
+    assert np.all(np.diff(transformed) > 0)
+    assert np.all(np.sign(transformed) == np.sign(residuals))
+
+
+def test_bilog_compresses_extremes_far_more_than_the_boundary():
+    """Extreme residuals are flattened while near-boundary detail is kept.
+
+    Compares how much the transform shrinks a residual of 1000 against one of 1, which is the property that
+    stops one wild violation from dominating the constraint model.
+    """
+    near, far = bilog(np.array([1.0, 1000.0]))
+
+    assert near == pytest.approx(np.log(2.0))
+    assert far / near < 12.0  # a thousandfold gap in raw units becomes roughly tenfold
+
+
+def test_bilog_round_trips():
+    """The inverse recovers the original residuals.
+
+    Transforms and inverts a spread of residuals and compares against the input.
+    """
+    residuals = np.array([-1000.0, -1.0, 0.0, 1.0, 1000.0])
+
+    assert inverse_bilog(bilog(residuals)) == pytest.approx(residuals)
+
+
+def test_probability_of_feasibility_matches_the_normal_cdf():
+    """The probability is the normal CDF of the standardised residual.
+
+    Predicts three mean residuals around the boundary with a known variance and compares against norm.cdf.
+    """
+    means = np.array([[0.0], [-10.0], [20.0]])
     variances = np.array([[25.0], [25.0], [25.0]])
 
-    probabilities = probability_of_feasibility(constraints, means, variances).ravel()
+    probabilities = probability_of_feasibility(means, variances).ravel()
 
     assert probabilities == pytest.approx([norm.cdf(0.0), norm.cdf(2.0), norm.cdf(-4.0)])
 
 
-def test_probability_of_feasibility_flips_for_a_lower_bound():
-    """A lower bound standardises the slack in the opposite direction.
+def test_probability_of_feasibility_is_direction_agnostic():
+    """Both bound directions reduce to the same residual-space computation.
 
-    Predicts one mean below and one above a lower bound and checks the probabilities are mirrored.
+    Builds the residuals of an upper and a lower bound for values equally far inside their bounds and checks
+    the resulting probabilities match.
     """
-    constraints = parse_constraints(["accuracy >= 0.9"])
-    means = np.array([[0.95], [0.85]])
-    variances = np.array([[0.0025], [0.0025]])
+    upper, lower = parse_constraints(["latency <= 100", "accuracy >= 0.9"])
 
-    probabilities = probability_of_feasibility(constraints, means, variances).ravel()
+    assert upper.residual(95.0) == pytest.approx(-5.0)
+    assert lower.residual(0.95) == pytest.approx(-0.05)
 
-    assert probabilities == pytest.approx([norm.cdf(1.0), norm.cdf(-1.0)])
+    both = np.array([[upper.residual(95.0), lower.residual(0.95) * 100.0]])
+    probabilities = probability_of_feasibility(both, np.ones((1, 2)))
+
+    assert probabilities.ravel() == pytest.approx([norm.cdf(5.0) * norm.cdf(5.0)])
 
 
 def test_probability_of_feasibility_multiplies_across_constraints():
     """Independent constraints combine as a product.
 
-    Predicts both outputs exactly on their bounds, so each probability is 0.5 and the product is 0.25.
+    Predicts both residuals exactly on the boundary, so each probability is 0.5 and the product is 0.25.
     """
-    constraints = parse_constraints(["a <= 10", "b >= 5"])
-    means = np.array([[10.0, 5.0]])
-    variances = np.array([[1.0, 1.0]])
-
-    assert probability_of_feasibility(constraints, means, variances).ravel() == pytest.approx([0.25])
+    assert probability_of_feasibility(np.zeros((1, 2)), np.ones((1, 2))).ravel() == pytest.approx([0.25])
 
 
 def test_probability_of_feasibility_is_a_step_function_without_variance():
     """A certain prediction gives a hard zero or one instead of dividing by zero.
 
-    Predicts a feasible and an infeasible mean with zero variance and checks the degenerate probabilities.
+    Predicts a feasible and an infeasible residual with zero variance and checks the degenerate probabilities.
     """
-    constraints = parse_constraints(["latency <= 100"])
-    means = np.array([[90.0], [110.0]])
-    variances = np.zeros((2, 1))
+    means = np.array([[-10.0], [10.0]])
 
-    assert probability_of_feasibility(constraints, means, variances).ravel() == pytest.approx([1.0, 0.0])
+    assert probability_of_feasibility(means, np.zeros((2, 1))).ravel() == pytest.approx([1.0, 0.0])
 
 
 def test_probability_of_feasibility_returns_a_column():
@@ -211,22 +247,46 @@ def test_probability_of_feasibility_returns_a_column():
 
     Predicts four points against two constraints and checks the output shape is [N, 1].
     """
-    constraints = parse_constraints(["a <= 1", "b <= 1"])
-
-    probabilities = probability_of_feasibility(constraints, np.zeros((4, 2)), np.ones((4, 2)))
-
-    assert probabilities.shape == (4, 1)
+    assert probability_of_feasibility(np.zeros((4, 2)), np.ones((4, 2))).shape == (4, 1)
 
 
 def test_probability_of_feasibility_rejects_mismatched_shapes():
-    """Predicting a different number of outputs than there are constraints is an error.
+    """Means and variances have to describe the same predictions.
 
-    Passes a single predicted column for a two-constraint set and expects a ValueError.
+    Passes differently shaped arrays and expects a ValueError rather than a broadcast.
     """
-    constraints = parse_constraints(["a <= 1", "b <= 1"])
-
-    with pytest.raises(ValueError, match="for 2 constraints"):
-        probability_of_feasibility(constraints, np.zeros((3, 1)), np.ones((3, 1)))
-
     with pytest.raises(ValueError, match="do not match"):
-        probability_of_feasibility(constraints, np.zeros((3, 2)), np.ones((4, 2)))
+        probability_of_feasibility(np.zeros((3, 2)), np.ones((4, 2)))
+
+
+def test_log_probability_of_feasibility_agrees_with_the_product():
+    """In the regime where the product is representable, the log form matches it.
+
+    Compares exp(log probability) against the plain product for moderate residuals.
+    """
+    means = np.array([[0.5, -1.0], [2.0, 0.25]])
+    variances = np.ones((2, 2))
+
+    log_probabilities = log_probability_of_feasibility(means, variances)
+
+    assert np.exp(log_probabilities) == pytest.approx(probability_of_feasibility(means, variances))
+
+
+def test_log_probability_survives_an_underflowing_product():
+    """Many unlikely constraints destroy the product but not the log sum.
+
+    Predicts sixty residuals at six sigma outside the bound, where the product underflows to exactly zero and
+    every candidate would rank equally, and checks the log form stays finite and still discriminates.
+    """
+    worse = np.full((1, 60), 6.0)
+    better = np.full((1, 60), 5.0)
+    variances = np.ones((1, 60))
+
+    assert probability_of_feasibility(worse, variances).ravel()[0] == 0.0
+    assert probability_of_feasibility(better, variances).ravel()[0] == 0.0
+
+    log_worse = log_probability_of_feasibility(worse, variances).ravel()[0]
+    log_better = log_probability_of_feasibility(better, variances).ravel()[0]
+
+    assert np.isfinite(log_worse) and np.isfinite(log_better)
+    assert log_better > log_worse
