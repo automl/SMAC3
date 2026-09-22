@@ -1,9 +1,14 @@
 # 2.4.1
 ## Improvements
 - Include a new multi-objective method based on hypervolume
+- Added cost-aware Bayesian optimization via `CostAwareFacade`, `CostAwareInitialDesign`,
+  and `CostAwareAcquisitionFunction` (EI-Cool). Evaluations are weighted by a user-supplied cost
+  formula, and the resource budget is tracked cumulatively rather than by trial count. See
+  `examples/4_advanced_optimizer/6_cost_aware_facade.py`.
 
 ## Examples
 - An example on the new multi-objective method
+- An example on for the cost-aware Bayesian optimization feature
 
 ## Bugfixes
 - Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)
