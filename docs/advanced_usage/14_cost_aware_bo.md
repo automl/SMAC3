@@ -1,6 +1,5 @@
 # Cost-Aware Bayesian Optimization
 
-
 Cost-aware BO extends standard SMAC by accounting for the **resource cost**
 of each configuration evaluation (e.g. wall-clock time, API credits, energy).
 Instead of treating all evaluations as equally expensive, the optimizer
@@ -49,5 +48,4 @@ smac = CostAwareFacade(
 smac.optimize()
 ```
 
-See the full example at
-[`examples/4_advanced_optimizer/6_cost_aware_facade.py`](../../examples/4_advanced_optimizer/6_cost_aware_facade.py).
+See the full example [`examples/4_advanced_optimizer/6_cost_aware_facade.py`](../examples/4%20Advanced%20Topics/6_cost_aware_facade.md).

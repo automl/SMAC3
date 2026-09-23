@@ -1,6 +1,5 @@
-"""
-Cost-Aware Bayesian Optimization
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""Cost-Aware Bayesian Optimization
+# Flags: doc-Runnable
 
 Example of optimizing a synthetic 2D function using :class:`~smac.facade.cost_aware_facade.CostAwareFacade`,
 which accounts for the evaluation cost of each configuration during the optimization process.
