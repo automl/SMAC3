@@ -25,6 +25,6 @@
  https://ojs.aaai.org/index.php/AAAI/article/view/39898
 
 
-* [](){#TSL26}[TWL26] D. Theodorakopoulos, M. Wever, M. Lindauer; 
+* [](){#TWL26}[TWL26] D. Theodorakopoulos, M. Wever, M. Lindauer;
     Dynamic Hyperparameter Importance for Efficient Multi-Objective Optimization; 
     https://arxiv.org/pdf/2601.03166
