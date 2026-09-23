@@ -156,7 +156,7 @@ class HPIRandomSearch(RandomSearch):
         list[tuple[float, Configuration]]
             Candidates with their acquisition function value. (acq value, candidate)
         """
-        if random.random() < self._random_prob:
+        if self._rng.rand() < self._random_prob:
             logger.debug("Sampling configurations from the original configuration space at random.")
             random_configs = self._original_cs.sample_configuration(n_points)
             for config in random_configs:
