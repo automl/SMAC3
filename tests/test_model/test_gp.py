@@ -384,6 +384,7 @@ def test_sampling_shape():
             get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=False),
             get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=True),
         ):
+            X, y = gp.transformer.fit_transform(X, y)
             gp._train(X, y)
             func = gp.sample_functions(X_test=X_test, n_funcs=1)
             assert func.shape == (101, 1)
@@ -398,10 +399,12 @@ def test_normalization():
     seed = 1
 
     gp = get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=False)
+    X, y = gp.transformer.fit_transform(X, y)
     gp._train(X, y, optimize_hyperparameters=False)
     mu_hat, var_hat = gp.predict(X_test)
 
     gp_norm = get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=True)
+    X, y = gp_norm.transformer.fit_transform(X, y)
     gp_norm._train(X, y, optimize_hyperparameters=False)
     mu_hat_prime, var_hat_prime = gp_norm.predict(X_test)
 

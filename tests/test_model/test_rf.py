@@ -74,8 +74,8 @@ def test_train_with_pca():
 
     assert model._n_features == 10
     assert model._n_hps == 10
-    assert model._pca is not None
-    assert model._scaler is not None
+    assert model.transformer.pca_ is not None
+    assert model.transformer.scaler_ is not None
 
 
 def test_predict_marginalized_over_instances_wrong_X_dimensions():

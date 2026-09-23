@@ -1,18 +1,16 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, TypeVar
+from typing import Any, Callable, TypeVar
 
 import copy
 import warnings
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace
-from sklearn.decomposition import PCA
-from sklearn.exceptions import NotFittedError
-from sklearn.preprocessing import MinMaxScaler
 
 from smac.constants import VERY_SMALL_NUMBER
+from smac.model.surrogate_transformer import SurrogateTransformer
 from smac.utils.configspace import get_types
 from smac.utils.logging import get_logger
 
@@ -57,6 +55,7 @@ class AbstractModel:
         self._rng = np.random.RandomState(self._seed)
         self._instance_features = instance_features
         self._pca_components = pca_components
+        self.transformer: SurrogateTransformer
 
         n_features = 0
         if self._instance_features is not None:
@@ -70,10 +69,6 @@ class AbstractModel:
         self._n_features = n_features
         self._n_hps = len(list(self._configspace.values()))
 
-        self._pca = PCA(n_components=self._pca_components)
-        self._scaler = MinMaxScaler()
-        self._apply_pca = False
-
         # Never use a lower variance than this.
         # If estimated variance < var_threshold, set to var_threshold
         self._var_threshold = VERY_SMALL_NUMBER
@@ -81,6 +76,32 @@ class AbstractModel:
 
         # Initial types array which is used to reset the type array at every call to `self.train()`
         self._initial_types = copy.deepcopy(self._types)
+
+    @abstractmethod
+    def build_transformer(self, normalize_y: bool = False) -> SurrogateTransformer:
+        """Creates and returns the preprocessing transformer for this model.
+
+        Parameters
+        ----------
+        normalize_y : bool
+            Whether the transformer should normalize target values (y).
+
+        Returns
+        -------
+        SurrogateTransformer
+            Configured transformer for preprocessing inputs/outputs.
+        """
+        raise NotImplementedError
+
+    def set_y_transform(self, func: Callable[[np.ndarray], np.ndarray] | None) -> None:
+        """Sets the target transformation function used by the transformer.
+
+        Parameters
+        ----------
+        func : Callable | None
+            Function applied to target values before training.
+        """
+        self.transformer.y_transform = func
 
     @property
     def meta(self) -> dict[str, Any]:
@@ -106,48 +127,19 @@ class AbstractModel:
         -------
         self : AbstractModel
         """
-        if len(X.shape) != 2:
-            raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
-
-        if X.shape[1] != self._n_hps + self._n_features:
-            raise ValueError(
-                f"Feature mismatch: X should have {self._n_hps} hyperparameters + {self._n_features} features, "
-                f"but has {X.shape[1]} in total."
-            )
-
         if X.shape[0] != Y.shape[0]:
             raise ValueError("X.shape[0] ({}) != y.shape[0] ({})".format(X.shape[0], Y.shape[0]))
 
-        # Reduce dimensionality of features if larger than PCA_DIM
-        if (
-            self._pca_components is not None
-            and X.shape[0] > self._pca.n_components
-            and self._n_features >= self._pca_components
-        ):
-            X_feats = X[:, -self._n_features :]
+        X, Y = self.transformer.fit_transform(X, Y)
 
-            # Scale features
-            X_feats = self._scaler.fit_transform(X_feats)
-            X_feats = np.nan_to_num(X_feats)  # if features with max == min
-
-            # PCA
-            X_feats = self._pca.fit_transform(X_feats)
-            X = np.hstack((X[:, : self._n_hps], X_feats))
-
-            if hasattr(self, "_types"):
-                # For RF, adapt types list
-                # if X_feats.shape[0] < self._pca, X_feats.shape[1] == X_feats.shape[0]
-                self._types = np.array(
-                    np.hstack((self._types[: self._n_hps], np.zeros(X_feats.shape[1]))),
-                    dtype=np.uint,
-                )  # type: ignore
-
-            self._apply_pca = True
-        else:
-            self._apply_pca = False
-
-            if hasattr(self, "_types"):
-                self._types = copy.deepcopy(self._initial_types)
+        if hasattr(self, "_types"):
+            n_transformed_features = X.shape[1] - self._n_hps
+            # For RF, adapt types list
+            # if X_feats.shape[0] < self._pca, X_feats.shape[1] == X_feats.shape[0]
+            self._types = np.array(
+                np.hstack((self._types[: self._n_hps], np.zeros(n_transformed_features))),
+                dtype=np.uint,
+            )  # type: ignore
 
         return self._train(X, Y)
 
@@ -194,25 +186,7 @@ class AbstractModel:
         vars : np.ndarray [#samples, #objectives] or [#samples, #samples] | None
             Predictive variance or standard deviation.
         """
-        if len(X.shape) != 2:
-            raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
-
-        if X.shape[1] != self._n_hps + self._n_features:
-            raise ValueError(
-                f"Feature mismatch: X should have {self._n_hps} hyperparameters + {self._n_features} features, "
-                f"but has {X.shape[1]} in total."
-            )
-
-        if self._apply_pca:
-            try:
-                X_feats = X[:, -self._n_features :]
-                X_feats = self._scaler.transform(X_feats)
-                X_feats = self._pca.transform(X_feats)
-                X = np.hstack((X[:, : self._n_hps], X_feats))
-            except NotFittedError:
-                # PCA not fitted if only one training sample
-                pass
-
+        X = self.transformer.transform_X(X)
         if X.shape[1] != len(self._types):
             raise ValueError("Rows in X should have %d entries but have %d!" % (len(self._types), X.shape[1]))
 
@@ -294,26 +268,17 @@ class AbstractModel:
             return mean, var
         else:
             n_instances = len(self._instance_features)
+            X_marg = self.transformer.build_marginalized_X(X)
 
-            mean = np.zeros(X.shape[0])
-            var = np.zeros(X.shape[0])
-            for i, x in enumerate(X):
-                features = np.array(list(self._instance_features.values()))
-                x_tiled = np.tile(x, (n_instances, 1))
-                X_ = np.hstack((x_tiled, features))
+            means, vars = self.predict(X_marg)
+            assert vars is not None
 
-                means, vars = self.predict(X_)
-                assert vars is not None
+            means = means.reshape(len(X), n_instances)
+            vars = vars.reshape(len(X), n_instances)
 
-                # VAR[1/n (X_1 + ... + X_n)] =
-                # 1/n^2 * ( VAR(X_1) + ... + VAR(X_n))
-                # for independent X_1 ... X_n
-                var_x = np.sum(vars) / (len(vars) ** 2)
-                if var_x < self._var_threshold:
-                    var_x = self._var_threshold
-
-                var[i] = var_x
-                mean[i] = np.mean(means)
+            mean = np.mean(means, axis=1)
+            var = np.sum(vars, axis=1) / (n_instances**2)
+            var[var < self._var_threshold] = self._var_threshold
 
             if len(mean.shape) == 1:
                 mean = mean.reshape((-1, 1))

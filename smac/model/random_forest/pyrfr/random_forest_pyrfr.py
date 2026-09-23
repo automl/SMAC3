@@ -150,7 +150,6 @@ class PyrfrRandomForest(AbstractRandomForest):
         return meta
 
     def _train(self, X: np.ndarray, y: np.ndarray) -> PyrfrRandomForest:
-        X = self._impute_inactive(X)
         y = y.flatten()
 
         # self.X = X
@@ -213,7 +212,6 @@ class PyrfrRandomForest(AbstractRandomForest):
             raise ValueError("`covariance_type` can only take `diagonal` for this model.")
 
         assert self._rf is not None
-        X = self._impute_inactive(X)
 
         if self._log_y:
             all_preds = []
@@ -288,9 +286,13 @@ class PyrfrRandomForest(AbstractRandomForest):
             raise ValueError("Rows in X should have %d entries but have %d!" % (len(self._bounds), X.shape[1]))
 
         assert self._rf is not None
-        X = self._impute_inactive(X)
+        X_feat = np.ndarray(list(self._instance_features.values()))
 
-        X_feat = list(self._instance_features.values())
+        # applies PCA to X (if enabled)
+        X_feat = self.transformer.transform_instance_features(X_feat)
+        # applies inactive imputation to X
+        X = self.transformer.transform_configs(X)
+
         dat_ = self._rf.predict_marginalized_over_instances_batch(X, X_feat, self._log_y)
         dat_ = np.array(dat_)
 

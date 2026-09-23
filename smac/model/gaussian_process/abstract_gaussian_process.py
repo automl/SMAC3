@@ -12,6 +12,7 @@ from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 from smac.model.abstract_model import AbstractModel
 from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 from smac.model.gaussian_process.priors.tophat_prior import SoftTopHatPrior, TophatPrior
+from smac.model.surrogate_transformer import SurrogateTransformer
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -31,6 +32,8 @@ class AbstractGaussianProcess(AbstractModel):
     pca_components : float, defaults to 7
         Number of components to keep when using PCA to reduce dimensionality of instance features.
     seed : int
+    normalize_y : bool, defaults to True
+        Zero mean unit variance normalization of the output values.
     """
 
     def __init__(
@@ -40,6 +43,7 @@ class AbstractGaussianProcess(AbstractModel):
         instance_features: dict[str, list[int | float]] | None = None,
         pca_components: int | None = 7,
         seed: int = 0,
+        normalize_y: bool = True,
     ):
         super().__init__(
             configspace=configspace,
@@ -50,6 +54,7 @@ class AbstractGaussianProcess(AbstractModel):
 
         self._kernel = kernel
         self._gp = self._get_gaussian_process()
+        self.transformer = self.build_transformer(normalize_y)
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -58,61 +63,20 @@ class AbstractGaussianProcess(AbstractModel):
 
         return meta
 
+    def build_transformer(self, normalize_y: bool = False) -> SurrogateTransformer:  # noqa: D102
+        return SurrogateTransformer(
+            n_hps=self._n_hps,
+            n_features=self._n_features,
+            instance_features=self._instance_features,
+            impute_inactive=self._impute_inactive,
+            normalize_y=normalize_y,
+            pca_components=self._pca_components,
+        )
+
     @abstractmethod
     def _get_gaussian_process(self) -> GaussianProcessRegressor:
         """Generates a Gaussian process."""
         raise NotImplementedError()
-
-    def _normalize(self, y: np.ndarray) -> np.ndarray:
-        """Normalize data to zero mean unit standard deviation.
-
-        Parameters
-        ----------
-        y : np.ndarray
-            Target values for the Gaussian process.
-
-        Returns
-        -------
-        normalized_y : np.ndarray
-            Normalized y values.
-        """
-        self.mean_y_ = np.mean(y)
-        self.std_y_ = np.std(y)
-
-        if self.std_y_ == 0:
-            self.std_y_ = 1
-
-        return (y - self.mean_y_) / self.std_y_
-
-    def _untransform_y(
-        self,
-        y: np.ndarray,
-        var: np.ndarray | None = None,
-    ) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
-        """Transform zero mean unit standard deviation data into the regular space.
-
-        Warning
-        -------
-        This function should be used after a prediction with the Gaussian process which was
-        trained on normalized data.
-
-        Parameters
-        ----------
-        y : np.ndarray
-            Normalized data.
-        var : np.ndarray | None, defaults to None
-            Normalized variance.
-
-        Returns
-        -------
-        untransformed_y : np.ndarray | tuple[np.ndarray, np.ndarray]
-        """
-        y = y * self.std_y_ + self.mean_y_
-        if var is not None:
-            var = var * self.std_y_**2
-            return y, var  # type: ignore
-
-        return y
 
     def _get_all_priors(
         self,

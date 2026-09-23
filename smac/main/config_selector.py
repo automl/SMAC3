@@ -429,18 +429,13 @@ class ConfigSelector:
         """
         if self._predict_x_best:
             model = self._model
-            costs = list(
-                map(
-                    lambda x: (
-                        model.predict_marginalized(x.reshape((1, -1)))[0][0][0],  # type: ignore
-                        x,
-                    ),
-                    X,
-                )
-            )
-            costs = sorted(costs, key=lambda t: t[0])
-            x_best_array = costs[0][1]
-            best_observation = costs[0][0]
+            assert model is not None
+
+            means, _ = model.predict_marginalized(X)
+            costs = means[:, 0]
+            best_index = int(np.argmin(costs))
+            x_best_array = X[best_index]
+            best_observation = float(costs[best_index])
 
         # else:
         #    all_configs = self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)

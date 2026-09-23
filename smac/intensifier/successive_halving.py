@@ -10,6 +10,7 @@ from ConfigSpace import Configuration
 
 from smac.constants import MAXINT
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.main.exceptions import ConfigurationSpaceExhaustedException
 from smac.runhistory import RunHistory, TrialInfo
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey
 from smac.runhistory.errors import NotEvaluatedError
@@ -369,6 +370,10 @@ class SuccessiveHalving(AbstractIntensifier):
                     except StopIteration:
                         # We stop if we don't find any configuration anymore
                         return
+                    except ConfigurationSpaceExhaustedException as e:
+                        raise RuntimeError(
+                            "Configuration space exhausted while creating the initial " "Successive Halving population."
+                        ) from e
 
                 seed = self._get_next_order_seed()
                 self._tracker[(bracket, stage)].append((seed, configs))
@@ -456,6 +461,12 @@ class SuccessiveHalving(AbstractIntensifier):
                     logger.warning(
                         "If you assume your configspace was not yet exhausted, try to "
                         "increase the number of max_new_config_tries in the config selector."
+                    )
+                    return
+                except ConfigurationSpaceExhaustedException:
+                    logger.info(
+                        "Configuration space exhausted. No further challenger configurations "
+                        "can be generated. Finishing optimization"
                     )
                     return
 

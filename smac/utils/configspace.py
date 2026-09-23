@@ -250,6 +250,10 @@ def create_uniform_configspace_copy(
 ) -> ConfigurationSpace:
     """Creates a copy of the given configuration space with uniform transformed hyperparameters.
 
+    Conditions and forbidden clauses are carried over as well. Forbidden clauses hold references
+    to the original hyperparameter objects, so they are rebuilt to point at the corresponding
+    hyperparameters in the new configuration space instead.
+
     Parameters
     ----------
     configspace : ConfigurationSpace

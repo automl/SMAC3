@@ -227,15 +227,17 @@ def test_normalization():
     y = np.sin(X)
     seed = 1
     gp = get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=False)
+    X, y = gp.transformer.fit_transform(X, y)
     gp._train(X, y, optimize_hyperparameters=False)
-    assert not gp.models[0]._normalize_y
-    assert not hasattr(gp.models[0], "mean_y_")
+    assert not gp.models[0].transformer.normalize_y
+    assert gp.models[0].transformer.mean_y_ is None
 
     mu_hat, var_hat = gp.predict(X_test)
     gp_norm = get_gp(n_dimensions=1, seed=seed, noise=1e-10, normalize_y=True)
+    X, y = gp_norm.transformer.fit_transform(X, y)
     gp_norm._train(X, y, optimize_hyperparameters=False)
-    assert gp_norm.models[0]._normalize_y
-    assert hasattr(gp_norm.models[0], "mean_y_")
+    assert gp_norm.models[0].transformer.normalize_y
+    assert gp_norm.models[0].transformer.mean_y_ is not None
 
     mu_hat_prime, var_hat_prime = gp_norm.predict(X_test)
     np.testing.assert_array_almost_equal(mu_hat, mu_hat_prime, decimal=4)

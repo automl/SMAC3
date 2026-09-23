@@ -12,6 +12,7 @@ from ConfigSpace import (
 )
 
 from smac.model.abstract_model import AbstractModel
+from smac.model.surrogate_transformer import SurrogateTransformer
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -25,6 +26,18 @@ class AbstractRandomForest(AbstractModel):
 
         self._conditional: dict[int, bool] = dict()
         self._impute_values: dict[int, float] = dict()
+
+        self.transformer = self.build_transformer()
+
+    def build_transformer(self, normalize_y: bool = False) -> SurrogateTransformer:  # noqa: D102
+        return SurrogateTransformer(
+            n_hps=self._n_hps,
+            n_features=self._n_features,
+            instance_features=self._instance_features,
+            impute_inactive=self._impute_inactive,
+            pca_components=self._pca_components,
+            normalize_y=normalize_y,
+        )
 
     def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
         X = X.copy()
