@@ -1,3 +1,29 @@
+"""
+Cost-Aware Bayesian Optimization
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Example of optimizing a synthetic 2D function using :class:`~smac.facade.cost_aware_facade.CostAwareFacade`,
+which accounts for the evaluation cost of each configuration during the optimization process.
+
+In standard Bayesian Optimization, all configurations are treated as equally expensive to evaluate.
+Cost-aware BO relaxes this assumption: a ``cost_formula`` maps each configuration to a scalar cost
+(e.g. wall-clock time, financial cost, or computational resources), and both the initial design and
+the acquisition function (EI-Cool) are adapted to prefer low-cost evaluations early in the search.
+
+The target function used here is a 2D synthetic problem where:
+
+- **Performance** is a simple bowl (quadratic), minimized at ``(-2, -1)``.
+- **Cost** is a four-peak landscape — cheap in some regions, expensive in others — creating a
+  deliberate mismatch between cost-optimal and performance-optimal regions.
+
+Running this example produces a side-by-side plot of the performance landscape and the cost landscape,
+with the initial design points and BO evaluations overlaid, saved to ``ei_cool_landscapes.svg``.
+
+.. note::
+    The ``CostAwareFacade`` uses ``n_trials=np.inf`` in the scenario; termination is controlled
+    by the ``total_resource_budget`` argument instead, which caps the cumulative cost spent.
+"""
+
 from __future__ import annotations
 
 import logging
@@ -6,20 +32,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from ConfigSpace import Configuration, ConfigurationSpace, UniformFloatHyperparameter
 
-from smac import BlackBoxFacade
-from smac.acquisition.function.cost_aware_acquisition_function import CostAwareAcquisitionFunction
-from smac.acquisition.function.expected_improvement import EI
-from smac.callback.cost_surrogate_callback import CostSurrogateCallback
-from smac.initial_design.cost_aware_initial_design import CostAwareInitialDesign
-from smac.model.hand_crafted_cost_model import HandCraftedCostModel
-from smac.runhistory.dataclasses import TrialValue
+from smac.facade.cost_aware_facade import CostAwareFacade
 from smac.scenario import Scenario
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
 
-def evaluate_config(config: Configuration) -> dict[str, float]:
+def evaluate_config(config: Configuration, seed: int = 0) -> dict[str, float]:
     """
     A 2D target function where cost and performance are non-trivial.
     - Performance is a simple quadratic function.
@@ -28,7 +48,7 @@ def evaluate_config(config: Configuration) -> dict[str, float]:
     x, y = config["x"], config["y"]
 
     # Performance is a simple bowl shape, minimum at (-2,-1)
-    performance_loss = (x+2)**2 + (y+1)**2
+    performance = (x+2)**2 + (y+1)**2
 
     # Cost is a function with four peaks/valleys
     cost_unnormalized = (
@@ -40,7 +60,7 @@ def evaluate_config(config: Configuration) -> dict[str, float]:
     # Normalize cost to be in a reasonable range (e.g., [0.1, 1.1])
     cost = (cost_unnormalized + 1) / 2 + 0.1
 
-    return {"performance": performance_loss, "cost": cost}
+    return {"performance": performance, "cost": cost}
 
 
 if __name__ == "__main__":
@@ -49,11 +69,7 @@ if __name__ == "__main__":
     configspace.add(UniformFloatHyperparameter("x", -3.5, 3.5, default_value=0))
     configspace.add(UniformFloatHyperparameter("y", -3.5, 3.5, default_value=0))
 
-    # 2. --- Budget Definition ---
-    total_resource_budget = 50.0
-    initial_design_budget = 0
-
-    # 3. Define the Scenario
+    # 2. Define the Scenario
     scenario = Scenario(
         configspace=configspace,
         name="EICoolTestWithHandCraftedCost",
@@ -63,70 +79,23 @@ if __name__ == "__main__":
         deterministic=True,
     )
 
-    # 4. Define the Cost Model and its callback
+    # 3. Define the cost formula
     cost_formula = lambda config: evaluate_config(config)["cost"]
-    cost_model = HandCraftedCostModel(scenario=scenario, cost_formula=cost_formula)
-    cost_surrogate_callback = CostSurrogateCallback(cost_model=cost_model, scenario=scenario)
 
-    # 5. Create the Cost-Aware Initial Design
-    initial_design = CostAwareInitialDesign(
+    # 4. Initialize SMAC facade
+    # The facade will automatically handle the initial design and acquisition function.
+    smac = CostAwareFacade(
         scenario=scenario,
-        cost_model=cost_model,
-        initial_budget=initial_design_budget,
-        candidate_pool_size=1000,
-    )
-
-    # 6. Define the EI-Cool acquisition function
-    base_acquisition_function = EI()
-    acquisition_function = CostAwareAcquisitionFunction(
-        acquisition_function=base_acquisition_function,
-        cost_surrogate_callback=cost_surrogate_callback
-    )
-
-    # 7. Initialize SMAC facade, passing our custom components
-    smac = BlackBoxFacade(
-        scenario=scenario,
-        initial_design=initial_design,
-        acquisition_function=acquisition_function,
-        callbacks=[cost_surrogate_callback],
+        target_function=evaluate_config,
+        total_resource_budget=50.0,
+        cost_formula=cost_formula,
         overwrite=True,
     )
 
-    # 8. --- Budget-Based Optimization Loop ---
-    cumulative_cost = initial_design_budget
-    print("\n--- Starting Budget-Based Optimization Loop with EI-Cool ---")
+    # 5. --- Optimize ---
+    smac.optimize()
 
-    # Main optimization loop
-    while cumulative_cost < total_resource_budget:
-        # Set the budget info on our acquisition function directly
-        acquisition_function.set_budget_info(
-            total_budget=total_resource_budget,
-            cumulative_cost=cumulative_cost,
-            initial_design_budget=initial_design_budget,
-        )
-
-        trial_info = smac.ask()
-
-        if trial_info is None:
-            print("SMAC has no more configurations to suggest. Stopping.")
-            break
-
-        result = evaluate_config(trial_info.config)
-        performance, cost = result["performance"], result["cost"]
-
-        if cumulative_cost + cost > total_resource_budget:
-            print(f"Evaluation cost ({cost:.2f}) would exceed total budget. Stopping.")
-            break
-
-        cumulative_cost += cost
-        print(f"Origin: {trial_info.config.origin}, Cost: {cost:.2f}, "
-              f"Cumulative Cost: {cumulative_cost:.2f}/{total_resource_budget:.2f}")
-
-        smac.tell(trial_info, TrialValue(cost=performance, time=cost))
-
-    print("\n--- Total resource budget exhausted. ---")
-
-    # 9. --- Plot the results ---
+    # 6. --- Plot the results ---
     grid_res = 100
     x_grid = np.linspace(-3.5, 3.5, grid_res)
     y_grid = np.linspace(-3.5, 3.5, grid_res)
@@ -142,7 +111,7 @@ if __name__ == "__main__":
     initial_x, initial_y, bo_x, bo_y = [], [], [], []
     for k, v in smac.runhistory.items():
         config = smac.runhistory.get_config(k.config_id)
-        if config.origin == "Cost Aware Initial Design":
+        if "Initial Design" in config.origin:
             initial_x.append(config["x"])
             initial_y.append(config["y"])
         else:
@@ -175,5 +144,5 @@ if __name__ == "__main__":
     ax2.grid(True)
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.savefig("ei_cool_landscapes.png")
+    plt.savefig("ei_cool_landscapes.svg")
     plt.show()
