@@ -326,6 +326,7 @@ class CostAwareFacade(BlackBoxFacade):
             initial_budget=initial_budget,
             candidate_pool_size=candidate_pool_size,
             n_bootstrap_points=n_bootstrap_points,
+            additional_configs=additional_configs,
         )
 
     @staticmethod

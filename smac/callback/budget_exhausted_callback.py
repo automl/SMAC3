@@ -24,8 +24,8 @@ class BudgetExhaustedCallback(Callback):
         Called after the stats are updated and the trial is added to the runhistory.
         Optionally, returns false to gracefully stop the optimization.
         """
-        # The resource cost is passed in additional_info
-        resource_cost = value.additional_info.get("resource_cost", 0.0)
+        # The resource cost is passed in additional_info, falling back to trial execution time
+        resource_cost = value.additional_info.get("resource_cost", value.time)
         self._cumulative_cost_tracker[0] += resource_cost
 
         logger.info(

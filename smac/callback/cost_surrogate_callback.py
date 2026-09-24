@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from smac.callback import Callback
+from smac.callback.callback import Callback
 from smac.main.smbo import SMBO
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory.dataclasses import TrialInfo, TrialValue

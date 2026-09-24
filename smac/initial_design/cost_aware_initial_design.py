@@ -77,13 +77,22 @@ class CostAwareInitialDesign(AbstractInitialDesign):
             if self._runhistory is None:
                 return 0.0
 
-            initial_design_origins = {"Sampling", "Initial design", "Cost Aware Initial Design"}
+            initial_design_origins = {
+                "Sampling",
+                "Initial design",
+                "Initial Design",
+                "Cost Aware Initial Design",
+                "Additional",
+            }
             cost = 0.0
             processed_configs = set()
 
             for config in self._runhistory.get_configs():
                 config_id = self._runhistory.get_config_id(config)
-                if config.origin in initial_design_origins:
+                origin = config.origin or ""
+                if config.origin in initial_design_origins or any(
+                    k in origin.lower() for k in ("sampling", "initial", "cost aware", "additional")
+                ):
                     if config_id in processed_configs:
                         continue
 
@@ -103,6 +112,13 @@ class CostAwareInitialDesign(AbstractInitialDesign):
             return cost
 
         selected_arrays: list[np.ndarray] = []
+
+        # Yield any user-provided additional configurations first
+        for config in self._additional_configs:
+            if config.origin is None:
+                config.origin = "Additional"
+            selected_arrays.append(config.get_array())
+            yield config
 
         # Step 3: Discretize Ω into ˜Ω using the specified candidate generator.
         generator = self._candidate_generator(

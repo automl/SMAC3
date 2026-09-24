@@ -58,6 +58,6 @@ class HandCraftedCostModel(AbstractModel):
 
         Variance is always zero as the model is deterministic.
         """
-        costs = np.array([self._cost_formula(Configuration(self._configspace, vector=x)) for x in X])
+        costs = np.array([self._cost_formula(Configuration(self._configspace, vector=x[: self._n_hps])) for x in X])
         variances = np.zeros_like(costs)
         return costs, variances

@@ -93,7 +93,7 @@ class CostAwareAcquisitionFunction(AbstractAcquisitionFunction):
             # Avoid division by zero or negative alpha
             self._alpha = 0.0
         else:
-            self._alpha = max(0.0, (self._total_budget - self._cumulative_cost) / denominator)
+            self._alpha = min(1.0, max(0.0, (self._total_budget - self._cumulative_cost) / denominator))
 
         # Update the wrapped acquisition function
         self._acquisition_function.update(model, **kwargs)
