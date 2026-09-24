@@ -47,7 +47,7 @@ def evaluate_config(config: Configuration, seed: int = 0) -> dict[str, float]:
     x, y = config["x"], config["y"]
 
     # Performance is a simple bowl shape, minimum at (-2,-1)
-    performance = (x+2)**2 + (y+1)**2
+    performance = (x + 2) ** 2 + (y + 1) ** 2
 
     # Cost is a function with four peaks/valleys
     cost_unnormalized = (
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     initial_x, initial_y, bo_x, bo_y = [], [], [], []
     for k, v in smac.runhistory.items():
         config = smac.runhistory.get_config(k.config_id)
-        if "Initial Design" in config.origin:
+        if "Initial Design" in config.origin or config.origin == "Sampling":
             initial_x.append(config["x"])
             initial_y.append(config["y"])
         else:
@@ -118,12 +118,14 @@ if __name__ == "__main__":
             bo_y.append(config["y"])
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 8))
-    fig.suptitle("EI-Cool with Cost-Aware Initial Design (Imperfect Cost Model)", fontsize=16)
+    fig.suptitle("EI-Cool with Cost-Aware Initial Design", fontsize=16)
 
     # Plot Performance Landscape
     contour1 = ax1.contourf(xx, yy, perf_grid, levels=20, cmap="magma")
     fig.colorbar(contour1, ax=ax1, label="Performance Loss")
-    ax1.scatter(initial_x, initial_y, c="blue", edgecolor="white", s=80, label="Cost Aware Initial Design Points", zorder=2)
+    ax1.scatter(
+        initial_x, initial_y, c="blue", edgecolor="white", s=80, label="Cost Aware Initial Design Points", zorder=2
+    )
     ax1.scatter(bo_x, bo_y, c="red", marker="X", edgecolor="white", s=100, label="BO Points (EI-Cool)", zorder=2)
     ax1.set_title("Performance Landscape with Evaluated Points")
     ax1.set_xlabel("x")

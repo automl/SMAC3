@@ -14,7 +14,7 @@
 
 ## Examples
 - An example on the new multi-objective method
-- An example on for the cost-aware Bayesian optimization feature
+- An example for the cost-aware Bayesian optimization feature
 
 ## Bugfixes
 - Remove the dead `FirstRunCrashedException` safeguard in `SMBO._add_results`: its condition
