@@ -12,6 +12,10 @@
 - An example on the new multi-objective method
 
 ## Bugfixes
+- Fix configurations being counted twice when their values carry numpy scalars: `Configuration`
+  hashes its `repr` but compares by value, so an equal configuration produced by
+  `sample_configuration` hashed differently from one built with built-in types. The runhistory
+  now normalises configuration values before every lookup (#1241)
 - Remove the dead `FirstRunCrashedException` safeguard in `SMBO._add_results`: its condition
   (`runhistory.finished == 0`) was checked *after* `tell()` had already incremented that counter and
   could therefore never hold. The unused `FirstRunCrashedException` and

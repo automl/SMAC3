@@ -170,6 +170,29 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         """
         return len(self._data) == 0
 
+    @staticmethod
+    def _normalized(config: Configuration) -> Configuration:
+        """Return an equal configuration whose values are built-in python types.
+
+        ``Configuration.__hash__`` hashes ``repr(config)`` while ``__eq__`` compares values, so two
+        equal configurations hash differently as soon as one of them carries numpy scalars (which
+        ``ConfigurationSpace.sample_configuration`` produces).
+        """
+        values = json.loads(json.dumps(dict(config), cls=NumpyEncoder))
+        normalized = Configuration(configuration_space=config.config_space, values=values)
+        normalized.origin = config.origin
+        return normalized
+
+    def _lookup_config_id(self, config: Configuration | None) -> int | None:
+        """Single entry point for configuration -> id lookups.
+
+        Returns ``None`` if the configuration is unknown to this runhistory.
+        """
+        if config is None:
+            return None
+
+        return self._config_ids.get(self._normalized(config))
+
     def add(
         self,
         config: Configuration,
@@ -220,16 +243,19 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         n_objectives = np.size(cost_array)
 
         # Get the config id
-        config_id = self._config_ids.get(config)
+        normalized = self._normalized(config)
+        config_id = self._config_ids.get(normalized)
 
         if config_id is None:
             self._n_id += 1
-            self._config_ids[config] = self._n_id
-            self._ids_config[self._n_id] = config
+            self._config_ids[normalized] = self._n_id
+            self._ids_config[self._n_id] = normalized
 
             config_id = self._n_id
 
-        # Set the id attribute of the config object, so that users can access it
+        # Set the id attribute of the config object, so that users can access it. The caller holds
+        # the original object, so the id has to be set on that one as well.
+        normalized.config_id = config_id
         config.config_id = config_id
 
         if status != StatusType.RUNNING:
@@ -354,14 +380,15 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
 
     def get_config_id(self, config: Configuration) -> int:
         """Returns the configuration id from a configuration."""
-        if config not in self._config_ids:
+        config_id = self._lookup_config_id(config)
+        if config_id is None:
             logger.warning("Requested id of unknown configuration!")
             return -1
-        return self._config_ids[config]
+        return config_id
 
     def has_config(self, config: Configuration) -> bool:
         """Check if the config is stored in the runhistory"""
-        return config in self._config_ids
+        return self._lookup_config_id(config) is not None
 
     def get_configs(self, sort_by: str | None = None) -> list[Configuration]:
         """Return all configurations in this RunHistory object.
@@ -467,7 +494,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         trials : list[InstanceSeedBudgetKey]
             List of trials for the passed configuration.
         """
-        config_id = self._config_ids.get(config)
+        config_id = self._lookup_config_id(config)
         trials = {}
         if config_id in self._config_id_to_isk_to_budget:
             trials = self._config_id_to_isk_to_budget[config_id].copy()
@@ -818,9 +845,8 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
         costs: list[float] | list[list[float]]
             List of all found costs. In case of multi-objective, the list contains lists.
         """
-        try:
-            id_ = self._config_ids[config]
-        except KeyError:  # Challenger was not running so far
+        id_ = self._lookup_config_id(config)
+        if id_ is None:  # Challenger was not running so far
             return []
 
         if instance_seed_budget_keys is None:
