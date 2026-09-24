@@ -10,9 +10,8 @@ from smac.acquisition.function.expected_improvement import EI
 from smac.callback.cost_surrogate_callback import CostSurrogateCallback
 from smac.initial_design.cost_aware_initial_design import CostAwareInitialDesign
 from smac.model.hand_crafted_cost_model import HandCraftedCostModel
-from smac.runhistory.dataclasses import TrialValue
+from smac.runhistory.dataclasses import StatusType, TrialValue
 from smac.scenario import Scenario
-
 
 # ---------------------------------------------------------------------------
 # Target function
@@ -124,16 +123,13 @@ def test_ei_cool_loop_runs_within_budget(scenario, configspace):
 
     assert iterations >= 1, "No trials were evaluated"
     assert cumulative_cost <= total_resource_budget + 1e-9
-    # CostAwareInitialDesign evaluates an internal bootstrap point before the
-    # test loop starts, so the run history has at least as many entries as the
-    # iterations we explicitly counted, and possibly more.
-    assert len(smac.runhistory) >= iterations
+    assert smac.runhistory.finished == iterations
+    assert len(smac.runhistory) in (iterations, iterations + 1)
 
 
 def test_ei_cool_budget_info_is_passed_before_each_ask(scenario, configspace):
     """set_budget_info must be called before every ask(); this test verifies that
-    the cumulative cost passed to the acquisition function is monotonically increasing,
-    which means budget_info was updated correctly on each iteration.
+    the budget parameters and alpha are updated correctly on each iteration.
     """
     total_resource_budget = 3.0
     initial_design_budget = 0.0
@@ -164,6 +160,7 @@ def test_ei_cool_budget_info_is_passed_before_each_ask(scenario, configspace):
 
     cumulative_cost = initial_design_budget
     recorded_cumulative_costs: list[float] = []
+    recorded_alphas: list[float] = []
 
     while cumulative_cost < total_resource_budget:
         acquisition_function.set_budget_info(
@@ -171,11 +168,15 @@ def test_ei_cool_budget_info_is_passed_before_each_ask(scenario, configspace):
             cumulative_cost=cumulative_cost,
             initial_design_budget=initial_design_budget,
         )
+        assert acquisition_function._cumulative_cost == cumulative_cost
+        assert acquisition_function._total_budget == total_resource_budget
         recorded_cumulative_costs.append(cumulative_cost)
 
         trial_info = smac.ask()
         if trial_info is None:
             break
+
+        recorded_alphas.append(acquisition_function._alpha)
 
         result = evaluate_config(trial_info.config)
         performance, cost = result["performance"], result["cost"]
@@ -186,12 +187,18 @@ def test_ei_cool_budget_info_is_passed_before_each_ask(scenario, configspace):
         cumulative_cost += cost
         smac.tell(trial_info, TrialValue(cost=performance, time=cost))
 
-    # Costs should be non-decreasing (each iteration starts at least as expensive as the last)
+    # Costs should be non-decreasing
     for i in range(1, len(recorded_cumulative_costs)):
         assert recorded_cumulative_costs[i] >= recorded_cumulative_costs[i - 1], (
             f"Cumulative cost decreased at iteration {i}: "
             f"{recorded_cumulative_costs[i - 1]:.4f} -> {recorded_cumulative_costs[i]:.4f}"
         )
+
+    # Alpha must decrease towards 0 as budget is consumed
+    for i in range(1, len(recorded_alphas)):
+        assert (
+            recorded_alphas[i] <= recorded_alphas[i - 1] + 1e-9
+        ), f"Alpha should decrease as budget is spent: {recorded_alphas[i - 1]:.4f} -> {recorded_alphas[i]:.4f}"
 
 
 def test_ei_cool_runhistory_records_trial_costs(scenario, configspace):
@@ -225,6 +232,7 @@ def test_ei_cool_runhistory_records_trial_costs(scenario, configspace):
 
     cumulative_cost = initial_design_budget
     told_performances: list[float] = []
+    told_costs: list[float] = []
 
     while cumulative_cost < total_resource_budget:
         acquisition_function.set_budget_info(
@@ -245,11 +253,19 @@ def test_ei_cool_runhistory_records_trial_costs(scenario, configspace):
 
         cumulative_cost += cost
         told_performances.append(performance)
-        smac.tell(trial_info, TrialValue(cost=performance, time=cost))
+        told_costs.append(cost)
+        smac.tell(
+            trial_info,
+            TrialValue(cost=performance, time=cost, additional_info={"resource_cost": cost}),
+        )
 
     assert len(told_performances) >= 1, "No trials were completed"
+    assert smac.runhistory.finished == len(told_performances)
+    assert len(smac.runhistory) in (len(told_performances), len(told_performances) + 1)
 
-    # Every entry in the run history should have a finite, non-negative cost
-    for run_key, run_value in smac.runhistory.items():
-        assert np.isfinite(run_value.cost), f"Run {run_key} has non-finite cost {run_value.cost}"
-        assert run_value.cost >= 0.0, f"Run {run_key} has negative cost {run_value.cost}"
+    finished_trials = [v for v in smac.runhistory.values() if v.status == StatusType.SUCCESS]
+    assert len(finished_trials) == len(told_performances)
+    for run_value, expected_perf, expected_cost in zip(finished_trials, told_performances, told_costs):
+        assert np.isclose(run_value.cost, expected_perf)
+        assert np.isclose(run_value.time, expected_cost)
+        assert np.isclose(run_value.additional_info["resource_cost"], expected_cost)

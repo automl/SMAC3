@@ -207,10 +207,10 @@ def test_manual_loop_runs_within_budget(scenario, configspace, cost_model_and_ca
     assert cumulative_cost <= total_resource_budget + 1e-9, (
         f"Cumulative cost {cumulative_cost:.4f} exceeded budget {total_resource_budget}"
     )
-    # The manual loop uses EmptyInitialDesign, but SMAC's intensifier may
-    # replay entries from the ask/tell history, so the run history has at
-    # least as many entries as the iterations we explicitly counted.
-    assert len(smac.runhistory) >= iterations
+    # The number of finished trials in run history matches the completed iterations,
+    # and runhistory may contain an extra RUNNING trial if ask() was called before the budget break.
+    assert smac.runhistory.finished == iterations
+    assert len(smac.runhistory) in (iterations, iterations + 1)
 
 
 def test_manual_loop_transitions_from_initial_design_to_bo(

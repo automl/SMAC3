@@ -105,14 +105,15 @@ def test_cost_aware_initial_design_runs_within_budget(scenario, configspace):
     assert iterations >= 1, "No trials were evaluated"
 
     # Budget was respected
-    assert cumulative_cost <= total_resource_budget + 1e-9, (
-        f"Cumulative cost {cumulative_cost:.4f} exceeded budget {total_resource_budget}"
-    )
+    assert (
+        cumulative_cost <= total_resource_budget + 1e-9
+    ), f"Cumulative cost {cumulative_cost:.4f} exceeded budget {total_resource_budget}"
 
-    # CostAwareInitialDesign evaluates an internal bootstrap point before the
-    # test loop starts, so the run history has at least as many entries as the
-    # iterations we explicitly counted, and possibly more.
-    assert len(smac.runhistory) >= iterations
+    # The number of finished trials in run history must match the completed iterations.
+    # Note: len(smac.runhistory) may be iterations + 1 because smac.ask() registers
+    # a RUNNING trial in runhistory before the budget check breaks the loop.
+    assert smac.runhistory.finished == iterations
+    assert len(smac.runhistory) in (iterations, iterations + 1)
 
 
 def test_cost_aware_initial_design_evaluates_low_cost_configs(scenario, configspace):
@@ -157,6 +158,15 @@ def test_cost_aware_initial_design_evaluates_low_cost_configs(scenario, configsp
     assert all(c > 0 for c in evaluated_costs), "All evaluation costs should be positive"
 
     # The cost landscape range is [0.1, 1.1]; evaluated costs should be finite
-    assert all(c <= 1.1 + 1e-9 for c in evaluated_costs), (
-        "Evaluated cost exceeds maximum possible cost of the landscape"
+    assert all(
+        c <= 1.1 + 1e-9 for c in evaluated_costs
+    ), "Evaluated cost exceeds maximum possible cost of the landscape"
+
+    # Selected configurations should have lower mean cost than uniform random sampling
+    random_configs = configspace.sample_configuration(size=100)
+    random_mean_cost = float(np.mean([evaluate_config(c)["cost"] for c in random_configs]))
+    cost_aware_mean_cost = float(np.mean(evaluated_costs))
+    assert cost_aware_mean_cost < random_mean_cost, (
+        f"Cost-aware mean cost ({cost_aware_mean_cost:.4f}) should be lower than "
+        f"random sampling mean cost ({random_mean_cost:.4f})"
     )

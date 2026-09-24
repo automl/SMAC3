@@ -141,3 +141,34 @@ def test_cost_aware_facade_invalid_arguments(scenario):
             cost_formula=cost_formula,
             overwrite=True,
         )
+
+
+def test_cost_aware_facade_with_additional_configs(scenario, configspace):
+    """CostAwareFacade should respect additional_configs in get_initial_design."""
+    total_resource_budget = 2.0
+    custom_cfg = Configuration(configspace, {"x": -2.0, "y": -1.0})
+
+    initial_design = CostAwareFacade.get_initial_design(
+        scenario=scenario,
+        cost_formula=lambda cfg: 0.1,
+        initial_budget=0.5,
+        candidate_pool_size=20,
+        additional_configs=[custom_cfg],
+    )
+
+    smac = CostAwareFacade(
+        scenario=scenario,
+        target_function=evaluate_config,
+        total_resource_budget=total_resource_budget,
+        cost_formula=lambda cfg: 0.1,
+        initial_design=initial_design,
+        overwrite=True,
+    )
+
+    smac.optimize()
+
+    evaluated_configs = smac.runhistory.get_configs()
+    assert any(
+        np.isclose(c["x"], custom_cfg["x"]) and np.isclose(c["y"], custom_cfg["y"])
+        for c in evaluated_configs
+    ), "Custom additional configuration was not evaluated."
