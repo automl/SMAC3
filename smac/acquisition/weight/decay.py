@@ -140,6 +140,11 @@ class LogarithmicDecay(DecaySchedule):
 
 
 DECAY_SHAPES: dict[str, Callable[[float], DecaySchedule]] = {
+    # A prior which does not fade. It belongs in the registry rather than only as a class, because a caller
+    # choosing a schedule by name - a configuration file, or a user interface offering the shapes - could
+    # otherwise express every way of forgetting a belief and no way of keeping it. The decay factor is accepted
+    # and ignored, so that every entry here is constructed the same way.
+    "none": lambda beta: NoDecay(),
     "logarithmic": lambda beta: LogarithmicDecay(beta),
     "linear": lambda beta: PolynomialDecay(beta, power=1.0),
     "quadratic": lambda beta: PolynomialDecay(beta, power=2.0),
@@ -147,8 +152,9 @@ DECAY_SHAPES: dict[str, Callable[[float], DecaySchedule]] = {
     "quartic": lambda beta: PolynomialDecay(beta, power=4.0),
     "quintic": lambda beta: PolynomialDecay(beta, power=5.0),
 }
-"""The decay shapes evaluated by DynaBO, by name, so that a schedule can be selected from a configuration file or
-a user interface without importing the classes."""
+"""The decay schedules available by name, so that one can be selected from a configuration file or a user
+interface without importing the classes. The six decaying shapes are those evaluated by DynaBO; ``none`` is the
+absence of decay, which is a choice a caller has to be able to state."""
 
 
 def get_decay_schedule(shape: str, beta: float) -> DecaySchedule:

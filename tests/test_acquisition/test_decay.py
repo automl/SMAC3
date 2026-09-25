@@ -87,13 +87,26 @@ def test_meta_describes_the_schedule():
 
 
 def test_shapes_can_be_selected_by_name():
-    assert sorted(DECAY_SHAPES) == ["cubic", "linear", "logarithmic", "quadratic", "quartic", "quintic"]
+    assert sorted(DECAY_SHAPES) == [
+        "cubic", "linear", "logarithmic", "none", "quadratic", "quartic", "quintic"
+    ]
 
     for shape in DECAY_SHAPES:
         schedule = get_decay_schedule(shape, beta=20.0)
         assert schedule(0) > 0
 
     assert get_decay_schedule("quadratic", 20.0)(3) == pytest.approx(20.0 / 16.0)
+
+
+def test_not_decaying_is_a_choice_a_caller_can_name():
+    """A caller selecting a schedule by name — a configuration file, or an
+    interface offering the shapes — could otherwise express every way of
+    forgetting a belief and no way of keeping it. The decay factor is accepted
+    and ignored, so every entry is constructed the same way."""
+    schedule = get_decay_schedule("none", beta=20.0)
+
+    assert isinstance(schedule, NoDecay)
+    assert [schedule(step) for step in (0, 1, 50, 5000)] == [1.0, 1.0, 1.0, 1.0]
 
     with pytest.raises(ValueError, match="Unknown decay shape"):
         get_decay_schedule("exponential", 20.0)

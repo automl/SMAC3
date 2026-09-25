@@ -164,6 +164,152 @@ class ConfigSpacePrior(AbstractInputPrior):
         return list(self._configspace.sample_configuration(size=n))
 
 
+class TabulatedPrior(AbstractInputPrior):
+    """A prior given by its values rather than by a named distribution.
+
+    Where `ConfigSpacePrior` writes a belief as a distribution ConfigSpace can express, this writes it as a table:
+    positions along one hyperparameter and a density at each. Anything an interface can draw can be stated this
+    way - a region ruled out, two peaks, a shape with no name - which is the point of it and is what a named
+    distribution cannot do.
+
+    Positions are in the **vectorized** representation, the one `pdf` is evaluated against: the unit interval for
+    a numerical hyperparameter, and the choice index for a categorical. That is deliberate rather than a
+    convenience, because it is the representation the acquisition function already works in, so what was drawn is
+    what is read with no conversion in between to disagree about.
+
+    A hyperparameter with no table contributes a constant factor, which is how a belief about part of the search
+    space is written: name the whole space, tabulate the part you have an opinion about. Between knots the density
+    is linear, and beyond the outermost ones it is flat - a table dense enough to have been drawn is dense enough
+    to be read back.
+
+    Parameters
+    ----------
+    configspace : ConfigurationSpace
+        The search space the prior is evaluated against. Its hyperparameters, in order, are the columns.
+    tables : Mapping[str, Any]
+        Knots per hyperparameter, as `(position, density)` pairs. Densities must be non-negative and need not be
+        normalized, since only ratios matter to a function which is itself only ranked.
+    """
+
+    def __init__(self, configspace: ConfigurationSpace, tables: Mapping[str, Any]) -> None:
+        self._configspace = configspace
+        self._hyperparameters = _hyperparameters_of(configspace)
+        self._tables: dict[str, tuple[np.ndarray, np.ndarray]] = {}
+
+        for name, knots in tables.items():
+            if name not in self._hyperparameters:
+                raise ValueError(
+                    f"The prior tabulates {name!r}, which the search space does not have. Its hyperparameters "
+                    f"are {list(self._hyperparameters)}."
+                )
+            points = np.asarray(knots, dtype=float)
+            if points.ndim != 2 or points.shape[1] != 2 or len(points) < 2:
+                raise ValueError(
+                    f"The table for {name!r} must be at least two (position, density) pairs, got shape "
+                    f"{points.shape}."
+                )
+            order = np.argsort(points[:, 0])
+            positions, densities = points[order, 0], points[order, 1]
+            if np.any(densities < 0):
+                raise ValueError(f"The table for {name!r} has a negative density, which is not a density.")
+            self._tables[name] = (positions, densities)
+
+    @property
+    def tables(self) -> dict[str, tuple[np.ndarray, np.ndarray]]:
+        """The knots, by hyperparameter, as `(positions, densities)`."""
+        return dict(self._tables)
+
+    @property
+    def hyperparameter_names(self) -> list[str]:  # noqa: D102
+        return list(self._hyperparameters)
+
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        data = super().meta
+        data["tabulated"] = {name: int(len(x)) for name, (x, _) in self._tables.items()}
+        return data
+
+    def pdf(self, X: np.ndarray, resolution: int | None = None) -> np.ndarray:  # noqa: D102
+        if len(X.shape) == 1:
+            X = X[:, np.newaxis]
+
+        values = np.ones((len(X), 1))
+
+        for name, column in zip(self._hyperparameters, X.T):
+            table = self._tables.get(name)
+            if table is None:
+                continue
+            positions, densities = table
+            density = np.interp(np.asarray(column, dtype=float), positions, densities)
+            if resolution is not None:
+                density = _coarsen(density, float(densities.max()), resolution)
+            values = values * density.reshape((-1, 1))
+
+        return values
+
+    def sample(self, n: int, rng: np.random.RandomState | None = None) -> list[Configuration] | None:  # noqa: D102
+        if not hasattr(self._configspace, "sample_configuration"):
+            return None
+
+        drawn = self._configspace.sample_configuration(size=n) if n > 1 else [self._configspace.sample_configuration()]
+        if not self._tables:
+            return list(drawn)
+
+        # Every untabulated hyperparameter keeps the draw the configuration space made for it, so the parts of the
+        # space nobody has an opinion about are sampled exactly as they would have been.
+        random = rng if rng is not None else np.random.RandomState()
+        names = list(self._hyperparameters)
+        out = []
+        for configuration in drawn:
+            vector = np.array(configuration.get_array(), dtype=float)
+            for name, (positions, densities) in self._tables.items():
+                column = names.index(name)
+                continuous = isinstance(self._hyperparameters[name], FloatHyperparameter)
+                vector[column] = (
+                    _sample_continuous(positions, densities, float(random.random_sample()))
+                    if continuous
+                    else _sample_discrete(positions, densities, random)
+                )
+            out.append(Configuration(self._configspace, vector=vector))
+        return out
+
+
+def _coarsen(values: np.ndarray, upper: float, number_of_bins: int) -> np.ndarray:
+    """Coarsens a tabulated density to a fixed number of levels, for the reason `discretize_pdf` explains."""
+    if number_of_bins < 1:
+        raise ValueError(f"The number of bins must be at least one, got {number_of_bins}.")
+    if upper <= 0:
+        return values
+
+    bin_values = np.linspace(0.0, upper, number_of_bins)
+    bin_indices = np.clip(np.round(values * number_of_bins / upper), 0, number_of_bins - 1).astype(int)
+    return bin_values[bin_indices]
+
+
+def _sample_continuous(positions: np.ndarray, densities: np.ndarray, u: float) -> float:
+    """Draws one value by inverting the cumulative mass of a piecewise linear density.
+
+    A table which is zero everywhere carries no information about where to look, so it falls back to uniform over
+    its own range rather than dividing by nothing.
+    """
+    mass = np.concatenate([[0.0], np.cumsum(0.5 * (densities[1:] + densities[:-1]) * np.diff(positions))])
+    if mass[-1] <= 0:
+        return float(positions[0] + u * (positions[-1] - positions[0]))
+    return float(np.interp(u * mass[-1], mass, positions))
+
+
+def _sample_discrete(positions: np.ndarray, densities: np.ndarray, rng: np.random.RandomState) -> float:
+    """Draws one of the tabulated positions, weighted by its density.
+
+    A categorical's vectorized value is a choice index, so interpolating between two of them would name a choice
+    that does not exist.
+    """
+    total = float(densities.sum())
+    if total <= 0:
+        return float(positions[int(rng.randint(len(positions)))])
+    return float(rng.choice(positions, p=densities / total))
+
+
 def density_of(hyperparameter: Hyperparameter, X_col: np.ndarray) -> np.ndarray:
     """Evaluates the density of one hyperparameter on the vectorized representation.
 

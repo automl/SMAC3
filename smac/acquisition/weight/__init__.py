@@ -18,6 +18,7 @@ from smac.acquisition.weight.prior import (
     AbstractInputPrior,
     ConfigSpacePrior,
     PriorWeight,
+    TabulatedPrior,
     discretize_pdf,
 )
 
@@ -31,6 +32,7 @@ __all__ = [
     "FeasibilityWeight",
     "AbstractInputPrior",
     "ConfigSpacePrior",
+    "TabulatedPrior",
     "PriorWeight",
     "discretize_pdf",
     "DecaySchedule",
