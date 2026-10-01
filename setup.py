@@ -80,7 +80,7 @@ setuptools.setup(
         "scipy>=1.9.2",
         "psutil",
         "pynisher>=1.0.0",
-        "ConfigSpace>=1.0.0",
+        "ConfigSpace>=1.2.2",
         "joblib",
         "scikit-learn>=1.6.1",
         "dask[distributed]",

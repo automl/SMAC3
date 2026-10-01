@@ -478,17 +478,76 @@ def test_differential_evolution_categorical(configspace_categorical, acquisition
 
     values = de._maximize(start_points, 1)
 
+
 # --------------------------------------------------------------
 # TestMOLocalSearch
 # --------------------------------------------------------------
 
+
 def test_mo_local_search_sort_keys(configspace, acquisition_function):
     rs = MOLocalSearch(configspace, acquisition_function, max_steps=100)
 
-    costs = np.array([[0.0,0.0], [0.4,0.5], [0.5, 0.4], [1.0, 1.0]])
+    costs = np.array([[0.0, 0.0], [0.4, 0.5], [0.5, 0.4], [1.0, 1.0]])
 
     sort_keys = rs._create_sort_keys(costs)
 
     assert len(sort_keys) == 2
-    assert np.array_equal(sort_keys[0],[3, 1, 1, 0])
-    assert np.array_equal(sort_keys[1],[0, 1, 1, 2])
+    assert np.array_equal(sort_keys[0], [3, 1, 1, 0])
+    assert np.array_equal(sort_keys[1], [0, 1, 1, 2])
+
+
+def test_local_search_survives_insufficient_neighbors(tmp_path):
+    """Regression test for the workaround kept from #773.
+
+    `get_one_exchange_neighbourhood` raises `ValueError` when it cannot produce the requested
+    number of distinct neighbors. SMAC asks for 8, so a quantized hyperparameter with exactly
+    ten values -- nine possible neighbors, one more than requested -- falls just below the
+    threshold at which ConfigSpace enumerates instead of samples. Sampling from the edge of the
+    range then fails to cover almost every remaining value.
+
+    Local search has to carry on with the neighbors it did get instead of letting the error
+    escape and kill the run.
+    """
+    from smac import HyperparameterOptimizationFacade, Scenario
+
+    cs = ConfigurationSpace(seed=0)
+    cs.add(
+        [
+            Float("x", (-5.0, 5.0), default=0.0),
+            Integer("n", (1, 10), default=5),  # exactly ten values
+            Categorical("kind", ["a", "b"], default="a"),
+        ]
+    )
+
+    def target(config: Configuration, seed: int = 0) -> float:
+        kind_factor = 1.0 if config["kind"] == "a" else 1.3
+        return kind_factor * ((float(config["x"]) - 2.0) ** 2 + 0.1 * int(config["n"]))
+
+    scenario = Scenario(cs, n_trials=25, deterministic=True, seed=0, output_directory=tmp_path)
+    smac = HyperparameterOptimizationFacade(scenario, target, overwrite=True)
+
+    # Must not raise.
+    smac.optimize()
+    assert smac.runhistory.finished == 25
+
+
+def test_one_exchange_neighbourhood_raises_on_insufficient_neighbors():
+    """Documents the ConfigSpace behaviour the workaround above exists for.
+
+    If this ever starts passing without raising, the `except ValueError` in
+    `LocalSearch._search` can be removed.
+    """
+    from smac.utils.configspace import get_one_exchange_neighbourhood
+
+    cs = ConfigurationSpace(seed=0)
+    cs.add(
+        [
+            Float("x", (-5.0, 5.0), default=0.0),
+            Integer("n", (1, 10), default=5),
+            Categorical("kind", ["a", "b"], default="a"),
+        ]
+    )
+    config = Configuration(cs, values={"kind": "b", "n": 1, "x": 2.7255750399722})
+
+    with pytest.raises(ValueError, match="Failed to find enough neighbors"):
+        list(get_one_exchange_neighbourhood(config, seed=79668, stdev=0.025))
