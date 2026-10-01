@@ -12,6 +12,12 @@
 - An example on the new multi-objective method
 
 ## Bugfixes
+- Partially roll back the local search workaround from #773: `get_one_exchange_neighbourhood` no
+  longer yields invalid configurations, so the validity check before accepting a better neighbour
+  was removed. The `except ValueError` around the neighbourhood iterator is kept -- it also catches
+  an unrelated `ValueError` that ConfigSpace still raises when it cannot generate the requested
+  number of neighbours. Requires `ConfigSpace>=1.2.2`, the first release containing the upstream
+  fix for the original issue (automl/ConfigSpace#415) (#778)
 - Remove the dead `FirstRunCrashedException` safeguard in `SMBO._add_results`: its condition
   (`runhistory.finished == 0`) was checked *after* `tell()` had already incremented that counter and
   could therefore never hold. The unused `FirstRunCrashedException` and

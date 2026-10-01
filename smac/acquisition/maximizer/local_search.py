@@ -8,7 +8,6 @@ import time
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
-from ConfigSpace.exceptions import ForbiddenValueError
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
     OrdinalHyperparameter,
@@ -504,8 +503,15 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                             neighbors_generated[i] += 1
                             neighbors_for_i.append(n)
                         except ValueError as e:
-                            # `neighborhood_iterator` raises `ValueError` with some probability when it reaches
-                            # an invalid configuration.
+                            # `get_one_exchange_neighbourhood` raises `ValueError` when it cannot
+                            # produce the requested number of distinct neighbors. This happens for a
+                            # quantized hyperparameter whose current value sits at the edge of its
+                            # range and that offers just one more value than we ask for -- with
+                            # `num_neighbors=8` that is a cardinality of exactly 10. ConfigSpace
+                            # enumerates all neighbors when we request at least as many as exist, but
+                            # samples just below that, and sampling from the edge rarely covers
+                            # almost every remaining value. We continue with the neighbors collected
+                            # so far; `actually_obtained` below keeps track of how many that is.
                             logger.debug(e)
                             new_neighborhood[i] = True
                         except StopIteration:
@@ -545,30 +551,22 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
                             # Found a better configuration
                             if acq_val[acq_index] > acq_val_candidates[i]:
-                                is_valid = False
-                                try:
-                                    neighbors[acq_index].check_valid_configuration()
-                                    is_valid = True
-                                except (ValueError, ForbiddenValueError) as e:
-                                    logger.debug("Local search %d: %s", i, e)
-
-                                if is_valid:
-                                    # We comment this as it just spams the log
-                                    # logger.debug(
-                                    #     "Local search %d: Switch to one of the neighbors (after %d configurations).",
-                                    #     i,
-                                    #     neighbors_looked_at[i],
-                                    # )
-                                    candidates[i] = neighbors[acq_index]
-                                    acq_val_candidates[i] = acq_val[acq_index]
-                                    new_neighborhood[i] = True
-                                    improved[i] = True
-                                    local_search_steps[i] += 1
-                                    neighbors_w_equal_acq[i] = []
-                                    obtain_n[i] = 1
-                                    # Reset visited values, as we now evaluate a new candidate.
-                                    for s in visited_values[i].values():
-                                        s.clear()
+                                # We comment this as it just spams the log
+                                # logger.debug(
+                                #     "Local search %d: Switch to one of the neighbors (after %d configurations).",
+                                #     i,
+                                #     neighbors_looked_at[i],
+                                # )
+                                candidates[i] = neighbors[acq_index]
+                                acq_val_candidates[i] = acq_val[acq_index]
+                                new_neighborhood[i] = True
+                                improved[i] = True
+                                local_search_steps[i] += 1
+                                neighbors_w_equal_acq[i] = []
+                                obtain_n[i] = 1
+                                # Reset visited values, as we now evaluate a new candidate.
+                                for s in visited_values[i].values():
+                                    s.clear()
                             # Found an equally well performing configuration, keeping it for plateau walking
                             elif acq_val[acq_index] == acq_val_candidates[i]:
                                 neighbors_w_equal_acq[i].append(neighbors[acq_index])
