@@ -94,7 +94,10 @@ class CostAwareFacade(BlackBoxFacade):
             target_function = self._wrap_target_function(target_function)
 
         # Resolve cost model (shared between initial design and acquisition function)
-        cost_model = self.get_cost_model(scenario, cost_model=cost_model, cost_formula=cost_formula)
+        if cost_model is None and isinstance(initial_design, CostAwareInitialDesign):
+            cost_model = initial_design._cost_model
+        else:
+            cost_model = self.get_cost_model(scenario, cost_model=cost_model, cost_formula=cost_formula)
 
         # Create initial design if not provided
         if initial_design is None:

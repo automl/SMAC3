@@ -110,9 +110,9 @@ class CostAwareAcquisitionFunction(AbstractAcquisitionFunction):
         if self._alpha == 0.0:
             return acq_values
 
-        # Get predicted costs
-        cost_values, _ = self._cost_callback.cost_model.predict(X)
-        cost_values = np.maximum(cost_values, 1e-9)  # Avoid division by zero
+        # Get predicted costs in original scale (predict_cost handles
+        # the inverse transform, e.g. exp() for log-encoded models).
+        cost_values, _ = self._cost_callback.predict_cost(X)
 
         # Return acq_value / (cost^alpha)
         return acq_values / (cost_values**self._alpha)
