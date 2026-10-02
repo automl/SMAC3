@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Iterator
+
 from collections import defaultdict
 
 import numpy as np
@@ -76,6 +78,10 @@ class InitialDesignDiagnosticsCallback(Callback):
         """Remembers which configurations belong to the initial design."""
         config_selector = smbo.intensifier._config_selector
         assert config_selector is not None
+        if isinstance(config_selector._initial_design_configs, Iterator):
+            self._expected_configs = []
+            return
+
         self._expected_configs = list(config_selector._initial_design_configs)
 
     def on_tell_end(self, smbo: SMBO, info: TrialInfo, value: TrialValue) -> bool | None:

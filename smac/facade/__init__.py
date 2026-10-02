@@ -1,6 +1,7 @@
 from smac.facade.abstract_facade import AbstractFacade
 from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.facade.blackbox_facade import BlackBoxFacade
+from smac.facade.cost_aware_facade import CostAwareFacade
 from smac.facade.hyperband_facade import HyperbandFacade
 from smac.facade.hyperparameter_optimization_facade import (
     HyperparameterOptimizationFacade,
@@ -18,4 +19,5 @@ __all__ = [
     "HyperbandFacade",
     "RandomFacade",
     "MultiObjectiveFacade",
+    "CostAwareFacade",
 ]
