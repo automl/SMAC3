@@ -1,6 +1,6 @@
 # Cost-Aware Bayesian Optimization
 
-Cost-aware BO extends standard SMAC by accounting for the **resource cost**
+SMAC supports **Cost-aware Bayesian Optimization** [[LPAS20][LPAS20]], which accounts for the **resource cost**
 of each configuration evaluation (e.g. wall-clock time, API credits, energy).
 Instead of treating all evaluations as equally expensive, the optimizer
 preferentially selects cheap configurations early and shifts to
@@ -15,24 +15,25 @@ Use `CostAwareFacade` when:
 
 ## How it works
 
-The facade uses two cost-aware components:
+The facade implements the two cost-aware components from [[LPAS20][LPAS20]]:
 
 **CostAwareInitialDesign** samples an initial set of configurations that are
 both diverse and cheap, staying within an `initial_budget` fraction of the
 total resource budget.
 
-**CostAwareAcquisitionFunction (EI-Cool)** wraps any acquisition function
-with a cost penalty that decreases as the budget is consumed:
+**CostAwareAcquisitionFunction** wraps any acquisition function
+with a cost penalty that decays as the budget is consumed:
 
 $$\mathrm{Acq}(x)_{\text{cost-aware}} = \frac{\mathrm{Acq}(x)}{c(x)^\alpha}$$
 
 where $\alpha$ decreases from 1 to 0 as the cumulative cost approaches the
-total budget.
+total budget. By default, it wraps Expected Improvement (`EI`), corresponding
+to the **EI-Cool** strategy.
 
 ## Usage
 
 ```python
-from smac.facade.cost_aware_facade import CostAwareFacade
+from smac import CostAwareFacade
 from smac.scenario import Scenario
 
 def target_function(config, seed=0):

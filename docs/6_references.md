@@ -18,3 +18,8 @@
 * [](){#SKKS10}[SKKS10] N. Srinivas, S. M. Kakade, A. Krause, M. Seeger; 
     Gaussian Process Optimization in the Bandit Setting: No Regret and Experimental Design; 
     https://arxiv.org/pdf/0912.3995.pdf
+
+
+* [](){#LPAS20}[LPAS20] Eric Hans Lee, Valerio Perrone, Cedric Archambeau, Matthias Seeger; 
+    Cost-aware Bayesian Optimization; 
+    https://arxiv.org/abs/2003.10870

@@ -105,18 +105,18 @@ which is easy to use and understand and without the need of deep diving into the
 invited to change the components to their specific hyperparameter optimization needs. The following
 table (horizontally scrollable) shows you what is supported and reveals the default [components][components]:
 
-| | [Black-Box][smac.facade.blackbox_facade] | [Hyperparameter Optimization][smac.facade.hyperparameter_optimization_facade] | [Multi-Fidelity][smac.facade.multi_fidelity_facade] | [Algorithm Configuration][smac.facade.algorithm_configuration_facade] | [Random][smac.facade.random_facade] | [Hyperband][smac.facade.hyperband_facade] |
-| --- | --- | --- | --- | --- | --- | --- |
-| #Parameters | low | low/medium/high | low/medium/high | low/medium/high | low/medium/high | low/medium/high |
-| Supports Instances | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Supports Multi-Fidelity | ❌ | ❌ | ✅ | ✅ | ❌ | ✅ |
-| Initial Design | [Sobol][smac.initial_design.sobol_design] | [Sobol][smac.initial_design.sobol_design] | [Random][smac.initial_design.random_design] | [Default][smac.initial_design.default_design] | [Default][smac.initial_design.default_design] | [Default][smac.initial_design.default_design] |
-| Surrogate Model | [Gaussian Process][smac.model.gaussian_process.gaussian_process] | [Random Forest][smac.model.random_forest.random_forest] | [Random Forest][smac.model.random_forest.random_forest] | [Random Forest][smac.model.random_forest.random_forest] | Not used | Not used |
-| Acquisition Function | [Expected Improvement][smac.acquisition.function.expected_improvement] | [Log Expected Improvement][smac.acquisition.function.expected_improvement] | [Log Expected Improvement][smac.acquisition.function.expected_improvement] | [Expected Improvement][smac.acquisition.function.expected_improvement] | Not used | Not used |
-| Acquisition Maximizer | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | Not Used | Not Used |
-| Intensifier | [Default][smac.intensifier.intensifier] | [Default][smac.intensifier.intensifier] | [Hyperband][smac.intensifier.hyperband] | [Default][smac.intensifier.intensifier] | [Default][smac.intensifier.intensifier] | [Hyperband][smac.intensifier.hyperband] |
-| Runhistory Encoder | [Default][smac.runhistory.encoder.encoder] | [Log][smac.runhistory.encoder.log_encoder] | [Log][smac.runhistory.encoder.log_encoder] | [Default][smac.runhistory.encoder.encoder] | [Default][smac.runhistory.encoder.encoder] | [Default][smac.runhistory.encoder.encoder] |
-| Random Design Probability | 8.5% | 20% | 20% | 50% | Not used | Not used |
+| | [Black-Box][smac.facade.blackbox_facade] | [Hyperparameter Optimization][smac.facade.hyperparameter_optimization_facade] | [Multi-Fidelity][smac.facade.multi_fidelity_facade] | [Algorithm Configuration][smac.facade.algorithm_configuration_facade] | [Random][smac.facade.random_facade] | [Hyperband][smac.facade.hyperband_facade] | [Cost-Aware][smac.facade.cost_aware_facade] |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| #Parameters | low | low/medium/high | low/medium/high | low/medium/high | low/medium/high | low/medium/high | low |
+| Supports Instances | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Supports Multi-Fidelity | ❌ | ❌ | ✅ | ✅ | ❌ | ✅ | ❌ |
+| Initial Design | [Sobol][smac.initial_design.sobol_design] | [Sobol][smac.initial_design.sobol_design] | [Random][smac.initial_design.random_design] | [Default][smac.initial_design.default_design] | [Default][smac.initial_design.default_design] | [Default][smac.initial_design.default_design] | [Cost-Aware][smac.initial_design.cost_aware_initial_design] |
+| Surrogate Model | [Gaussian Process][smac.model.gaussian_process.gaussian_process] | [Random Forest][smac.model.random_forest.random_forest] | [Random Forest][smac.model.random_forest.random_forest] | [Random Forest][smac.model.random_forest.random_forest] | Not used | Not used | [Gaussian Process][smac.model.gaussian_process.gaussian_process] |
+| Acquisition Function | [Expected Improvement][smac.acquisition.function.expected_improvement] | [Log Expected Improvement][smac.acquisition.function.expected_improvement] | [Log Expected Improvement][smac.acquisition.function.expected_improvement] | [Expected Improvement][smac.acquisition.function.expected_improvement] | Not used | Not used | [Cost-Aware EI (EI-Cool)][smac.acquisition.function.cost_aware_acquisition_function] |
+| Acquisition Maximizer | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] | Not Used | Not Used | [Local and Sorted Random Search][smac.acquisition.maximizer.local_and_random_search] |
+| Intensifier | [Default][smac.intensifier.intensifier] | [Default][smac.intensifier.intensifier] | [Hyperband][smac.intensifier.hyperband] | [Default][smac.intensifier.intensifier] | [Default][smac.intensifier.intensifier] | [Hyperband][smac.intensifier.hyperband] | [Default][smac.intensifier.intensifier] |
+| Runhistory Encoder | [Default][smac.runhistory.encoder.encoder] | [Log][smac.runhistory.encoder.log_encoder] | [Log][smac.runhistory.encoder.log_encoder] | [Default][smac.runhistory.encoder.encoder] | [Default][smac.runhistory.encoder.encoder] | [Default][smac.runhistory.encoder.encoder] | [Default][smac.runhistory.encoder.encoder] |
+| Random Design Probability | 8.5% | 20% | 20% | 50% | Not used | Not used | 8.5% |
 
 
 !!! info
@@ -138,12 +138,14 @@ from smac import MultiFidelityFacade as MFFacade
 from smac import AlgorithmConfigurationFacade as ACFacade
 from smac import RandomFacade as RFacade
 from smac import HyperbandFacade as HBFacade
+from smac import CostAwareFacade as CAFacade
 
 smac = HPOFacade(scenario=scenario, target_function=train)
 smac = MFFacade(scenario=scenario, target_function=train)
 smac = ACFacade(scenario=scenario, target_function=train)
 smac = RFacade(scenario=scenario, target_function=train)
 smac = HBFacade(scenario=scenario, target_function=train)
+smac = CAFacade(scenario=scenario, target_function=train, total_resource_budget=100.0)
 ```
 
 ## SMBO
