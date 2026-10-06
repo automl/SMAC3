@@ -12,6 +12,10 @@
 - An example on the new multi-objective method
 
 ## Bugfixes
+- Resource limits (`trial_walltime_limit`, `trial_memory_limit`) now also work with user-provided dask clients
+  whose workers are started by a nanny. Previously every trial crashed silently, because pynisher cannot start its
+  child process in a daemonic worker; SMAC now clears the daemon flag of the worker process before running such a
+  trial. Added tests for pynisher within dask workers (#1031)
 - Remove the dead `FirstRunCrashedException` safeguard in `SMBO._add_results`: its condition
   (`runhistory.finished == 0`) was checked *after* `tell()` had already incremented that counter and
   could therefore never hold. The unused `FirstRunCrashedException` and

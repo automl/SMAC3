@@ -60,7 +60,7 @@ if __name__ == "__main__":
         walltime="00:10:00",                    # Walltime limit for a runner job. 
         processes=1,                            # Number of processes per worker
         log_directory="tmp/smac_dask_slurm",    # Logging directory
-        nanny=False,                            # False unless you want to use pynisher
+        nanny=False,                            # Whether dask restarts crashed workers
         worker_extra_args=[
             "--worker-port",                    # Worker port range 
             "60010:60100"],                     # Worker port range 

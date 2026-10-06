@@ -2,11 +2,13 @@ from __future__ import annotations
 
 from typing import Callable
 
+import dataclasses
 import time
 
+import dask
 import pytest
 from ConfigSpace import ConfigurationSpace
-from dask.distributed import Client
+from dask.distributed import Client, LocalCluster
 
 from smac.runhistory import TrialInfo, TrialValue
 from smac.runner.abstract_runner import StatusType
@@ -37,6 +39,13 @@ def target_failed(x: float, seed: int, instance: str) -> tuple[float, dict]:
     raise RuntimeError("Failed.")
 
 
+def target_timeout_if_positive(x: float, seed: int, instance: str) -> tuple[float, dict]:
+    """Target function which exceeds a walltime limit of 1 second for positive x"""
+    if x > 0:
+        time.sleep(3)
+    return x**2, {"key": seed, "instance": instance}
+
+
 @pytest.fixture
 def make_dummy_ta(
     configspace_small: ConfigurationSpace,
@@ -44,8 +53,15 @@ def make_dummy_ta(
 ) -> Callable[..., TargetFunctionRunner]:
     """Make a TargetFunctionRunner, ``make_dummy_ta(func)``"""
 
-    def _make(target_function: Callable, n_workers: int = 2) -> TargetFunctionRunner:
+    def _make(
+        target_function: Callable,
+        n_workers: int = 2,
+        trial_walltime_limit: float | None = None,
+    ) -> TargetFunctionRunner:
         scenario = make_scenario(configspace=configspace_small, n_workers=n_workers)
+        if trial_walltime_limit is not None:
+            # A finite crash cost is needed, otherwise the runner reports TIMEOUT as CRASHED
+            scenario = dataclasses.replace(scenario, trial_walltime_limit=trial_walltime_limit, crash_cost=1e6)
         return TargetFunctionRunner(
             target_function=target_function,
             scenario=scenario,
@@ -196,3 +212,62 @@ def test_with_external_client(make_dummy_ta: Callable[..., TargetFunctionRunner]
 
     assert client.status == "running"
     client.close()
+
+
+def run_trials(runner: DaskParallelRunner, xs: list[float]) -> list[TrialValue]:
+    """Submits one trial per x and returns the trial values ordered like ``xs``"""
+    for x in xs:
+        runner.submit_trial(TrialInfo(config=x, instance="test", seed=0, budget=0.0))
+
+    results = []
+    while len(results) < len(xs):
+        runner.wait()
+        results += list(runner.iter_results())
+
+    return [value for _, value in sorted(results, key=lambda result: xs.index(result[0].config))]
+
+
+def test_walltime_limit(make_dummy_ta: Callable[..., TargetFunctionRunner]) -> None:
+    """
+    Expects
+    -------
+    * Pynisher works within the workers of the internally created client.
+    * Trials exceeding the walltime limit are reported as TIMEOUT.
+    * The workers survive the timeouts and keep running trials afterwards.
+    """
+    single_worker = make_dummy_ta(target_timeout_if_positive, n_workers=2, trial_walltime_limit=1)
+    runner = DaskParallelRunner(single_worker=single_worker)
+    workers_before = set(runner._client.scheduler_info()["workers"])
+
+    values = run_trials(runner, [1, -2])
+    assert [value.status for value in values] == [StatusType.TIMEOUT, StatusType.SUCCESS]
+
+    values = run_trials(runner, [-3, -4])
+    assert [value.status for value in values] == [StatusType.SUCCESS, StatusType.SUCCESS]
+    assert [value.cost for value in values] == [9, 16]
+
+    assert set(runner._client.scheduler_info()["workers"]) == workers_before
+    runner.close()
+
+
+@pytest.mark.parametrize("daemon", [True, False])
+def test_walltime_limit_with_external_client(
+    make_dummy_ta: Callable[..., TargetFunctionRunner],
+    daemon: bool,
+) -> None:
+    """
+    Expects
+    -------
+    * Pynisher also works within the workers of a user client with nanny, no matter whether its workers are
+      daemonic (dask default) or not.
+    """
+    with dask.config.set({"distributed.worker.daemon": daemon}):
+        cluster = LocalCluster(n_workers=1, processes=True, dashboard_address=":0")
+
+    with cluster, Client(cluster) as client:
+        runner = DaskParallelRunner(
+            single_worker=make_dummy_ta(target_timeout_if_positive, n_workers=1, trial_walltime_limit=1),
+            dask_client=client,
+        )
+        values = run_trials(runner, [1, -2])
+        assert [value.status for value in values] == [StatusType.TIMEOUT, StatusType.SUCCESS]

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Callable
 
+import multiprocessing
 import time
 
 import pytest
@@ -145,6 +146,24 @@ def test_fail(make_runner: Callable[..., TargetFunctionRunner]) -> None:
     # Make sure the traceback message is included
     assert "traceback" in run_value.additional_info
     assert "RuntimeError" in run_value.additional_info["traceback"]
+
+
+def test_limits_in_daemonic_process(
+    make_runner: Callable[..., TargetFunctionRunner],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test that resource limits also work in a daemonic process (e.g. a dask worker with nanny), which is not
+    allowed to start pynisher's child process unless its daemon flag is cleared"""
+    runner = make_runner(target, use_instances=True)
+    runner._algorithm_walltime_limit = 1
+    monkeypatch.setattr(multiprocessing.current_process(), "daemon", True)
+
+    runner.submit_trial(TrialInfo(config=2, instance="test", seed=0, budget=0.0))
+    _, run_value = next(runner.iter_results())
+
+    assert run_value.status == StatusType.SUCCESS
+    assert run_value.cost == 4
+    assert not multiprocessing.current_process().daemon
 
 
 def test_call(make_runner: Callable[..., TargetFunctionRunner]) -> None:
