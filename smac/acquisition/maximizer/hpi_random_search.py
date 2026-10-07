@@ -160,7 +160,11 @@ class HPIRandomSearch(RandomSearch):
         """
         if self._rng.rand() < self._random_prob:
             logger.debug("Sampling configurations from the original configuration space at random.")
-            random_configs = self._original_cs.sample_configuration(n_points)
+            random_configs = (
+                self._original_cs.sample_configuration(n_points)
+                if n_points > 1
+                else [self._original_cs.sample_configuration()]
+            )
             for config in random_configs:
                 config.origin = "Acquisition Function Maximizer: HPI Random Search (random)"
             random_configs = [(0, cfg) for cfg in random_configs if cfg not in previous_configs]
