@@ -61,7 +61,7 @@ smac = HPIFacade(scenario, train_function)
     ``HPIRandomSearch`` requires the optional ``hypershap`` dependency: ``pip install smac[hpi]``. HyperSHAP requires
     Python >= 3.10.
 
-    ``reweigh=10`` gives the optimizer time to exploit a scalarization before new weights are sampled. The
+    ``reweigh=5`` gives the optimizer time to exploit a scalarization before new weights are sampled. The
     default ``ParEGO`` behavior (``reweigh=1``) is unchanged.
 
 See the [HPI-ParEGO example](../examples/3%20Multi-Objective/4_hpi_parego.md) for a full, runnable version.

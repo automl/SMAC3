@@ -22,7 +22,7 @@ def test_components():
 
     assert isinstance(HPIFacade.get_acquisition_maximizer(scenario), HPIRandomSearch)
     assert isinstance(HPIFacade.get_multi_objective_algorithm(scenario), ParEGO)
-    assert HPIFacade.get_multi_objective_algorithm(scenario)._reweigh == 10
+    assert HPIFacade.get_multi_objective_algorithm(scenario)._reweigh == 5
     assert HPIFacade.get_config_selector(scenario)._retrain_after == 2
 
 

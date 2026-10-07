@@ -176,6 +176,8 @@ class HPIRandomSearch(RandomSearch):
 
         if len(important_hps) > 0:
             self._reduce_configspace(important_hps, reference_config)
+        else:
+            self._configspace = self._original_cs
 
         configs = (
             self._configspace.sample_configuration(n_points)
@@ -392,14 +394,23 @@ class HPIRandomSearch(RandomSearch):
         while changed:
             changed = False
             for cond in self._original_cs.conditions:
-                if cond.child.name in important_hps and cond.parent.name not in important_hps:
-                    important_hps.append(cond.parent.name)
-                    changed = True
+                if cond.child.name not in important_hps:
+                    continue
+                for parent_name in self._parent_names(cond):
+                    if parent_name not in important_hps:
+                        important_hps.append(parent_name)
+                        changed = True
 
-        conditions = [cond for cond in self._original_cs.conditions if cond.parent.name in important_hps]
+        conditions = [
+            cond
+            for cond in self._original_cs.conditions
+            if all(parent_name in important_hps for parent_name in self._parent_names(cond))
+        ]
 
         reduced_cs = ConfigurationSpace()
-        reduced_cs.random.set_state(self._original_cs.random.get_state())
+        # Carry on the state of the space we are currently sampling from, so successive reduced spaces do not
+        # restart the same sample stream.
+        reduced_cs.random.set_state(self._configspace.random.get_state())
 
         for hp in self._original_cs.values():
             if hp.name in important_hps:
@@ -424,6 +435,14 @@ class HPIRandomSearch(RandomSearch):
 
         reduced_cs.add(conditions)
         self._configspace = reduced_cs
+
+    @staticmethod
+    def _parent_names(condition: Any) -> list[str]:
+        """Names of all parents of a condition, including those of ``AndConjunction`` and ``OrConjunction``."""
+        if hasattr(condition, "components"):
+            return [name for component in condition.components for name in HPIRandomSearch._parent_names(component)]
+
+        return [condition.parent.name]
 
     def _drop_forbidden(self, configs: list[Configuration]) -> list[Configuration]:
         """Removes configurations that violate a forbidden clause of the original (unreduced) configuration space.
