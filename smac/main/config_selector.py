@@ -263,6 +263,7 @@ class ConfigSelector:
                 previous_configs,
                 # n_points=self._retrain_after, #TODO MERGE check
                 random_design=self._random_design,
+                n_evaluated_trials=self._runhistory.finished,
             )
 
             if self._retrain_wallclock_ratio is not None:
