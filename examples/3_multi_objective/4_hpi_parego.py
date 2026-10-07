@@ -6,8 +6,10 @@ reducing the configuration space to the hyperparameters that matter most for the
 via HyperSHAP on the trained surrogate model. Both accuracy and run-time are going to be optimized on the digits
 dataset using an MLP, and the configurations are shown in a plot, highlighting the best ones in a Pareto front.
 
-In the optimization, SMAC evaluates the configurations on two different seeds. Therefore, the plot shows the
-mean accuracy and run-time of each configuration.
+The ``HPIFacade`` uses ``ParEGO`` (with ``reweigh=5``, so a scalarization is kept for several iterations), and
+``HPIRandomSearch`` as acquisition maximizer. Since the configuration selector retrains the surrogate model every
+two configurations, the hyperparameter importance estimates stay up to date. SMAC may evaluate a configuration on
+several seeds. Requires ``pip install smac[hpi]`` (Python >= 3.10).
 """
 
 from __future__ import annotations
@@ -30,13 +32,9 @@ from sklearn.datasets import load_digits
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
-from smac import HyperparameterOptimizationFacade as HPOFacade
-from smac import Scenario
-from smac.acquisition.maximizer import HPIRandomSearch
+from smac import HPIFacade, Scenario
 from smac.facade.abstract_facade import AbstractFacade
-from smac.multi_objective.parego import ParEGO
 from smac.utils.cost_transformer import CostTransformer
-from smac.main.config_selector import ConfigSelector
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -146,31 +144,14 @@ if __name__ == "__main__":
     scenario = Scenario(
         mlp.configspace,
         objectives=objectives,
-        n_trials=200, 
+        n_trials=200,
         n_workers=1,
     )
 
-    # We want to run five random configurations before starting the optimization.
-    initial_design = HPOFacade.get_initial_design(scenario, n_configs=5)
-    # HPI-ParEGO uses reweigh of 10 (retrain * reweigh) to give the optimizer time to exploit a scalarization before resampling new weights.
-    config_selector = ConfigSelector(scenario, retrain_after=2)
-    multi_objective_algorithm = ParEGO(scenario, reweigh=5)
-    intensifier = HPOFacade.get_intensifier(scenario, max_config_calls=2)
-
-    # HPI-ParEGO only differs from plain ParEGO in the acquisition maximizer: instead of considering the whole
-    # configuration space, it dynamically restricts the search to the hyperparameters that matter most for the
-    # scalarization ParEGO is currently exploring (estimated via HyperSHAP).
-    acquisition_maximizer = HPIRandomSearch(scenario.configspace, n_trials=scenario.n_trials)
-
     # Create our SMAC object and pass the scenario and the train method
-    smac = HPOFacade(
+    smac = HPIFacade(
         scenario,
         mlp.train,
-        initial_design=initial_design,
-        config_selector=config_selector,
-        multi_objective_algorithm=multi_objective_algorithm,
-        intensifier=intensifier,
-        acquisition_maximizer=acquisition_maximizer,
         overwrite=True,
     )
 

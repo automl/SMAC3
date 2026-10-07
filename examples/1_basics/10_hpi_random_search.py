@@ -2,9 +2,11 @@
 # Flags: doc-Runnable
 
 An example of optimizing a simple support vector machine on the IRIS dataset (see also
-[Support Vector Machine with Cross-Validation](2_svm_cv.md)), using ``HPIRandomSearch`` as the acquisition
-maximizer. ``HPIRandomSearch`` dynamically estimates via HyperSHAP which hyperparameters matter most, and restricts the search to those. This works for
-single-objective optimization and for the multi-objective case (see [HPI-ParEGO](../3%20Multi-Objective/4_hpi_parego.md)).
+[Support Vector Machine with Cross-Validation](2_svm_cv.md)), using the ``HPIFacade``. The facade builds on the
+``HyperparameterOptimizationFacade`` (random forest and EI), but uses ``HPIRandomSearch`` as acquisition maximizer.
+``HPIRandomSearch`` dynamically estimates via HyperSHAP which hyperparameters matter most, and restricts the search
+to those. This works for single-objective optimization and for the multi-objective case (see
+[HPI-ParEGO](../3%20Multi-Objective/4_hpi_parego.md)). Requires ``pip install smac[hpi]`` (Python >= 3.10).
 """
 
 import numpy as np
@@ -13,9 +15,7 @@ from ConfigSpace.conditions import InCondition
 from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
-from smac import HyperparameterOptimizationFacade, Scenario
-from smac.acquisition.maximizer import HPIRandomSearch
-from smac.main.config_selector import ConfigSelector
+from smac import HPIFacade, Scenario
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -73,27 +73,13 @@ if __name__ == "__main__":
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
         classifier.configspace,
-        n_trials=100, 
-    )
-
-    # We want to run the facade's default initial design, but we want to change the number
-    # of initial configs to 5.
-    initial_design = HyperparameterOptimizationFacade.get_initial_design(scenario, n_configs=5)
-    
-    config_selector = ConfigSelector(scenario, retrain_after=2)
-
-    # HPIRandomSearch replaces the default acquisition maximizer.
-    acquisition_maximizer = HPIRandomSearch(
-        scenario.configspace, n_trials=scenario.n_trials
+        n_trials=100,
     )
 
     # Now we use SMAC to find the best hyperparameters
-    smac = HyperparameterOptimizationFacade(
+    smac = HPIFacade(
         scenario,
         classifier.train,
-        config_selector=config_selector,
-        initial_design=initial_design,
-        acquisition_maximizer=acquisition_maximizer,
         overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state
     )
 

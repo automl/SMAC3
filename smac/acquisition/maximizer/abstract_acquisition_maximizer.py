@@ -50,7 +50,7 @@ class AbstractAcquisitionMaximizer:
         self._challengers = challengers
         self._seed = seed
         self._rng = np.random.RandomState(seed=seed)
-        self._n_evaluated_trials: int | None = 0
+        self._n_evaluated_trials: int = 0
 
     @property
     def acquisition_function(self) -> AbstractAcquisitionFunction | None:
@@ -106,7 +106,8 @@ class AbstractAcquisitionMaximizer:
         if n_points is None:
             n_points = self._challengers
 
-        self._n_evaluated_trials = n_evaluated_trials
+        if n_evaluated_trials is not None:
+            self._n_evaluated_trials = n_evaluated_trials
 
         def next_configs_by_acquisition_value() -> list[Configuration]:
             assert n_points is not None

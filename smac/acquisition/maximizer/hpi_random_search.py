@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Any
 
 import copy
-import random
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
@@ -50,9 +49,10 @@ class HPIRandomSearch(RandomSearch):
     seed : int, defaults to 0
     n_trials : int | None, defaults to None
         Total optimization budget. Used to derive the reduction schedule when ``threshold`` is a list.
-    threshold : float | list[float], defaults to 0.8
+    threshold : float | list[float] | None, defaults to None
         Cumulative contribution that the selected hyperparameters must jointly explain between 0 and 1. 0 disables
-        the configuration space reduction. If a list, ``n_trials`` is split into ``len(threshold)`` equal-width
+        the configuration space reduction. ``None`` uses the three-phase schedule ``[0.0, 0.8, 0.0]``, which
+        requires ``n_trials``. If a list, ``n_trials`` is split into ``len(threshold)`` equal-width
         phases, and ``threshold[i]`` is applied during phase ``i``. It is recommended to use a warm-up phase for
         the surrogate model to work well. For example:
         * Reduction in the middle third of trials only: ``[0.0, 0.8, 0.0]`` (default)
@@ -94,6 +94,8 @@ class HPIRandomSearch(RandomSearch):
             )
 
         if isinstance(threshold, list):
+            if n_trials is not None and n_trials < len(threshold):
+                raise ValueError("n_trials must be at least the length of the threshold list.")
             if any(not 0 <= t <= 1 for t in threshold):
                 raise ValueError("Every value in threshold must lie in [0, 1].")
         elif not 0 <= threshold <= 1:
@@ -219,8 +221,7 @@ class HPIRandomSearch(RandomSearch):
             return self._threshold
 
         assert self._n_trials is not None
-        assert self._n_evaluated_trials is not None
-        phase_length = self._n_trials // len(self._threshold)
+        phase_length = max(1, self._n_trials // len(self._threshold))
         position = min(self._n_evaluated_trials // phase_length, len(self._threshold) - 1)
 
         return self._threshold[position]

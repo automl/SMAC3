@@ -82,7 +82,7 @@ for more information about acquisition functions.
 
 The acquisition maximizer is a wrapper for the acquisition function. It returns the next configurations. SMAC
 supports local search, (sorted) random search, local and (sorted) random search, differential evolution, and
-HPI-based random search.
+HPI-based random search[[TWL26][TWL26]].
 While local search checks neighbours of the best configurations, random search makes sure to explore the configuration
 space. When using sorted random search, random configurations are sorted by the value of the acquisition function.
 

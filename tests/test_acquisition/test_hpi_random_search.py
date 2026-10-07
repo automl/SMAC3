@@ -395,3 +395,31 @@ def test_maximize_reduction_path_produces_sorted_configs(configspace, acquisitio
 
     acq_values = [v for v, _ in values]
     assert acq_values == sorted(acq_values, reverse=True)
+
+def test_threshold_list_longer_than_n_trials_raises(configspace):
+    with pytest.raises(ValueError):
+        HPIRandomSearch(configspace, n_trials=2)
+
+
+def test_empty_important_hps_restores_original_space(configspace, acquisition_function, monkeypatch):
+    rs = HPIRandomSearch(configspace, acquisition_function=acquisition_function, threshold=0.8, random_prob=0.0)
+    rs._configspace = ConfigurationSpace()
+    monkeypatch.setattr(rs, "_compute_important_hps", lambda *args: [])
+
+    rs._maximize(configspace.sample_configuration(5), 3)
+
+    assert rs._configspace is rs._original_cs
+
+
+def test_reduce_configspace_handles_conjunction_conditions():
+    from ConfigSpace import AndConjunction, EqualsCondition
+
+    cs = ConfigurationSpace(seed=0)
+    cs.add([Float("a", (0, 1)), Float("b", (0, 1)), Float("c", (0, 1))])
+    cs.add(AndConjunction(EqualsCondition(cs["c"], cs["a"], 0.5), EqualsCondition(cs["c"], cs["b"], 0.5)))
+
+    rs = HPIRandomSearch(cs, random_prob=0.0)
+    rs._reduce_configspace(["c"], cs.get_default_configuration())
+
+    assert rs._configspace is not rs._original_cs
+    assert len(rs._configspace.conditions) == 1

@@ -7,6 +7,7 @@
   hyperparameters estimated to be most important (via HyperSHAP) for the current scalarization. Combined with
   `ParEGO`, this implements HPI-ParEGO. Requires the optional `hypershap` dependency (`pip install smac[hpi]`).
   Also works for single-objective optimization.
+- Add `HPIFacade`, which sets up HPI-ParEGO (`HPIRandomSearch`, `ParEGO` with `reweigh=5`, retraining every 2 configs).
 
 ## Examples
 - An example on the new multi-objective method
