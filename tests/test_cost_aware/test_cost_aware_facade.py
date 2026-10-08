@@ -2,59 +2,11 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
-from ConfigSpace import Configuration, ConfigurationSpace, UniformFloatHyperparameter
+from ConfigSpace import Configuration
 
 from smac.facade.cost_aware_facade import CostAwareFacade
 from smac.model.random_forest import RandomForest
-from smac.scenario import Scenario
-
-# ---------------------------------------------------------------------------
-# Target function
-# ---------------------------------------------------------------------------
-
-
-def evaluate_config(config: Configuration, seed: int = 0) -> dict[str, float]:
-    """2D target function returning performance loss and evaluation cost.
-
-    Performance bowl minimized at (-2, -1). Cost ranges in [0.1, 1.1].
-    """
-    x, y = config["x"], config["y"]
-    performance = (x + 2) ** 2 + (y + 1) ** 2
-
-    cost_unnormalized = (
-        np.exp(-((x - 2) ** 2 + (y - 2) ** 2))
-        + np.exp(-((x + 2) ** 2 + (y + 2) ** 2))
-        - np.exp(-((x - 2) ** 2 + (y + 2) ** 2))
-        - np.exp(-((x + 2) ** 2 + (y - 2) ** 2))
-    )
-    cost = (cost_unnormalized + 1) / 2 + 0.1
-    return {"performance": performance, "cost": cost}
-
-
-# ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
-
-
-@pytest.fixture
-def configspace() -> ConfigurationSpace:
-    cs = ConfigurationSpace(seed=0)
-    cs.add(UniformFloatHyperparameter("x", -3.5, 3.5, default_value=0))
-    cs.add(UniformFloatHyperparameter("y", -3.5, 3.5, default_value=0))
-    return cs
-
-
-@pytest.fixture
-def scenario(configspace: ConfigurationSpace, tmp_path) -> Scenario:
-    return Scenario(
-        configspace=configspace,
-        name="CostAwareFacadeTest",
-        objectives="cost",
-        n_trials=np.inf,
-        seed=0,
-        deterministic=True,
-        output_directory=tmp_path,
-    )
+from tests.test_cost_aware.conftest import evaluate_config
 
 
 # ---------------------------------------------------------------------------

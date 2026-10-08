@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
-from ConfigSpace import Configuration, ConfigurationSpace, UniformFloatHyperparameter
+from ConfigSpace import Configuration
 
 from smac import BlackBoxFacade
 from smac.acquisition.function.cost_aware_acquisition_function import CostAwareAcquisitionFunction
@@ -11,57 +11,7 @@ from smac.callback.cost_surrogate_callback import CostSurrogateCallback
 from smac.initial_design.cost_aware_initial_design import CostAwareInitialDesign
 from smac.model.hand_crafted_cost_model import HandCraftedCostModel
 from smac.runhistory.dataclasses import StatusType, TrialValue
-from smac.scenario import Scenario
-
-# ---------------------------------------------------------------------------
-# Target function
-# ---------------------------------------------------------------------------
-
-def evaluate_config(config: Configuration) -> dict[str, float]:
-    """2D function with a bowl-shaped performance landscape and a four-peak cost landscape.
-
-    Performance minimum at (-2, -1); cost landscape is deliberately misaligned to
-    create a non-trivial trade-off between cheap and good regions.
-    """
-    x, y = config["x"], config["y"]
-
-    performance_loss = (x + 2) ** 2 + (y + 1) ** 2
-
-    cost_unnormalized = (
-        np.exp(-((x - 2) ** 2 + (y - 2) ** 2))
-        + np.exp(-((x + 2) ** 2 + (y + 2) ** 2))
-        - np.exp(-((x - 2) ** 2 + (y + 2) ** 2))
-        - np.exp(-((x + 2) ** 2 + (y - 2) ** 2))
-    )
-    # Normalise to [0.1, 1.1]
-    cost = (cost_unnormalized + 1) / 2 + 0.1
-
-    return {"performance": performance_loss, "cost": cost}
-
-
-# ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
-
-@pytest.fixture
-def configspace() -> ConfigurationSpace:
-    cs = ConfigurationSpace(seed=0)
-    cs.add(UniformFloatHyperparameter("x", -3.5, 3.5, default_value=0))
-    cs.add(UniformFloatHyperparameter("y", -3.5, 3.5, default_value=0))
-    return cs
-
-
-@pytest.fixture
-def scenario(configspace: ConfigurationSpace, tmp_path) -> Scenario:
-    return Scenario(
-        configspace=configspace,
-        name="EICoolTestWithHandCraftedCost",
-        objectives="cost",
-        n_trials=np.inf,
-        seed=0,
-        deterministic=True,
-        output_directory=tmp_path,
-    )
+from tests.test_cost_aware.conftest import evaluate_config
 
 
 # ---------------------------------------------------------------------------
@@ -70,7 +20,7 @@ def scenario(configspace: ConfigurationSpace, tmp_path) -> Scenario:
 
 def test_ei_cool_loop_runs_within_budget(scenario, configspace):
     """EI-Cool acquisition loop should terminate without error and respect the budget."""
-    total_resource_budget = 3.0  # cost per eval in [0.1, 1.1], keeps CI fast
+    total_resource_budget = 3.0  # cost per eval in [0.1, 1.0], keeps CI fast
     initial_design_budget = 0.0
 
     cost_formula = lambda cfg: evaluate_config(cfg)["cost"]
