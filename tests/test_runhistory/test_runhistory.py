@@ -4,7 +4,9 @@ import os
 import pickle
 import tempfile
 
+import numpy as np
 import pytest
+from ConfigSpace import Configuration
 
 from smac.runhistory.runhistory import RunHistory, TrialKey
 from smac.runner.abstract_runner import StatusType
@@ -218,6 +220,7 @@ def test_cost_transformer():
     assert CostTransformer.mean(raw_costs) == pytest.approx(20.0)
     assert CostTransformer.sum(raw_costs) == pytest.approx(60.0)
     assert CostTransformer.min(raw_costs) == pytest.approx(10.0)
+
 
 def test_incremental_update(runhistory, config1, compute_cost):
     runhistory.add(
@@ -451,3 +454,52 @@ def test_unpack(runhistory, config1):
     for (k, v), expected in zip(unpacked.items(), params):
         assert k.instance == expected["instance"]
         assert v.cost == expected["cost"]
+
+
+def test_numpy_and_native_types_are_the_same_config(runhistory, configspace_small):
+    """Regression test for #1241.
+
+    ``Configuration.__hash__`` hashes ``repr(config)`` while ``__eq__`` compares values, so two
+    equal configurations hash differently as soon as one of them carries numpy scalars. The
+    runhistory used to store both of them, and the config selector eventually ran out of new
+    configurations.
+    """
+    native = Configuration(configspace_small, values={"a": 5, "b": 1e-2, "c": "dog"})
+    numpyish = Configuration(
+        configspace_small,
+        values={"a": np.int64(5), "b": np.float64(1e-2), "c": np.str_("dog")},
+    )
+
+    # This is the upstream inconsistency the fix has to work around.
+    assert native == numpyish
+    assert hash(native) != hash(numpyish)
+
+    runhistory.add(config=native, cost=1.0, time=1.0, status=StatusType.SUCCESS, seed=0)
+    runhistory.add(config=numpyish, cost=1.0, time=1.0, status=StatusType.SUCCESS, seed=0)
+
+    assert len(runhistory.config_ids) == 1
+    assert runhistory.finished == 1
+
+
+def test_config_can_be_looked_up_with_numpy_types(runhistory, configspace_small):
+    """Regression test for #1241: adding a configuration and looking it up stay consistent.
+
+    Normalising only on write would make the runhistory forget the very configuration it was
+    just given, because the lookup would still hash the original numpy-typed object.
+    """
+    numpyish = Configuration(
+        configspace_small,
+        values={"a": np.int64(7), "b": np.float64(1e-3), "c": np.str_("cat")},
+    )
+
+    runhistory.add(config=numpyish, cost=2.0, time=1.0, status=StatusType.SUCCESS, seed=0)
+
+    assert runhistory.has_config(numpyish)
+    assert runhistory.get_config_id(numpyish) == numpyish.config_id
+    assert len(runhistory.get_trials(numpyish)) == 1
+    assert len(runhistory.get_instance_seed_budget_keys(numpyish)) == 1
+    assert runhistory.get_costs(numpyish) == [2.0]
+
+    # The very same configuration expressed with built-in types has to resolve to the same entry.
+    native = Configuration(configspace_small, values={"a": 7, "b": 1e-3, "c": "cat"})
+    assert runhistory.get_config_id(native) == runhistory.get_config_id(numpyish)
