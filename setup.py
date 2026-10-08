@@ -27,6 +27,9 @@ extras_require = {
     "mosmac": [
         "pymoo"
     ],
+    "wandb": [
+        "wandb>=0.24.0",
+    ],
     "dev": [
         "setuptools",
         "types-setuptools",
