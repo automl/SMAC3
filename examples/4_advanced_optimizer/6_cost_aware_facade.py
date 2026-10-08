@@ -56,8 +56,8 @@ def evaluate_config(config: Configuration, seed: int = 0) -> dict[str, float]:
         - np.exp(-((x - 2) ** 2 + (y + 2) ** 2))
         - np.exp(-((x + 2) ** 2 + (y - 2) ** 2))
     )
-    # Normalize cost to be in a reasonable range (e.g., [0.1, 1.1])
-    cost = (cost_unnormalized + 1) / 2 + 0.1
+    # Normalize cost to be in [0.1, 1.0]
+    cost = 0.1 + 0.9 * (cost_unnormalized + 1) / 2
 
     return {"performance": performance, "cost": cost}
 

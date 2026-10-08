@@ -54,11 +54,14 @@ class CostAwareFacade(BlackBoxFacade):
     total_resource_budget : float
         The total budget for the optimization in terms of resource/cost.
     cost_model : AbstractModel | None, defaults to None
-        The cost model to predict the cost of configurations.
+        The cost model to predict the cost of configurations. If neither ``cost_model`` nor
+        ``cost_formula`` is provided, a default Random Forest surrogate model is created via
+        ``HyperparameterOptimizationFacade.get_model`` to learn costs from observed evaluations.
         Mutually exclusive with ``cost_formula``.
     cost_formula : Callable | None, defaults to None
-        A callable that calculates the cost of a configuration.
-        Used if ``cost_model`` is not provided.
+        A callable that calculates the cost of a configuration (e.g. from known hyperparameter
+        values such as number of epochs). When provided, a ``HandCraftedCostModel`` is used.
+        Mutually exclusive with ``cost_model``.
     initial_design : AbstractInitialDesign | None, defaults to None
         The initial design strategy. If None, ``CostAwareInitialDesign`` is used.
     initial_design_budget_ratio : float, defaults to 0.125
@@ -86,6 +89,9 @@ class CostAwareFacade(BlackBoxFacade):
         overwrite: bool = False,
         **kwargs: Any,
     ):
+        if cost_model is not None and cost_formula is not None:
+            raise ValueError("Cannot provide both `cost_model` and `cost_formula`.")
+
         self._total_resource_budget = total_resource_budget
         self._initial_design_budget = total_resource_budget * initial_design_budget_ratio
 

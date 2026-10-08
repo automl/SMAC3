@@ -12,11 +12,16 @@ from smac.utils.logging import get_logger
 
 
 class HandCraftedCostModel(AbstractModel):
-    """
-    A dummy cost model that uses a fixed formula instead of learning from data.
+    """A deterministic cost model that evaluates an explicit cost formula.
 
-    The `train` method is a no-op. The `predict` method applies the given
-    formula to the input configurations.
+    When evaluation costs are known a priori from configuration hyperparameters
+    (such as the number of epochs or dataset subsample size) or from an analytical
+    cost formula, fitting an empirical surrogate model to observed trial costs is
+    unnecessary and prone to approximation errors.
+
+    ``HandCraftedCostModel`` directly evaluates the provided ``cost_formula`` on
+    input configurations. Its :meth:`train` method is a no-op, and :meth:`predict`
+    evaluates the formula with zero variance.
     """
 
     def __init__(
