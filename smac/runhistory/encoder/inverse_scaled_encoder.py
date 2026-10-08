@@ -25,15 +25,13 @@ class RunHistoryInverseScaledEncoder(RunHistoryEncoder):
         """Transform the response values by linearly scaling
         them between zero and one and then use inverse scaling.
         """
-        min_y = self._min_y - (
-            self._percentile - self._min_y
-        )  # Subtract the difference between the percentile and the minimum
-        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
-        # linear scaling
-        # prevent diving by zero
-
-        min_y[np.where(min_y == self._max_y)] *= 1 - 10**-10
-
-        values = (values - min_y) / (self._max_y - min_y)
+        min_y, max_y = self._scaling_bounds(1 - 10**-10)
+        values = (values - min_y) / (max_y - min_y)
         values = 1 - 1 / values
         return values
+
+    def _inverse_response_values(self, values: np.ndarray) -> np.ndarray:
+        # 1 - 1/s is increasing in s and below one; a value at or above one has no cost, so it is held just below.
+        values = np.minimum(values, 1 - constants.VERY_SMALL_NUMBER)
+        min_y, max_y = self._scaling_bounds(1 - 10**-10)
+        return 1 / (1 - values) * (max_y - min_y) + min_y

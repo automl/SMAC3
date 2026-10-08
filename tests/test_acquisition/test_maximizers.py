@@ -255,6 +255,28 @@ def test_local_search(configspace):
     assert acq_val_start_point < acq_val_incumbent
 
 
+def test_climb_starts_only_from_the_given_points(configspace):
+    """`climb` runs one local search per given starting point and adds none of its own, so it answers where those
+    points lead; each ends at least as well as it started."""
+    calls = []
+
+    def acquisition_function(points):
+        calls.append(len(points))
+        return np.array([[-euclidean(point.get_array(), np.array([1, 1, 1]))] for point in points])
+
+    ls = LocalSearch(configspace, acquisition_function, max_steps=50)
+    start_points = configspace.sample_configuration(3)
+
+    climbed = ls.climb(start_points)
+
+    assert len(climbed) == 3
+    assert calls[0] == 3, "the first evaluation is of the given starting points alone"
+    for start_point, (value, _) in zip(start_points, climbed):
+        assert value >= acquisition_function([start_point])[0][0]
+
+    assert ls.climb([]) == []
+
+
 def test_local_search_2(configspace, acquisition_function):
     start_points = configspace.sample_configuration(100)
     ls = LocalSearch(configspace, acquisition_function, max_steps=1000)

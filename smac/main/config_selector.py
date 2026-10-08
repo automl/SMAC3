@@ -492,14 +492,25 @@ class ConfigSelector:
             weight.prior.validate_against(self._scenario.configspace)
 
         policy = acceptance_policy if acceptance_policy is not None else self._prior_acceptance_policy
-        if not policy.accept(
-            weight,
-            configspace=self._scenario.configspace,
-            model=self._trained_model(),
-            runhistory=self._runhistory,
-            incumbent=self._incumbent(),
-            rng=self._acquisition_maximizer.rng,
-        ):
+        context: dict[str, Any] = {
+            "configspace": self._scenario.configspace,
+            "model": self._trained_model(),
+            "runhistory": self._runhistory,
+            "incumbent": self._incumbent(),
+            "rng": self._acquisition_maximizer.rng,
+        }
+        if policy.requires_model:
+            # Judged against everything observed so far, not against the last time a configuration was asked
+            # for: a belief stated between a `tell` and the next `ask` would otherwise meet no model at all.
+            model, eta = self._fit_model_for_judging()
+            context.update(
+                model=model,
+                eta=eta,
+                num_data=self._current_num_data(),
+                runhistory_encoder=self._runhistory_encoder,
+            )
+
+        if not policy.accept(weight, **context):
             return None
 
         weight.anchor(self._current_num_data())
@@ -540,6 +551,35 @@ class ConfigSelector:
             return None
 
         return self._model
+
+    def _fit_model_for_judging(self) -> tuple[AbstractModel | None, float | None]:
+        """The surrogate fitted to everything observed so far, and the incumbent's cost as it sees it.
+
+        For an acceptance policy that asks for a model. Trained here if the data has grown since the last
+        training, the same way an `ask` would train it; `_previous_entries` is left alone, so the next `ask`
+        trains as it would have anyway and the search itself is unaffected.
+
+        Returns
+        -------
+        tuple[AbstractModel | None, float | None]
+            The model and the incumbent's cost, or `(None, None)` while nothing has been observed.
+        """
+        assert self._model is not None
+        assert self._runhistory is not None
+
+        if self._runhistory.empty():
+            return None, None
+
+        X, Y, X_configurations = self._collect_data()
+        if X.shape[0] == 0:
+            return None, None
+
+        if self._previous_entries != Y.shape[0]:
+            self._model.train(X, Y)
+
+        _, eta = self._get_x_best(X_configurations)
+
+        return self._model, eta
 
     def _incumbent(self) -> Configuration | None:
         """The best configuration so far, if there is one."""

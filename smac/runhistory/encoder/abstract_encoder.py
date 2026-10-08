@@ -5,6 +5,7 @@ from typing import Any, Mapping
 
 import numpy as np
 
+from smac import constants
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.runhistory.runhistory import RunHistory, TrialKey, TrialValue
 from smac.runner.abstract_runner import StatusType
@@ -288,6 +289,51 @@ class AbstractRunHistoryEncoder:
         logger.debug("Converted %d observations." % (X.shape[0]))
         return X, Y
 
+    def inverse_transform_response_values(self, values: np.ndarray) -> np.ndarray | None:
+        """Maps values the surrogate model works in back to cost values, or returns `None` if this encoder cannot.
+
+        The inverse of `transform_response_values`, for a reader that wants an answer in the objective's own units:
+        a difference between two model predictions means something different under every encoder. It applies the
+        statistics stored by the last `transform` call, as `transform_response_values` itself does.
+
+        Only an inverse defined by the same class as the transform is trusted. A subclass that changes the
+        transform without supplying the matching inverse gets `None` rather than the inverse of its parent's.
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Values as the surrogate model sees them.
+
+        Returns
+        -------
+        np.ndarray | None
+            The corresponding cost values, or `None` if the transformation cannot be inverted.
+        """
+        if _owner(type(self), "transform_response_values") is not _owner(type(self), "_inverse_response_values"):
+            return None
+
+        return self._inverse_response_values(np.asarray(values, dtype=float))
+
+    def _inverse_response_values(self, values: np.ndarray) -> np.ndarray | None:
+        """The inverse of `transform_response_values`, or `None` if there is none.
+
+        See `inverse_transform_response_values`.
+        """
+        return None
+
+    def _scaling_bounds(self, collapse_factor: float) -> tuple[np.ndarray, np.ndarray]:
+        """The lower and upper ends the scaling encoders map costs between, from the stored statistics.
+
+        The lower end sits below the smallest cost by as much as the percentile sits above it, and a little further,
+        so that the smallest cost scales to a small positive number rather than to zero. Where every cost was the
+        same, the lower end is moved by `collapse_factor` so that the scaling does not divide by zero.
+        """
+        min_y = self._min_y - (self._percentile - self._min_y)
+        min_y -= constants.VERY_SMALL_NUMBER
+        min_y[np.where(min_y == self._max_y)] *= collapse_factor
+
+        return min_y, self._max_y
+
     @abstractmethod
     def transform_response_values(
         self,
@@ -305,3 +351,12 @@ class AbstractRunHistoryEncoder:
         transformed_values : np.ndarray
         """
         raise NotImplementedError
+
+
+def _owner(cls: type, name: str) -> type | None:
+    """The class in `cls`'s method resolution order that defines `name`."""
+    for klass in cls.__mro__:
+        if name in vars(klass):
+            return klass
+
+    return None

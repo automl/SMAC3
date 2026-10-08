@@ -80,9 +80,37 @@ if key is None:
     ...  # the surrogate did not find the belief plausible, and nothing changed
 ```
 
-The policy draws configurations from the belief and from a belief-shaped neighbourhood of the current incumbent,
-scores both under the current model, and rejects the belief when its region looks clearly worse
-[[FWS+25][FWS+25]]. Its threshold is in raw objective units, so set it for the objective at hand.
+The policy draws configurations from the belief and from a neighbourhood of the current incumbent, scores both
+under the current model, and rejects the belief when its region looks clearly worse [[FWS+25][FWS+25]]. The model
+is fitted to every trial reported so far before it judges. Its threshold is in the objective's units, so set it for
+the objective at hand: a confidence bound is read back through the runhistory encoder, since the model may be
+fitted to transformed costs. With an encoder that cannot be inverted, the threshold is in the units the model
+works in.
+
+#### Beliefs about some hyperparameters
+
+`IncumbentComparisonPolicy` compares the mean score of the two sets of configurations, which is fair when the belief
+covers the whole configuration. A belief about only some hyperparameters leaves the others to be drawn at random,
+and their random values pull its mean down - by more, the more hyperparameters it says nothing about - so a correct
+belief about one hyperparameter can be rejected for what it does not say.
+
+`ClimbingComparisonPolicy` judges a belief by where it leads instead. It draws configurations from the belief and
+from the incumbent's neighbourhood, climbs with local search from the best `top_k` of each - the belief's side on the
+acquisition function weighted by the belief, the neighbourhood's on the acquisition function alone - and compares
+where the climbs ended under the acquisition function alone:
+
+```python
+from smac.acquisition.weight import ClimbingComparisonPolicy
+
+key = smac.add_prior(prior, acceptance_policy=ClimbingComparisonPolicy())
+```
+
+Climbing optimizes the hyperparameters the belief says nothing about rather than leaving them to chance. Part of the
+belief's draws (`neighbourhood_share`) take those hyperparameters from the incumbent's neighbourhood, so its climbs
+start where the neighbourhood's do as well as anywhere in the space. The number of draws is fixed by `n_samples`, or
+set per hyperparameter with `n_samples_per_hyperparameter`; the same option is available on
+`IncumbentComparisonPolicy`. The judgement is reproducible for a given random state and leaves the run's own random
+state unchanged.
 
 ## Using both together
 

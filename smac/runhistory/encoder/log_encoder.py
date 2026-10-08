@@ -25,3 +25,6 @@ class RunHistoryLogEncoder(RunHistoryEncoder):
             values[values < constants.MINIMAL_COST_FOR_LOG] = constants.MINIMAL_COST_FOR_LOG
 
         return np.log(values)
+
+    def _inverse_response_values(self, values: np.ndarray) -> np.ndarray:
+        return np.exp(values)

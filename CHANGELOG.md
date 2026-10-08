@@ -19,6 +19,14 @@
   stated, so one stated late arrives at full strength; beliefs accumulate and are summed. Candidates are drawn
   from each belief as well as ranked by it, and `IncumbentComparisonPolicy` optionally checks a belief against the
   surrogate before acting on it.
+- `ClimbingComparisonPolicy` checks a belief about some hyperparameters by where it leads: it climbs from the best
+  draws of the belief and of the incumbent's neighbourhood with local search and compares the endpoints, so a correct
+  belief is not rejected for the hyperparameters it says nothing about. Both acceptance policies judge against a model
+  fitted to every reported trial, compare in the objective's units, and take `n_samples_per_hyperparameter` as an
+  alternative to a fixed `n_samples`.
+- Runhistory encoders map model values back to costs with `inverse_transform_response_values`, where their
+  transformation can be inverted.
+- `LocalSearch.climb` runs a local search from given starting points only.
 - Acquisition maximizers can draw candidates from several configuration spaces at once.
 - The acquisition function is updated when it is changed from outside, even if no new trial has been reported
   since the last update.

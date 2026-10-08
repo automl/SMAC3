@@ -188,6 +188,28 @@ class LocalSearch(AbstractAcquisitionMaximizer):
 
         return configs_acq
 
+    def climb(self, start_points: list[Configuration]) -> list[tuple[float, Configuration]]:
+        """Runs a local search from each of the given starting points, and from those only.
+
+        `maximize` adds starting points of its own - the best previous configurations, and random ones when there
+        are too few - which is right for proposing the next configuration and wrong for asking where particular
+        starting points lead.
+
+        Parameters
+        ----------
+        start_points : list[Configuration]
+            Where to start, one local search each.
+
+        Returns
+        -------
+        list[tuple[float, Configuration]]
+            Where each local search ended, with its acquisition value, in the order of the starting points.
+        """
+        if len(start_points) == 0:
+            return []
+
+        return self._search(list(start_points))
+
     def _get_initial_points(
         self,
         previous_configs: list[Configuration],

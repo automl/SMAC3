@@ -328,3 +328,70 @@ def test_lower_budget_states(runhistory, make_scenario, configspace_small, confi
     # receive the cost of 3
     X, Y = encoder.transform(budget_subset=[500])
     assert Y.tolist() == [[3.0]]
+
+
+def _encoded(encoder_class, runhistory, make_scenario, configspace, configs):
+    """An encoder of `encoder_class` that has transformed a runhistory of four costs, so its statistics are set."""
+    for config, cost in zip(configs, (0.2, 1.0, 3.0, 8.0)):
+        runhistory.add(config=config, cost=cost, time=1, status=StatusType.SUCCESS)
+
+    encoder = encoder_class(scenario=make_scenario(configspace), considered_states=[StatusType.SUCCESS])
+    encoder.runhistory = runhistory
+    encoder.transform()
+
+    return encoder
+
+
+@pytest.mark.parametrize(
+    "encoder_class",
+    [
+        RunHistoryEncoder,
+        RunHistoryScaledEncoder,
+        RunHistoryLogEncoder,
+        RunHistoryLogScaledEncoder,
+        RunHistoryInverseScaledEncoder,
+        RunHistorySqrtScaledEncoder,
+    ],
+)
+def test_inverse_transform_recovers_the_costs(runhistory, make_scenario, configspace_small, configs, encoder_class):
+    """Mapping costs to the model's values and back gives the costs, so a model's prediction can be read in the
+    objective's units."""
+    encoder = _encoded(encoder_class, runhistory, make_scenario, configspace_small, configs)
+    costs = np.array([[0.2], [0.5], [1.0], [3.0], [8.0]])
+
+    recovered = encoder.inverse_transform_response_values(encoder.transform_response_values(costs.copy()))
+
+    np.testing.assert_allclose(recovered, costs, rtol=1e-8)
+
+
+def test_inverse_transform_is_increasing(runhistory, make_scenario, configspace_small, configs):
+    """A value below anything the model was trained on still maps to a cost, and the order is kept - a lower
+    confidence bound on a log scale can fall far below the observed costs."""
+    encoder = _encoded(RunHistoryLogScaledEncoder, runhistory, make_scenario, configspace_small, configs)
+    values = np.array([[-50.0], [-5.0], [-1.0], [0.0]])
+
+    costs = encoder.inverse_transform_response_values(values)
+
+    assert np.all(np.diff(costs[:, 0]) > 0)
+
+
+def test_an_encoder_without_an_inverse_says_so(runhistory, make_scenario, configspace_small, configs):
+    """An encoder whose transformation cannot be inverted answers `None` rather than a wrong cost."""
+    encoder = _encoded(RunHistoryEIPSEncoder, runhistory, make_scenario, configspace_small, configs)
+
+    assert encoder.inverse_transform_response_values(np.array([[0.5, 0.1]])) is None
+
+
+def test_a_subclass_with_its_own_transform_does_not_inherit_an_inverse(
+    runhistory, make_scenario, configspace_small, configs
+):
+    """Changing the transformation without supplying its inverse leaves the encoder without one, rather than with
+    the inverse of the transformation it replaced."""
+
+    class Squared(RunHistoryEncoder):
+        def transform_response_values(self, values: np.ndarray) -> np.ndarray:
+            return np.square(values)
+
+    encoder = _encoded(Squared, runhistory, make_scenario, configspace_small, configs)
+
+    assert encoder.inverse_transform_response_values(np.array([[4.0]])) is None

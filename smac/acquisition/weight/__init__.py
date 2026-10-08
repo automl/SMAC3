@@ -2,6 +2,7 @@ from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
 from smac.acquisition.weight.acceptance import (
     AbstractPriorAcceptancePolicy,
     AcceptAllPriors,
+    ClimbingComparisonPolicy,
     IncumbentComparisonPolicy,
 )
 from smac.acquisition.weight.composite import CompositeWeight, PriorEnsemble
@@ -26,6 +27,7 @@ __all__ = [
     "AbstractAcquisitionWeight",
     "AbstractPriorAcceptancePolicy",
     "AcceptAllPriors",
+    "ClimbingComparisonPolicy",
     "IncumbentComparisonPolicy",
     "CompositeWeight",
     "PriorEnsemble",
