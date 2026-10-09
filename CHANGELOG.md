@@ -1,3 +1,13 @@
+# 2.4.2
+## Improvements
+- Add a `WandbRunner` for logging SMAC trials to Weights & Biases
+
+## Dependencies
+- Add Weights & Biases as an optional dependency via `smac[wandb]`
+
+## Examples
+- Add an example for using SMAC with Weights & Biases
+
 # 2.4.1
 ## Improvements
 - Early diagnostics on the initial design evaluations: SMAC now reports when all configurations
