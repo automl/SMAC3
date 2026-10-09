@@ -98,6 +98,16 @@ class DaskParallelRunner(AbstractRunner):
             self._client = dask_client
             self._close_client_at_del = False
 
+    def on_start(self, resumed: bool) -> None:
+        """Call the start hook of the underlying runner.
+
+        Parameters
+        ----------
+        resumed : bool
+            Whether the optimization is continued from a previous run.
+        """
+        self._single_worker.on_start(resumed)
+
     def submit_trial(self, trial_info: TrialInfo, **dask_data_to_scatter: dict[str, Any]) -> None:
         """This function submits a configuration embedded in a ``trial_info`` object, and uses one of
         the workers to produce a result locally to each worker.
