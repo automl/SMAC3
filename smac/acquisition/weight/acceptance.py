@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Callable
 
 import copy
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
+from ConfigSpace.hyperparameters import NumericalHyperparameter
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
@@ -148,6 +149,11 @@ class IncumbentComparisonPolicy(AbstractPriorAcceptancePolicy):
         deliver rather than only by its mean, so an unexplored region is not rejected for being unexplored.
     std_denominator : float, defaults to 4.0
         Width of the incumbent's neighbourhood, as a divisor of the range of each hyperparameter.
+    neighbourhood_std : str, defaults to "range"
+        How wide the incumbent's neighbourhood is along each numerical hyperparameter. "range" is the range
+        divided by `std_denominator`. "prior" is the belief's own standard deviation, as [[FWS+25][FWS+25]] draw it,
+        measured from the belief's draws on the hyperparameter's unit axis; a hyperparameter the belief says nothing
+        about gets the width of the uniform distribution.
     """
 
     def __init__(
@@ -158,14 +164,17 @@ class IncumbentComparisonPolicy(AbstractPriorAcceptancePolicy):
         threshold: float = -0.15,
         acquisition_function: AbstractAcquisitionFunction | None = None,
         std_denominator: float = 4.0,
+        neighbourhood_std: str = "range",
     ) -> None:
         _check_sample_counts(n_samples, n_samples_per_hyperparameter)
+        _check_neighbourhood_std(neighbourhood_std)
 
         self._n_samples = n_samples
         self._n_samples_per_hyperparameter = n_samples_per_hyperparameter
         self._threshold = threshold
         self._acquisition_function = acquisition_function if acquisition_function is not None else LCB()
         self._std_denominator = std_denominator
+        self._neighbourhood_std = neighbourhood_std
 
     @property
     def meta(self) -> dict[str, Any]:  # noqa: D102
@@ -177,6 +186,7 @@ class IncumbentComparisonPolicy(AbstractPriorAcceptancePolicy):
                 "threshold": self._threshold,
                 "acquisition_function": self._acquisition_function.meta,
                 "std_denominator": self._std_denominator,
+                "neighbourhood_std": self._neighbourhood_std,
             }
         )
 
@@ -220,7 +230,19 @@ class IncumbentComparisonPolicy(AbstractPriorAcceptancePolicy):
             dict(incumbent),
             std_denominator=self._std_denominator,
         )
-        incumbent_samples = list(neighbourhood.sample_configuration(size=n_samples))
+        if self._neighbourhood_std == "prior":
+            random = copy.deepcopy(rng) if rng is not None else np.random.RandomState()
+            neighbourhood.seed(_seed(random))
+            incumbent_samples = _around(
+                configspace,
+                incumbent,
+                neighbourhood,
+                _widths(configspace, _in_space(configspace, prior_samples)),
+                n_samples,
+                random,
+            )
+        else:
+            incumbent_samples = list(neighbourhood.sample_configuration(size=n_samples))
 
         self._acquisition_function.update(model=model, num_data=len(runhistory), eta=0.0)
 
@@ -294,6 +316,11 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
         reads them. With an encoder that cannot be inverted, in the units the model works in.
     std_denominator : float, defaults to 4.0
         Width of the incumbent's neighbourhood, as a divisor of the range of each hyperparameter.
+    neighbourhood_std : str, defaults to "range"
+        How wide the incumbent's neighbourhood is along each numerical hyperparameter. "range" is the range
+        divided by `std_denominator`. "prior" is the belief's own standard deviation, as [[FWS+25][FWS+25]] draw it,
+        measured from the belief's draws on the hyperparameter's unit axis; a hyperparameter the belief says nothing
+        about gets the width of the uniform distribution.
     max_steps : int | None, defaults to None
         Maximum number of steps of each climb. `None` leaves it to the local search.
     n_steps_plateau_walk : int, defaults to 10
@@ -309,10 +336,12 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
         neighbourhood_share: float = 0.5,
         threshold: float = -0.15,
         std_denominator: float = 4.0,
+        neighbourhood_std: str = "range",
         max_steps: int | None = None,
         n_steps_plateau_walk: int = 10,
     ) -> None:
         _check_sample_counts(n_samples, n_samples_per_hyperparameter)
+        _check_neighbourhood_std(neighbourhood_std)
         if top_k < 1:
             raise ValueError(f"At least one climb is needed, got top_k={top_k}.")
         if not 0.0 <= neighbourhood_share <= 1.0:
@@ -324,6 +353,7 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
         self._neighbourhood_share = neighbourhood_share
         self._threshold = threshold
         self._std_denominator = std_denominator
+        self._neighbourhood_std = neighbourhood_std
         self._max_steps = max_steps
         self._n_steps_plateau_walk = n_steps_plateau_walk
 
@@ -338,6 +368,7 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
                 "neighbourhood_share": self._neighbourhood_share,
                 "threshold": self._threshold,
                 "std_denominator": self._std_denominator,
+                "neighbourhood_std": self._neighbourhood_std,
                 "max_steps": self._max_steps,
                 "n_steps_plateau_walk": self._n_steps_plateau_walk,
             }
@@ -440,12 +471,23 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
             std_denominator=self._std_denominator,
         )
         neighbourhood.seed(_seed(random))
-        nearby = _in_space(configspace, _sample(neighbourhood, n_samples))
+        if self._neighbourhood_std == "prior":
+            widths = _widths(configspace, _in_space(configspace, believed))
+
+            def around(n: int) -> list[Configuration]:
+                return _around(configspace, incumbent, neighbourhood, widths, n, random)
+
+        else:
+
+            def around(n: int) -> list[Configuration]:
+                return _sample(neighbourhood, n)
+
+        nearby = _in_space(configspace, around(n_samples))
         believed = self._pool(
             _in_space(configspace, believed),
             _unstated(prior.prior, configspace),
             configspace,
-            neighbourhood,
+            around,
         )
         if len(believed) == 0 or len(nearby) == 0:
             return None
@@ -485,7 +527,7 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
         believed: list[Configuration],
         unstated: set[str],
         configspace: ConfigurationSpace,
-        neighbourhood: ConfigurationSpace,
+        around: Callable[[int], list[Configuration]],
     ) -> list[Configuration]:
         """The belief's draws, a `neighbourhood_share` of them with their unstated hyperparameters replaced by
         values drawn around the incumbent. A replacement the search space does not admit - a condition the mixed
@@ -495,7 +537,7 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
         if n_pooled == 0 or len(unstated) == 0:
             return believed
 
-        replacements = _sample(neighbourhood, n_pooled)
+        replacements = around(n_pooled)
         pooled = list(believed)
         for i, replacement in enumerate(replacements):
             values = dict(believed[i])
@@ -553,6 +595,77 @@ def _check_sample_counts(n_samples: int, n_samples_per_hyperparameter: int | Non
 
     if n_samples_per_hyperparameter is not None and n_samples_per_hyperparameter < 1:
         raise ValueError(f"At least one sample per hyperparameter is needed, got {n_samples_per_hyperparameter}.")
+
+
+#: The ways the width of the incumbent's neighbourhood can be set; see the policies' `neighbourhood_std`.
+NEIGHBOURHOOD_STDS = ("range", "prior")
+
+
+def _check_neighbourhood_std(neighbourhood_std: str) -> None:
+    if neighbourhood_std not in NEIGHBOURHOOD_STDS:
+        raise ValueError(f"The neighbourhood's width is one of {NEIGHBOURHOOD_STDS}, got {neighbourhood_std!r}.")
+
+
+def _widths(configspace: ConfigurationSpace, draws: list[Configuration]) -> dict[int, float]:
+    """The standard deviation of the draws along each numerical hyperparameter, on its unit axis, by column."""
+    vectors = np.array([configuration.get_array() for configuration in draws], dtype=float)
+    widths = {}
+    for hyperparameter in configspace.values():
+        if not isinstance(hyperparameter, NumericalHyperparameter):
+            continue
+        column = configspace.index_of[hyperparameter.name]
+        values = vectors[:, column] if len(vectors) else np.array([])
+        values = values[~np.isnan(values)]
+        if len(values) > 1:
+            widths[column] = float(np.std(values))
+
+    return widths
+
+
+def _around(
+    configspace: ConfigurationSpace,
+    incumbent: Configuration,
+    neighbourhood: ConfigurationSpace,
+    widths: dict[int, float],
+    n: int,
+    random: np.random.RandomState,
+) -> list[Configuration]:
+    """`n` configurations around the incumbent, normal along each numerical hyperparameter in `widths` with that
+    standard deviation on its unit axis, truncated to it.
+
+    Drawn on the unit axis, so a log-scaled hyperparameter is as wide on its log axis as any other is on its own.
+    Everything else - categorical choices, and which hyperparameters a condition leaves active - comes from
+    `neighbourhood`.
+    """
+    centre = incumbent.get_array()
+    drawn = _sample(neighbourhood, n)
+    vectors = np.array([configuration.get_array() for configuration in drawn], dtype=float)
+    for column, width in widths.items():
+        active = ~np.isnan(vectors[:, column])
+        if np.isnan(centre[column]) or not active.any():
+            continue
+        vectors[active, column] = _truncated_normal(centre[column], width, int(active.sum()), random)
+
+    out = []
+    for vector in vectors:
+        try:
+            out.append(Configuration(configspace, vector=vector))
+        except Exception:  # noqa: BLE001
+            continue
+
+    return _in_space(configspace, out)
+
+
+def _truncated_normal(centre: float, width: float, n: int, random: np.random.RandomState) -> np.ndarray:
+    """`n` draws from a normal around `centre`, redrawn until they fall in [0, 1]."""
+    values = centre + width * random.standard_normal(n)
+    for _ in range(100):
+        outside = (values < 0.0) | (values > 1.0)
+        if not outside.any():
+            break
+        values[outside] = centre + width * random.standard_normal(int(outside.sum()))
+
+    return np.clip(values, 0.0, 1.0)
 
 
 def _sample_count(configspace: ConfigurationSpace, n_samples: int, n_samples_per_hyperparameter: int | None) -> int:

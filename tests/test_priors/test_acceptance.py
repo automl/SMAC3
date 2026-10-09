@@ -4,7 +4,7 @@ import tempfile
 
 import numpy as np
 import pytest
-from ConfigSpace import ConfigurationSpace, Float
+from ConfigSpace import Configuration, ConfigurationSpace, Float
 
 from smac import BlackBoxFacade, Scenario
 from smac.acquisition.function.abstract_acquisition_function import (
@@ -19,7 +19,12 @@ from smac.acquisition.weight import (
     PriorWeight,
     TabulatedPrior,
 )
-from smac.acquisition.weight.acceptance import _BeliefWeightedBound, _in_objective_units
+from smac.acquisition.weight.acceptance import (
+    _around,
+    _BeliefWeightedBound,
+    _in_objective_units,
+    _widths,
+)
 from smac.runhistory import TrialInfo, TrialValue
 from smac.runhistory.encoder import RunHistoryEIPSEncoder, RunHistoryLogEncoder
 from smac.utils.configspace import create_prior_configspace_copy
@@ -194,7 +199,6 @@ def test_meta_describes_the_policy():
     assert meta["acquisition_function"]["name"] == "LCB"
 
 
-
 # Judging where a belief leads: `ClimbingComparisonPolicy`
 
 
@@ -256,11 +260,17 @@ def test_a_correct_belief_about_one_hyperparameter_is_accepted():
     judged by where it leads, it is accepted."""
     smac = _wide_smac()
 
-    assert smac.add_prior(_about_x0(smac.scenario.configspace, OPTIMUM), acceptance_policy=IncumbentComparisonPolicy()) is None
+    assert (
+        smac.add_prior(_about_x0(smac.scenario.configspace, OPTIMUM), acceptance_policy=IncumbentComparisonPolicy())
+        is None
+    )
 
     smac = _wide_smac()
 
-    assert smac.add_prior(_about_x0(smac.scenario.configspace, OPTIMUM), acceptance_policy=ClimbingComparisonPolicy()) is not None
+    assert (
+        smac.add_prior(_about_x0(smac.scenario.configspace, OPTIMUM), acceptance_policy=ClimbingComparisonPolicy())
+        is not None
+    )
 
 
 def test_a_wrong_belief_about_one_hyperparameter_is_still_rejected():
@@ -418,3 +428,61 @@ def test_meta_describes_the_climbing_policy():
     assert meta["neighbourhood_share"] == 0.25
     assert meta["n_samples_per_hyperparameter"] == 100
     assert meta["n_samples"] == 5000
+
+
+# The incumbent's neighbourhood at the belief's own width
+
+
+def test_a_beliefs_width_is_measured_on_each_hyperparameters_unit_axis():
+    """A belief about `x0` with a standard deviation of 0.05 is that wide along `x0`, and as wide as the uniform
+    distribution, the square root of 1/12, along the hyperparameters it says nothing about."""
+    configspace = _space(3)
+    draws = _about_x0(configspace, 0.5).sample(4000, np.random.RandomState(0))
+
+    widths = _widths(configspace, draws)
+
+    assert widths[configspace.index_of["x0"]] == pytest.approx(0.05, abs=0.005)
+    for name in ("x1", "x2"):
+        assert widths[configspace.index_of[name]] == pytest.approx((1 / 12) ** 0.5, abs=0.01)
+
+
+def test_the_neighbourhood_is_drawn_at_the_widths_given():
+    """Centred on the incumbent, as wide as asked along each hyperparameter, and inside the search space."""
+    configspace = _space(2)
+    incumbent = Configuration(configspace, values={"x0": 0.3, "x1": 0.98})
+    neighbourhood = create_prior_configspace_copy(configspace, dict(incumbent))
+    widths = {configspace.index_of["x0"]: 0.05, configspace.index_of["x1"]: 0.2}
+
+    drawn = _around(configspace, incumbent, neighbourhood, widths, 4000, np.random.RandomState(0))
+    x0 = np.array([configuration["x0"] for configuration in drawn])
+    x1 = np.array([configuration["x1"] for configuration in drawn])
+
+    assert len(drawn) == 4000
+    assert x0.mean() == pytest.approx(0.3, abs=0.005)
+    assert x0.std() == pytest.approx(0.05, abs=0.005)
+    assert x1.min() >= 0.0 and x1.max() <= 1.0
+    assert x1.std() < 0.2, "truncated at the edge of the range it sits next to"
+
+
+@pytest.mark.parametrize("policy", [ClimbingComparisonPolicy, IncumbentComparisonPolicy])
+def test_a_neighbourhood_at_the_beliefs_width_still_tells_good_beliefs_from_bad(policy):
+    smac = _wide_smac()
+    context = _judging_context(smac)
+    judge = policy(neighbourhood_std="prior", n_samples_per_hyperparameter=500)
+
+    # The mean comparison refuses a correct belief about one of four hyperparameters whatever its neighbourhood,
+    # which is what the climbing policy is for, so only the refusal is common to both.
+    if policy is ClimbingComparisonPolicy:
+        assert judge.accept(PriorWeight(_about_x0(smac.scenario.configspace, OPTIMUM)), **context)
+    assert not judge.accept(PriorWeight(_about_x0(smac.scenario.configspace, 0.05)), **context)
+
+
+def test_the_neighbourhoods_width_is_checked():
+    for policy in (ClimbingComparisonPolicy, IncumbentComparisonPolicy):
+        with pytest.raises(ValueError, match="neighbourhood's width"):
+            policy(neighbourhood_std="belief")
+
+
+def test_meta_names_the_neighbourhoods_width():
+    assert ClimbingComparisonPolicy().meta["neighbourhood_std"] == "range"
+    assert IncumbentComparisonPolicy(neighbourhood_std="prior").meta["neighbourhood_std"] == "prior"

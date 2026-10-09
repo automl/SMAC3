@@ -87,6 +87,12 @@ the objective at hand: a confidence bound is read back through the runhistory en
 fitted to transformed costs. With an encoder that cannot be inverted, the threshold is in the units the model
 works in.
 
+The neighbourhood is a normal around the incumbent with a standard deviation of a quarter of each hyperparameter's
+range (`std_denominator`). The paper draws it as wide as the belief instead; `neighbourhood_std="prior"` does that,
+measuring the belief's standard deviation from its draws on each hyperparameter's unit axis. A hyperparameter the
+belief says nothing about then gets the width of the uniform distribution, and a log-scaled one is as wide on its log
+axis as any other is on its own. Both policies take the option.
+
 #### Beliefs about some hyperparameters
 
 `IncumbentComparisonPolicy` compares the mean score of the two sets of configurations, which is fair when the belief

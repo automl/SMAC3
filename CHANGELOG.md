@@ -24,6 +24,8 @@
   belief is not rejected for the hyperparameters it says nothing about. Both acceptance policies judge against a model
   fitted to every reported trial, compare in the objective's units, and take `n_samples_per_hyperparameter` as an
   alternative to a fixed `n_samples`.
+- Both acceptance policies take `neighbourhood_std="prior"`, drawing the incumbent's neighbourhood as wide as the
+  belief, as Fehring et al. 2025 do, rather than a quarter of each range.
 - Runhistory encoders map model values back to costs with `inverse_transform_response_values`, where their
   transformation can be inverted.
 - `LocalSearch.climb` runs a local search from given starting points only.
