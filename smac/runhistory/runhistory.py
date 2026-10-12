@@ -670,8 +670,10 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             List of configurations, all of which have at least one running trial.
         """
         configs = []
+        seen: set[Configuration] = set()
         for trial in self._running_trials:
-            if trial.config not in configs:
+            if trial.config not in seen:
+                seen.add(trial.config)
                 configs.append(trial.config)
 
         return configs

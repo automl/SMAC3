@@ -522,3 +522,23 @@ def test_unpack(runhistory, config1):
     for (k, v), expected in zip(unpacked.items(), params):
         assert k.instance == expected["instance"]
         assert v.cost == expected["cost"]
+
+
+def test_get_running_configs_dedup_is_order_preserving(runhistory, config1, config2):
+    # config1 has two running trials (different seeds), config2 has one.
+    # config1 is seen first.
+    runhistory.add(config=config1, cost=0.0, status=StatusType.RUNNING, seed=0)
+    runhistory.add(config=config2, cost=0.0, status=StatusType.RUNNING, seed=0)
+    runhistory.add(config=config1, cost=0.0, status=StatusType.RUNNING, seed=1)
+
+    result = runhistory.get_running_configs()
+
+    # Each distinct config appears exactly once...
+    assert len(result) == 2
+    assert set(result) == {config1, config2}
+    # ...in first-seen order.
+    assert result == [config1, config2]
+
+
+def test_get_running_configs_empty(runhistory):
+    assert runhistory.get_running_configs() == []

@@ -1,3 +1,11 @@
+# 2.4.2
+## Improvements
+- Make `RunHistory.get_running_configs` deduplicate running-trial
+  configurations in O(R) using a set instead of O(R²) list membership, which
+  could dominate the serial ask phase when many trials stay in-flight (e.g. a
+  long per-trial walltime limit on a highly parallel machine). Return value is
+  unchanged — same `list[Configuration]` in first-seen order (#1362).
+
 # 2.4.1
 ## Bugfixes
 - Scikit-learn 1.9 deprecated an alias for np.float32 called DTYPE. Change removes references to deprecated alias (#1314)
