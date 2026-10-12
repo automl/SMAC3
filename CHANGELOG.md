@@ -4,7 +4,7 @@
   configurations in O(R) using a set instead of O(R²) list membership, which
   could dominate the serial ask phase when many trials stay in-flight (e.g. a
   long per-trial walltime limit on a highly parallel machine). Return value is
-  unchanged — same `list[Configuration]` in first-seen order (#XXXX).
+  unchanged — same `list[Configuration]` in first-seen order (#1362).
 
 # 2.4.1
 ## Bugfixes
