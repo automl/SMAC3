@@ -28,7 +28,8 @@ extras_require = {
         "pymoo"
     ],
     "hpi": [
-        "hypershap>=0.0.6",
+        "hypershap>=0.0.6"
+    ],
     "wandb": [
         "wandb>=0.24.0",
     ],
