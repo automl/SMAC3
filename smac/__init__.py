@@ -28,6 +28,7 @@ try:
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
+        HPIFacade,
         HyperbandFacade,
         HyperparameterOptimizationFacade,
         MultiFidelityFacade,
@@ -45,6 +46,7 @@ try:
         "MultiFidelityFacade",
         "AlgorithmConfigurationFacade",
         "RandomFacade",
+        "HPIFacade",
         "HyperbandFacade",
         "MultiObjectiveFacade",
         "Callback",

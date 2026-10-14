@@ -9,6 +9,9 @@
 - Add an example for using SMAC with Weights & Biases
 
 # 2.4.1
+## Breaking
+- Drop support for Python 3.9 (minimum is now Python 3.10).
+
 ## Improvements
 - Early diagnostics on the initial design evaluations: SMAC now reports when all configurations
   failed, when some of them failed, or when all of them perform identically, and can abort the run
@@ -17,9 +20,16 @@
 - Include a new multi-objective method based on hypervolume
 - Added configurable `warn_mode` for ask-and-tell budget exhaustion behavior (#1197)
 - Batch model predictions when selecting the best predicted configuration.
+- Add `HPIRandomSearch`, an acquisition maximizer that dynamically restricts the configuration space to the
+  hyperparameters estimated to be most important (via HyperSHAP) for the current scalarization. Combined with
+  `ParEGO`, this implements HPI-ParEGO. Requires the optional `hypershap` dependency (`pip install smac[hpi]`).
+  Also works for single-objective optimization.
+- Add `HPIFacade`, which sets up HPI-ParEGO (`HPIRandomSearch`, `ParEGO` with `reweigh=5`, retraining every 2 configs).
 
 ## Examples
 - An example on the new multi-objective method
+- An example on HPI-ParEGO
+- An example on HPIRandomSearch for single objective optimization
 
 ## Bugfixes
 - Remove the dead `FirstRunCrashedException` safeguard in `SMBO._add_results`: its condition
