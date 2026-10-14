@@ -20,7 +20,6 @@ from smac.main.exceptions import AskAndTellBudgetExhaustedError
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runhistory.runhistory import RunHistory
-from smac.runner import FirstRunCrashedException
 from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.scenario import Scenario
@@ -482,16 +481,6 @@ class SMBO:
         for trial_info, trial_value in self._runner.iter_results():
             # Add the results of the run to the run history
             self.tell(trial_info, trial_value)
-
-            # We expect the first run to always succeed.
-            if self.runhistory.finished == 0 and trial_value.status == StatusType.CRASHED:
-                additional_info = ""
-                if "traceback" in trial_value.additional_info:
-                    additional_info = "\n\n" + trial_value.additional_info["traceback"]
-
-                raise FirstRunCrashedException(
-                    "The first run crashed. Please check your setup again." + additional_info
-                )
 
             # Update SMAC stats
             self._used_target_function_walltime += float(trial_value.time)

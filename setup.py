@@ -29,6 +29,8 @@ extras_require = {
     ],
     "hpi": [
         "hypershap>=0.0.6",
+    "wandb": [
+        "wandb>=0.24.0",
     ],
     "dev": [
         "setuptools",
