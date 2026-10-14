@@ -2,6 +2,10 @@
 ## Improvements
 - Add a `WandbRunner` for logging SMAC trials to Weights & Biases
 
+## Bugfixes
+- Fix `RunHistory` omitting completed budgets equal to their seed and duplicating budget entries
+  when overwriting trials (#1363)
+
 ## Dependencies
 - Add Weights & Biases as an optional dependency via `smac[wandb]`
 

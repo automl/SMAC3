@@ -25,7 +25,7 @@ from smac.utils.cost_transformer import CostTransformer
 from smac.utils.logging import get_logger
 from smac.utils.numpyencoder import NumpyEncoder
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
@@ -767,8 +767,7 @@ class RunHistory(Mapping[TrialKey, TrialValue]):
             if isk not in self._config_id_to_isk_to_budget[k.config_id]:
                 # Add new inst-seed-key with budget to main dict
                 self._config_id_to_isk_to_budget[k.config_id][isk] = [k.budget]
-            # Before it was k.budget not in isk
-            elif k.budget != isk.instance and k.budget != isk.seed:
+            elif k.budget not in self._config_id_to_isk_to_budget[k.config_id][isk]:
                 # We have to make sure that we don't mix none and float budgets
                 if isinstance(self._config_id_to_isk_to_budget[k.config_id][isk][0], float) != isinstance(
                     k.budget, float
