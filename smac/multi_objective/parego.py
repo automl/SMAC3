@@ -26,6 +26,9 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
         Scaling factor for the Dirichlet distribution when `objective_weights` are provided:
         - Low values -> more exploration (weights vary strongly)
         - High values -> stronger focus on the scenario-provided objective_weights
+    reweigh : int, defaults to 1
+        Resample scalarization weights only every `reweigh`-th call to `update_on_iteration_start`.
+        A value of 1 (default) resamples on every call, matching standard ParEGO.
     """
 
     def __init__(
@@ -34,8 +37,12 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
         rho: float = 0.05,
         seed: int | None = None,
         concentration_scale: float = 10.0,
+        reweigh: int = 1,
     ):
         super(ParEGO, self).__init__()
+
+        if reweigh < 1:
+            raise ValueError("reweigh must be at least 1.")
 
         if seed is None:
             seed = scenario.seed
@@ -44,6 +51,8 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
         self._seed = seed
         self._rng = np.random.RandomState(seed)
         self.concentration_scale = concentration_scale
+        self._reweigh = reweigh
+        self._reweigh_count = 0
 
         self._objective_weights = None
         if scenario.objective_weights is not None:
@@ -64,22 +73,28 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
                 "seed": self._seed,
                 "objective_weights": self._objective_weights,
                 "concentration_scale": self.concentration_scale,
+                "reweigh": self._reweigh,
             }
         )
 
         return meta
 
     def update_on_iteration_start(self) -> None:
-        """Sample new scalarization weights for the current iteration."""
-        if self._objective_weights is None:
-            # Sample uniformly and normalize to simplex
-            self._theta = self._rng.rand(self._n_objectives)
-            self._theta = self._theta / (np.sum(self._theta) + 1e-10)
-        else:
-            # Dirichlet sampling around user preference vector
-            w = self._objective_weights
-            alpha = self.concentration_scale * w
-            self._theta = self._rng.dirichlet(alpha)
+        """Samples new scalarization weights for the current iteration, but only every `reweigh`-th call; keeps
+        the previous weights otherwise.
+        """
+        if self._reweigh_count % self._reweigh == 0:
+            if self._objective_weights is None:
+                # Sample uniformly and normalize to simplex
+                self._theta = self._rng.rand(self._n_objectives)
+                self._theta = self._theta / (np.sum(self._theta) + 1e-10)
+            else:
+                # Dirichlet sampling around user preference vector
+                w = self._objective_weights
+                alpha = self.concentration_scale * w
+                self._theta = self._rng.dirichlet(alpha)
+
+        self._reweigh_count += 1
 
     def __call__(self, values: list[float]) -> float:  # noqa: D102
         # Weight the values

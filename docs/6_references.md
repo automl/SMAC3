@@ -23,3 +23,14 @@
 * [](){#LPAS20}[LPAS20] Eric Hans Lee, Valerio Perrone, Cedric Archambeau, Matthias Seeger; 
     Cost-aware Bayesian Optimization; 
     https://arxiv.org/abs/2003.10870
+
+
+* [](){#WMFL26}[WMFL26] M. Wever, M. Muschalik, F. Fumagalli, M. Lindauer;
+ HyperSHAP: Shapley values and interactions for explaining hyperparameter optimization;
+ https://ojs.aaai.org/index.php/AAAI/article/view/39898
+
+
+* [](){#TWL26}[TWL26] D. Theodorakopoulos, M. Wever, M. Lindauer;
+    Dynamic Hyperparameter Importance for Efficient Multi-Objective Optimization; 
+    https://arxiv.org/pdf/2601.03166
+

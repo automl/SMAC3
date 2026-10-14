@@ -27,6 +27,12 @@ extras_require = {
     "mosmac": [
         "pymoo"
     ],
+    "hpi": [
+        "hypershap>=0.0.6"
+    ],
+    "wandb": [
+        "wandb>=0.24.0",
+    ],
     "dev": [
         "setuptools",
         "types-setuptools",
@@ -74,7 +80,7 @@ setuptools.setup(
     version=version,
     packages=setuptools.find_packages(exclude=["tests"]),
     include_package_data=True,
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     install_requires=[
         "numpy",
         "scipy>=1.9.2",
@@ -93,8 +99,6 @@ setuptools.setup(
     test_suite="pytest",
     platforms=["Linux"],
     classifiers=[
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Natural Language :: English",
         "Intended Audience :: Developers",
