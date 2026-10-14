@@ -6,7 +6,7 @@ An example of optimizing a simple support vector machine on the IRIS dataset (se
 ``HyperparameterOptimizationFacade`` (random forest and EI), but uses ``HPIRandomSearch`` as acquisition maximizer.
 ``HPIRandomSearch`` dynamically estimates via HyperSHAP which hyperparameters matter most, and restricts the search
 to those. This works for single-objective optimization and for the multi-objective case (see
-[HPI-ParEGO](../3%20Multi-Objective/4_hpi_parego.md)). Requires ``pip install smac[hpi]`` (Python >= 3.10).
+[HPI-ParEGO](../3%20Multi-Objective/4_hpi_parego.md)). Requires ``pip install smac[hpi]``.
 """
 
 import numpy as np

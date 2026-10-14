@@ -1,4 +1,7 @@
 # 2.4.1
+## Breaking
+- Drop support for Python 3.9 (minimum is now Python 3.10).
+
 ## Improvements
 - Include a new multi-objective method based on hypervolume
 - Added configurable `warn_mode` for ask-and-tell budget exhaustion behavior (#1197)

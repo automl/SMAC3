@@ -9,7 +9,7 @@ dataset using an MLP, and the configurations are shown in a plot, highlighting t
 The ``HPIFacade`` uses ``ParEGO`` (with ``reweigh=5``, so a scalarization is kept for several iterations), and
 ``HPIRandomSearch`` as acquisition maximizer. Since the configuration selector retrains the surrogate model every
 two configurations, the hyperparameter importance estimates stay up to date. SMAC may evaluate a configuration on
-several seeds. Requires ``pip install smac[hpi]`` (Python >= 3.10).
+several seeds. Requires ``pip install smac[hpi]``.
 """
 
 from __future__ import annotations
