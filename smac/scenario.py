@@ -111,7 +111,7 @@ class Scenario:
     max_budget: float | int | None = None
 
     # Matern kernel
-    do_autoscale_length: bool = False
+    do_autoscale_length: bool = True
 
     # Others
     seed: int = 0

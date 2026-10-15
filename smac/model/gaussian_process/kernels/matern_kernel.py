@@ -26,7 +26,6 @@ class MaternKernel(AbstractKernel, kernels.Matern):
         operate_on: np.ndarray | None = None,
         has_conditions: bool = False,
         prior: AbstractPrior | None = None,
-        do_autoscale_length: bool = False,
     ) -> None:
         super().__init__(
             operate_on=operate_on,
@@ -36,7 +35,6 @@ class MaternKernel(AbstractKernel, kernels.Matern):
             length_scale_bounds=length_scale_bounds,
             nu=nu,
         )
-        self.do_autoscale_length = do_autoscale_length
 
     def _call(
         self,
@@ -47,13 +45,6 @@ class MaternKernel(AbstractKernel, kernels.Matern):
     ) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
         X = np.atleast_2d(X)
         length_scale = kernels._check_length_scale(X, self.length_scale)
-
-        if self.do_autoscale_length:
-            # Adjust the length scale of the Matern Kernel
-            #   according to Xu et al. 2025 (https://arxiv.org/abs/2402.02746)
-            # Aka. length_scale = c * sqrt(dim(X))
-            # Here c is simply set as the provided length_scale (default: 1.0)
-            length_scale = length_scale * np.sqrt(X.shape[1])
 
         if Y is None:
             dists = scipy.spatial.distance.pdist(X / length_scale, metric="euclidean")

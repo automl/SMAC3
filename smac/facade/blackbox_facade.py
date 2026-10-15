@@ -133,12 +133,21 @@ class BlackBoxFacade(AbstractFacade):
         # Continuous / Categorical Kernels
         exp_kernel, ham_kernel = 0.0, 0.0
         if len(cont_dims) > 0:
+            length_scale = np.ones([len(cont_dims)])
+            if scenario.do_autoscale_length:
+                # Adjust the length scale of the Matern Kernel
+                # according to Xu et al. 2025 (https://arxiv.org/abs/2402.02746)
+                # Aka. length_scale = c * sqrt(dim(X))
+                # Here c is simply set as the provided length_scale (default: 1.0)
+                length_scale = length_scale * np.sqrt(len(cont_dims))
+
             exp_kernel = MaternKernel(
-                np.ones([len(cont_dims)]),
-                [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cont_dims))],
+                length_scale=length_scale,
+                length_scale_bounds=[
+                    (np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cont_dims))
+                ],
                 nu=2.5,
                 operate_on=cont_dims,
-                do_autoscale_length=scenario.do_autoscale_length,
             )
         if len(cat_dims) > 0:
             ham_kernel = HammingKernel(
