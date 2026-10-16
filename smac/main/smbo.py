@@ -532,6 +532,7 @@ class SMBO:
         # The SMBO object recognizes that stats (based on runhistory) is not empty and hence does not the run initial
         # design anymore.
         # Since the runhistory is already updated, the model uses previous data directly.
+        resumed = False
 
         if not self._overwrite:
             old_output_directory = self._scenario.output_directory
@@ -549,6 +550,8 @@ class SMBO:
                     if self._runhistory.submitted <= 1 and self._runhistory.finished == 0:
                         logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
                         self.reset()
+                    else:
+                        resumed = True
                 else:
                     # Here, we run into different scenarios
                     diff = recursively_compare_dicts(
@@ -586,6 +589,9 @@ class SMBO:
         # And now we save everything
         self._scenario.save()
         self.save()
+
+        if isinstance(self._runner, AbstractRunner):
+            self._runner.on_start(resumed)
 
     def validate(
         self,
