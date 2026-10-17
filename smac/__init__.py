@@ -28,6 +28,7 @@ try:
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
+        CostAwareFacade,
         HPIFacade,
         HyperbandFacade,
         HyperparameterOptimizationFacade,
@@ -49,6 +50,7 @@ try:
         "HPIFacade",
         "HyperbandFacade",
         "MultiObjectiveFacade",
+        "CostAwareFacade",
         "Callback",
     ]
 except ModuleNotFoundError as e:
