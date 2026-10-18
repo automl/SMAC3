@@ -512,10 +512,14 @@ class AbstractIntensifier:
         previous_incumbents = incumbents.copy()
         previous_incumbent_ids = incumbent_ids.copy()
 
-        # Little sanity check here for consistency
-        if len(incumbents) > 0:
-            assert incumbent_isb_keys is not None
-            assert len(incumbent_isb_keys) > 0
+        # When using multi-objective with multi-fidelity, pareto-front incumbents
+        # may have been evaluated at different budgets, leaving the ISB-key
+        # Intersection empty. Skip comparison since we cannot compare fairly
+        if len(incumbents) > 0 and len(incumbent_isb_keys) == 0:
+            logger.debug(
+                "Incumbents ISB-key intersecion is empty (incumbents evaluated at diffrent budgets). Skipping incumbents update."
+            )
+            return
 
         # If there are no incumbents at all, we just use the new config as new incumbent
         # Problem: We can add running incumbents
@@ -525,6 +529,7 @@ class AbstractIntensifier:
 
             # Nothing else to do
             return
+
 
         # Comparison keys
         # This one is a bit tricky: We would have problems if we compare with budgets because we might have different
