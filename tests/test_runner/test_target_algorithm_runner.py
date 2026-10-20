@@ -155,7 +155,7 @@ def test_limits_in_daemonic_process(
     """Test that resource limits also work in a daemonic process (e.g. a dask worker with nanny), which is not
     allowed to start pynisher's child process unless its daemon flag is cleared"""
     runner = make_runner(target, use_instances=True)
-    runner._algorithm_walltime_limit = 1
+    runner._algorithm_walltime_limit = 30  # generous, as pynisher's overhead counts towards the limit
     monkeypatch.setattr(multiprocessing.current_process(), "daemon", True)
 
     runner.submit_trial(TrialInfo(config=2, instance="test", seed=0, budget=0.0))

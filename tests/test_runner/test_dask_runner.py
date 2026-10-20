@@ -39,10 +39,16 @@ def target_failed(x: float, seed: int, instance: str) -> tuple[float, dict]:
     raise RuntimeError("Failed.")
 
 
+# Pynisher's own overhead counts towards the walltime limit and can exceed a second within a dask worker on slow
+# machines. Hence, trials that should time out use a short limit, and trials that should succeed a generous one.
+TIMEOUT_LIMIT = 1
+SUCCESS_LIMIT = 30
+
+
 def target_timeout_if_positive(x: float, seed: int, instance: str) -> tuple[float, dict]:
-    """Target function which exceeds a walltime limit of 1 second for positive x"""
+    """Target function which exceeds `TIMEOUT_LIMIT` for positive x"""
     if x > 0:
-        time.sleep(3)
+        time.sleep(3 * TIMEOUT_LIMIT)
     return x**2, {"key": seed, "instance": instance}
 
 
@@ -235,19 +241,24 @@ def test_walltime_limit(make_dummy_ta: Callable[..., TargetFunctionRunner]) -> N
     * Trials exceeding the walltime limit are reported as TIMEOUT.
     * The workers survive the timeouts and keep running trials afterwards.
     """
-    single_worker = make_dummy_ta(target_timeout_if_positive, n_workers=2, trial_walltime_limit=1)
+    single_worker = make_dummy_ta(target_timeout_if_positive, n_workers=2, trial_walltime_limit=TIMEOUT_LIMIT)
     runner = DaskParallelRunner(single_worker=single_worker)
-    workers_before = set(runner._client.scheduler_info()["workers"])
+    try:
+        workers_before = set(runner._client.scheduler_info()["workers"])
 
-    values = run_trials(runner, [1, -2])
-    assert [value.status for value in values] == [StatusType.TIMEOUT, StatusType.SUCCESS]
+        values = run_trials(runner, [1, 2])
+        assert [value.status for value in values] == [StatusType.TIMEOUT, StatusType.TIMEOUT]
 
-    values = run_trials(runner, [-3, -4])
-    assert [value.status for value in values] == [StatusType.SUCCESS, StatusType.SUCCESS]
-    assert [value.cost for value in values] == [9, 16]
+        # The runner is sent to the workers with every trial, so this applies to the next trials
+        single_worker._algorithm_walltime_limit = SUCCESS_LIMIT
+        values = run_trials(runner, [-3, -4])
+        assert [value.status for value in values] == [StatusType.SUCCESS, StatusType.SUCCESS]
+        assert [value.cost for value in values] == [9, 16]
 
-    assert set(runner._client.scheduler_info()["workers"]) == workers_before
-    runner.close()
+        assert set(runner._client.scheduler_info()["workers"]) == workers_before
+    finally:
+        # Otherwise the workers keep running and disturb later tests measuring cpu time
+        runner.close()
 
 
 @pytest.mark.parametrize("daemon", [True, False])
@@ -265,9 +276,9 @@ def test_walltime_limit_with_external_client(
         cluster = LocalCluster(n_workers=1, processes=True, dashboard_address=":0")
 
     with cluster, Client(cluster) as client:
-        runner = DaskParallelRunner(
-            single_worker=make_dummy_ta(target_timeout_if_positive, n_workers=1, trial_walltime_limit=1),
-            dask_client=client,
-        )
-        values = run_trials(runner, [1, -2])
-        assert [value.status for value in values] == [StatusType.TIMEOUT, StatusType.SUCCESS]
+        single_worker = make_dummy_ta(target_timeout_if_positive, n_workers=1, trial_walltime_limit=TIMEOUT_LIMIT)
+        runner = DaskParallelRunner(single_worker=single_worker, dask_client=client)
+        assert run_trials(runner, [1])[0].status == StatusType.TIMEOUT
+
+        single_worker._algorithm_walltime_limit = SUCCESS_LIMIT
+        assert run_trials(runner, [-2])[0].status == StatusType.SUCCESS
