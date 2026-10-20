@@ -24,6 +24,7 @@ def _scenario(tmp_path, mode, n_trials=20, seed=0, **kwargs):
         crash_cost=1000.0,
         initial_design_diagnostics=mode,
         output_directory=tmp_path,
+        overwrite=True,
         **kwargs,
     )
 
@@ -85,7 +86,7 @@ def test_diagnostics_warn_by_default(tmp_path):
     scenario = Scenario(_configspace(), n_trials=10, output_directory=tmp_path)
     assert scenario.initial_design_diagnostics == "warn"
 
-    smac = HyperparameterOptimizationFacade(scenario, _healthy, overwrite=True)
+    smac = HyperparameterOptimizationFacade(scenario, _healthy)
     registered = [c for c in smac._callbacks if isinstance(c, InitialDesignDiagnosticsCallback)]
     assert len(registered) == 1
     assert registered[0].mode == "warn"
@@ -96,7 +97,7 @@ def test_diagnostics_can_be_switched_off(tmp_path):
         _configspace(), n_trials=10, initial_design_diagnostics="off", output_directory=tmp_path
     )
 
-    smac = HyperparameterOptimizationFacade(scenario, _healthy, overwrite=True)
+    smac = HyperparameterOptimizationFacade(scenario, _healthy)
     registered = [c for c in smac._callbacks if isinstance(c, InitialDesignDiagnosticsCallback)]
     assert registered == [], "the callback must not be registered when switched off"
 
@@ -104,7 +105,7 @@ def test_diagnostics_can_be_switched_off(tmp_path):
 @pytest.mark.parametrize("mode", ["warn", "abort"])
 def test_callback_is_registered_when_requested(tmp_path, mode):
     scenario = _scenario(tmp_path, mode)
-    smac = HyperparameterOptimizationFacade(scenario, _healthy, overwrite=True)
+    smac = HyperparameterOptimizationFacade(scenario, _healthy)
 
     registered = [c for c in smac._callbacks if isinstance(c, InitialDesignDiagnosticsCallback)]
     assert len(registered) == 1
@@ -115,7 +116,7 @@ def test_all_trials_crashed_is_reported(tmp_path):
     scenario = _scenario(tmp_path, "warn")
 
     with _CaptureWarnings() as logs:
-        smac = HyperparameterOptimizationFacade(scenario, _crashing, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, _crashing)
         smac.optimize()
 
     assert "configurations of the initial design failed" in logs.text
@@ -127,7 +128,7 @@ def test_all_trials_crashed_aborts_in_abort_mode(tmp_path):
     scenario = _scenario(tmp_path, "abort")
 
     with _CaptureWarnings() as logs:
-        smac = HyperparameterOptimizationFacade(scenario, _crashing, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, _crashing)
         smac.optimize()
 
     assert "Aborting the optimization" in logs.text
@@ -140,7 +141,7 @@ def test_constant_objective_is_reported(tmp_path):
     scenario = _scenario(tmp_path, "warn")
 
     with _CaptureWarnings() as logs:
-        smac = HyperparameterOptimizationFacade(scenario, _constant, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, _constant)
         smac.optimize()
 
     assert "same cost" in logs.text
@@ -155,7 +156,7 @@ def test_constant_objective_aborts_in_abort_mode(tmp_path):
     scenario = _scenario(tmp_path, "abort")
 
     with _CaptureWarnings() as logs:
-        smac = HyperparameterOptimizationFacade(scenario, _constant, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, _constant)
         smac.optimize()
 
     assert "same cost" in logs.text
@@ -168,7 +169,7 @@ def test_constant_objective_does_not_abort_in_warn_mode(tmp_path):
     scenario = _scenario(tmp_path, "warn")
 
     with _CaptureWarnings() as logs:
-        smac = HyperparameterOptimizationFacade(scenario, _constant, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, _constant)
         smac.optimize()
 
     assert "same cost" in logs.text
@@ -182,7 +183,7 @@ def test_healthy_run_is_never_reported(tmp_path, mode):
     scenario = _scenario(tmp_path, mode)
 
     with _CaptureWarnings() as logs:
-        smac = HyperparameterOptimizationFacade(scenario, _healthy, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, _healthy)
         smac.optimize()
 
     assert "configurations of the initial design failed" not in logs.text
@@ -201,7 +202,7 @@ def test_partial_crashes_do_not_trigger(tmp_path):
     scenario = _scenario(tmp_path, "abort")
 
     with _CaptureWarnings() as logs:
-        smac = HyperparameterOptimizationFacade(scenario, half_broken, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, half_broken)
         smac.optimize()
 
     assert "configurations of the initial design failed" not in logs.text
@@ -223,7 +224,7 @@ def test_first_run_crash_no_longer_raises(tmp_path):
         return float(config["x0"])
 
     scenario = _scenario(tmp_path, "off", n_trials=8)
-    smac = HyperparameterOptimizationFacade(scenario, first_run_crashes, overwrite=True)
+    smac = HyperparameterOptimizationFacade(scenario, first_run_crashes)
 
     # Must not raise; the optimization simply continues.
     smac.optimize()
@@ -250,7 +251,7 @@ def test_single_config_initial_design_does_not_abort_on_one_crash(tmp_path):
     scenario = _scenario(tmp_path, "abort", n_trials=15)
 
     with _CaptureWarnings() as logs:
-        smac = RandomFacade(scenario, only_default_crashes, overwrite=True)
+        smac = RandomFacade(scenario, only_default_crashes)
         assert len(smac.intensifier._config_selector._initial_design_configs) == 1
         smac.optimize()
 
@@ -266,7 +267,7 @@ def test_abort_waits_for_the_minimum_number_of_trials(tmp_path):
     scenario = _scenario(tmp_path, "abort", n_trials=15)
 
     with _CaptureWarnings() as logs:
-        smac = RandomFacade(scenario, _crashing, overwrite=True)
+        smac = RandomFacade(scenario, _crashing)
         smac.optimize()
 
     assert "Aborting the optimization" in logs.text
@@ -321,7 +322,7 @@ def test_partial_failures_are_counted(tmp_path):
     scenario = _scenario(tmp_path, "warn")
 
     with _CaptureWarnings() as logs:
-        smac = HyperparameterOptimizationFacade(scenario, half_broken, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, half_broken)
         smac.optimize()
 
     assert "initial design configurations failed" in logs.text
@@ -365,7 +366,7 @@ def test_all_failed_does_not_also_report_a_count(tmp_path):
     scenario = _scenario(tmp_path, "warn")
 
     with _CaptureWarnings() as logs:
-        smac = HyperparameterOptimizationFacade(scenario, _crashing, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, _crashing)
         smac.optimize()
 
     assert "configurations of the initial design failed" in logs.text
@@ -377,7 +378,7 @@ def test_healthy_run_reports_no_failure_count(tmp_path):
     scenario = _scenario(tmp_path, "warn")
 
     with _CaptureWarnings() as logs:
-        smac = HyperparameterOptimizationFacade(scenario, _healthy, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, _healthy)
         smac.optimize()
 
     assert "failed" not in logs.text

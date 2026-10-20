@@ -36,6 +36,7 @@ class Version20(Wrapper):
         # Create scenario
         scenario = Scenario(
             self.model.configspace,
+            overwrite=True,
             n_trials=self.task.n_trials,
             walltime_limit=self.task.walltime_limit,
             deterministic=self.task.deterministic,
@@ -84,7 +85,6 @@ class Version20(Wrapper):
             intensifier=intensifier,
             config_selector=config_selector,
             logging_level=99999,
-            overwrite=True,
         )
         smac.optimize()
 

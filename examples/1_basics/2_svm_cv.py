@@ -71,6 +71,7 @@ if __name__ == "__main__":
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
         classifier.configspace,
+        overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state
         n_trials=50,  # We want to run max 50 trials (combination of config and seed)
     )
 
@@ -83,7 +84,6 @@ if __name__ == "__main__":
         scenario,
         classifier.train,
         initial_design=initial_design,
-        overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state
     )
 
     incumbent = smac.optimize()

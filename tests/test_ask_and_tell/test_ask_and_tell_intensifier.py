@@ -31,6 +31,8 @@ def make_facade(digits_dataset, make_sgd) -> HyperparameterOptimizationFacade:
 
         scenario = Scenario(
             model.configspace,
+            experiment_name="test",
+            overwrite=True,
             deterministic=deterministic,
             n_trials=15,  # We want to try max 5000 different configurations
             min_budget=1,  # Use min one instance
@@ -46,7 +48,6 @@ def make_facade(digits_dataset, make_sgd) -> HyperparameterOptimizationFacade:
             intensifier=HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=max_config_calls),
             logging_level=0,
             warn_mode=warn_mode,
-            overwrite=True,
         )
 
         return model, smac

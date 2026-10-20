@@ -61,7 +61,7 @@ class CustomCallback(Callback):
 def test_callback(rosenbrock):
     N_TRIALS = 5
 
-    scenario = Scenario(rosenbrock.configspace, n_trials=N_TRIALS)
+    scenario = Scenario(rosenbrock.configspace, overwrite=True, n_trials=N_TRIALS)
 
     # The intensify percentage indirectly influences the number of calls of configuration
     # sampling.
@@ -74,7 +74,6 @@ def test_callback(rosenbrock):
         intensifier=intensifier,
         initial_design=initial_design,
         callbacks=[Callback()],
-        overwrite=True,
     )
     smac.optimize()
 
@@ -82,7 +81,7 @@ def test_callback(rosenbrock):
 def test_custom_callback(rosenbrock):
     N_TRIALS = 40
 
-    scenario = Scenario(rosenbrock.configspace, n_trials=N_TRIALS)
+    scenario = Scenario(rosenbrock.configspace, overwrite=True, n_trials=N_TRIALS)
     callback = CustomCallback()
 
     # The intensify percentage indirectly influences the number of calls of configuration
@@ -96,7 +95,6 @@ def test_custom_callback(rosenbrock):
         intensifier=intensifier,
         initial_design=initial_design,
         callbacks=[callback],
-        overwrite=True,
     )
     smac.optimize()
 

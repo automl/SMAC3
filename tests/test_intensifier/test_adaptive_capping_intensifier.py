@@ -11,6 +11,7 @@ import numpy as np
 from smac.main.exceptions import ConfigurationSpaceExhaustedException
 from smac.utils.configspace import get_config_hash
 from smac.utils.logging import get_logger
+
 """
 The Adaptive Capping Intensifier test tests SMAC capabilities to work with the adaptive capping feature being enabled.
 To this end, we create a train function mockup which also logs every single evaluation requested by SMAC to ensure that
@@ -23,6 +24,7 @@ __copyright__ = "Copyright 2025, automl.org"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)
+
 
 class TrainMockup:
     """
@@ -57,7 +59,7 @@ class TrainMockup:
         self.expected_behavior_violations = []
         np.random.seed(42)
 
-    def train(self, config:Configuration, instance: str, cutoff: int, seed: int = 0):
+    def train(self, config: Configuration, instance: str, cutoff: int, seed: int = 0):
         self.log_counter += 1
         config_hash = get_config_hash(config)
         rand_perf = np.random.random_integers(low=1, high=20)
@@ -99,9 +101,11 @@ class TrainMockup:
             c_challenger = np.array([self.log_map[config_hash][instance] for instance in instances_evaluated]).sum()
             c_incumbent = np.array([self.log_map[self.incumbent][instance] for instance in instances_evaluated]).sum()
 
-            logger.debug(f"evaluated challenger {config_hash} on budget {n_challenger} with performance "
-                         f"{c_challenger} and incumbent {self.incumbent} was evaluated on budget {n_incumbent} "
-                         f"showing performance {c_incumbent}.")
+            logger.debug(
+                f"evaluated challenger {config_hash} on budget {n_challenger} with performance "
+                f"{c_challenger} and incumbent {self.incumbent} was evaluated on budget {n_incumbent} "
+                f"showing performance {c_incumbent}."
+            )
 
             if n_challenger >= n_incumbent and c_challenger < c_incumbent:
                 self.event_log += [(self.log_counter, "accept", config_hash)]
@@ -117,15 +121,30 @@ class TrainMockup:
         report += "\n".join(self.expected_behavior_violations)
         return report
 
-def get_basic_setup(train, num_configs = 10, num_instances = 10, num_trials=30):
+
+def get_basic_setup(train, num_configs=10, num_instances=10, num_trials=30):
     # generate config space with num_configs many different configurations
-    cs = ConfigurationSpace({"p1": ["v"+str(i) for i in range(num_configs)], })
+    cs = ConfigurationSpace(
+        {
+            "p1": ["v" + str(i) for i in range(num_configs)],
+        }
+    )
     cs.seed(42)
     # generate instance set with num_instances many instances
-    instances = ["i"+str(i) for i in range(num_instances)]
+    instances = ["i" + str(i) for i in range(num_instances)]
     # setup scenario with generated config space, instances, and the given number of trials
-    scenario = Scenario(cs, deterministic=True, n_trials=num_trials, instances=instances, seed=44, adaptive_capping=True, runtime_cutoff=500)
+    scenario = Scenario(
+        cs,
+        experiment_name="test",
+        deterministic=True,
+        n_trials=num_trials,
+        instances=instances,
+        seed=44,
+        adaptive_capping=True,
+        runtime_cutoff=500,
+    )
     return AlgorithmConfigurationFacade(scenario, train)
+
 
 def test_incumbent_switch() -> None:
     """
@@ -151,3 +170,4 @@ def test_incumbent_switch() -> None:
         pass
 
     assert tm.expected_behavior_violated is False, tm.get_violation_report()
+

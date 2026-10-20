@@ -48,7 +48,7 @@ if __name__ == "__main__":
     # --- Part 1: Mixed ask-and-tell + optimize ---
     # This shows how to use ask/tell for some trials and then hand control back to SMAC.
 
-    scenario = Scenario(model.configspace, deterministic=False, n_trials=40)
+    scenario = Scenario(model.configspace, overwrite=True, deterministic=False, n_trials=40)
 
     intensifier = HyperparameterOptimizationFacade.get_intensifier(
         scenario,
@@ -60,7 +60,6 @@ if __name__ == "__main__":
         scenario,
         target_function=model.train,
         intensifier=intensifier,
-        overwrite=True,
     )
 
     # We can ask SMAC which trials should be evaluated next

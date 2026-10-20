@@ -79,6 +79,7 @@ if __name__ == "__main__":
     # Next, we create an object, holding general information about the run
     scenario = Scenario(
         classifier.configspace,
+        overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state
         n_trials=50,  # We want to run max 50 trials (combination of config and instances in the case of
         # deterministic=True. In the case of deterministic=False, this would be the
         # combination of instances, seeds and configs). The number of distinct configurations
@@ -99,7 +100,6 @@ if __name__ == "__main__":
         scenario,
         classifier.train,
         initial_design=initial_design,
-        overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state
         # The next line defines the intensifier, i.e., the module that governs the selection of
         # instance-seed pairs. Since we set deterministic to True above, it only governs the instance in
         # this example. Technically, it is not necessary to create the intensifier as a user, but it is

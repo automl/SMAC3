@@ -75,6 +75,7 @@ if __name__ == "__main__":
     # Scenario object
     scenario = Scenario(
         configspace=cs,
+        overwrite=True,
         deterministic=True,  # Only one seed
         n_trials=150,
         objectives=["metric1", "metric2"],
@@ -85,7 +86,6 @@ if __name__ == "__main__":
         scenario=scenario,
         target_function=target_function,
         multi_objective_algorithm=HPOFacade.get_multi_objective_algorithm(scenario),
-        overwrite=True,
     )
     incumbents = smac.optimize()
 

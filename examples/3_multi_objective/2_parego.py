@@ -8,6 +8,7 @@ a Pareto front. The red cross indicates the best configuration selected by SMAC.
 In the optimization, SMAC evaluates the configurations on two different seeds. Therefore, the plot shows the
 mean accuracy and run-time of each configuration.
 """
+
 from __future__ import annotations
 
 import time
@@ -141,6 +142,7 @@ if __name__ == "__main__":
     # Define our environment variables
     scenario = Scenario(
         mlp.configspace,
+        overwrite=True,
         objectives=objectives,
         walltime_limit=30,  # After 30 seconds, we stop the hyperparameter optimization
         n_trials=200,  # Evaluate max 200 different trials
@@ -159,7 +161,6 @@ if __name__ == "__main__":
         initial_design=initial_design,
         multi_objective_algorithm=multi_objective_algorithm,
         intensifier=intensifier,
-        overwrite=True,
     )
 
     # Let's optimize

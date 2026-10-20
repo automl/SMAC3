@@ -76,7 +76,7 @@ def test_mean_aggregation(facade, make_scenario, configspace):
 
     # walltime_limit must be large enough that n_trials (not walltime) is always the binding constraint.
     # BlackBoxFacade trains a GP which is slower than other facades.
-    scenario: Scenario = make_scenario(configspace, use_multi_objective=True, n_trials=N_TRIALS, walltime_limit=3600)
+    scenario: Scenario = make_scenario(configspace, overwrite=True, use_multi_objective=True, n_trials=N_TRIALS, walltime_limit=3600)
         # TODO: Check whether different weighting affects the sampled configurations.
     weights = [[0.1,0.9], [0.5,0.5], [0.8,0.2], [1.0,0.0], [0.0,1.0], None]
     for weight_pair in weights:
@@ -93,7 +93,6 @@ def test_mean_aggregation(facade, make_scenario, configspace):
             intensifier=intensifier,
             config_selector=config_selector,
             initial_design=initial_design,
-            overwrite=True,
         )
         incumbents = smac.optimize()
 
@@ -120,7 +119,7 @@ def test_parego(facade, make_scenario, configspace):
     N_TRIALS = 64
     RETRAIN_AFTER = 8
 
-    scenario: Scenario = make_scenario(configspace, use_multi_objective=True, n_trials=N_TRIALS, walltime_limit=3600)
+    scenario: Scenario = make_scenario(configspace, overwrite=True, use_multi_objective=True, n_trials=N_TRIALS, walltime_limit=3600)
     multi_objective_algorithm = WrapStrategy(ParEGO, scenario=scenario)
     intensifier = Intensifier(scenario, max_config_calls=1, max_incumbents=10)
     config_selector = ConfigSelector(scenario, retrain_after=RETRAIN_AFTER)
@@ -133,7 +132,6 @@ def test_parego(facade, make_scenario, configspace):
         intensifier=intensifier,
         config_selector=config_selector,
         initial_design=initial_design,
-        overwrite=True,
     )
     incumbents = smac.optimize()
 

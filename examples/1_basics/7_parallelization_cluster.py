@@ -16,6 +16,7 @@ import numpy as np
 from ConfigSpace import ConfigurationSpace, Float
 from ConfigSpace import Configuration  # for type hints
 
+
 class Branin:
     def __init__(self, seed: int = 0):
         cs = ConfigurationSpace(seed=seed)
@@ -43,6 +44,7 @@ if __name__ == "__main__":
     # Scenario object specifying the optimization "environment"
     scenario = Scenario(
         model.cs,
+        overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
         deterministic=True,
         n_trials=100,
         trial_walltime_limit=100,
@@ -82,7 +84,6 @@ if __name__ == "__main__":
     smac = BlackBoxFacade(
         scenario,
         model.train,  # We pass the target function here
-        overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
         dask_client=client,
     )
     incumbent = smac.optimize()

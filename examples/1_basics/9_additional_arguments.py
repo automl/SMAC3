@@ -67,7 +67,13 @@ if __name__ == "__main__":
     for model, bias, color, incumbent_color in [(AdditionalArgumentsClass(bias=2), 2, "green", "red"), (PartialFunctionClass(), -2, "blue", "orange")]:
         # Scenario object specifying the optimization "environment"
         seed = 0 if isinstance(model, AdditionalArgumentsClass) else 1
-        scenario = Scenario(model.configspace, deterministic=True, n_trials=100, seed=seed)
+        scenario = Scenario(
+            model.configspace,
+            overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
+            deterministic=True,
+            n_trials=100,
+            seed=seed,
+        )
 
         if isinstance(model, PartialFunctionClass):
             model.train = partial(model.train, bias=-2)
@@ -76,7 +82,6 @@ if __name__ == "__main__":
         smac = HPOFacade(
             scenario,
             model.train,  # We pass the target function here
-            overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
         )
 
         incumbent_config = smac.optimize()

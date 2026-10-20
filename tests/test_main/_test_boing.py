@@ -25,6 +25,7 @@ from smac.utils import _test_helpers
 def test_init(make_scenario):
     scenario = make_scenario(
         configspace=_test_helpers.get_branin_config_space(),
+        overwrite=True,
     )
     tae = lambda x: x
     with pytest.raises(ValueError) as excinfo:
@@ -39,7 +40,7 @@ def test_init(make_scenario):
         )
         assert excinfo.values == "BOinG only supports RunHistory2EPM4CostWithRaw as its rh transformer"
 
-    facade = BOinGFacade(scenario=scenario, target_function=tae, overwrite=True)
+    facade = BOinGFacade(scenario=scenario, target_function=tae)
     assert not hasattr(facade._optimizer, "turbo_optimizer")
 
     # facade.do_switching = True
@@ -51,12 +52,13 @@ def test_chooser_next(make_scenario):
     configspace = _test_helpers.get_branin_config_space()
     scenario = make_scenario(
         configspace=configspace,
+        overwrite=True,
     )
     config = scenario.configspace.sample_configuration()
     rh = RunHistory()
     rh.add(config, 10, 10, StatusType.SUCCESS)
     tae = lambda x: x
-    facade = BOinGFacade(scenario=scenario, runhistory=rh, target_function=tae, do_switching=False, overwrite=True)
+    facade = BOinGFacade(scenario=scenario, runhistory=rh, target_function=tae, do_switching=False)
     optimizer = facade.optimizer
 
     x = next(optimizer.ask())
@@ -83,6 +85,7 @@ def test_do_switching(make_scenario):
     configspace = _test_helpers.get_branin_config_space()
     scenario = make_scenario(
         configspace=configspace,
+        overwrite=True,
     )
     config = scenario.configspace.sample_configuration()
     rh = RunHistory()
@@ -96,7 +99,6 @@ def test_do_switching(make_scenario):
         target_function=tae,
         do_switching=True,
         turbo_kwargs=turbo_kwargs,
-        overwrite=True,
     )
     optimizer = facade.optimizer
 
@@ -115,7 +117,7 @@ def test_do_switching(make_scenario):
 
     optimizer.failcount_BOinG = 19
     # in this case, prob_to_TurBO becomes 1
-    with patch("smac.main.boing.BOinGSMBO." "restart_TuRBOinG") as mk:
+    with patch("smac.main.boing.BOinGSMBO.restart_TuRBOinG") as mk:
         next(optimizer.ask())
         assert optimizer.run_TuRBO is True
         assert mk.called is True
