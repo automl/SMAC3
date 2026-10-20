@@ -3,6 +3,10 @@
 - Add a `WandbRunner` for logging SMAC trials to Weights & Biases
 - `tell()` raises an error if no seed is passed and warns if the seed is not used by the intensifier, since such trials can not be matched, e.g., by Successive Halving/Hyperband (#1148)
 
+## Bugfixes
+- Fix `RunHistory` omitting completed budgets equal to their seed and duplicating budget entries
+  when overwriting trials (#1363)
+
 ## Dependencies
 - Add Weights & Biases as an optional dependency via `smac[wandb]`
 

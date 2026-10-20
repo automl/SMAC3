@@ -10,7 +10,7 @@ from smac.runhistory.runhistory import RunHistory, TrialKey
 from smac.runner.abstract_runner import StatusType
 from smac.utils.cost_transformer import CostTransformer
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
@@ -219,6 +219,7 @@ def test_cost_transformer():
     assert CostTransformer.sum(raw_costs) == pytest.approx(60.0)
     assert CostTransformer.min(raw_costs) == pytest.approx(10.0)
 
+
 def test_incremental_update(runhistory, config1, compute_cost):
     runhistory.add(
         config=config1,
@@ -270,6 +271,75 @@ def test_multiple_budgets(runhistory, config1, compute_cost):
     assert compute_cost(runhistory, config1) == 20
     raw_costs = runhistory.get_costs(config1, highest_observed_budget_only=False)
     assert CostTransformer.min(raw_costs) == 10
+
+
+@pytest.mark.parametrize("instance", [None, "task"])
+@pytest.mark.parametrize("seed", [1, 3, 7])
+@pytest.mark.parametrize("budgets", [(1, 3), (3, 1)])
+def test_budgets_matching_seed(runhistory, config1, instance, seed, budgets):
+    for budget in budgets:
+        runhistory.add(config1, cost=10 * budget, instance=instance, seed=seed, budget=budget)
+
+    assert len(runhistory) == 2
+    trials = runhistory.get_trials(config1, highest_observed_budget_only=False)
+    assert [trial.budget for trial in trials] == list(budgets)
+    keys = runhistory.get_instance_seed_budget_keys(config1, highest_observed_budget_only=False)
+    assert [key.budget for key in keys] == list(budgets)
+    assert [trial.budget for trial in runhistory.get_trials(config1)] == [3]
+    assert runhistory.get_costs(config1, highest_observed_budget_only=False) == [10 * budget for budget in budgets]
+    assert runhistory.get_costs(config1) == [30]
+
+
+@pytest.mark.parametrize("instance", [None, "task"])
+@pytest.mark.parametrize("budget", [None, 1])
+@pytest.mark.parametrize("force_update", [False, True])
+def test_overwrite_preserves_unique_budgets(config1, instance, budget, force_update):
+    runhistory = RunHistory(overwrite_existing_trials=not force_update)
+    for cost in (10, 20):
+        runhistory.add(config1, cost=cost, instance=instance, seed=7, budget=budget, force_update=force_update)
+
+    assert len(runhistory) == runhistory.submitted == runhistory.finished == 1
+    assert runhistory.running == 0
+    trials = runhistory.get_trials(config1, highest_observed_budget_only=False)
+    assert [trial.budget for trial in trials] == [budget]
+    assert runhistory.get_costs(config1, highest_observed_budget_only=False) == [20]
+    assert runhistory.get_costs(config1) == [20]
+
+
+@pytest.mark.parametrize("budgets", [(None, 1), (1, None)])
+def test_mixed_budget_types_rejected(runhistory, config1, budgets):
+    runhistory.add(config1, cost=10, seed=7, budget=budgets[0])
+    with pytest.raises(ValueError, match="Can not mix budgets of different types"):
+        runhistory.add(config1, cost=20, seed=7, budget=budgets[1])
+
+
+def test_budget_matching_seed_after_running_trial(runhistory, config1):
+    runhistory.add(config1, cost=10, seed=3, budget=1)
+    runhistory.add(config1, cost=30, seed=3, budget=3, status=StatusType.RUNNING)
+    assert runhistory.get_costs(config1) == [10]
+    assert runhistory.running == 1
+
+    runhistory.add(config1, cost=30, seed=3, budget=3, force_update=True)
+    assert runhistory.get_costs(config1) == [30]
+    assert runhistory.running == 0
+    assert runhistory.finished == 2
+
+
+def test_budget_cache_after_load_and_update(runhistory, config1, configspace_small, tmp_path):
+    runhistory.add(config1, cost=10, seed=3, budget=1)
+    runhistory.add(config1, cost=30, seed=3, budget=3)
+    path = tmp_path / "runhistory.json"
+    runhistory.save(path)
+
+    loaded = RunHistory()
+    loaded.load(path, configspace_small)
+    updated = RunHistory()
+    updated.update(loaded)
+    for copied in (loaded, updated):
+        config = copied.get_configs()[0]
+        assert len(copied) == 2
+        assert copied.get_costs(config, highest_observed_budget_only=False) == [10, 30]
+        assert copied.get_costs(config) == [30]
 
 
 def test_get_configs_per_budget(runhistory, config1, config2, config3):
