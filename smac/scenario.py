@@ -100,7 +100,7 @@ class Scenario:
     configspace: ConfigurationSpace
     experiment_name: str | None = None
     output_directory: Path = Path("smac3_output")
-    overwrite: bool = False
+    overwrite: bool = True
     deterministic: bool = False
 
     # Objectives
