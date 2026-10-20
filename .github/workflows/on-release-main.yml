@@ -8,10 +8,10 @@ jobs:
   set-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.10'
 
@@ -20,7 +20,7 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel build twine
 
       - name: Determine package version
-        id: vars
+        id: package-version
         run: |
           echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
 
@@ -29,7 +29,7 @@ jobs:
           python -m build --sdist --wheel
 
       - name: Export tag
-        id: vars
+        id: export-tag
         run: echo tag=${GITHUB_REF#refs/*/} >> $GITHUB_OUTPUT
         if: ${{ github.event_name == 'release' }}
 
@@ -37,11 +37,11 @@ jobs:
         run: |
           sed -i "s/^version = \".*\"/version = \"$RELEASE_VERSION\"/" pyproject.toml
         env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.export-tag.outputs.tag }}
         if: ${{ github.event_name == 'release' }}
 
       - name: Upload updated pyproject.toml
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: pyproject-toml
           path: pyproject.toml
@@ -51,10 +51,10 @@ jobs:
     needs: [set-version]
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up the environment
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.10"
 
@@ -85,10 +85,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up the environment
         uses: ./.github/actions/setup-python-env
 
       - name: Deploy documentation
-        run: uv run mkdocs gh-deploy --force
+        run: uv run properdocs gh-deploy -f mkdocs.yaml --force

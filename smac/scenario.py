@@ -12,6 +12,7 @@ from pathlib import Path
 import numpy as np
 from ConfigSpace import ConfigurationSpace
 
+from smac.constants import INITIAL_DESIGN_VALID_DIAGNOSTICS_MODES
 from smac.utils.logging import get_logger
 from smac.utils.numpyencoder import NumpyEncoder
 
@@ -46,6 +47,11 @@ class Scenario:
         and optionally model noise in the Gaussian Process surrogate.
     objectives : str | list[str] | None, defaults to "cost"
         The objective(s) to optimize. This argument is required for multi-objective optimization.
+    objective_weights : list[float] | None, defaults to None
+        Optional preference weights for multi-objective optimization.
+        Indicate the relative importance of each objective when aggregating them
+        (e.g., using MeanAggregationStrategy or ParEGO). Must be non-negative
+        and have the same length as the number of objectives in the scenario.
     crash_cost : float | list[float], defaults to np.inf
         Defines the cost for a failed trial. In case of multi-objective, each objective can be associated with
         a different cost.
@@ -70,6 +76,39 @@ class Scenario:
         For historic benchmark reasons, this is False by default.
         Notice, that this will result in n_configs + 1 for the initial design. Respecting n_trials,
         this will result in one fewer evaluated configuration in the optimization.
+    initial_design_warmstart_mode : str, defaults to "additional"
+        Controls how configurations that are already in the runhistory before the first `ask()` call
+        (e.g. because they were passed via `tell()` for warmstarting, or because a previous run is being
+        continued) relate to the initial design's own configurations:
+        * ``"additional"``: The already-evaluated configurations are treated as pure extra information.
+          The initial design is not affected and still proposes its full, configured number of
+          configurations.
+        * ``"reduce_budget"``: The already-evaluated configurations count against the initial design's
+          budget. The initial design proposes only as many additional configurations as are still
+          missing to reach its originally configured number of configurations.
+        * ``"replace"``: The already-evaluated configurations are treated as the complete initial design.
+          The initial design does not propose any additional configurations of its own; SMAC moves on
+          directly to model-based optimization.
+    initial_design_diagnostics : str, defaults to "warn"
+        Controls early diagnostics on the initial design evaluations. Once every initial design
+        configuration has been evaluated at least once, SMAC can check whether the collected data
+        carries any feedback signal for the surrogate model:
+
+        * all configurations failed, i.e. the target function or pipeline is likely broken,
+        * some configurations failed, which is reported as a count so that the user can react, or
+        * all successful configurations share the same cost, i.e. the metric or the search space is
+          likely misconfigured (this can also be a legitimate plateau).
+
+        A configuration counts as failed only if none of its evaluations succeeded.
+
+        Possible values:
+
+        * ``"off"``: No diagnostics are performed. This is the historic behaviour.
+        * ``"warn"`` (default): A warning is logged for each detected case; the optimization
+          continues. Nothing but the log output changes compared to ``"off"``.
+        * ``"abort"``: A warning is logged and the optimization is stopped gracefully if the initial
+          design carries no feedback signal, i.e. if all configurations failed or all of them
+          perform identically. Partial failures are only ever warned about.
     instances : list[str] | None, defaults to None
         Names of the instances to use. If None, no instances are used.
         Instances could be dataset names, seeds, subsets, etc.
@@ -105,6 +144,7 @@ class Scenario:
 
     # Objectives
     objectives: str | list[str] = "cost"
+    objective_weights: list[float] | None = None
     crash_cost: float | list[float] = np.inf
     termination_cost_threshold: float | list[float] = np.inf
 
@@ -115,6 +155,8 @@ class Scenario:
     trial_memory_limit: int | None = None
     n_trials: int = 100
     use_default_config: bool = False
+    initial_design_warmstart_mode: str = "additional"
+    initial_design_diagnostics: str = "warn"
 
     # Algorithm Configuration
     instances: list[str] | None = None
@@ -147,10 +189,34 @@ class Scenario:
         if self.instance_features is not None:
             instance_features = {str(instance): features for instance, features in self.instance_features.items()}
             object.__setattr__(self, "instance_features", instance_features)
+            self._check_instance_features(instance_features)
 
         # Validate that we have a runtime cutoff set if adaptive capping slackfactor is given
         if self.adaptive_capping_slackfactor is not None and self.runtime_cutoff is None:
             raise ValueError("If adaptive_capping_slackfactor is set, then runtime_cutoff must be set as well.")
+
+        valid_warmstart_modes = ("additional", "reduce_budget", "replace")
+        if self.initial_design_warmstart_mode not in valid_warmstart_modes:
+            raise ValueError(
+                f"`initial_design_warmstart_mode` must be one of {valid_warmstart_modes}, "
+                f"got {self.initial_design_warmstart_mode!r}."
+            )
+
+        if self.initial_design_diagnostics not in INITIAL_DESIGN_VALID_DIAGNOSTICS_MODES:
+            raise ValueError(
+                f"`initial_design_diagnostics` must be one of "
+                f"{sorted(INITIAL_DESIGN_VALID_DIAGNOSTICS_MODES)}, "
+                f"got {self.initial_design_diagnostics!r}."
+            )
+
+        if self.objective_weights is not None:
+            n_objectives = self.count_objectives()
+            # Ensure one weight per objective
+            if len(self.objective_weights) != n_objectives:
+                raise ValueError("objective_weights must have the same length as objectives")
+            # Ensure weights are non-negative
+            if any(w < 0 for w in self.objective_weights):
+                raise ValueError("objective_weights must be non-negative")
 
         # Change directory wrt name and seed
         self._change_output_directory()
@@ -176,6 +242,16 @@ class Scenario:
         Meta data are set when the facade is initialized.
         """
         return self._meta  # type: ignore
+
+    @staticmethod
+    def _check_instance_features(instance_features: dict[str, list[float]]) -> None:
+        """Checks whether instance features contain only finite values."""
+        for instance, features in instance_features.items():
+            if not np.isfinite(features).all():
+                raise ValueError(
+                    f"Instance features for instance '{instance}' contain non-finite values. "
+                    "Please provide finite numerical instance features before passing them to SMAC."
+                )
 
     def count_objectives(self) -> int:
         """Counts the number of objectives."""

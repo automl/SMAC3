@@ -1,3 +1,7 @@
+import itertools
+from functools import lru_cache
+import pytest
+
 from smac.initial_design.random_design import RandomInitialDesign
 from smac.intensifier.intensifier import Intensifier
 from smac.main.config_selector import ConfigSelector
@@ -7,12 +11,60 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario import Scenario
 
 
-def test_trials_of_interest(make_scenario, configspace_small, make_config_selector):
+##Mixins
+
+## Intermediate decision
+from smac.intensifier.mixins import intermediate_decision as idmixin
+from smac.intensifier.mixins import intermediate_update as iumixin
+from smac.intensifier.mixins import update_incumbent as uimixin
+
+intermediate_decision_mixins = [
+    idmixin.NewCostDominatesOldCost,
+    idmixin.NewCostDominatesOldCostSkipFirst,
+    idmixin.DoublingNComparison,
+    idmixin.DoublingNComparisonFour,
+    idmixin.Always,
+    idmixin.Never,
+]
+
+intermediate_update_mixins = [
+    iumixin.FullIncumbentComparison,
+    iumixin.SingleIncumbentComparison,
+    iumixin.ClosestIncumbentComparison,
+    iumixin.NoComparison,
+]
+
+update_incumbent_mixins = [
+    uimixin.NonDominatedUpdate,
+    uimixin.BootstrapUpdate,
+]
+
+ALL_MIXINS = [o for o in itertools.product(intermediate_decision_mixins,
+                                           intermediate_update_mixins,
+                                           update_incumbent_mixins)]
+
+def mixin_id(mixins):
+    return "Intensifier" if not mixins else "".join(m.__name__ for m in mixins)
+
+def build_intensifier_class(mixins):
+    """Create a unique class for a given list of mixins."""
+    # MRO: mixins first, then Intensifier
+    bases = tuple(mixins) + (Intensifier,)
+    name = mixin_id(mixins)
+    return type(name, bases, {})
+
+@pytest.fixture(params=ALL_MIXINS, ids=mixin_id)
+def IntensifierClass(request):
+    return build_intensifier_class(request.param)
+
+
+
+def test_trials_of_interest(IntensifierClass, make_scenario, configspace_small, make_config_selector):
     """Tests whether the trials of interests are as expected."""
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
     runhistory = RunHistory()
-    intensifier = Intensifier(scenario=scenario, max_config_calls=10, seed=0)
+    intensifier = IntensifierClass(scenario=scenario, max_config_calls=10, seed=0)
     intensifier.config_selector = make_config_selector(scenario, runhistory)
     intensifier.runhistory = runhistory
     intensifier.__post_init__()
@@ -41,12 +93,12 @@ def test_trials_of_interest(make_scenario, configspace_small, make_config_select
     assert trials[3].instance == val_trials[3].instance
 
 
-def test_next_trials(make_scenario, configspace_small, make_config_selector):
+def test_next_trials(IntensifierClass, make_scenario, configspace_small, make_config_selector):
     """Tests whether the next trials are as expected."""
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
     runhistory = RunHistory()
-    intensifier = Intensifier(scenario=scenario, max_config_calls=9, seed=0)
+    intensifier = IntensifierClass(scenario=scenario, max_config_calls=9, seed=0)
     intensifier.config_selector = make_config_selector(scenario, runhistory)
     intensifier.runhistory = runhistory
     intensifier.__post_init__()
@@ -102,12 +154,12 @@ def test_next_trials(make_scenario, configspace_small, make_config_selector):
     assert trials[0].seed == isbk.seed
 
 
-def test_next_trials_counter(make_scenario, configspace_small, make_config_selector):
+def test_next_trials_counter(IntensifierClass, make_scenario, configspace_small, make_config_selector):
     """Tests whether the next trials are as expected."""
 
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
     runhistory = RunHistory()
-    intensifier = Intensifier(scenario=scenario, max_config_calls=9, seed=0)
+    intensifier = IntensifierClass(scenario=scenario, max_config_calls=9, seed=0)
     intensifier.config_selector = make_config_selector(scenario, runhistory)
     intensifier.runhistory = runhistory
     intensifier.__post_init__()
@@ -141,11 +193,11 @@ def test_next_trials_counter(make_scenario, configspace_small, make_config_selec
     assert len(trials) == 2
 
 
-def test_intensifier(make_scenario, configspace_small, make_config_selector):
+def test_intensifier(IntensifierClass, make_scenario, configspace_small, make_config_selector):
     """Tests whether the generator returns trials as expected."""
     scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
     runhistory = RunHistory()
-    intensifier = Intensifier(scenario=scenario, max_config_calls=3, seed=0)
+    intensifier = IntensifierClass(scenario=scenario, max_config_calls=3, seed=0)
     intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
 
@@ -193,11 +245,11 @@ def test_intensifier(make_scenario, configspace_small, make_config_selector):
     assert intensifier.config_selector._processed_configs[2] == trial4.config
 
 
-def test_intensifier_with_filled_runhistory(make_scenario, configspace_small, make_config_selector):
+def test_intensifier_with_filled_runhistory(IntensifierClass, make_scenario, configspace_small, make_config_selector):
     """Tests whether entries from the runhistory are incorporated."""
     scenario: Scenario = make_scenario(configspace_small, use_instances=True, n_instances=3)
     runhistory = RunHistory()
-    intensifier = Intensifier(scenario=scenario, max_config_calls=3, seed=0)
+    intensifier = IntensifierClass(scenario=scenario, max_config_calls=3, seed=0)
     intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
     intensifier.runhistory = runhistory
     config = configspace_small.get_default_configuration()

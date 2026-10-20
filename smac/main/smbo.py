@@ -14,14 +14,16 @@ from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.callback.callback import Callback
+from smac.constants import ASK_AND_TELL_VALID_WARN_MODES
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
+from smac.main.exceptions import AskAndTellBudgetExhaustedError
 from smac.model.abstract_model import AbstractModel
 from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.runhistory.runhistory import RunHistory
-from smac.runner import FirstRunCrashedException
 from smac.runner.abstract_runner import AbstractRunner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.scenario import Scenario
+from smac.utils.cost_transformer import CostTransformer
 from smac.utils.data_structures import recursively_compare_dicts
 from smac.utils.logging import get_logger
 from smac.utils.numpyencoder import NumpyEncoder
@@ -61,6 +63,7 @@ class SMBO:
         runner: AbstractRunner | None,
         runhistory: RunHistory,
         intensifier: AbstractIntensifier,
+        warn_mode: str = "warn_always",
     ):
         self._scenario = scenario
         self._configspace = scenario.configspace
@@ -69,15 +72,23 @@ class SMBO:
         self._trial_generator = iter(intensifier)
         self._runner = runner
 
+        if warn_mode not in ASK_AND_TELL_VALID_WARN_MODES:
+            raise ValueError(f"Unknown warn_mode `{warn_mode}`. Allowed: {sorted(ASK_AND_TELL_VALID_WARN_MODES)}")
+
+        self._warn_mode = warn_mode
+
         # Internal variables
         self._finished = False
         self._stop = False  # Gracefully stop SMAC
         self._callbacks: list[Callback] = []
+        self._warned_on_ask_after_budget_exhausted = False
 
         # Stats variables
-        self._start_time: float | None = None
         self._used_target_function_walltime = 0.0
         self._used_target_function_cputime = 0.0
+
+        # Start the timer. In case of resuming an optimization process, the starting time is set by the load method
+        self._start_time: float = time.time()
 
         # Set walltime used method for intensifier
         self._intensifier.used_walltime = lambda: self.used_walltime  # type: ignore
@@ -148,6 +159,26 @@ class SMBO:
             Information about the trial (config, instance, seed, budget).
         """
         logger.debug("Calling ask...")
+
+        if self.budget_exhausted:
+            message = (
+                "ask() was called after the scenario budget was exhausted."
+                f" (remaining wallclock time: {self.remaining_walltime}, "
+                f"remaining cpu time: {self.remaining_cputime}, "
+                f"remaining trials: {self.remaining_trials}). "
+                "SMAC will continue returning trials for backward compatibility."
+            )
+
+            if self._warn_mode == "exception":
+                raise AskAndTellBudgetExhaustedError(message)
+            elif self._warn_mode == "warn_never":
+                pass
+            elif self._warn_mode == "warn_once":
+                if not self._warned_on_ask_after_budget_exhausted:
+                    logger.warning(message)
+                    self._warned_on_ask_after_budget_exhausted = True
+            elif self._warn_mode == "warn_always":
+                logger.warning(message)
 
         for callback in self._callbacks:
             callback.on_ask_start(self)
@@ -277,11 +308,6 @@ class SMBO:
             else:
                 return self.intensifier.get_incumbents()
 
-        # Start the timer before we do anything
-        # If we continue the optimization, the starting time is set by the load method
-        if self._start_time is None:
-            self._start_time = time.time()
-
         for callback in self._callbacks:
             callback.on_start(self)
 
@@ -365,6 +391,8 @@ class SMBO:
         self._used_target_function_walltime = 0
         self._used_target_function_cputime = 0
         self._finished = False
+        self._warned_on_ask_after_budget_exhausted = False
+        self._start_time = time.time()
 
         # We also reset runhistory and intensifier here
         self._runhistory.reset()
@@ -448,23 +476,14 @@ class SMBO:
             # Add the results of the run to the run history
             self.tell(trial_info, trial_value)
 
-            # We expect the first run to always succeed.
-            if self.runhistory.finished == 0 and trial_value.status == StatusType.CRASHED:
-                additional_info = ""
-                if "traceback" in trial_value.additional_info:
-                    additional_info = "\n\n" + trial_value.additional_info["traceback"]
-
-                raise FirstRunCrashedException(
-                    "The first run crashed. Please check your setup again." + additional_info
-                )
-
             # Update SMAC stats
             self._used_target_function_walltime += float(trial_value.time)
             self._used_target_function_cputime += float(trial_value.cpu_time)
 
             # Gracefully end optimization if termination cost is reached
             if self._scenario.termination_cost_threshold != np.inf:
-                cost = self.runhistory.average_cost(trial_info.config)
+                raw_cost = self.runhistory.get_costs(trial_info.config)
+                cost = CostTransformer.mean(raw_cost)
 
                 if not isinstance(cost, list):
                     cost = [cost]

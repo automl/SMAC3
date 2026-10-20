@@ -18,6 +18,9 @@ from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.callback.callback import Callback
+from smac.callback.initial_design_diagnostics_callback import (
+    InitialDesignDiagnosticsCallback,
+)
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.main.config_selector import ConfigSelector
@@ -35,6 +38,7 @@ from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.runner.target_function_script_runner import TargetFunctionScriptRunner
 from smac.scenario import Scenario
+from smac.utils.ask_and_tell import validate_warn_mode
 from smac.utils.logging import get_logger, setup_logging
 
 logger = get_logger(__name__)
@@ -91,6 +95,13 @@ class AbstractFacade:
         expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.
         If False is passed, SMAC will not do any customization of the logging setup and the responsibility is left
         to the user.
+    warn_mode: str, defaults to "warn_always"
+        The warn_mode to consider for the warning levels for trials
+        after the budget is exploited. The default is "warn_always",
+        which means that the user will get repeated warnings.
+        The other values are "warn_once", "warn_never", "exception",
+        which means that the user will get a warning only once,
+        never, or an exception, respectively.
     callbacks: list[Callback], defaults to []
         Callbacks, which are incorporated into the optimization loop.
     dask_client: Client | None, defaults to None
@@ -114,13 +125,20 @@ class AbstractFacade:
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
         logging_level: int | Path | Literal[False] | None = None,
-        callbacks: list[Callback] = None,
+        warn_mode: str = "warn_always",
+        callbacks: list[Callback] | None = None,
         dask_client: Client | None = None,
     ):
         setup_logging(logging_level)
 
         if callbacks is None:
             callbacks = []
+
+        # Early diagnostics on the initial design are opt-in via the scenario. We prepend the
+        # callback so that a degenerate initial design is reported before user callbacks run.
+        if scenario.initial_design_diagnostics != "off":
+            diagnostics_callback: Callback = InitialDesignDiagnosticsCallback(mode=scenario.initial_design_diagnostics)
+            callbacks = [diagnostics_callback] + callbacks
 
         if model is None:
             model = self.get_model(scenario)
@@ -167,8 +185,11 @@ class AbstractFacade:
         self._multi_objective_algorithm = multi_objective_algorithm
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
+        self._warn_mode = validate_warn_mode(warn_mode)
         self._config_selector = config_selector
         self._callbacks = callbacks
+
+        self._model.set_y_transform(func=self._runhistory_encoder.transform_response_values)
 
         # Prepare the algorithm executer
         runner: AbstractRunner | None
@@ -416,11 +437,18 @@ class AbstractFacade:
     def get_config_selector(
         scenario: Scenario,
         *,
-        retrain_after: int = 8,
+        retrain_after: int | None = 8,
+        retrain_wallclock_ratio: int | None = None,
         retries: int = 16,
     ) -> ConfigSelector:
         """Returns the default configuration selector."""
-        return ConfigSelector(scenario, retrain_after=retrain_after, max_new_config_tries=retries)
+        return ConfigSelector(
+            scenario,
+            retrain_after=retrain_after,
+            retrain_wallclock_ratio=retrain_wallclock_ratio,
+            # retries=retries,
+            max_new_config_tries=retries,
+        )
 
     def _get_optimizer(self) -> SMBO:
         """Fills the SMBO with all the pre-initialized components."""
@@ -429,6 +457,7 @@ class AbstractFacade:
             runner=self._runner,
             runhistory=self._runhistory,
             intensifier=self._intensifier,
+            warn_mode=self._warn_mode,
         )
 
     def _update_dependencies(self) -> None:

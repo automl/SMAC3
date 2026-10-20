@@ -1,8 +1,46 @@
+# 2.4.2
+## Improvements
+- Add a `WandbRunner` for logging SMAC trials to Weights & Biases
+
+## Dependencies
+- Add Weights & Biases as an optional dependency via `smac[wandb]`
+
+## Examples
+- Add an example for using SMAC with Weights & Biases
+
+# 2.4.1
+## Breaking
+- Drop support for Python 3.9 (minimum is now Python 3.10).
+
+## Improvements
+- Early diagnostics on the initial design evaluations: SMAC now reports when all configurations
+  failed, when some of them failed, or when all of them perform identically, and can abort the run
+  when the initial design carries no feedback signal for the surrogate model. Controlled via
+  `Scenario.initial_design_diagnostics` (`"off"` | `"warn"` (default) | `"abort"`) (#1320)
+- Include a new multi-objective method based on hypervolume
+- Added configurable `warn_mode` for ask-and-tell budget exhaustion behavior (#1197)
+- Batch model predictions when selecting the best predicted configuration.
+- Add `HPIRandomSearch`, an acquisition maximizer that dynamically restricts the configuration space to the
+  hyperparameters estimated to be most important (via HyperSHAP) for the current scalarization. Combined with
+  `ParEGO`, this implements HPI-ParEGO. Requires the optional `hypershap` dependency (`pip install smac[hpi]`).
+  Also works for single-objective optimization.
+- Add `HPIFacade`, which sets up HPI-ParEGO (`HPIRandomSearch`, `ParEGO` with `reweigh=5`, retraining every 2 configs).
+
+## Examples
+- An example on the new multi-objective method
+- An example on HPI-ParEGO
+- An example on HPIRandomSearch for single objective optimization
+
 # 2.4.1
 ## Bugfixes
+- Remove the dead `FirstRunCrashedException` safeguard in `SMBO._add_results`: its condition
+  (`runhistory.finished == 0`) was checked *after* `tell()` had already incremented that counter and
+  could therefore never hold. The unused `FirstRunCrashedException` and
+  `TargetAlgorithmAbortException` classes were removed along with it; the initial design diagnostics
+  replace them (#1320)
 - Scikit-learn 1.9 deprecated an alias for np.float32 called DTYPE. Change removes references to deprecated alias (#1314)
 - Forbidden clauses weren't being preserved. Change fixes that and adds a test (#1306)
-- Tests were failing due to an incompatibility between pytest and pytest-cases.  Pytest-cases is a dead stub, so simplest fix is to remove it.
+- Tests were failing due to an incompatibility between pytest and pytest-cases.  Pytest-cases is a dead stub, so simplest fix is to remove 
 
 # 2.4.0
 ## Improvements

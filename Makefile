@@ -92,7 +92,7 @@ docs-full:
 	SMAC_DOC_RENDER_EXAMPLES=all \
 		SMAC_DOCS_OFFLINE=true \
 		SMAC_EXEC_DOCS=true \
-		mkdocs serve --watch-theme
+		properdocs serve -f mkdocs.yaml --watch-theme
 
 # Launch the docs and execute code blocks
 docs-code:
@@ -100,7 +100,7 @@ docs-code:
 	SMAC_DOCS_OFFLINE=true \
 		SMAC_EXEC_DOCS=true \
 		SMAC_DOC_RENDER_EXAMPLES=false \
-		mkdocs serve --watch-theme
+		properdocs serve -f mkdocs.yaml --watch-theme
 
 # Launch the docs but dont run code examples
 docs:
@@ -108,7 +108,7 @@ docs:
 	SMAC_DOCS_OFFLINE=true \
 		SMAC_EXEC_DOCS=false \
 		SMAC_DOC_RENDER_EXAMPLES=false \
-		mkdocs serve --watch-theme
+		properdocs serve -f mkdocs.yaml --watch-theme
 	# https://github.com/pawamoy/markdown-exec/issues/19
 
 # Build a distribution in ./dist
@@ -124,7 +124,7 @@ clean-build:
 clean-data:
 	# remove all files that could have been left by test cases or by manual runs
 	# feel free to add more lines
-	find . -maxdepth 3 -iname 'smac3-output_*-*-*_*' | tac | while read -r TESTDIR ; do rm -Rf "$${TESTDIR}" ; done
+	find . -maxdepth 3 -iname 'smac3-output_*-*-*_*' -exec rm -Rf {} \;
 	find . -maxdepth 3 -iname '*.lock' -exec rm {} \;
 	rm -Rf run_*
 	rm -Rf test/test_files/scenario_test/tmp_output_*

@@ -85,7 +85,7 @@ class EI(AbstractAcquisitionFunction):
         return meta
 
     def _update(self, **kwargs: Any) -> None:
-        """Update acsquisition function attributes
+        """Update acquisition function attributes
 
         Parameters
         ----------
@@ -200,7 +200,7 @@ class EIPS(EI):
     r"""Expected Improvement per Second acquisition function
 
     $$
-    EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}
+    EI(X) := \frac{\mathbb{E}\left[\max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\}\right]}{\log(r(x))}
     $$
     with $f(X^+)$ as the best location and $r(x)$ as runtime.
 

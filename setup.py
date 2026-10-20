@@ -24,6 +24,15 @@ extras_require = {
     "pyrfr": [
         "pyrfr>=0.9.0",
     ],
+    "mosmac": [
+        "pymoo"
+    ],
+    "hpi": [
+        "hypershap>=0.0.6"
+    ],
+    "wandb": [
+        "wandb>=0.24.0",
+    ],
     "dev": [
         "setuptools",
         "types-setuptools",
@@ -42,7 +51,7 @@ extras_require = {
         "flake8",
         "pre-commit",
         "pylint",
-        "mkdocs",
+        "properdocs",
         "mkdocs-material",
         "mkdocs-autorefs",
         "mkdocs-gen-files",
@@ -51,7 +60,7 @@ extras_require = {
         "mkdocs-glossary-plugin",
         "mkdocstrings[python]",
         "markdown-exec[ansi]",
-        "mike",
+        "mike>=2.2.0",
         "pillow",
         "cairosvg",
         "black",                # This allows mkdocstrings to format signatures in the docs
@@ -71,7 +80,7 @@ setuptools.setup(
     version=version,
     packages=setuptools.find_packages(exclude=["tests"]),
     include_package_data=True,
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     install_requires=[
         "numpy",
         "scipy>=1.9.2",
@@ -90,8 +99,6 @@ setuptools.setup(
     test_suite="pytest",
     platforms=["Linux"],
     classifiers=[
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Natural Language :: English",
         "Intended Audience :: Developers",

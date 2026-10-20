@@ -81,7 +81,8 @@ for more information about acquisition functions.
 ## [Acquisition Maximize][smac.acquisition.maximizer.abstract_acquisition_maximizer]
 
 The acquisition maximizer is a wrapper for the acquisition function. It returns the next configurations. SMAC
-supports local search, (sorted) random search, local and (sorted) random search, and differential evolution.
+supports local search, (sorted) random search, local and (sorted) random search, differential evolution, and
+HPI-based random search[[TWL26][TWL26]].
 While local search checks neighbours of the best configurations, random search makes sure to explore the configuration
 space. When using sorted random search, random configurations are sorted by the value of the acquisition function.
 
@@ -219,7 +220,8 @@ for trial_info, trial_value in smac.runhistory.items():
 # Iterate over all configs
 for config in smac.runhistory.get_configs():
     # Get the cost of all trials of this config
-    average_cost = smac.runhistory.average_cost(config)
+    raw_costs = smac.runhistory.get_costs(config)
+    average_cost = CostTransformer.mean(raw_costs)
 ```
 
 !!! warning

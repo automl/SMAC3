@@ -12,25 +12,21 @@ from smac.scenario import Scenario
 
 class MeanAggregationStrategy(AbstractMultiObjectiveAlgorithm):
     """A class to mean-aggregate multi-objective costs to a single cost.
+    If `objective_weights` are provided via the scenario, each objective is weighted
+    accordingly when computing the mean; otherwise, all objectives are treated equally.
 
     Parameters
     ----------
     scenario : Scenario
-    objective_weights : list[float] | None, defaults to None
-        Weights for an weighted average. Must be of the same length as the number of objectives.
     """
 
     def __init__(
         self,
         scenario: Scenario,
-        objective_weights: list[float] | None = None,
     ):
         super(MeanAggregationStrategy, self).__init__()
 
-        if objective_weights is not None and scenario.count_objectives() != len(objective_weights):
-            raise ValueError("Number of objectives and number of weights must be equal.")
-
-        self._objective_weights = objective_weights
+        self._objective_weights = scenario.objective_weights
 
     @property
     def meta(self) -> dict[str, Any]:
@@ -42,3 +38,23 @@ class MeanAggregationStrategy(AbstractMultiObjectiveAlgorithm):
 
     def __call__(self, values: list[float]) -> float:  # noqa: D102
         return float(np.average(values, axis=0, weights=self._objective_weights))
+
+
+class NoAggregationStrategy(AbstractMultiObjectiveAlgorithm):
+    """A class to not aggregate multi-objective losses into a single objective losses."""
+
+    def __call__(self, values: list[float]) -> list[float]:  # type: ignore[override]
+        """
+        Not transform a multi-objective loss to a single loss.
+
+        Parameters
+        ----------
+        values : list[float]
+            Normalized cost values.
+
+        Returns
+        -------
+        costs : list[float]
+            costs.
+        """
+        return values
