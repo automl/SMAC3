@@ -60,7 +60,12 @@ if __name__ == "__main__":
     model = QuadraticFunction()
 
     # Scenario object specifying the optimization "environment"
-    scenario = Scenario(model.configspace, deterministic=True, n_trials=50)
+    scenario = Scenario(
+        model.configspace,
+        overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
+        deterministic=True,
+        n_trials=50,
+    )
     stop_after = 10
 
     # Now we use SMAC to find the best hyperparameters
@@ -68,7 +73,6 @@ if __name__ == "__main__":
         scenario,
         model.train,  # We pass the target function here
         callbacks=[StopCallback(stop_after=stop_after)],
-        overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
     )
 
     incumbent = smac.optimize()
@@ -76,10 +80,10 @@ if __name__ == "__main__":
 
     # Now, we want to continue the optimization
     # Make sure, we don't overwrite the last run
+    scenario.overwrite = False
     smac2 = HPOFacade(
         scenario,
         model.train,
-        overwrite=False,
     )
 
     # Check whether we get the same incumbent

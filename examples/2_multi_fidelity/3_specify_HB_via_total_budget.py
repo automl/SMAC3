@@ -1,7 +1,7 @@
 """Specify Number of Trials via a Total Budget in Hyperband
 # Flags: doc-Runnable
 
-This example uses a dummy function but illustrates how to setup Hyperband if you 
+This example uses a dummy function but illustrates how to setup Hyperband if you
 want to specify a total optimization budget in terms of fidelity units.
 
 In Hyperband, normally SMAC calculates a typical Hyperband round.
@@ -11,6 +11,7 @@ in terms of the fidelity units and let SMAC calculate how many trials that would
 
 
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -87,14 +88,18 @@ if __name__ == "__main__":
 
     # Scenario object specifying the optimization "environment"
     scenario = Scenario(
-        model.configspace, deterministic=True, n_trials=n_trials, min_budget=min_budget, max_budget=max_budget
+        model.configspace,
+        overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
+        deterministic=True,
+        n_trials=n_trials,
+        min_budget=min_budget,
+        max_budget=max_budget,
     )
 
     # Now we use SMAC to find the best hyperparameters
     smac = MultiFidelityFacade(
         scenario,
         model.train,  # We pass the target function here
-        overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
         intensifier=MultiFidelityFacade.get_intensifier(scenario=scenario, eta=eta),
     )
 

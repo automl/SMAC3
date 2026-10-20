@@ -5,6 +5,7 @@ With the ask and tell interface, we can support warmstarting SMAC. We can commun
 information about the previous trials to SMAC using `TrialInfo` and `TrialValue` instances.
 For more details on ask and tell consult the [info page ask-and-tell](../../advanced_usage/5_ask_and_tell.md).
 """
+
 from __future__ import annotations
 
 from smac.scenario import Scenario
@@ -52,14 +53,12 @@ if __name__ == "__main__":
     costs = [task.evaluate(c, seed=SEED) for c in configurations]
 
     # Define optimization problem and budget
-    scenario = Scenario(task.configspace, deterministic=False, n_trials=30)
+    scenario = Scenario(task.configspace, overwrite=True, deterministic=False, n_trials=30)
     intensifier = HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=1)
     smac = HyperparameterOptimizationFacade(
         scenario,
         target_function=task.evaluate,
         intensifier=intensifier,
-        overwrite=True,
-
         # Modify the initial design to use our custom initial design
         initial_design=HyperparameterOptimizationFacade.get_initial_design(
             scenario, 

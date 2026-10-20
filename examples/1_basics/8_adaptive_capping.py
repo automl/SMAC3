@@ -6,6 +6,7 @@ scenarios where the time taken to evaluate solutions can vary significantly.
 For more details on adaptive capping, consult the [info page adaptive capping](../../advanced_usage/13_adaptive_capping.md).
 
 """
+
 import math
 import time
 
@@ -21,6 +22,7 @@ from ConfigSpace import Categorical, Configuration, ConfigurationSpace, Float
 
 class TimeoutException(Exception):
     pass
+
 
 @contextmanager
 def timeout(seconds):
@@ -47,7 +49,7 @@ class CappedProblem:
         cs.add_hyperparameters([x0, x1])
         return cs
 
-    def train(self, config: Configuration, instance:str, cutoff, seed: int = 0) -> float:
+    def train(self, config: Configuration, instance: str, cutoff, seed: int = 0) -> float:
         x0 = config["x0"]
         x1 = config["x1"]
 
@@ -61,7 +63,7 @@ class CappedProblem:
             return cutoff + 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from smac import AlgorithmConfigurationFacade
     from smac import Scenario
 
@@ -69,6 +71,7 @@ if __name__ == '__main__':
 
     scenario = Scenario(
         capped_problem.configspace,
+        overwrite=True,
         walltime_limit=3600,  # After 3600 seconds, we stop the hyperparameter optimization
         n_trials=500,  # Evaluate max 500 different trials
         instances=['1', '2', '3'],
@@ -85,7 +88,6 @@ if __name__ == '__main__':
         scenario,
         capped_problem.train,
         initial_design=initial_design,
-        overwrite=True,
     )
 
     # Let's optimize

@@ -10,6 +10,7 @@ from smac.scenario import Scenario
 def make_scenario() -> Callable:
     def _make(
         configspace: ConfigurationSpace,
+        overwrite: bool = False,
         deterministic: bool = False,
         use_multi_objective: bool = False,
         n_objectives: int = 2,
@@ -26,7 +27,7 @@ def make_scenario() -> Callable:
         if use_multi_objective:
             objectives = []
             for i in range(n_objectives):
-                objectives.append(f"cost{i+1}")
+                objectives.append(f"cost{i + 1}")
 
         instances = None
         instance_features = None
@@ -34,13 +35,14 @@ def make_scenario() -> Callable:
             instances = []
             instance_features = {}
             for i in range(n_instances):
-                instance_name = f"i{i+1}"
+                instance_name = f"i{i + 1}"
                 instances += [instance_name]
                 instance_features[instance_name] = [j + i for j in range(n_instance_features)]
 
         return Scenario(
             configspace=configspace,
-            name="test",
+            overwrite=overwrite,
+            experiment_name="test",
             output_directory="smac3_output_test",
             objectives=objectives,
             deterministic=deterministic,

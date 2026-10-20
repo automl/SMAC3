@@ -11,16 +11,17 @@ def test_exhausted_configspace():
 
     def objective_function(x, seed):
         return x["x"] ** 2
-    
+
     scenario = Scenario(
         configspace=cs,
+        experiment_name="test",
+        overwrite=True,
         n_trials=10,
     )
 
     smac = HyperparameterOptimizationFacade(
         scenario,
         objective_function,
-        overwrite=True,
     )
 
     with pytest.raises(ConfigurationSpaceExhaustedException):

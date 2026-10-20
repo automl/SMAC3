@@ -7,16 +7,15 @@ def test_termination_cost_threshold(rosenbrock):
     termination_cost_threshold = 100
     scenario = Scenario(
         rosenbrock.configspace,
+        experiment_name="test",
+        overwrite=True,
         n_trials=200,
         termination_cost_threshold=termination_cost_threshold,
     )
     smac = HyperparameterOptimizationFacade(
         scenario,
         rosenbrock.train,
-        intensifier=HyperparameterOptimizationFacade.get_intensifier(
-            scenario, max_config_calls=1
-        ),
-        overwrite=True,
+        intensifier=HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=1),
     )
     i = smac.optimize()
 
@@ -38,6 +37,8 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock):
     termination_cost_threshold = 100
     scenario = Scenario(
         rosenbrock.configspace,
+        experiment_name="test",
+        overwrite=True,
         n_trials=200,
         min_budget=1,
         max_budget=max_budget,
@@ -46,7 +47,6 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock):
     smac = MultiFidelityFacade(
         scenario,
         rosenbrock.train,
-        overwrite=True,
     )
     i = smac.optimize()
 
@@ -64,14 +64,11 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock):
 
 
 def test_smbo_reset(rosenbrock):
-    scenario = Scenario(rosenbrock.configspace, n_trials=3)
+    scenario = Scenario(rosenbrock.configspace, experiment_name="test", overwrite=True, n_trials=3)
     smac = HyperparameterOptimizationFacade(
         scenario,
         rosenbrock.train,
-        intensifier=HyperparameterOptimizationFacade.get_intensifier(
-            scenario, max_config_calls=1
-        ),
-        overwrite=True,
+        intensifier=HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=1),
     )
 
     smac.optimize()

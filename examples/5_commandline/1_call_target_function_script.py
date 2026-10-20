@@ -38,13 +38,17 @@ if __name__ == "__main__":
     cs = ConfigurationSpace({"x0": (0, 1000)}, seed=0)
 
     # Scenario object specifying the optimization "environment"
-    scenario = Scenario(cs, deterministic=True, n_trials=30)
+    scenario = Scenario(
+        cs,
+        overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
+        deterministic=True,
+        n_trials=30,
+    )
 
     # Now we use SMAC to find the best hyperparameters
     smac = BlackBoxFacade(
         scenario,
         "./script.sh",  # We pass the filename of our script here
-        overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
     )
     incumbent = smac.optimize()
 

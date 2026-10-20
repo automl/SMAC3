@@ -75,6 +75,7 @@ if __name__ == "__main__":
     # Scenario object
     scenario = Scenario(
         configspace=cs,
+        overwrite=True,
         deterministic=True,  # Only one seed
         n_trials=150,
         objectives=["metric1", "metric2"],
@@ -87,7 +88,6 @@ if __name__ == "__main__":
             scenario,
             objective_weights=[1, 2],  # Weight metric2 twice as much as metric1
         ),
-        overwrite=True,
     )
     incumbents = smac.optimize()
 

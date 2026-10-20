@@ -46,7 +46,7 @@ if __name__ == "__main__":
     model = Rosenbrock2D()
 
     # Scenario object
-    scenario = Scenario(model.configspace, deterministic=False, n_trials=100)
+    scenario = Scenario(model.configspace, overwrite=True, deterministic=False, n_trials=100)
 
     intensifier = HyperparameterOptimizationFacade.get_intensifier(
         scenario,
@@ -58,7 +58,6 @@ if __name__ == "__main__":
         scenario,
         target_function=model.train,
         intensifier=intensifier,
-        overwrite=True,
     )
 
     # We can ask SMAC which trials should be evaluated next

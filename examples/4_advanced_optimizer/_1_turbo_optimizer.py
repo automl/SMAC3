@@ -89,7 +89,7 @@
 #     model = Rosenbrock2D()
 
 #     # Scenario object
-#     scenario = Scenario(model.configspace, n_trials=100)
+#     scenario = Scenario(model.configspace, overwrite=True, n_trials=100)
 
 #     # Example call of the target function
 #     default_value = model.train(model.configspace.get_default_configuration())
@@ -100,7 +100,6 @@
 #     smac = TuRBOFacade(
 #         scenario=scenario,
 #         target_function=model.train,
-#         overwrite=True,
 #     )
 #     smac.optimize()
 

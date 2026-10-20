@@ -73,11 +73,13 @@ def test_mean_aggregation(facade, make_scenario, configspace):
     N_TRIALS = 64
     RETRAIN_AFTER = 8
 
-    scenario: Scenario = make_scenario(configspace, use_multi_objective=True, n_trials=N_TRIALS)
-        # TODO: Check whether different weighting affects the sampled configurations.
-    weights = [[0.1,0.9], [0.5,0.5], [0.8,0.2], [1.0,0.0], [0.0,1.0], None]
+    scenario: Scenario = make_scenario(configspace, overwrite=True, use_multi_objective=True, n_trials=N_TRIALS)
+    # TODO: Check whether different weighting affects the sampled configurations.
+    weights = [[0.1, 0.9], [0.5, 0.5], [0.8, 0.2], [1.0, 0.0], [0.0, 1.0], None]
     for weight_pair in weights:
-        multi_objective_algorithm = WrapStrategy(MeanAggregationStrategy, objective_weights=weight_pair, scenario=scenario)
+        multi_objective_algorithm = WrapStrategy(
+            MeanAggregationStrategy, objective_weights=weight_pair, scenario=scenario
+        )
         intensifier = Intensifier(scenario, max_config_calls=1, max_incumbents=10)
         config_selector = ConfigSelector(scenario, retrain_after=RETRAIN_AFTER)
         initial_design = RandomInitialDesign(scenario, n_configs=1)
@@ -89,7 +91,6 @@ def test_mean_aggregation(facade, make_scenario, configspace):
             intensifier=intensifier,
             config_selector=config_selector,
             initial_design=initial_design,
-            overwrite=True,
         )
         incumbents = smac.optimize()
 
@@ -116,7 +117,7 @@ def test_parego(facade, make_scenario, configspace):
     N_TRIALS = 64
     RETRAIN_AFTER = 8
 
-    scenario: Scenario = make_scenario(configspace, use_multi_objective=True, n_trials=N_TRIALS)
+    scenario: Scenario = make_scenario(configspace, overwrite=True, use_multi_objective=True, n_trials=N_TRIALS)
     multi_objective_algorithm = WrapStrategy(ParEGO, scenario=scenario)
     intensifier = Intensifier(scenario, max_config_calls=1, max_incumbents=10)
     config_selector = ConfigSelector(scenario, retrain_after=RETRAIN_AFTER)
@@ -129,7 +130,6 @@ def test_parego(facade, make_scenario, configspace):
         intensifier=intensifier,
         config_selector=config_selector,
         initial_design=initial_design,
-        overwrite=True,
     )
     incumbents = smac.optimize()
 
