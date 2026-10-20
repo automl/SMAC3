@@ -1,6 +1,7 @@
 # 2.4.2
 ## Improvements
 - Add a `WandbRunner` for logging SMAC trials to Weights & Biases
+- `tell()` raises an error if no seed is passed and warns if the seed is not used by the intensifier, since such trials can not be matched, e.g., by Successive Halving/Hyperband (#1148)
 
 ## Dependencies
 - Add Weights & Biases as an optional dependency via `smac[wandb]`

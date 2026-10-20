@@ -22,6 +22,18 @@ and report the results of the trial.
     SMAC now emits a runtime warning in this case and keeps this behaviour for backward compatibility.
     If you want strict stopping in your loop, stop calling `ask()` when the optimizer reports no remaining budget (for example, `smac.optimizer.budget_exhausted` or `smac.optimizer.remaining_trials <= 0`)
 
+!!! warning
+
+    `ask()` returns a `TrialInfo` object containing not only the configuration,
+    but also information such as the seed, instance, and budget.
+    When evaluating a trial externally, these values must be preserved and the
+    same `TrialInfo` should be passed back to `tell()`.
+    This is especially important for intensifiers such as Successive Halving
+    and Hyperband, which use the seed and budget to identify and promote trials
+    between stages. If a trial is told with a different seed, it can not be matched
+    and the intensifier waits for the expected trial forever.
+    SMAC raises an error if no seed is passed and warns if the seed is not used by the intensifier.
+
 Notice: if you are exclusively using the ask-and-tell interface and do not use `smac.optimize()`, then smac no longer
 is responsible for the evaluation of the trials and therefore the Facade no longer will require a specified `target_algorithm` argument.
 

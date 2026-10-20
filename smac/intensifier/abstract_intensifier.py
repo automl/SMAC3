@@ -244,6 +244,16 @@ class AbstractIntensifier:
         """How often the incumbents have changed."""
         return self._incumbents_changed
 
+    @property
+    def used_seeds(self) -> list[int] | None:
+        """The seeds the intensifier uses for its (training) trials. None if they were not determined yet, i.e.,
+        before the first ``ask()``. Seeds of trials in the runhistory are reused when determining the seeds.
+        """
+        if self._instance_seed_keys is None:
+            return None
+
+        return list(dict.fromkeys(key.seed for key in self._instance_seed_keys if key.seed is not None))
+
     def get_instance_seed_keys_of_interest(
         self,
         *,
