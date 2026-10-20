@@ -49,10 +49,6 @@ class SMBO:
     intensifier : AbstractIntensifier
         The intensifier decides which trial (combination of configuration, seed, budget and instance) should be run
         next.
-    overwrite: bool, defaults to False
-        When True, overwrites the run results if a previous run is found that is
-        inconsistent in the meta data with the current setup. If ``overwrite`` is set to False, the user is asked
-        for the exact behaviour (overwrite completely, save old run, or use old results).
 
     Warning
     -------
@@ -65,7 +61,6 @@ class SMBO:
         runner: AbstractRunner | None,
         runhistory: RunHistory,
         intensifier: AbstractIntensifier,
-        overwrite: bool = False,
     ):
         self._scenario = scenario
         self._configspace = scenario.configspace
@@ -73,7 +68,6 @@ class SMBO:
         self._intensifier = intensifier
         self._trial_generator = iter(intensifier)
         self._runner = runner
-        self._overwrite = overwrite
 
         # Internal variables
         self._finished = False
@@ -514,7 +508,7 @@ class SMBO:
         # design anymore.
         # Since the runhistory is already updated, the model uses previous data directly.
 
-        if not self._overwrite:
+        if not self._scenario.overwrite:
             old_output_directory = self._scenario.output_directory
             if self.exists(old_output_directory):
                 old_scenario = Scenario.load(old_output_directory)

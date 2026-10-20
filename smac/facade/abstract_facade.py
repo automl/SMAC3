@@ -93,12 +93,6 @@ class AbstractFacade:
         to the user.
     callbacks: list[Callback], defaults to []
         Callbacks, which are incorporated into the optimization loop.
-    overwrite: bool, defaults to False
-        When True, overwrites the run results if a previous run is found that is
-        consistent in the meta data with the current setup. When False and a previous run is found that is
-        consistent in the meta data, the run is continued. When False and a previous run is found that is
-        not consistent in the meta data, the the user is asked for the exact behaviour (overwrite completely
-        or rename old run first).
     dask_client: Client | None, defaults to None
         User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not
         be closed automatically and will have to be closed manually if provided explicitly. If none is provided
@@ -121,7 +115,6 @@ class AbstractFacade:
         config_selector: ConfigSelector | None = None,
         logging_level: int | Path | Literal[False] | None = None,
         callbacks: list[Callback] = None,
-        overwrite: bool = False,
         dask_client: Client | None = None,
     ):
         setup_logging(logging_level)
@@ -176,7 +169,6 @@ class AbstractFacade:
         self._runhistory_encoder = runhistory_encoder
         self._config_selector = config_selector
         self._callbacks = callbacks
-        self._overwrite = overwrite
 
         # Prepare the algorithm executer
         runner: AbstractRunner | None
@@ -437,7 +429,6 @@ class AbstractFacade:
             runner=self._runner,
             runhistory=self._runhistory,
             intensifier=self._intensifier,
-            overwrite=self._overwrite,
         )
 
     def _update_dependencies(self) -> None:
