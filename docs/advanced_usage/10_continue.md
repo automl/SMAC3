@@ -4,7 +4,7 @@ SMAC can automatically restore states where it left off if a run was interrupted
 it reads in old files (derived from scenario's name, output_directory and seed) and obtains the scenario information
 of the previous run from those to continue the run.
 
-The behavior can be controlled by setting the parameter ``overwrite`` in the facade to True or False, respectively:
+The behavior can be controlled by setting the parameter ``overwrite`` in the Scenario to True or False, respectively:
 
 * If set to True, SMAC overwrites the run results if a previous run is found that is consistent in the meta data with the current setup.
 * If set to False and a previous run is found that
