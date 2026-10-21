@@ -51,11 +51,11 @@ class HPIRandomSearch(RandomSearch):
         Total optimization budget. Used to derive the reduction schedule when ``threshold`` is a list.
     threshold : float | list[float] | None, defaults to None
         Cumulative contribution that the selected hyperparameters must jointly explain between 0 and 1. 0 disables
-        the configuration space reduction. ``None`` uses the three-phase schedule ``[0.0, 0.8, 0.0]``, which
+        the configuration space reduction. ``None`` uses the three-phase schedule ``[0.0, 0.8, 0.8]``, which
         requires ``n_trials``. If a list, ``n_trials`` is split into ``len(threshold)`` equal-width
         phases, and ``threshold[i]`` is applied during phase ``i``. It is recommended to use a warm-up phase for
         the surrogate model to work well. For example:
-        * Reduction in the middle third of trials only: ``[0.0, 0.8, 0.0]`` (default)
+        * Reduction in middle and last third of trials: ``[0.0, 0.8, 0.8]`` (default)
         * Reduction only in the second half: ``[0.0, 0.8]``
         * Reduction all the time: 0.8
     fixing_strategy : str, defaults to "incumbent"
@@ -86,7 +86,7 @@ class HPIRandomSearch(RandomSearch):
         )
 
         if threshold is None:
-            threshold = [0.0, 0.8, 0.0]
+            threshold = [0.0, 0.8, 0.8]
 
         if fixing_strategy not in ("incumbent", "default", "random"):
             raise ValueError(
@@ -173,6 +173,7 @@ class HPIRandomSearch(RandomSearch):
         threshold = self._get_current_threshold()
 
         if threshold <= 0:
+            self._configspace = self._original_cs
             return super()._maximize(previous_configs, n_points, _sorted=_sorted)
 
         reference_config = self._get_reference_configuration(previous_configs)
@@ -183,6 +184,7 @@ class HPIRandomSearch(RandomSearch):
         else:
             self._configspace = self._original_cs
 
+        seen = set(previous_configs)
         configs = (
             self._configspace.sample_configuration(n_points)
             if n_points > 1
@@ -196,6 +198,7 @@ class HPIRandomSearch(RandomSearch):
                 "original configuration space for this iteration."
             )
 
+        configs = [c for c in configs if c not in seen]
         attempts = 0
         while len(configs) < min(2, n_points) and attempts < 30:
             configs = (
@@ -203,6 +206,7 @@ class HPIRandomSearch(RandomSearch):
                 if n_points > 1
                 else [self._original_cs.sample_configuration()]
             )
+            configs = [c for c in configs if c not in seen]
             attempts += 1
 
         for config in configs:
@@ -412,8 +416,6 @@ class HPIRandomSearch(RandomSearch):
         ]
 
         reduced_cs = ConfigurationSpace()
-        # Carry on the state of the space we are currently sampling from, so successive reduced spaces do not
-        # restart the same sample stream.
         reduced_cs.random.set_state(self._configspace.random.get_state())
 
         for hp in self._original_cs.values():
