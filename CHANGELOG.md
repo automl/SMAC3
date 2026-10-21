@@ -1,18 +1,10 @@
 # 2.4.2
-## Improvements
-- Add a `WandbRunner` for logging SMAC trials to Weights & Biases
-
-## Dependencies
-- Add Weights & Biases as an optional dependency via `smac[wandb]`
-
-## Examples
-- Add an example for using SMAC with Weights & Biases
-
-# 2.4.1
 ## Breaking
 - Drop support for Python 3.9 (minimum is now Python 3.10).
 
 ## Improvements
+- Add a `WandbRunner` for logging SMAC trials to Weights & Biases
+- `tell()` raises an error if no seed is passed and warns if the seed is not used by the intensifier, since such trials can not be matched, e.g., by Successive Halving/Hyperband (#1148)
 - Early diagnostics on the initial design evaluations: SMAC now reports when all configurations
   failed, when some of them failed, or when all of them perform identically, and can abort the run
   when the initial design carries no feedback signal for the surrogate model. Controlled via
@@ -26,7 +18,11 @@
   Also works for single-objective optimization.
 - Add `HPIFacade`, which sets up HPI-ParEGO (`HPIRandomSearch`, `ParEGO` with `reweigh=5`, retraining every 2 configs).
 
+## Dependencies
+- Add Weights & Biases as an optional dependency via `smac[wandb]`
+
 ## Examples
+- Add an example for using SMAC with Weights & Biases
 - An example on the new multi-objective method
 - An example on HPI-ParEGO
 - An example on HPIRandomSearch for single objective optimization
@@ -37,13 +33,14 @@
   could therefore never hold. The unused `FirstRunCrashedException` and
   `TargetAlgorithmAbortException` classes were removed along with it; the initial design diagnostics
   replace them (#1320)
+
+# 2.4.1
+## Bugfixes
 - Scikit-learn 1.9 deprecated an alias for np.float32 called DTYPE. Change removes references to deprecated alias (#1314)
-- Fix `create_uniform_configspace_copy` not copying forbidden clauses, causing `RandomInitialDesign` to sample configs that violate the original search space's constraints (#1306)
+- Forbidden clauses weren't being preserved. Change fixes that and adds a test (#1306)
 - Tests were failing due to an incompatibility between pytest and pytest-cases.  Pytest-cases is a dead stub, so simplest fix is to remove it.
 
-
 # 2.4.0
-
 ## Improvements
 - Replace random forest from pyrfr with random forest from sklearn (#1246)
 - Submit trials to runners in SMBO instead of running configs directly (#937)

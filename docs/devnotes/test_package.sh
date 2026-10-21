@@ -1,4 +1,4 @@
-export SMACVERSION="2.4.0"
+export SMACVERSION="2.4.1"
 make clean 
 make build
 pip install uv
