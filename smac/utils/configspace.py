@@ -303,8 +303,9 @@ def create_prior_configspace_copy(
     acquisition function can be weighted by.
 
     Numerical hyperparameters become normal hyperparameters centred on the given value, with a standard deviation
-    of their range divided by ``std_denominator``; categorical and ordinal ones get ``categorical_weight`` on the
-    named choice and the remainder spread evenly over the others.
+    of their range divided by ``std_denominator`` - for a log-scaled one, of its logarithmic range, which makes the
+    standard deviation a factor of ``(upper / lower) ** (1 / std_denominator)``. Categorical and ordinal ones get
+    ``categorical_weight`` on the named choice and the remainder spread evenly over the others.
 
     A hyperparameter which does not appear in ``prior``, or whose value there is `None`, keeps its uniform
     distribution. That is how a belief about part of the search space is stated: name only the part you have an
@@ -320,8 +321,8 @@ def create_prior_configspace_copy(
     prior : Mapping[str, Any]
         The believed values, by hyperparameter name.
     std_denominator : float, defaults to 4.0
-        The range of a numerical hyperparameter is divided by this to get the standard deviation. Larger values
-        make a sharper belief.
+        The range of a numerical hyperparameter, logarithmic if it is log-scaled, is divided by this to get the
+        standard deviation. Larger values make a sharper belief.
     categorical_weight : float, defaults to 0.8
         Probability given to the named choice of a categorical or ordinal hyperparameter. One would make every
         other choice impossible up to the prior floor, so the default leaves room to recover from a wrong belief.
@@ -396,7 +397,12 @@ def _place_prior(
         if not lower <= value <= upper:
             raise ValueError(f"The prior for {hyperparameter.name!r} is {value}, which is outside [{lower}, {upper}].")
 
-        sigma = (upper - lower) / std_denominator
+        if hyperparameter.log:
+            # On a log scale sigma is a factor, so the belief spans the same fraction of the logarithmic range.
+            sigma = (upper / lower) ** (1 / std_denominator)
+        else:
+            sigma = (upper - lower) / std_denominator
+
         kind = (
             NormalFloatHyperparameter
             if isinstance(hyperparameter, FloatHyperparameter)
