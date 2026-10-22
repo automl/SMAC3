@@ -78,6 +78,19 @@ class AbstractRunner(ABC):
                 assert isinstance(scenario.crash_cost, float)
                 self._crash_cost = [scenario.crash_cost for _ in range(self._n_objectives)]
 
+    def on_start(self, resumed: bool) -> None:
+        """Hook called after the optimization state has been initialized.
+
+        This method can be overridden by runners that require initialization
+        depending on whether the optimization is resumed.
+
+        Parameters
+        ----------
+        resumed : bool
+            Whether the optimization is continued from a previous run.
+        """
+        pass
+
     def run_wrapper(
         self, trial_info: TrialInfo, **dask_data_to_scatter: dict[str, Any]
     ) -> tuple[TrialInfo, TrialValue]:

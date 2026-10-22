@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
+import json
 from numbers import Real
 
 import wandb
@@ -65,7 +66,34 @@ class WandbRunner(TargetFunctionRunner):
         else:
             self._objectives = list(scenario.objectives)
 
-        self._sweep_id = self._create_sweep_id(sweep_id)
+        self._sweep_id = sweep_id
+
+    def on_start(self, resumed: bool) -> None:
+        """Initializes the W&B Sweep for the optimization.
+
+        Reuses the stored Sweep when resuming an optimization and creates a new
+        Sweep otherwise.
+
+        Parameters
+        ----------
+        resumed : bool
+            Whether the optimization is continued from a previous run.
+        """
+        sweep_file = self._scenario.output_directory / "wandb_sweep.json"
+
+        if resumed and self._sweep_id is None:
+            if not sweep_file.exists():
+                raise RuntimeError(
+                    f"SMAC is continuing a previous run, but no W&B Sweep ID was found at `{sweep_file}`. "
+                    "Provide `sweep_id` explicitly to continue this optimization."
+                )
+            with sweep_file.open() as f:
+                self._sweep_id = json.load(f)["sweep_id"]
+
+            self._delete_running_runs()
+            return
+
+        self._initialize_sweep_id()
 
     def __call__(
         self, config: Configuration, algorithm: Callable, algorithm_kwargs: dict[str, Any]
@@ -88,6 +116,11 @@ class WandbRunner(TargetFunctionRunner):
         additional_info : dict[str, Any]
             Additional information returned by the target function.
         """
+        if self._sweep_id is None:
+            raise RuntimeError(
+                "WandbRunner has not been initialized. on_start() must be called before running a trial."
+            )
+
         smac_config = {}
         if "seed" in self._required_arguments:
             smac_config["smac/seed"] = algorithm_kwargs.get("seed")
@@ -152,23 +185,12 @@ class WandbRunner(TargetFunctionRunner):
 
         raise TypeError(f"Unsupported target-function result type: {type(result).__name__}")
 
-    def _create_sweep_id(self, sweep_id: str | None) -> str:
-        """Creates or returns a W&B Sweep ID.
+    def _initialize_sweep_id(self) -> None:
+        """Initializes and stores the W&B Sweep ID.
 
-        Parameters
-        ----------
-        sweep_id : str | None
-            Existing W&B Sweep ID. If provided, it is returned directly.
-            Otherwise, a new W&B Sweep is created.
-
-        Returns
-        -------
-        str
-            W&B Sweep ID.
+        Uses an explicitly provided Sweep ID if available, otherwise creates a
+        new W&B Sweep.
         """
-        if sweep_id is not None:
-            return sweep_id
-
         sweep_config: dict[str, Any] = {
             "method": "random",  # W&B is only used for tracking/grouping.
             "parameters": self._parameters_from_configspace(),
@@ -179,7 +201,14 @@ class WandbRunner(TargetFunctionRunner):
                 "goal": "minimize",
             }
 
-        return wandb.sweep(sweep=sweep_config, entity=self._entity, project=self._project)
+        if self._sweep_id is None:
+            self._sweep_id = wandb.sweep(sweep=sweep_config, entity=self._entity, project=self._project)
+
+        sweep_file = self._scenario.output_directory / "wandb_sweep.json"
+        self._scenario.output_directory.mkdir(parents=True, exist_ok=True)
+
+        with sweep_file.open("w") as f:
+            json.dump({"sweep_id": self._sweep_id}, f, indent=2)
 
     def _parameters_from_configspace(self) -> dict[str, dict[str, Any]]:
         """Converts the SMAC configuration space to W&B sweep parameters.
@@ -212,3 +241,15 @@ class WandbRunner(TargetFunctionRunner):
                 raise ValueError(f"Unsupported ConfigSpace hyperparameter type: {type(hp).__name__} ({hp.name})")
 
         return parameters
+
+    def _delete_running_runs(self) -> None:
+        """Deletes unfinished runs from the current W&B Sweep.
+
+        Running W&B runs may remain after an interrupted SMAC optimization and
+        cannot be continued by SMAC after restoring its state.
+        """
+        api = wandb.Api()
+        sweep = api.sweep(f"{self._entity}/{self._project}/{self._sweep_id}")
+        for run in sweep.runs:
+            if run.state == "running":
+                run.delete()
