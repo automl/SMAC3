@@ -152,4 +152,4 @@ If you use SMAC in one of your research projects, please cite our
 }
 ```
 
-Copyright (c) 2025, [Leibniz University Hannover - Institute of AI](https://www.ai.uni-hannover.de/)
+Copyright (c) 2026, [Leibniz University Hanover, Institute of AI](https://www.ai.uni-hannover.de/)

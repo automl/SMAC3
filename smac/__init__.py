@@ -1,4 +1,3 @@
-import datetime
 import traceback
 
 name = "SMAC3"
@@ -15,11 +14,11 @@ project_urls = {
     "Documentation": "https://automl.github.io/SMAC3/latest",
     "Source Code": "https://github.com/automl/SMAC3",
 }
-copyright = (
-    f"Copyright {datetime.date.today().strftime('%Y')}, Marius Lindauer, Katharina Eggensperger, "
-    "Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass "
-    "and Frank Hutter"
-)
+# Single source of truth for the copyright notice. Run `python scripts/update_files.py` after changing it
+# to propagate it to all file headers, LICENSE.txt and README.md.
+copyright_year = "2026"
+copyright_holder = "Leibniz University Hanover, Institute of AI"
+copyright = f"Copyright {copyright_year}, {copyright_holder}"
 version = "2.4.1"
 
 

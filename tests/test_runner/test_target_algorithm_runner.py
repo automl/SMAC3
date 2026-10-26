@@ -13,7 +13,7 @@ from smac.runner.abstract_runner import StatusType
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.scenario import Scenario
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
