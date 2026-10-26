@@ -8,6 +8,11 @@ author = (
 )
 
 author_email = "smac@ai.uni-hannover.de"
+maintainer = (
+    "Marcel Wever, Anthony Angrimson, Lukas Fehring, Michael Gratius, Leona Hennig, "
+    "Daphne Theodorakopoulos, René Traoré, Eva Vormschlag and Andreas Bentzen Winje"
+)
+maintainer_email = "smac@ai.uni-hannover.de"
 description = "SMAC3, a Python implementation of 'Sequential Model-based Algorithm Configuration'."
 url = "https://www.ai.uni-hannover.de/"
 project_urls = {

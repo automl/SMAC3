@@ -25,38 +25,31 @@ license: "BSD-3-Clause"
 authors:
   - family-names: "Lindauer"
     given-names: "Marius"
-    affiliation: "Leibniz University Hannover, Germany"
-
-  - family-names: "Benjamins"
-    given-names: "Carolin"
-    affiliation: "Leibniz University Hannover, Germany"
-
-  - family-names: "Biedenkapp"
-    given-names: "André"
-    orcid: "https://orcid.org/0000-0002-8703-8559"
-    affiliation: "University of Freiburg, Germany"
-
-  - family-names: "Deng"
-    given-names: "Difan"
+    orcid: "https://orcid.org/0000-0002-9675-3175"
     affiliation: "Leibniz University Hannover, Germany"
 
   - family-names: "Eggensperger"
     given-names: "Katharina" 
     orcid: "https://orcid.org/0000-0002-0309-401X"
-    affiliation: "University of Freiburg, Germany"
-
-  - family-names: "Falkner"
-    given-names: "Stefan"
-    orcid: "https://orcid.org/0000-0002-6303-9418"
-    affiliation: "Bosch Center for Artificial Intelligence, Rennigen, Germany"
+    affiliation: "TU Dortmund University, Germany"
 
   - family-names: "Feurer"
     given-names: "Matthias"
     orcid: "https://orcid.org/0000-0001-9611-8588"
-    affiliation: "University of Freiburg, Germany"
+    affiliation: "TU Dortmund University, Germany"
 
-  - family-names: "Graf"
-    given-names: "Helena"
+  - family-names: "Biedenkapp"
+    given-names: "André"
+    orcid: "https://orcid.org/0000-0002-8703-8559"
+    affiliation: "Karlsruhe Institute of Technology, Germany"
+
+  - family-names: "Deng"
+    given-names: "Difan"
+    orcid: "https://orcid.org/0009-0002-6530-8519"
+    affiliation: "Amazon, Berlin, Germany"
+
+  - family-names: "Benjamins"
+    given-names: "Carolin"
     affiliation: "Leibniz University Hannover, Germany"
 
   - family-names: "Ruhkopf"
@@ -67,17 +60,57 @@ authors:
     given-names: "René"
     affiliation: "Leibniz University Hannover, Germany"
 
-  - family-names: "Segel"
-    given-names: "Sarah"
-    affiliation: "Leibniz University Hannover, Germany"
-
-  - family-names: "Tornede"
-    given-names: "Alexander"
-    affiliation: "Leibniz University Hannover, Germany"
-
   - family-names: "Hutter"
     given-names: "Frank"
-    affiliation: "University of Freiburg, Germany"
+    orcid: "https://orcid.org/0000-0002-2037-3694"
+    affiliation: "Prior Labs and University of Freiburg, Germany"
+
+contact:
+  - name: "Leibniz University Hanover, Institute of AI"
+    email: "smac@ai.uni-hannover.de"
+
+  - family-names: "Wever"
+    given-names: "Marcel"
+    orcid: "https://orcid.org/0000-0001-9782-6818"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Angrimson"
+    given-names: "Anthony"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Fehring"
+    given-names: "Lukas"
+    orcid: "https://orcid.org/0000-0001-8057-4650"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Gratius"
+    given-names: "Michael"
+    orcid: "https://orcid.org/0009-0003-4436-3583"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Hennig"
+    given-names: "Leona"
+    orcid: "https://orcid.org/0009-0006-1117-9853"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Theodorakopoulos"
+    given-names: "Daphne"
+    orcid: "https://orcid.org/0009-0008-0827-7449"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Traoré"
+    given-names: "René"
+    orcid: "https://orcid.org/0000-0001-8780-2775"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Vormschlag"
+    given-names: "Eva"
+    affiliation: "Leibniz University Hannover, Germany"
+
+  - family-names: "Winje"
+    given-names: "Andreas Bentzen"
+    orcid: "https://orcid.org/0009-0001-8409-9364"
+    affiliation: "Leibniz University Hannover, Germany"
 
 preferred-citation:
   type: "article"
