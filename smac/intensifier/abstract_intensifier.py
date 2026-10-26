@@ -606,10 +606,15 @@ class AbstractIntensifier:
         if len(config_isb_keys) == 0:
             logger.debug(f"No relevant instances evaluated for config {config_hash}. Updating incumbents is skipped.")
             return
-
-        if len(incumbents) > 0:
-            assert incumbent_isb_keys is not None
-            assert len(incumbent_isb_keys) > 0
+        
+        # When using multi-objective with multi-fidelity, pareto-front incumbents
+        # may have been evaluated at different budgets, leaving the ISB-key
+        # Intersection empty. Skip comparison since we cannot compare fairly
+        if len(incumbents) > 0 and (incumbent_isb_keys is None or len(incumbent_isb_keys) == 0):
+            logger.debug(
+                "Incumbents ISB-key intersecion is empty (incumbents evaluated at diffrent budgets). Skipping incumbents update."
+            )
+            return
 
         # Check if incumbent exists
         # If there are no incumbents at all, we just use the new config as new incumbent

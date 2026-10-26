@@ -625,16 +625,32 @@ class SuccessiveHalving(AbstractIntensifier):
         pareto_front : list[Configuration]
             The pareto front computed from the given configurations.
         """
-        # Add the budgets to the isb keys according to the set incumbent heuristic
-        for i, (config, isb_keys) in enumerate(zip(configs, config_instance_seed_budget_keys)):
-            existing_isb_keys = []
-            for key in self.get_instance_seed_budget_keys(config, compare=False):
-                if InstanceSeedBudgetKey(instance=key.instance, seed=key.seed, budget=None) in isb_keys:
-                    existing_isb_keys.append(key)
-            config_instance_seed_budget_keys[i] = existing_isb_keys
+        config_instance_seed_budget_keys = self._add_budgets_to_isb_keys(configs, config_instance_seed_budget_keys)
 
         return calculate_pareto_front(
             runhistory=runhistory,
             configs=configs,
             config_instance_seed_budget_keys=config_instance_seed_budget_keys,
         )
+
+    def _cut_incumbents(
+        self, incumbent_ids: list[Configuration], all_incumbent_isb_keys: list[list[InstanceSeedBudgetKey]]
+    ) -> list[Configuration]:
+        all_incumbent_isb_keys = self._add_budgets_to_isb_keys(incumbent_ids, all_incumbent_isb_keys)
+        return super()._cut_incumbents(incumbent_ids, all_incumbent_isb_keys)
+
+    def _add_budgets_to_isb_keys(
+        self, configs: list[Configuration], config_instance_seed_budget_keys: list[list[InstanceSeedBudgetKey]]
+    ) -> list[list[InstanceSeedBudgetKey]]:
+        """Adds the budgets to the budget-less comparison keys according to the set incumbent heuristic."""
+        keys_with_budgets = []
+        for config, isb_keys in zip(configs, config_instance_seed_budget_keys):
+            keys_with_budgets.append(
+                [
+                    key
+                    for key in self.get_instance_seed_budget_keys(config, compare=False)
+                    if InstanceSeedBudgetKey(instance=key.instance, seed=key.seed, budget=None) in isb_keys
+                ]
+            )
+
+        return keys_with_budgets
