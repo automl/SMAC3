@@ -18,6 +18,8 @@
   Also works for single-objective optimization.
 - Add `HPIFacade`, which sets up HPI-ParEGO (`HPIRandomSearch`, `ParEGO` with `reweigh=5`, retraining every 2 configs).
 
+- Add `QExpectedImprovement`, a Monte Carlo q-EI acquisition function for batch Bayesian optimization. Use it with `batch_sampling_estimation_strategy="q_ei"`, the running configurations are then treated as pending points (#1229).
+
 ## Dependencies
 - Add Weights & Biases as an optional dependency via `smac[wandb]`
 

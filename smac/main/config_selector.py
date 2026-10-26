@@ -11,11 +11,9 @@ from ConfigSpace import Configuration
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
-from smac.acquisition.function.expected_improvement import QExpectedImprovement
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
-from smac.acquisition.maximizer.random_search import RandomSearch
 from smac.callback.callback import Callback
 from smac.initial_design import AbstractInitialDesign
 from smac.main.exceptions import ConfigurationSpaceExhaustedException
@@ -64,7 +62,9 @@ class ConfigSelector:
         information from the running configurations. If the strategy is kriging_believer, we use the predicted mean from
         our surrogate model as the estimations for the new samples. If the strategy is CL_min/mean/max, we use the
         min/mean/max from the existing evaluations as the estimations for the new samples. If the strategy is sample,
-        we use our surrogate model (in this case, only GP is allowed) to sample new configurations.
+        we use our surrogate model (in this case, only GP is allowed) to sample new configurations. If the strategy is
+        q_ei, no values are estimated, instead the running configurations are passed as pending points to the
+        acquisition function (use QExpectedImprovement).
     """
 
     def __init__(
@@ -247,8 +247,11 @@ class ConfigSelector:
 
             # Check if X/Y differs from the last run, otherwise use cached results
             train_start_time = time.time()
-            if self._previous_entries != Y.shape[0]:
-                self._model.train(X, Y)
+            # q_ei needs the pending configurations, which can change without new data
+            update_acquisition = self._batch_sampling_estimation_strategy == "q_ei"
+            if self._previous_entries != Y.shape[0] or update_acquisition:
+                if self._previous_entries != Y.shape[0]:
+                    self._model.train(X, Y)
 
                 x_best_array: np.ndarray | None = None
                 if incumbent_value is not None:
@@ -268,6 +271,11 @@ class ConfigSelector:
                     incumbents=self._runhistory.incumbents,
                     runhistory=self._runhistory,
                     runhistory_encoder=self._runhistory_encoder,
+                    X_pending=(
+                        self._runhistory_encoder.transform_running_configs(budget_subset=self._considered_budgets)
+                        if update_acquisition
+                        else None
+                    ),
                 )
 
             # We want to cache how many entries we used because if we have the same number of entries
@@ -466,7 +474,8 @@ class ConfigSelector:
              values
             sample: estimations for X are sampled from the surrogate models. Since the samples need to be sampled from a
               joint distribution for all X, we only allow sample strategy with GP as surrogate models.
-            q_ei: uses the Q-EI acquisition function to estimate Y.
+            q_ei: no estimation of Y. The running configurations are passed to the acquisition function as pending
+              points, which has to be QExpectedImprovement.
 
         Returns
         -------
@@ -504,6 +513,8 @@ class ConfigSelector:
                 Y_estimated = np.nanmean(Y_evaluated, axis=0, keepdims=True)
                 return np.repeat(Y_estimated, n_running_points, 0)
             return self._model.predict_marginalized(X_running)[0]  # type: ignore[union-attr]
+        elif estimation_strategy == "q_ei":
+            return None
         elif estimation_strategy == "sample":
             # https://papers.nips.cc/paper_files/paper/2012/file/05311655a15b75fab86956663e1819cd-Paper.pdf
             # since this requires a multi-variant gaussian distribution for the candidates, we need to restrict the

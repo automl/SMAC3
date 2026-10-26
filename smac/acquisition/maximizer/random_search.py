@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
 from ConfigSpace import Configuration
 
 from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
@@ -23,7 +21,6 @@ class RandomSearch(AbstractAcquisitionMaximizer):
         previous_configs: list[Configuration],
         n_points: int,
         _sorted: bool = False,
-        **kwargs: Any,
     ) -> list[tuple[float, Configuration]]:
         """Maximize acquisition function with random search
 

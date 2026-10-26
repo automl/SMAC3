@@ -51,3 +51,39 @@ def test_get_x_best_predicts_configurations_in_one_batch():
     np.testing.assert_array_equal(model.predict_marginalized.call_args.args[0], X)
     np.testing.assert_array_equal(x_best, X[1])
     assert best_observation == pytest.approx(0.1)
+
+def test_q_ei_strategy_does_not_estimate_running_configs():
+    selector = ConfigSelector(Scenario(ConfigurationSpace()), batch_sampling_estimation_strategy="q_ei")
+    assert selector.estimate_running_config_costs(np.zeros((2, 1)), np.zeros((3, 1)), "q_ei") is None
+
+
+def test_q_ei_passes_running_configs_as_pending_points():
+    from smac import BlackBoxFacade
+    from smac.acquisition.function import QExpectedImprovement
+    from smac.acquisition.maximizer import RandomSearch
+
+    cs = ConfigurationSpace({"x": (-5.0, 5.0)}, seed=0)
+    scenario = Scenario(cs, n_trials=12, n_workers=2, seed=0, deterministic=True)
+    acq = QExpectedImprovement(n_samples=16)
+    pending = []
+    original_update = acq._update
+
+    def spy(**kwargs):
+        pending.append(kwargs.get("X_pending"))
+        original_update(**kwargs)
+
+    acq._update = spy
+    smac = BlackBoxFacade(
+        scenario,
+        lambda config, seed=0: config["x"] ** 2,
+        acquisition_function=acq,
+        acquisition_maximizer=RandomSearch(cs, acq, challengers=50),
+        config_selector=BlackBoxFacade.get_config_selector(scenario, batch_sampling_estimation_strategy="q_ei"),
+        overwrite=True,
+        logging_level=50,
+    )
+    smac.optimize()
+
+    assert len(smac.runhistory) == 12
+    assert len(pending) > 0
+    assert all(p is not None and p.ndim == 2 for p in pending)

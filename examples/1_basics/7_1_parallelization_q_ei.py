@@ -106,6 +106,7 @@ if __name__ == "__main__":
         target_function=Branin().train,
         config_selector=facade.get_config_selector(
             scenario=scenario,
+            batch_sampling_estimation_strategy="q_ei",
         ),
         acquisition_function = acq_function_qei,
         acquisition_maximizer=acq_maximizer_qei,
