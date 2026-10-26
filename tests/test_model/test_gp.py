@@ -350,7 +350,8 @@ def test_gp_on_sklearn_data():
         model.train(X_train, y_train)
         y_hat, mu_hat = model.predict(X_test)
         mae = np.mean(np.abs(y_hat.flatten() - y_test), dtype=float)
-        assert pytest.approx(mae) == maes[i]
+        # The GP hyperparameter optimization differs slightly across platforms
+        assert pytest.approx(mae, rel=0.01) == maes[i]
 
 
 def test_nll():
