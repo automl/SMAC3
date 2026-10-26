@@ -25,7 +25,7 @@ license: "BSD-3-Clause"
 authors:
   - family-names: "Lindauer"
     given-names: "Marius"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Eggensperger"
     given-names: "Katharina" 
@@ -45,11 +45,11 @@ authors:
 
   - family-names: "Benjamins"
     given-names: "Carolin"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Ruhkopf"
     given-names: "Tim"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Sass"
     given-names: "René"
@@ -64,39 +64,39 @@ contact:
 
   - family-names: "Wever"
     given-names: "Marcel"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Angrimson"
     given-names: "Anthony"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Fehring"
     given-names: "Lukas"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Gratius"
     given-names: "Michael"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Hennig"
     given-names: "Leona"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Theodorakopoulos"
     given-names: "Daphne"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Traoré"
     given-names: "René"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Vormschlag"
     given-names: "Eva"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Winje"
     given-names: "Andreas Bentzen"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
 preferred-citation:
   type: "article"
@@ -112,7 +112,7 @@ preferred-citation:
   authors:
     - family-names: "Lindauer"
       given-names: "Marius"
-      affiliation: "Leibniz University Hannover"
+      affiliation: "Leibniz University Hanover"
 
     - family-names: "Eggensperger"
       given-names: "Katharina" 
@@ -131,19 +131,19 @@ preferred-citation:
 
     - family-names: "Deng"
       given-names: "Difan"
-      affiliation: "Leibniz University Hannover"
+      affiliation: "Leibniz University Hanover"
 
     - family-names: "Benjamins"
       given-names: "Carolin"
-      affiliation: "Leibniz University Hannover"
+      affiliation: "Leibniz University Hanover"
 
     - family-names: "Ruhkopf"
       given-names: "Tim"
-      affiliation: "Leibniz University Hannover"
+      affiliation: "Leibniz University Hanover"
 
     - family-names: "Sass"
       given-names: "René"
-      affiliation: "Leibniz University Hannover"
+      affiliation: "Leibniz University Hanover"
 
     - family-names: "Hutter"
       given-names: "Frank"
