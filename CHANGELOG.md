@@ -33,6 +33,7 @@
   could therefore never hold. The unused `FirstRunCrashedException` and
   `TargetAlgorithmAbortException` classes were removed along with it; the initial design diagnostics
   replace them (#1320)
+- RunHistory._add skipped a budget when it equaled the instance or seed. A budget of 3 with seed=3 was never recorded in the budget list. Overwriting a trial also appended its budget a second time. (#1363)
 
 # 2.4.1
 ## Bugfixes
