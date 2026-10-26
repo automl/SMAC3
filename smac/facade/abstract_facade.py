@@ -448,6 +448,8 @@ class AbstractFacade:
         retrain_after: int | None = 8,
         retrain_wallclock_ratio: int | None = None,
         retries: int = 16,
+        min_trials: int = 1,
+        batch_sampling_estimation_strategy: str = "no_estimate",
     ) -> ConfigSelector:
         """Returns the default configuration selector."""
         return ConfigSelector(
@@ -456,6 +458,8 @@ class AbstractFacade:
             retrain_wallclock_ratio=retrain_wallclock_ratio,
             # retries=retries,
             max_new_config_tries=retries,
+            min_trials=min_trials,
+            batch_sampling_estimation_strategy=batch_sampling_estimation_strategy,
         )
 
     def _get_optimizer(self) -> SMBO:

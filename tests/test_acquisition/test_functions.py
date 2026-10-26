@@ -12,6 +12,7 @@ from smac.acquisition.function import (
     IntegratedAcquisitionFunction,
     PriorAcquisitionFunction,
     PHVI,
+    QExpectedImprovement
 )
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -614,6 +615,87 @@ def test_logei_NxD(model, acq_logei):
     assert np.isclose(acq[0][0], 1.6670107375002425)
     assert np.isclose(acq[1][0], 1.5570607606556273)
     assert np.isclose(acq[2][0], 0.6480973967332011)
+
+
+# --------------------------------------------------------------
+# Test QEI
+# --------------------------------------------------------------
+
+
+@pytest.fixture
+def acq_qei(model):
+    qei = QExpectedImprovement(n_samples=20000)
+    qei.model = model
+    return qei
+
+
+def test_qei_matches_ei_without_pending(model, acq_qei):
+    configurations = [ConfigurationMock([0.1, 0.1, 0.1]), ConfigurationMock([1.0, 1.0, 1.0])]
+    ei = EI()
+    ei.update(model=model, eta=1.0)
+    acq_qei.update(model=model, eta=1.0)
+    assert acq_qei(configurations).shape == (2, 1)
+    assert np.allclose(acq_qei(configurations), ei(configurations), atol=0.03)
+
+
+def test_qei_pending_reduces_value(model, acq_qei):
+    configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
+    acq_qei.update(model=model, eta=1.0)
+    without = acq_qei(configurations)
+    acq_qei.update(model=model, eta=1.0, X_pending=np.array([[0.1, 0.1, 0.1]]))
+    with_pending = acq_qei(configurations)
+    assert with_pending[0][0] >= 0
+    assert with_pending[0][0] > without[0][0]  # a pending point can only make the batch minimum smaller
+
+
+def test_qei_pending_at_candidate_is_ei_of_batch(model, acq_qei):
+    # Two identical (but independent) samples have a lower minimum than one
+    configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
+    acq_qei.update(model=model, eta=1.0)
+    single = acq_qei(configurations)[0][0]
+    acq_qei.update(model=model, eta=1.0, X_pending=np.array([[1.0, 1.0, 1.0]]))
+    assert acq_qei(configurations)[0][0] > single
+
+
+def test_qei_gp_joint_sampling_accounts_for_correlation():
+    from tests.test_model.test_gp import get_gp
+
+    rs = np.random.RandomState(0)
+    X = rs.rand(10, 1)
+    Y = np.sin(6 * X) + 0.01 * rs.randn(10, 1)
+    gp = get_gp(1, 0)
+    gp.train(X, Y)
+
+    qei = QExpectedImprovement(n_samples=256, n_joint=3)
+    qei.update(model=gp, eta=float(Y.min()), X_pending=np.array([[0.5]]))
+    acq = qei._compute(np.linspace(0, 1, 50).reshape(-1, 1))
+    assert acq.shape == (50, 1)
+    assert np.isfinite(acq).all()
+    # the refined candidates are ranked above all others
+    order = np.argsort(-acq[:, 0])
+    assert acq[order[2], 0] > acq[order[3], 0]
+
+    # next to the pending point the correlation shrinks the gain compared to independent samples
+    near = np.array([[0.82]])
+    independent = QExpectedImprovement(n_samples=4000, n_joint=0, seed=1)
+    joint = QExpectedImprovement(n_samples=4000, n_joint=1, seed=1)
+    for q in (independent, joint):
+        q.update(model=gp, eta=float(Y.min()), X_pending=np.array([[0.8]]))
+    assert joint._compute(near)[0, 0] < independent._compute(near)[0, 0]
+
+
+def test_qei_log(model):
+    qei = QExpectedImprovement(log=True, n_samples=100)
+    qei.model = model
+    qei.update(model=model, eta=1.0)
+    acq = qei([ConfigurationMock([0.1, 0.1, 0.1]), ConfigurationMock([1.0, 1.0, 1.0])])
+    assert acq.shape == (2, 1)
+    assert (acq >= 0).all()
+
+
+def test_qei_requires_eta(model, acq_qei):
+    with pytest.raises(ValueError):
+        acq_qei([ConfigurationMock([1.0, 1.0, 1.0])])
 
 
 # --------------------------------------------------------------

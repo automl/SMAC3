@@ -8,6 +8,7 @@ from scipy.stats import norm
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
+from smac.model.gaussian_process import GaussianProcess
 from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
@@ -290,3 +291,141 @@ class EIPS(EI):
             raise ValueError("Expected Improvement per Second is smaller than 0 " "for at least one sample.")
 
         return f.reshape((-1, 1))
+
+
+class QExpectedImprovement(EI):
+    r"""Monte Carlo approximation of q-Expected Improvement for batch Bayesian optimization.
+
+    The batch is built greedily: for each candidate x, the acquisition value is the q-EI of the pending
+    configurations (configurations that are currently running) together with x. Without pending configurations,
+    this is a Monte Carlo estimate of the standard EI.
+
+    All candidates are first scored by treating them as independent normals. If the surrogate model is a Gaussian
+    process and there are pending configurations, the `n_joint` best candidates are then re-scored with samples from
+    the joint posterior of the pending configurations and the candidate, which accounts for their correlation. These
+    candidates are ranked above all others.
+
+    Parameters
+    ----------
+    xi : float, defaults to 0.0
+        Controls the balance between exploration and exploitation of the
+        acquisition function.
+    log : bool, defaults to False
+        Whether the function values are in log-space.
+    n_samples : int, defaults to 128
+        Number of Monte Carlo samples.
+    n_joint : int, defaults to 20
+        Number of best candidates that are re-scored with joint samples (only for Gaussian processes).
+    seed : int, defaults to 0
+        Random seed for the Monte Carlo samples.
+
+    Attributes
+    ----------
+    _xi : float
+        Exploration-exloitation trade-off parameter.
+    _log: bool
+        Function values in log-space or not.
+    _eta : float
+        Current incumbent function value (best value observed so far).
+    _X_pending : np.ndarray [P, D] | None
+        Array representation of the pending (running) configurations.
+    """
+
+    def __init__(
+        self, xi: float = 0.0, log: bool = False, n_samples: int = 128, n_joint: int = 20, seed: int = 0
+    ) -> None:
+        super(QExpectedImprovement, self).__init__(xi=xi, log=log)
+        self.n_samples = n_samples
+        self.n_joint = n_joint
+        self._rng = np.random.RandomState(seed)
+        self._X_pending: np.ndarray | None = None
+
+    @property
+    def name(self) -> str:  # noqa: D102
+        return "Batch Expected Improvement"
+
+    @property
+    def meta(self) -> dict[str, Any]:  # noqa: D102
+        meta = super().meta
+        meta.update({"n_samples": self.n_samples, "n_joint": self.n_joint})
+
+        return meta
+
+    def _update(self, **kwargs: Any) -> None:
+        """Update acquisition function attributes
+
+        Parameters
+        ----------
+        eta : float
+            Function value of current incumbent.
+        xi : float, optional
+            Exploration-exploitation trade-off parameter
+        X_pending : np.ndarray [P, D], optional
+            Array representation of the pending (running) configurations.
+        """
+        super()._update(**kwargs)
+        self._X_pending = kwargs.get("X_pending")
+
+    def _sample(self, X: np.ndarray) -> np.ndarray:
+        """Draw `n_samples` samples of the (marginalized) posterior at X, returns an array [n_samples, N]."""
+        assert self._model is not None
+        m, var = self._model.predict_marginalized(X)
+        return self._rng.normal(loc=m.T, scale=np.sqrt(var).T, size=(self.n_samples, X.shape[0]))
+
+    def _compute(self, X: np.ndarray) -> np.ndarray:
+        """Compute the q-EI of each candidate together with the pending configurations.
+
+        Parameters
+        ----------
+        X : np.ndarray [N, D]
+            The candidates.
+
+        Returns
+        -------
+        np.ndarray [N, 1]
+            The q-EI value of each candidate.
+        """
+        assert self._model is not None
+        assert self._xi is not None
+
+        if self._eta is None:
+            raise ValueError(
+                "No current best specified. Call update(eta=<float>) to inform the acquisition function "
+                "about the current best value."
+            )
+
+        if len(X.shape) == 1:
+            X = X[np.newaxis, :]
+
+        samples = self._sample(X)  # [n_samples, N]
+        X_pending = self._X_pending if self._X_pending is not None and len(self._X_pending) > 0 else None
+        if X_pending is not None:
+            pending = self._sample(X_pending)
+            samples = np.minimum(samples, np.min(pending, axis=1, keepdims=True))
+
+        acq = np.mean(self._improvement(samples), axis=0)
+
+        if X_pending is not None and self.n_joint > 0 and isinstance(self._model, GaussianProcess):
+            top = np.argsort(-acq)[: self.n_joint]
+            refined = np.empty(len(top))
+            for j, i in enumerate(top):
+                batch = np.concatenate([X_pending, X[i : i + 1]], axis=0)
+                # sample_functions returns [batch size, n_samples]
+                joint = self._model.sample_functions(batch, n_funcs=self.n_samples)
+                refined[j] = np.mean(self._improvement(np.min(joint, axis=0)))
+
+            # Rank the refined candidates above all others while keeping the order of the others
+            rest = np.setdiff1d(np.arange(len(acq)), top)
+            if len(rest) > 0:
+                acq[rest] += min(0.0, refined.min() - acq[rest].max())
+            acq[top] = refined
+
+        return acq.reshape((-1, 1))
+
+    def _improvement(self, samples: np.ndarray) -> np.ndarray:
+        assert self._eta is not None
+        if self._log:
+            # In log-space, the actual values are exp(samples), eta is already in log-space
+            return np.maximum(np.exp(self._eta - self._xi) - np.exp(samples), 0.0)
+
+        return np.maximum(self._eta - self._xi - samples, 0.0)
