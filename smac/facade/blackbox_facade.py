@@ -334,8 +334,9 @@ class BlackBoxFacade(AbstractFacade):
             the information from the running configurations. If the strategy is kriging_believer, we use the predicted
             mean from our surrogate model as the estimations for the new samples. If the strategy is CL_min/mean/max, we
             use the min/mean/max from the existing evaluations as the estimations for the new samples. If the strategy
-            is sample, we use our surrogate model (in this case, only GP is allowed) to sample new configurations. If the
-            strategy is q_ei, the running configurations are passed as pending points to QExpectedImprovement.
+            is sample, we use our surrogate model (in this case, only GP is allowed) to sample new configurations.
+            If the strategy is q_ei, the running configurations are passed as pending points to
+            QExpectedImprovement.
 
         Returns
         -------

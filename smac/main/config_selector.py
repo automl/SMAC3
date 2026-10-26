@@ -454,7 +454,7 @@ class ConfigSelector:
 
     def estimate_running_config_costs(
         self, X_running: np.ndarray, Y_evaluated: np.ndarray, estimation_strategy: str = "CL_max"
-    ) -> np.ndarray:
+    ) -> np.ndarray | None:
         """This function is implemented to estimate the still pending/ running configurations
 
         Parameters

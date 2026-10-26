@@ -331,7 +331,9 @@ class QExpectedImprovement(EI):
         Array representation of the pending (running) configurations.
     """
 
-    def __init__(self, xi: float = 0.0, log: bool = False, n_samples: int = 128, n_joint: int = 20, seed: int = 0) -> None:
+    def __init__(
+        self, xi: float = 0.0, log: bool = False, n_samples: int = 128, n_joint: int = 20, seed: int = 0
+    ) -> None:
         super(QExpectedImprovement, self).__init__(xi=xi, log=log)
         self.n_samples = n_samples
         self.n_joint = n_joint
@@ -366,6 +368,7 @@ class QExpectedImprovement(EI):
 
     def _sample(self, X: np.ndarray) -> np.ndarray:
         """Draw `n_samples` samples of the (marginalized) posterior at X, returns an array [n_samples, N]."""
+        assert self._model is not None
         m, var = self._model.predict_marginalized(X)
         return self._rng.normal(loc=m.T, scale=np.sqrt(var).T, size=(self.n_samples, X.shape[0]))
 
@@ -395,18 +398,18 @@ class QExpectedImprovement(EI):
             X = X[np.newaxis, :]
 
         samples = self._sample(X)  # [n_samples, N]
-        has_pending = self._X_pending is not None and len(self._X_pending) > 0
-        if has_pending:
-            pending = self._sample(self._X_pending)
+        X_pending = self._X_pending if self._X_pending is not None and len(self._X_pending) > 0 else None
+        if X_pending is not None:
+            pending = self._sample(X_pending)
             samples = np.minimum(samples, np.min(pending, axis=1, keepdims=True))
 
         acq = np.mean(self._improvement(samples), axis=0)
 
-        if has_pending and isinstance(self._model, GaussianProcess) and self.n_joint > 0:
+        if X_pending is not None and self.n_joint > 0 and isinstance(self._model, GaussianProcess):
             top = np.argsort(-acq)[: self.n_joint]
             refined = np.empty(len(top))
             for j, i in enumerate(top):
-                batch = np.concatenate([self._X_pending, X[i : i + 1]], axis=0)
+                batch = np.concatenate([X_pending, X[i : i + 1]], axis=0)
                 # sample_functions returns [batch size, n_samples]
                 joint = self._model.sample_functions(batch, n_funcs=self.n_samples)
                 refined[j] = np.mean(self._improvement(np.min(joint, axis=0)))
@@ -420,6 +423,7 @@ class QExpectedImprovement(EI):
         return acq.reshape((-1, 1))
 
     def _improvement(self, samples: np.ndarray) -> np.ndarray:
+        assert self._eta is not None
         if self._log:
             # In log-space, the actual values are exp(samples), eta is already in log-space
             return np.maximum(np.exp(self._eta - self._xi) - np.exp(samples), 0.0)
