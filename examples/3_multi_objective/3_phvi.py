@@ -31,7 +31,9 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
 from smac import Scenario
+from smac.facade.abstract_facade import AbstractFacade
 from smac.facade.multi_objective_facade import MultiObjectiveFacade as MOFacade
+from smac.utils.cost_transformer import CostTransformer
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -160,7 +162,6 @@ if __name__ == "__main__":
         scenario,
         mlp.train,
         config_selector=config_selector,
-        overwrite=True,
     )
 
     # Let's optimize

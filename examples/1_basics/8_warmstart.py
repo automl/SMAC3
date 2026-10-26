@@ -5,6 +5,7 @@ With the ask and tell interface, we can support warmstarting SMAC. We can commun
 information about the previous trials to SMAC using `TrialInfo` and `TrialValue` instances.
 For more details on ask and tell consult the [info page ask-and-tell](../../advanced_usage/5_ask_and_tell.md).
 """
+
 from __future__ import annotations
 
 from smac.scenario import Scenario
@@ -58,8 +59,6 @@ if __name__ == "__main__":
         scenario,
         target_function=task.evaluate,
         intensifier=intensifier,
-        overwrite=True,
-
         # Modify the initial design to use our custom initial design
         initial_design=HyperparameterOptimizationFacade.get_initial_design(
             scenario, 

@@ -93,6 +93,7 @@ def _scenario(tmp_path, mode, **kwargs):
         crash_cost=1000.0,
         initial_design_diagnostics=mode,
         output_directory=tmp_path,
+        continue_run=False,
         **kwargs,
     )
 
@@ -104,7 +105,7 @@ def _run(tmp_path, mode, target, facade=HyperparameterOptimizationFacade, n_conf
         extra["initial_design"] = facade.get_initial_design(scenario, n_configs=n_configs)
 
     with Diagnostics() as diagnostics:
-        smac = facade(scenario, target, overwrite=True, **extra)
+        smac = facade(scenario, target, **extra)
         smac.optimize()
 
     return smac, diagnostics
@@ -137,7 +138,7 @@ def test_all_configurations_crash_is_reported(tmp_path):
 
 
 def test_all_configurations_crash_aborts_the_run(tmp_path):
-    """"... we can safely abort the HPO run early ..."
+    """ "... we can safely abort the HPO run early ..."
 
     This is the German note on the issue: SMAC otherwise keeps going with the crashed configs,
     which makes no sense.
@@ -160,7 +161,7 @@ def test_identical_performance_is_reported(tmp_path):
 
 
 def test_identical_performance_aborts_the_run(tmp_path):
-    """"... In either case we have no real feedback signal for the surrogate model."
+    """ "... In either case we have no real feedback signal for the surrogate model."
 
     Whether this is a huge plateau or a bug, there is nothing to learn from, so the run stops.
     """
@@ -219,13 +220,11 @@ def test_default_reports_but_never_aborts(tmp_path):
 
     Only the log output differs from the historic behaviour.
     """
-    scenario = Scenario(
-        _configspace(), n_trials=N_TRIALS, crash_cost=1000.0, output_directory=tmp_path
-    )
+    scenario = Scenario(_configspace(), n_trials=N_TRIALS, crash_cost=1000.0, output_directory=tmp_path)
     assert scenario.initial_design_diagnostics == "warn"
 
     with Diagnostics() as diagnostics:
-        smac = HyperparameterOptimizationFacade(scenario, everything_crashes, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, everything_crashes)
         smac.optimize()
 
     assert "probably broken" in diagnostics.text
@@ -244,7 +243,7 @@ def test_diagnostics_can_be_switched_off_entirely(tmp_path):
     )
 
     with Diagnostics() as diagnostics:
-        smac = HyperparameterOptimizationFacade(scenario, everything_crashes, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, everything_crashes)
         smac.optimize()
 
     assert diagnostics.messages == []
@@ -288,6 +287,7 @@ def test_repeated_evaluations_of_one_configuration_are_not_counted_twice(tmp_pat
     scenario = Scenario(
         _configspace(),
         n_trials=30,
+        continue_run=False,
         deterministic=False,
         seed=0,
         crash_cost=1000.0,
@@ -301,7 +301,6 @@ def test_repeated_evaluations_of_one_configuration_are_not_counted_twice(tmp_pat
         smac = AlgorithmConfigurationFacade(
             scenario,
             fails_only_on_one_instance,
-            overwrite=True,
             initial_design=HyperparameterOptimizationFacade.get_initial_design(scenario, n_configs=5),
         )
         smac.optimize()
@@ -330,7 +329,7 @@ def test_legitimate_plateau_in_a_small_discrete_space(tmp_path):
     )
 
     with Diagnostics() as diagnostics:
-        smac = HyperparameterOptimizationFacade(scenario, lambda config, seed=0: 1.0, overwrite=True)
+        smac = HyperparameterOptimizationFacade(scenario, lambda config, seed=0: 1.0)
         smac.optimize()
 
     assert "same cost" in diagnostics.text
@@ -353,7 +352,7 @@ def test_all_configurations_crash_aborts_for_every_facade(tmp_path, facade):
     scenario = _scenario(tmp_path, "abort")
 
     with Diagnostics() as diagnostics:
-        smac = facade(scenario, everything_crashes, overwrite=True)
+        smac = facade(scenario, everything_crashes)
         smac.optimize()
 
     assert diagnostics.aborted
@@ -368,7 +367,7 @@ def test_multi_fidelity_facades_are_covered(tmp_path, facade):
     scenario = _scenario(tmp_path, "abort", min_budget=1, max_budget=9)
 
     with Diagnostics() as diagnostics:
-        smac = facade(scenario, crashes_on_every_budget, overwrite=True)
+        smac = facade(scenario, crashes_on_every_budget)
         smac.optimize()
 
     assert diagnostics.aborted
@@ -384,6 +383,7 @@ def test_multi_objective_is_covered(tmp_path):
     scenario = Scenario(
         _configspace(),
         n_trials=N_TRIALS,
+        continue_run=False,
         deterministic=True,
         seed=0,
         crash_cost=1000.0,
@@ -396,7 +396,6 @@ def test_multi_objective_is_covered(tmp_path):
         smac = MultiObjectiveFacade(
             scenario,
             constant_multi_objective,
-            overwrite=True,
             multi_objective_algorithm=MultiObjectiveFacade.get_multi_objective_algorithm(scenario),
         )
         smac.optimize()

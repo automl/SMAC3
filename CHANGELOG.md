@@ -1,6 +1,9 @@
 # 2.4.2
 ## Breaking
 - Drop support for Python 3.9 (minimum is now Python 3.10).
+- Param 'name' is now called 'experiment_name' in Scenario.
+- By default, SMAC now overwrites a previous run instead of continuing it (`Scenario.continue_run=False`). Set `continue_run=True` to continue a previous run (#1343).
+- Removed param `overwrite` from SMBO (#1343).
 
 ## Improvements
 - Add a `WandbRunner` for logging SMAC trials to Weights & Biases
@@ -17,6 +20,9 @@
   `ParEGO`, this implements HPI-ParEGO. Requires the optional `hypershap` dependency (`pip install smac[hpi]`).
   Also works for single-objective optimization.
 - Add `HPIFacade`, which sets up HPI-ParEGO (`HPIRandomSearch`, `ParEGO` with `reweigh=5`, retraining every 2 configs).
+- Replaced param 'overwrite' of AbstractFacade (now deprecated) by param 'continue_run' in Scenario, which has the opposite meaning (`continue_run = not overwrite`) (#1343). 
+- Added method `Scenario.set_continue_run(continue_run: bool)` (#1343).
+- Changed name of parameter 'name' of Scenario to 'experiment_name' (#1343).
 
 ## Dependencies
 - Add Weights & Biases as an optional dependency via `smac[wandb]`
@@ -26,6 +32,7 @@
 - An example on the new multi-objective method
 - An example on HPI-ParEGO
 - An example on HPIRandomSearch for single objective optimization
+- Updated examples to reflect change to overwrite/continue behavior.
 
 ## Bugfixes
 - Resource limits (`trial_walltime_limit`, `trial_memory_limit`) now also work with user-provided dask clients
@@ -39,6 +46,12 @@
   replace them (#1320)
 - Fix crash in `update_incumbents` and `_cut_incumbents` for multi-objective multi-fidelity runs (e.g. ParEGO with Hyperband) when incumbents share no instance-seed-budget keys (#1369)
 - RunHistory._add skipped a budget when it equaled the instance or seed. A budget of 3 with seed=3 was never recorded in the budget list. Overwriting a trial also appended its budget a second time. (#1363)
+
+## Deprecated
+- Param 'overwrite' of the Facade is deprecated since 2.4.2 and replaced by 'continue_run' in Scenario (`continue_run = not overwrite`). For compatibility, if set in the Facade, it overrides `Scenario.continue_run`.
+
+## Documentation
+- Changed documentation to reflect replacing the `overwrite` parameter of `Facade` by `continue_run` in `Scenario`, and added warnings for using `Facade(overwrite=...)`.
 
 # 2.4.1
 ## Bugfixes

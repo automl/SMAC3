@@ -84,7 +84,6 @@ class Version20(Wrapper):
             intensifier=intensifier,
             config_selector=config_selector,
             logging_level=99999,
-            overwrite=True,
         )
         smac.optimize()
 

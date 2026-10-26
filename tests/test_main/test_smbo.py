@@ -1,4 +1,5 @@
 from unittest.mock import patch
+from unittest.mock import patch
 
 import pytest
 
@@ -11,16 +12,15 @@ def test_termination_cost_threshold(rosenbrock):
     termination_cost_threshold = 100
     scenario = Scenario(
         rosenbrock.configspace,
+        experiment_name="test",
+        continue_run=False,
         n_trials=200,
         termination_cost_threshold=termination_cost_threshold,
     )
     smac = HyperparameterOptimizationFacade(
         scenario,
         rosenbrock.train,
-        intensifier=HyperparameterOptimizationFacade.get_intensifier(
-            scenario, max_config_calls=1
-        ),
-        overwrite=True,
+        intensifier=HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=1),
     )
     i = smac.optimize()
 
@@ -42,6 +42,8 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock, compute_cost):
     termination_cost_threshold = 100
     scenario = Scenario(
         rosenbrock.configspace,
+        experiment_name="test",
+        continue_run=False,
         n_trials=200,
         min_budget=1,
         max_budget=max_budget,
@@ -50,7 +52,6 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock, compute_cost):
     smac = MultiFidelityFacade(
         scenario,
         rosenbrock.train,
-        overwrite=True,
     )
     i = smac.optimize()
 
@@ -68,14 +69,11 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock, compute_cost):
 
 
 def test_smbo_reset(rosenbrock):
-    scenario = Scenario(rosenbrock.configspace, n_trials=3)
+    scenario = Scenario(rosenbrock.configspace, experiment_name="test", continue_run=False, n_trials=3)
     smac = HyperparameterOptimizationFacade(
         scenario,
         rosenbrock.train,
-        intensifier=HyperparameterOptimizationFacade.get_intensifier(
-            scenario, max_config_calls=1
-        ),
-        overwrite=True,
+        intensifier=HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=1),
     )
 
     smac.optimize()
@@ -103,7 +101,6 @@ def test_tell_without_seed(rosenbrock):
     smac = MultiFidelityFacade(
         scenario,
         rosenbrock.train,
-        overwrite=True,
     )
     info = smac.ask()
 
@@ -124,7 +121,6 @@ def test_tell_with_same_seed(rosenbrock):
     smac = MultiFidelityFacade(
         scenario,
         rosenbrock.train,
-        overwrite=True,
     )
 
     # The first bracket evaluates 9 configs on budget 1 and promotes 3 of them to budget 3
@@ -156,7 +152,6 @@ def test_tell_with_unknown_seed(rosenbrock):
     smac = MultiFidelityFacade(
         scenario,
         rosenbrock.train,
-        overwrite=True,
     )
     info = smac.ask()
     unknown_seed = info.seed + 1

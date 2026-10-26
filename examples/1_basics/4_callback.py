@@ -84,7 +84,6 @@ if __name__ == "__main__":
     HPOFacade(
         scenario,
         model.train,
-        overwrite=True,
         callbacks=[CustomCallback()],
         logging_level=999999,
     ).optimize()

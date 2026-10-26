@@ -28,11 +28,17 @@ class Scenario:
     ----------
     configspace : ConfigurationSpace
         The configuration space from which to sample the configurations.
-    name : str | None, defaults to None
+    experiment_name : str | None, defaults to None
         The name of the run. If no name is passed, SMAC generates a hash from the meta data.
         Specify this argument to identify your run easily.
     output_directory : Path, defaults to Path("smac3_output")
-        The directory in which to save the output. The files are saved in `./output_directory/name/seed`.
+        The directory in which to save the output. The files are saved in `./output_directory/experiment_name/seed`.
+    continue_run : bool, defaults to False
+        When False, overwrites the run results if a previous run is found that is
+        consistent in the meta data with the current setup. When True and a previous run is found that is
+        consistent in the meta data, the run is continued. When True and a previous run is found that is
+        not consistent in the meta data, the user is asked for the exact behaviour (overwrite completely
+        or rename old run first).
     deterministic : bool, defaults to False
         If True, only one seed is passed to the target function, assuming deterministic (noise-free) behavior.
         Otherwise, multiple seeds are passed (if `n_seeds` > 1) to enable repeated evaluations.
@@ -131,8 +137,9 @@ class Scenario:
 
     # General
     configspace: ConfigurationSpace
-    name: str | None = None
+    experiment_name: str | None = None
     output_directory: Path = Path("smac3_output")
+    continue_run: bool = False
     deterministic: bool = False
 
     # Objectives
@@ -275,9 +282,10 @@ class Scenario:
         if self.meta == {}:
             logger.warning("Scenario will saved without meta data. Please call the facade first to set meta data.")
 
-        if self.name is None:
+        if self.experiment_name is None:
             raise RuntimeError(
-                "Please specify meta data for generating a name. Alternatively, you can specify a name manually."
+                "Please specify meta data for generating a name. Alternatively, you can specify a name "
+                "manually with `Scenario(experiment_name=...)`."
             )
 
         self.output_directory.mkdir(parents=True, exist_ok=True)
@@ -329,14 +337,15 @@ class Scenario:
         """Makes the scenario serializable."""
         s = copy.deepcopy(scenario.__dict__)
         del s["configspace"]
+        del s["continue_run"]
         s["output_directory"] = str(s["output_directory"])
 
         return json.loads(json.dumps(s))
 
     def _change_output_directory(self) -> None:
         # Create output directory
-        if self.name is not None:
-            new = Path(self.name) / str(self.seed)
+        if self.experiment_name is not None:
+            new = Path(self.experiment_name) / str(self.seed)
             if not str(self.output_directory).endswith(str(new)):
                 object.__setattr__(self, "output_directory", self.output_directory / new)
 
@@ -345,7 +354,19 @@ class Scenario:
         object.__setattr__(self, "_meta", meta)
 
         # We overwrite name with the hash of the meta (if no name is passed)
-        if self.name is None:
-            hash = hashlib.md5(str(self.__dict__).encode("utf-8")).hexdigest()
-            object.__setattr__(self, "name", hash)
+        if self.experiment_name is None:
+            hash_dict = self.__dict__.copy()
+            # While continue_run might change between runs, it should still refers to the same experiment.
+            # Thus, exclude it from the hash to avoid creating a new experiment when continuing.
+            del hash_dict["continue_run"]
+            hash = hashlib.md5(str(hash_dict).encode("utf-8")).hexdigest()
+            object.__setattr__(self, "experiment_name", hash)
             self._change_output_directory()
+
+    def set_continue_run(self, continue_run: bool) -> None:
+        """Sets whether to continue from a previous run (True) or to overwrite it (False).
+
+        `continue_run` does not define the scenario (it is excluded from the hash and the serialization),
+        so it can be changed after creation, even though the Scenario is frozen.
+        """
+        object.__setattr__(self, "continue_run", continue_run)

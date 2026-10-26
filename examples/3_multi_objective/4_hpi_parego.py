@@ -152,7 +152,6 @@ if __name__ == "__main__":
     smac = HPIFacade(
         scenario,
         mlp.train,
-        overwrite=True,
     )
 
     # Let's optimize

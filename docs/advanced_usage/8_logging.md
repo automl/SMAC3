@@ -33,12 +33,12 @@ By default, SMAC generates several files to document the optimization process. T
 ```python
 Scenario(
     configspace = some_configspace,
-    name = 'experiment_name',
+    experiment_name = 'experiment_name',
     output_directory = Path('some_directory'),
     ...
 )
 ```
-Notably, if an output already exists at `./some_directory/experiment_name/seed`, the behavior is determined by the overwrite parameter in the [facade's][smac.facade.abstract_facade] settings. This parameter specifies whether to continue the previous run (default) or start a new run.
+Notably, if an output already exists at `./some_directory/experiment_name/seed`, the behavior is determined by the `continue_run` parameter in the [Scenario's][smac.scenario] settings. This parameter specifies whether to continue the previous run or start a new run (default).
 
 The output is split into four different log files, and a copy of the utilized [Configuration Space of the ConfigSpace library](https://automl.github.io/ConfigSpace/latest/).
 

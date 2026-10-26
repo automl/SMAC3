@@ -80,7 +80,6 @@ if __name__ == "__main__":
     smac = HPIFacade(
         scenario,
         classifier.train,
-        overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state
     )
 
     incumbent = smac.optimize()

@@ -126,7 +126,6 @@ if __name__ == "__main__":
     smac = MFFacade(
         scenario,
         model.train,
-        overwrite=True,
     )
 
     # Now we start the optimization process

@@ -32,6 +32,6 @@ def test_single_objective_uses_mean_aggregation():
 
 def test_optimize_multi_objective():
     scenario = _scenario(["x", "y"])
-    smac = HPIFacade(scenario, lambda config, seed=0: {"x": config["a"], "y": config["b"]}, overwrite=True)
+    smac = HPIFacade(scenario, lambda config, seed=0: {"x": config["a"], "y": config["b"]})
 
     assert len(smac.optimize()) > 0

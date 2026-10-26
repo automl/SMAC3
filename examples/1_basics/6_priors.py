@@ -101,9 +101,7 @@ class MLP:
         )
 
         # Add all hyperparameters at once:
-        cs.add(
-            [n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init]
-        )
+        cs.add([n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init])
 
         return cs
 
@@ -159,9 +157,7 @@ class MLP:
         )
 
         # Add all hyperparameters at once:
-        cs.add(
-            [n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init]
-        )
+        cs.add([n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init])
 
         return cs
 
@@ -180,12 +176,8 @@ class MLP:
             )
 
             # Returns the 5-fold cross validation accuracy
-            cv = StratifiedKFold(
-                n_splits=5, random_state=seed, shuffle=True
-            )  # to make CV splits consistent
-            score = cross_val_score(
-                classifier, digits.data, digits.target, cv=cv, error_score="raise"
-            )
+            cv = StratifiedKFold(n_splits=5, random_state=seed, shuffle=True)  # to make CV splits consistent
+            score = cross_val_score(classifier, digits.data, digits.target, cv=cv, error_score="raise")
 
         return 1 - np.mean(score)
 
@@ -205,9 +197,7 @@ if __name__ == "__main__":
 
     # We define the prior acquisition function, which conduct the optimization using priors over the optimum
     acquisition_function = PriorAcquisitionFunction(
-        acquisition_function=HyperparameterOptimizationFacade.get_acquisition_function(
-            scenario
-        ),
+        acquisition_function=HyperparameterOptimizationFacade.get_acquisition_function(scenario),
         decay_beta=scenario.n_trials / 10,  # Proven solid value
     )
 
@@ -224,7 +214,6 @@ if __name__ == "__main__":
         initial_design=initial_design,
         acquisition_function=acquisition_function,
         intensifier=intensifier,
-        overwrite=True,
     )
 
     incumbent = smac.optimize()

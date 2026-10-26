@@ -63,7 +63,6 @@
 #     smac = BOinGFacade(
 #         scenario=scenario,
 #         target_function=model.train,
-#         overwrite=True,
 #     )
 
 #     incumbent = smac.optimize()

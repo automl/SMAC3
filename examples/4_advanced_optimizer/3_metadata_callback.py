@@ -58,7 +58,6 @@ if __name__ == "__main__":
     HPOFacade(
         scenario,
         model.train,
-        overwrite=True,
         callbacks=[
             MetadataCallback(
                 project_name="My Project Name",

@@ -3,6 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any, Callable
 
+import warnings
 from pathlib import Path
 
 import joblib
@@ -104,16 +105,16 @@ class AbstractFacade:
         never, or an exception, respectively.
     callbacks: list[Callback], defaults to []
         Callbacks, which are incorporated into the optimization loop.
-    overwrite: bool, defaults to False
-        When True, overwrites the run results if a previous run is found that is
-        consistent in the meta data with the current setup. When False and a previous run is found that is
-        consistent in the meta data, the run is continued. When False and a previous run is found that is
-        not consistent in the meta data, the the user is asked for the exact behaviour (overwrite completely
-        or rename old run first).
     dask_client: Client | None, defaults to None
         User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not
         be closed automatically and will have to be closed manually if provided explicitly. If none is provided
         (default), a local one will be created for you and closed upon completion.
+    overwrite: bool | None, defaults to None
+        Deprecated since 2.4.2 and will be removed in future versions. `overwrite` has been replaced by
+        `continue_run` in the Scenario, which has the opposite meaning. If set, the value is translated to
+        `continue_run = not overwrite` and overrides `Scenario.continue_run` (on the passed Scenario object).
+        If True, the optimization will overwrite existing results. If False, it will continue from a previous run.
+        If None, uses the behavior set by the Scenario.
     """
 
     def __init__(
@@ -133,10 +134,22 @@ class AbstractFacade:
         logging_level: int | Path | Literal[False] | None = None,
         warn_mode: str = "warn_always",
         callbacks: list[Callback] | None = None,
-        overwrite: bool = False,
         dask_client: Client | None = None,
+        overwrite: bool | None = None,
     ):
         setup_logging(logging_level)
+
+        if overwrite is not None:
+            warnings.warn(
+                "`overwrite` in the Facade is deprecated since 2.4.2 and will be removed in future versions. "
+                "It has been replaced by `continue_run` in the Scenario (`continue_run = not overwrite`). "
+                "Note that the value set in the Facade overrides `Scenario.continue_run` of the passed Scenario.",
+                FutureWarning,
+                stacklevel=2,
+            )
+            # The deprecated 'overwrite' takes precedence and overrides the Scenario's behavior
+            # (also for the user's object).
+            scenario.set_continue_run(not overwrite)
 
         if callbacks is None:
             callbacks = []
@@ -195,7 +208,6 @@ class AbstractFacade:
         self._warn_mode = validate_warn_mode(warn_mode)
         self._config_selector = config_selector
         self._callbacks = callbacks
-        self._overwrite = overwrite
 
         self._model.set_y_transform(func=self._runhistory_encoder.transform_response_values)
 
@@ -465,7 +477,6 @@ class AbstractFacade:
             runner=self._runner,
             runhistory=self._runhistory,
             intensifier=self._intensifier,
-            overwrite=self._overwrite,
             warn_mode=self._warn_mode,
         )
 

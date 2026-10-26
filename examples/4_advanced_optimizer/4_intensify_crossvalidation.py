@@ -99,7 +99,6 @@ if __name__ == "__main__":
         scenario,
         classifier.train,
         initial_design=initial_design,
-        overwrite=True,  # If the run exists, we overwrite it; alternatively, we can continue from last state
         # The next line defines the intensifier, i.e., the module that governs the selection of
         # instance-seed pairs. Since we set deterministic to True above, it only governs the instance in
         # this example. Technically, it is not necessary to create the intensifier as a user, but it is

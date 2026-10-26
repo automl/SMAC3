@@ -60,7 +60,6 @@ if __name__ == "__main__":
         scenario,
         target_function=model.train,
         intensifier=intensifier,
-        overwrite=True,
     )
 
     # We can ask SMAC which trials should be evaluated next
@@ -118,7 +117,6 @@ if __name__ == "__main__":
         target_function=None,  # We handle evaluation ourselves
         intensifier=intensifier_pure,
         warn_mode="warn_always",
-        overwrite=True,
     )
 
     # Recommended pattern: check the budget yourself via smac.optimizer

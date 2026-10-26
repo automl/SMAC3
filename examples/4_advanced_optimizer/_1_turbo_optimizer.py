@@ -100,7 +100,6 @@
 #     smac = TuRBOFacade(
 #         scenario=scenario,
 #         target_function=model.train,
-#         overwrite=True,
 #     )
 #     smac.optimize()
 

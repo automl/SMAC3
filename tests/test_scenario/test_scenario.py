@@ -25,7 +25,7 @@ def scenario2(configspace: ConfigurationSpace) -> Scenario:
 def scenario3(configspace: ConfigurationSpace) -> Scenario:
     return Scenario(
         configspace,
-        name="test_scenario",
+        experiment_name="test_scenario",
         output_directory=Path("smac3_output_test"),
         n_trials=20,
         seed=5,
@@ -41,7 +41,7 @@ def scenario4(configspace: ConfigurationSpace) -> Scenario:
 def scenario5(configspace: ConfigurationSpace) -> Scenario:
     return Scenario(
         configspace,
-        name="test_scenario",
+        experiment_name="test_scenario",
         output_directory=Path("smac3_output_test"),
         n_trials=100,
         seed=5,
@@ -54,7 +54,7 @@ def scenario5(configspace: ConfigurationSpace) -> Scenario:
 def scenario6(configspace: ConfigurationSpace) -> Scenario:
     return Scenario(
         configspace,
-        name="test_scenario",
+        experiment_name="test_scenario",
         output_directory=Path("smac3_output_test"),
         instances=["i1", "i2", "i3"],
         instance_features={"i1": [1, 2, 3], "i2": [4, 5], "i3": [7, 8, 9]},
@@ -65,7 +65,7 @@ def scenario6(configspace: ConfigurationSpace) -> Scenario:
 def scenario7(configspace: ConfigurationSpace) -> Scenario:
     return Scenario(
         configspace,
-        name="test_scenario",
+        experiment_name="test_scenario",
         output_directory=Path("smac3_output_test"),
         instances=["i1", "i2", "i3"],
         instance_features={"blub": [1, 2, 3], "i2": [4, 5, 6], "i3": [7, 8, 9]},

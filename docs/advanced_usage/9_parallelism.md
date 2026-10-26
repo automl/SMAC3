@@ -67,7 +67,6 @@ client.wait_for_workers(n_workers)
 smac = BlackBoxFacade(
     scenario,                               # Pass scenario
     model.train,                            # Pass Pass target-function
-    overwrite=True,                         # Overrides any previous result
     dask_client=client,                     # Pass dask_client
 )
 incumbent = smac.optimize()

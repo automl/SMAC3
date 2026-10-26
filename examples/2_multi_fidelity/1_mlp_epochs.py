@@ -165,7 +165,6 @@ if __name__ == "__main__":
             mlp.train,
             initial_design=initial_design,
             intensifier=intensifier,
-            overwrite=True,
         )
 
         # Let's optimize
