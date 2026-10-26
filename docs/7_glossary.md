@@ -9,21 +9,31 @@
 - [](){#GP-MCMC}**GP-MCMC**: Gaussian Process with Markov-Chain Monte-Carlo.
 - [](){#HB}**HB**: See `Hyperband`.
 - [](){#HP}**HP**: Hyperparameter.
+- [](){#HPI}**HPI**: Hyperparameter Importance.
 - [](){#MF}**MF**: See `Multi-Fidelity`.
 - [](){#RF}**RF**: Random Forest.
 - [](){#ROAR}**ROAR**: See `Random Online Adaptive Racing`.
 - [](){#SMAC}**SMAC**: Sequential Model-Based Algorithm Configuration.
-- [](){#SMBO}**SMBO**: Sequential Mode-Based Optimization.
+- [](){#SMBO}**SMBO**: Sequential Model-Based Optimization.
+- [](){#AcquisitionFunction}**Acquisition Function**: A function that rates how promising it is to evaluate a configuration next, based on the predictions of the surrogate model. It trades off exploration (uncertain regions) and exploitation (regions with good predicted performance). Examples are Expected Improvement (EI) and Lower Confidence Bound (LCB). See [Components](advanced_usage/1_components.md#acquisition-function).
 - [](){#BayesianOptimization}**Bayesian Optimization**: Bayesian optimization is a sequential design strategy for global optimization of black-box functions that does not assume any functional forms. It is usually employed to optimize expensive-to-evaluate functions. A Bayesian optimization weights exploration and exploitation to find the minimum of its objective.
 - [](){#Black-Box}**Black-Box**: Refers to an algorithm being optimized, where only input and output are observable.
 - [](){#Budget}**Budget**: Budget is another word for fidelity. Examples are the number of training epochs or the size of the data subset the algorithm is trained on. However, budget can also be used in the context of instances. For example, if you have 100 instances (let's say we optimize across datasets) and you want to run your algorithm on 10 of them, then the budget is 10.
+- [](){#Configuration}**Configuration**: A concrete assignment of values to all (active) hyperparameters of the configuration space.
+- [](){#ConfigurationSpace}**Configuration Space**: The space of all possible configurations, defined by the hyperparameters, their ranges, and optional conditions and forbidden combinations. SMAC uses [ConfigSpace](https://automl.github.io/ConfigSpace/) to define it.
+- [](){#Facade}**Facade**: The entry point to SMAC. A [facade][smac.facade.abstract_facade] bundles all components (surrogate model, acquisition function, initial design, intensifier, ...) with sensible defaults for a specific use case, e.g. black-box optimization, hyperparameter optimization, multi-fidelity optimization or algorithm configuration. See [Getting Started](3_getting_started.md#facade) for an overview of the available facades.
+- [](){#HPI-ParEGO}**HPI-ParEGO**: An extension of `ParEGO` [[TWL26][TWL26]] that reduces the configuration space to the hyperparameters that matter most for the current scalarization, estimated via HyperSHAP on the surrogate model. It is set up by the `HPIFacade`. See [Multi-Objective Optimization](advanced_usage/3_multi_objective.md#hpi-parego).
 - [](){#Hyperband}**Hyperband**: [Hyperband](https://arxiv.org/abs/1603.06560). A novel bandit-based algorithm for hyperparameter optimization. Hyperband is an extension of successive halving and therefore works with multi-fidelities.
 - [](){#Incumbent}**Incumbent**: The incumbent is the current best known configuration.
+- [](){#InitialDesign}**Initial Design**: The configurations that are evaluated before the surrogate model is trained for the first time, e.g. the default configuration, random or Sobol samples. See [Components](advanced_usage/1_components.md#initial-design).
 - [](){#Instances}**Instances**: Often you want to optimize across different datasets, subsets, or even different transformations (e.g. augmentation). In general, each of these is called an instance. Configurations are evaluated on multiple instances so that a configuration is found which performs superior on all instances instead of only a few.
 - [](){#Intensification}**Intensification**: A mechanism that governs how many evaluations to perform with each configuration and when to trust a configuration enough to make it the new current best known configuration (the incumbent).
 - [](){#Multi-Fidelity}**Multi-Fidelity**: Multi-fidelity refers to running an algorithm on multiple budgets (such as number of epochs or subsets of data) and thereby evaluating the performance prematurely.
 - [](){#Multi-Objective}**Multi-Objective**: A multi-objective optimization problem is a problem with more than one objective. The goal is to find a solution that is optimal or at least a good compromise in all objectives.
 - [](){#Objective}**Objective**: An objective is a metric to evaluate the quality or performance of an algorithm.
-- [](){#Random Online Adaptive Racing}**Random Online Adaptive Racing**: Random Online Adaptive Racing. A simple model-free instantiation of the general `SMBO` framework. It selects configurations uniformly at random and iteratively compares them against the current incumbent using the intensification mechanism. See [SMAC extended](https://ai.dmi.unibas.ch/research/reading_group/hutter-et-al-tr2010.pdf) chapter 3.2 for details.
-- [](){#Target Function}**Target Function**: Your model, which returns a cost based on the given config, seed, budget, and/or instance.
+- [](){#ParetoFront}**Pareto Front**: In multi-objective optimization, the set of configurations for which no objective can be improved without worsening another one.
+- [](){#RandomOnlineAdaptiveRacing}**Random Online Adaptive Racing**: A simple model-free instantiation of the general `SMBO` framework. It selects configurations uniformly at random and iteratively compares them against the current incumbent using the intensification mechanism. See [SMAC extended](https://ai.dmi.unibas.ch/research/reading_group/hutter-et-al-tr2010.pdf) chapter 3.2 for details.
+- [](){#Scenario}**Scenario**: The object that describes the optimization problem and its environment, e.g. the configuration space, the number of trials, time and memory limits, budgets and instances.
+- [](){#SurrogateModel}**Surrogate Model**: A model (e.g. a random forest or Gaussian process) that is trained on the evaluated configurations and predicts the performance of unseen configurations. See [Components](advanced_usage/1_components.md#surrogate-model).
+- [](){#TargetFunction}**Target Function**: Your model, which returns a cost based on the given config, seed, budget, and/or instance.
 - [](){#Trial}**Trial**: Trial is a single run of a target function on a combination of configuration, seed, budget and/or instance.
