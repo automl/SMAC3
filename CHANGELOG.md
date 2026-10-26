@@ -33,6 +33,7 @@
   could therefore never hold. The unused `FirstRunCrashedException` and
   `TargetAlgorithmAbortException` classes were removed along with it; the initial design diagnostics
   replace them (#1320)
+- Fix crash in `update_incumbents` and `_cut_incumbents` for multi-objective multi-fidelity runs (e.g. ParEGO with Hyperband) when incumbents share no instance-seed-budget keys (#1369)
 
 # 2.4.1
 ## Bugfixes
