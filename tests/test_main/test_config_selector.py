@@ -87,3 +87,18 @@ def test_q_ei_passes_running_configs_as_pending_points():
     assert len(smac.runhistory) == 12
     assert len(pending) > 0
     assert all(p is not None and p.ndim == 2 for p in pending)
+
+def test_retrain_wallclock_ratio():
+    scenario = Scenario(ConfigurationSpace())
+    selector = ConfigSelector(scenario, retrain_after=None, retrain_wallclock_ratio=0.1)
+    selector._wallclock_start_time = 0.0
+    selector._counter = 1
+
+    with mock.patch("smac.main.config_selector.time.time", return_value=100.0):
+        # 5% of the elapsed time was spent on the model, which is less than the ratio of 10%, so return True
+        selector._acquisition_training_times = [5.0]
+        assert selector._check_for_retrain()
+
+        # 20% of the elapsed time was spent on the model, which is more than the ratio of 10%, so return False
+        selector._acquisition_training_times = [20.0]
+        assert not selector._check_for_retrain()
