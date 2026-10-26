@@ -85,13 +85,16 @@ scenario = Scenario(
 )
 ```
 
+!!! warning "Deprecated"
+    The `overwrite` flag used to be set in the Facade, but is now set in the Scenario. For compatibility, setting the flag in the Facade takes precedence over the Scenario, but will show a deprecation warning, and setting it in the Facade will be removed in the future.
+
 !!! info "Deterministic Behavior"
     The **`deterministic`** parameter controls whether the objective function is assumed to be noise-free.
     * **For Deterministic Objectives (`deterministic=True`):** Use this when repeated evaluations of the same configuration produce identical results. In this mode, each configuration is evaluated only once, and the surrogate model does not include a noise term.
     * **For Stochastic Objectives (`deterministic=False`):** Use this when the objective is noisy. Intensification parameters like `max_config_calls` and `n_seeds` must be set to enable repeated evaluations per configuration.
 
 !!! info
-    To continue from a previous run, set a `experiment_name` and set overwrite=False. This will load the previous run's history and contiunue where it stopped.
+    To continue from a previous run, set a `experiment_name` and set `overwrite=False`. This will load the previous run's history and continue where it stopped.
 
 !!! note
     If no `experiment_name` is given, a hash of the experiment is used. Running the same experiment again at a later time will result in exactly the same hash. This is important, because the optimization will warmstart on the preexisting evaluations, if not otherwise specified in the [Facade][smac.facade.abstract_facade].

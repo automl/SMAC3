@@ -37,7 +37,7 @@ class Scenario:
         When True, overwrites the run results if a previous run is found that is
         consistent in the meta data with the current setup. When False and a previous run is found that is
         consistent in the meta data, the run is continued. When False and a previous run is found that is
-        not consistent in the meta data, the the user is asked for the exact behaviour (overwrite completely
+        not consistent in the meta data, the user is asked for the exact behaviour (overwrite completely
         or rename old run first).
     deterministic : bool, defaults to False
         If True, only one seed is passed to the target function, assuming deterministic (noise-free) behavior.

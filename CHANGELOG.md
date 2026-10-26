@@ -1,13 +1,13 @@
 # 2.4.2
 ## Breaking
-- Param 'overwrite' must be set in the Scenario rather than the Facade
-- Param 'name' is now called 'experiment_name' in Scenario
+- Param 'name' is now called 'experiment_name' in Scenario.
+- Removed param `overwrite` from SMBO (#1343).
 
 ## Improvements
 - Add a `WandbRunner` for logging SMAC trials to Weights & Biases
 - Change default value of 'overwrite' to True instead of False (#1343)
-- Moved param 'overwrite' from AbstractFacade to Scenario (#1343)
-- Changed name of parameter 'name' of Scenario to 'experiment_name' (#1343)
+- Moved param 'overwrite' from AbstractFacade to Scenario (#1343).
+- Changed name of parameter 'name' of Scenario to 'experiment_name' (#1343).
 
 ## Dependencies
 - Add Weights & Biases as an optional dependency via `smac[wandb]`
@@ -15,8 +15,11 @@
 ## Examples
 - Add an example for using SMAC with Weights & Biases
 
+## Deprecated
+- Setting overwrite in the Facade is deprecated and should be set in Scenario instead.
+
 ## Documentation
-- Changes reflecting 
+- Changed documentation to reflect the moving of `overwrite` parameter from `Facade` to `Scenario`, and added warnings for using `Facade(overwrite=...)`.
 
 # 2.4.1
 ## Breaking

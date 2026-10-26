@@ -3,6 +3,8 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any, Callable
 
+import warnings
+from dataclasses import replace
 from pathlib import Path
 
 import joblib
@@ -108,6 +110,10 @@ class AbstractFacade:
         User-created dask client, which can be used to start a dask cluster and then attach SMAC to it. This will not
         be closed automatically and will have to be closed manually if provided explicitly. If none is provided
         (default), a local one will be created for you and closed upon completion.
+    overwrite: bool | None, defaults to None
+        Deprecated since 2.4.2 and will be removed in future versions. Set `overwrite` in the Scenario instead.
+        If True, the optimization will overwrite existing results. If False, it will continue from a previous run.
+        If None, uses the behavior set by the Scenario.
     """
 
     def __init__(
@@ -128,8 +134,19 @@ class AbstractFacade:
         warn_mode: str = "warn_always",
         callbacks: list[Callback] | None = None,
         dask_client: Client | None = None,
+        overwrite: bool | None = None,
     ):
         setup_logging(logging_level)
+
+        if overwrite is not None:
+            warnings.warn(
+                "Setting `overwrite` in the Facade is deprecated since 2.4.2 and will be removed in future versions. "
+                "Please set `overwrite` in the Scenario instead.",
+                FutureWarning,
+                stacklevel=2,
+            )
+            # Scenario is frozen. We need to create a new scenario for internal use.
+            scenario = replace(scenario, overwrite=overwrite)
 
         if callbacks is None:
             callbacks = []
