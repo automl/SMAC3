@@ -43,7 +43,8 @@ class HPIFacade(HyperparameterOptimizationFacade):
         challengers : int, defaults to 5000
             Number of challengers.
         threshold : float | list[float] | None, defaults to None
-            See ``HPIRandomSearch``. ``None`` reduces the configuration space during the middle third of the trials.
+            See ``HPIRandomSearch``. ``None`` reduces the configuration space during the middle and last third of
+            the trials.
         fixing_strategy : str, defaults to "incumbent"
             See ``HPIRandomSearch``.
         random_prob : float, defaults to 0.1

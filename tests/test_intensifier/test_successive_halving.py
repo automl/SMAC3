@@ -186,8 +186,7 @@ def test_incumbents_highest_observed_budget(make_scenario, configspace_small, ma
         InstanceSeedBudgetKey(instance=None, seed=8, budget=1.0)
     ]
 
-    # TODO: We actually want to prioritze configs evaluated on higher budgets
-    # Not working yet
+    # Same cost on the same budget: the incumbent does not change
     runhistory.add(config=config2, cost=0.5, time=0.0, seed=8, budget=1, status=StatusType.SUCCESS)
     intensifier.update_incumbents(config2)
     assert intensifier.get_incumbent() == config
@@ -203,6 +202,36 @@ def test_incumbents_highest_observed_budget(make_scenario, configspace_small, ma
         # We don't want InstanceSeedBudgetKey(instance=None, seed=8, budget=1.0) anymore
         # That means, we only calculate the cost based on the highest observed budget
         InstanceSeedBudgetKey(instance=None, seed=8, budget=2.0),
+    ]
+
+
+def test_incumbents_highest_observed_budget_per_config(make_scenario, configspace_small, make_config_selector):
+    """Tests that the highest observed budget is determined per config, i.e., a config is not preferred
+    just because it was evaluated on a higher budget (see #940)."""
+    scenario: Scenario = make_scenario(configspace_small, use_instances=False, min_budget=1, max_budget=3)
+    runhistory = RunHistory()
+    intensifier = SuccessiveHalving(
+        scenario=scenario, eta=3, n_seeds=1, instance_seed_order=None, incumbent_selection="highest_observed_budget"
+    )
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
+    intensifier.runhistory = runhistory
+    intensifier.__post_init__()
+    config = configspace_small.get_default_configuration()
+    config2 = configspace_small.sample_configuration()
+
+    runhistory.add(config=config, cost=0.5, time=0.0, seed=8, budget=1, status=StatusType.SUCCESS)
+    intensifier.update_incumbents(config)
+    assert intensifier.get_incumbent() == config
+
+    # config2 is evaluated on a higher budget but performs worse, so the incumbent does not change
+    runhistory.add(config=config2, cost=0.6, time=0.0, seed=8, budget=2, status=StatusType.SUCCESS)
+    intensifier.update_incumbents(config2)
+    assert intensifier.get_incumbent() == config
+    assert intensifier.get_instance_seed_budget_keys(config) == [
+        InstanceSeedBudgetKey(instance=None, seed=8, budget=1.0)
+    ]
+    assert intensifier.get_instance_seed_budget_keys(config2) == [
+        InstanceSeedBudgetKey(instance=None, seed=8, budget=2.0)
     ]
 
 
@@ -405,3 +434,54 @@ def test_promoting(make_scenario, configspace_small, make_config_selector):
     # However, the first batch should still be there
     assert len(intensifier._tracker[(0, 0)]) == 1
     assert len(intensifier._tracker[(0, 0)][0][1]) == n_configs[0][0]
+
+
+def test_update_incumbents_without_common_isb_keys(make_scenario, configspace_small, make_config_selector):
+    """Incumbents evaluated on different instance-seed-budget keys share none, which should not raise."""
+    scenario: Scenario = make_scenario(
+        configspace_small, use_instances=False, use_multi_objective=True, min_budget=1, max_budget=3
+    )
+    runhistory = RunHistory()
+    intensifier = SuccessiveHalving(
+        scenario=scenario, eta=3, n_seeds=1, instance_seed_order=None, incumbent_selection="any_budget"
+    )
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
+    intensifier.runhistory = runhistory
+    configs = configspace_small.sample_configuration(3)
+
+    runhistory.add(config=configs[0], cost=[0.1, 0.9], time=0.0, seed=8, budget=1, status=StatusType.SUCCESS)
+    runhistory.add(config=configs[1], cost=[0.9, 0.1], time=0.0, seed=9, budget=3, status=StatusType.SUCCESS)
+    runhistory.add(config=configs[2], cost=[0.5, 0.5], time=0.0, seed=8, budget=3, status=StatusType.SUCCESS)
+    intensifier._incumbents = [configs[0], configs[1]]
+    assert intensifier.get_incumbent_instance_seed_budget_keys(compare=True) == []
+
+    intensifier.update_incumbents(configs[2])
+    assert intensifier.get_incumbents() == [configs[0], configs[1]]
+
+
+def test_cut_incumbents_adds_budgets(make_scenario, configspace_small, make_config_selector):
+    """Cutting incumbents needs the budgets of the keys, which are removed for comparing."""
+    scenario: Scenario = make_scenario(
+        configspace_small, use_instances=False, use_multi_objective=True, min_budget=1, max_budget=3
+    )
+    runhistory = RunHistory()
+    intensifier = SuccessiveHalving(
+        scenario=scenario,
+        eta=3,
+        n_seeds=1,
+        instance_seed_order=None,
+        incumbent_selection="highest_budget",
+        max_incumbents=2,
+    )
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
+    intensifier.runhistory = runhistory
+    intensifier.__post_init__()
+    configs = configspace_small.sample_configuration(3)
+
+    for config, cost in zip(configs, [[0.1, 0.9], [0.5, 0.5], [0.9, 0.1]]):
+        runhistory.add(config=config, cost=cost, time=0.0, seed=8, budget=3, status=StatusType.SUCCESS)
+
+    isb_keys = [InstanceSeedBudgetKey(instance=None, seed=8, budget=None)]
+    new_incumbents = intensifier._cut_incumbents(configs, [isb_keys for _ in configs])
+
+    assert len(new_incumbents) == 2

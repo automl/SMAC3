@@ -233,6 +233,24 @@ class SMBO:
         if self._intensifier.uses_budgets and info.budget is None:
             raise ValueError("Passed budget is None but intensifier requires budgets.")
 
+        if self._intensifier.uses_seeds and info.seed is None:
+            raise ValueError(
+                "Passed seed is None but intensifier requires seeds. Please pass the "
+                "TrialInfo returned by `ask()` "
+                "to `tell()` (or at least use the same seed), "
+                "otherwise the trial can not be matched by the intensifier."
+            )
+
+        # A trial with a seed unknown to the intensifier is added to the runhistory but never matched by the
+        # intensifier (e.g., Successive Halving/Hyperband would wait for the trials with the expected seed forever)
+        used_seeds = self._intensifier.used_seeds
+        if self._intensifier.uses_seeds and used_seeds is not None and info.seed not in used_seeds:
+            logger.warning(
+                f"Passed seed {info.seed} is not used by the intensifier (used seeds: {used_seeds}). The trial is "
+                "added to the runhistory but might not be considered by the intensifier. Please pass the TrialInfo "
+                "returned by `ask()` to `tell()` (or at least use the same seed)."
+            )
+
         self._runhistory.add(
             config=info.config,
             cost=value.cost,
