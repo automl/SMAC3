@@ -24,12 +24,12 @@
 #### Checklist
 > Go over all the following points, and put an `x` in all the boxes that apply.
 > Should there be a good argument to differ, please provide a reasoned explanation.
-- [ ] My change is based on the latest stage of the `develop` branch.
+- [ ] My change is based on the latest stage of the `development` branch.
 - [ ] My change required a change of the documentation, which has been done.
 - [ ] I checked that the documentation can be build, visualizes everything as expected, and does not contain any warnings.
 - [ ] I have added/adapted tests to cover my changes.
 - [ ] The tests can be executed successfully.
-- [ ] I have added a description of the changes to `CHANGELOG.rst`.
+- [ ] I have added a description of the changes to `CHANGELOG.md`.
 
 #### Any other comments?
 

@@ -19,7 +19,7 @@ from smac.scenario import Scenario
 # https://github.com/dask/distributed/issues/4168
 # import multiprocessing.popen_spawn_posix  # noqa
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

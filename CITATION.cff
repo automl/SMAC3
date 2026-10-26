@@ -25,59 +25,78 @@ license: "BSD-3-Clause"
 authors:
   - family-names: "Lindauer"
     given-names: "Marius"
-    affiliation: "Leibniz University Hannover, Germany"
-
-  - family-names: "Benjamins"
-    given-names: "Carolin"
-    affiliation: "Leibniz University Hannover, Germany"
-
-  - family-names: "Biedenkapp"
-    given-names: "André"
-    orcid: "https://orcid.org/0000-0002-8703-8559"
-    affiliation: "University of Freiburg, Germany"
-
-  - family-names: "Deng"
-    given-names: "Difan"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Eggensperger"
     given-names: "Katharina" 
-    orcid: "https://orcid.org/0000-0002-0309-401X"
-    affiliation: "University of Freiburg, Germany"
-
-  - family-names: "Falkner"
-    given-names: "Stefan"
-    orcid: "https://orcid.org/0000-0002-6303-9418"
-    affiliation: "Bosch Center for Artificial Intelligence, Rennigen, Germany"
+    affiliation: "TU Dortmund University, Germany"
 
   - family-names: "Feurer"
     given-names: "Matthias"
-    orcid: "https://orcid.org/0000-0001-9611-8588"
-    affiliation: "University of Freiburg, Germany"
+    affiliation: "TU Dortmund University, Germany"
 
-  - family-names: "Graf"
-    given-names: "Helena"
-    affiliation: "Leibniz University Hannover, Germany"
+  - family-names: "Biedenkapp"
+    given-names: "André"
+    affiliation: "Karlsruhe Institute of Technology, Germany"
+
+  - family-names: "Deng"
+    given-names: "Difan"
+    affiliation: "Amazon, Berlin, Germany"
+
+  - family-names: "Benjamins"
+    given-names: "Carolin"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Ruhkopf"
     given-names: "Tim"
-    affiliation: "Leibniz University Hannover, Germany"
+    affiliation: "Leibniz University Hanover, Germany"
 
   - family-names: "Sass"
     given-names: "René"
-    affiliation: "Leibniz University Hannover, Germany"
-
-  - family-names: "Segel"
-    given-names: "Sarah"
-    affiliation: "Leibniz University Hannover, Germany"
-
-  - family-names: "Tornede"
-    given-names: "Alexander"
-    affiliation: "Leibniz University Hannover, Germany"
 
   - family-names: "Hutter"
     given-names: "Frank"
-    affiliation: "University of Freiburg, Germany"
+    affiliation: "Prior Labs and University of Freiburg, Germany"
+
+contact:
+  - name: "Leibniz University Hanover, Institute of AI"
+    email: "smac@ai.uni-hannover.de"
+
+  - family-names: "Wever"
+    given-names: "Marcel"
+    affiliation: "Leibniz University Hanover, Germany"
+
+  - family-names: "Angrimson"
+    given-names: "Anthony"
+    affiliation: "Leibniz University Hanover, Germany"
+
+  - family-names: "Fehring"
+    given-names: "Lukas"
+    affiliation: "Leibniz University Hanover, Germany"
+
+  - family-names: "Gratius"
+    given-names: "Michael"
+    affiliation: "Leibniz University Hanover, Germany"
+
+  - family-names: "Hennig"
+    given-names: "Leona"
+    affiliation: "Leibniz University Hanover, Germany"
+
+  - family-names: "Theodorakopoulos"
+    given-names: "Daphne"
+    affiliation: "Leibniz University Hanover, Germany"
+
+  - family-names: "Traoré"
+    given-names: "René"
+    affiliation: "Leibniz University Hanover, Germany"
+
+  - family-names: "Vormschlag"
+    given-names: "Eva"
+    affiliation: "Leibniz University Hanover, Germany"
+
+  - family-names: "Winje"
+    given-names: "Andreas Bentzen"
+    affiliation: "Leibniz University Hanover, Germany"
 
 preferred-citation:
   type: "article"
@@ -93,7 +112,7 @@ preferred-citation:
   authors:
     - family-names: "Lindauer"
       given-names: "Marius"
-      affiliation: "Leibniz University Hannover"
+      affiliation: "Leibniz University Hanover"
 
     - family-names: "Eggensperger"
       given-names: "Katharina" 
@@ -112,19 +131,19 @@ preferred-citation:
 
     - family-names: "Deng"
       given-names: "Difan"
-      affiliation: "Leibniz University Hannover"
+      affiliation: "Leibniz University Hanover"
 
     - family-names: "Benjamins"
       given-names: "Carolin"
-      affiliation: "Leibniz University Hannover"
+      affiliation: "Leibniz University Hanover"
 
     - family-names: "Ruhkopf"
       given-names: "Tim"
-      affiliation: "Leibniz University Hannover"
+      affiliation: "Leibniz University Hanover"
 
     - family-names: "Sass"
       given-names: "René"
-      affiliation: "Leibniz University Hannover"
+      affiliation: "Leibniz University Hanover"
 
     - family-names: "Hutter"
       given-names: "Frank"

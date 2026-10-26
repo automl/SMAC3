@@ -7,7 +7,7 @@ from ConfigSpace import ConfigurationSpace, Float
 from smac.multi_objective.parego import ParEGO
 from smac.scenario import Scenario
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

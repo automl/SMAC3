@@ -14,7 +14,7 @@ from smac.acquisition.function import (
     PHVI,
 )
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 from tests.fixtures.runhistory import runhistory

@@ -36,7 +36,7 @@ from smac import HPIFacade, Scenario
 from smac.facade.abstract_facade import AbstractFacade
 from smac.utils.cost_transformer import CostTransformer
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

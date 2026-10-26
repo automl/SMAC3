@@ -9,6 +9,9 @@ from smac.multi_objective.abstract_multi_objective_algorithm import (
 )
 from smac.scenario import Scenario
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 
 class ParEGO(AbstractMultiObjectiveAlgorithm):
     """
