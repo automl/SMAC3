@@ -527,7 +527,7 @@ class SMBO:
         # design anymore.
         # Since the runhistory is already updated, the model uses previous data directly.
 
-        if not self._scenario.overwrite:
+        if self._scenario.continue_run:
             old_output_directory = self._scenario.output_directory
             if self.exists(old_output_directory):
                 old_scenario = Scenario.load(old_output_directory)

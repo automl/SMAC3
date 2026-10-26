@@ -53,7 +53,7 @@ if __name__ == "__main__":
     costs = [task.evaluate(c, seed=SEED) for c in configurations]
 
     # Define optimization problem and budget
-    scenario = Scenario(task.configspace, overwrite=True, deterministic=False, n_trials=30)
+    scenario = Scenario(task.configspace, deterministic=False, n_trials=30)
     intensifier = HyperparameterOptimizationFacade.get_intensifier(scenario, max_config_calls=1)
     smac = HyperparameterOptimizationFacade(
         scenario,

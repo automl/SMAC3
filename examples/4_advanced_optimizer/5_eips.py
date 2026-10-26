@@ -144,7 +144,6 @@ if __name__ == "__main__":
     smac = HPOFacade(
         scenario,
         model.train,
-        overwrite=True,
         runhistory_encoder=encoder,
         acquisition_function=acquisition_function,
         model=surrogate,

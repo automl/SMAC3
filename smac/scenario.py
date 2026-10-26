@@ -33,10 +33,10 @@ class Scenario:
         Specify this argument to identify your run easily.
     output_directory : Path, defaults to Path("smac3_output")
         The directory in which to save the output. The files are saved in `./output_directory/experiment_name/seed`.
-    overwrite : bool, defaults to True
-        When True, overwrites the run results if a previous run is found that is
-        consistent in the meta data with the current setup. When False and a previous run is found that is
-        consistent in the meta data, the run is continued. When False and a previous run is found that is
+    continue_run : bool, defaults to False
+        When False, overwrites the run results if a previous run is found that is
+        consistent in the meta data with the current setup. When True and a previous run is found that is
+        consistent in the meta data, the run is continued. When True and a previous run is found that is
         not consistent in the meta data, the user is asked for the exact behaviour (overwrite completely
         or rename old run first).
     deterministic : bool, defaults to False
@@ -139,7 +139,7 @@ class Scenario:
     configspace: ConfigurationSpace
     experiment_name: str | None = None
     output_directory: Path = Path("smac3_output")
-    overwrite: bool = True
+    continue_run: bool = False
     deterministic: bool = False
 
     # Objectives
@@ -337,7 +337,7 @@ class Scenario:
         """Makes the scenario serializable."""
         s = copy.deepcopy(scenario.__dict__)
         del s["configspace"]
-        del s["overwrite"]
+        del s["continue_run"]
         s["output_directory"] = str(s["output_directory"])
 
         return json.loads(json.dumps(s))
@@ -356,9 +356,17 @@ class Scenario:
         # We overwrite name with the hash of the meta (if no name is passed)
         if self.experiment_name is None:
             hash_dict = self.__dict__.copy()
-            # While overwrite might change between runs, it should still refers to the same experiment.
+            # While continue_run might change between runs, it should still refers to the same experiment.
             # Thus, exclude it from the hash to avoid creating a new experiment when continuing.
-            del hash_dict["overwrite"]
+            del hash_dict["continue_run"]
             hash = hashlib.md5(str(hash_dict).encode("utf-8")).hexdigest()
             object.__setattr__(self, "experiment_name", hash)
             self._change_output_directory()
+
+    def set_continue_run(self, continue_run: bool) -> None:
+        """Sets whether to continue from a previous run (True) or to overwrite it (False).
+
+        `continue_run` does not define the scenario (it is excluded from the hash and the serialization),
+        so it can be changed after creation, even though the Scenario is frozen.
+        """
+        object.__setattr__(self, "continue_run", continue_run)

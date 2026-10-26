@@ -89,7 +89,6 @@ if __name__ == "__main__":
     # Scenario object specifying the optimization "environment"
     scenario = Scenario(
         model.configspace,
-        overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
         deterministic=True,
         n_trials=n_trials,
         min_budget=min_budget,

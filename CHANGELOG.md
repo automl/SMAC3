@@ -1,12 +1,13 @@
 # 2.4.2
 ## Breaking
 - Param 'name' is now called 'experiment_name' in Scenario.
+- By default, SMAC now overwrites a previous run instead of continuing it (`Scenario.continue_run=False`). Set `continue_run=True` to continue a previous run (#1343).
 - Removed param `overwrite` from SMBO (#1343).
 
 ## Improvements
 - Add a `WandbRunner` for logging SMAC trials to Weights & Biases
-- Change default value of 'overwrite' to True instead of False (#1343)
-- Moved param 'overwrite' from AbstractFacade to Scenario (#1343).
+- Replaced param 'overwrite' of AbstractFacade by param 'continue_run' in Scenario, which has the opposite meaning (`continue_run = not overwrite`) (#1343). 
+- Added method `Scenario.set_continue_run(continue_run: bool)` (#1343).
 - Changed name of parameter 'name' of Scenario to 'experiment_name' (#1343).
 
 ## Dependencies
@@ -14,12 +15,13 @@
 
 ## Examples
 - Add an example for using SMAC with Weights & Biases
+- Updated examples to reflect change to overwrite/continue behavior.
 
 ## Deprecated
-- Setting overwrite in the Facade is deprecated and should be set in Scenario instead.
+- Param 'overwrite' of the Facade is deprecated since 2.4.2 and replaced by 'continue_run' in Scenario (`continue_run = not overwrite`). For compatibility, if set in the Facade, it overrides `Scenario.continue_run`.
 
 ## Documentation
-- Changed documentation to reflect the moving of `overwrite` parameter from `Facade` to `Scenario`, and added warnings for using `Facade(overwrite=...)`.
+- Changed documentation to reflect replacing the `overwrite` parameter of `Facade` by `continue_run` in `Scenario`, and added warnings for using `Facade(overwrite=...)`.
 
 # 2.4.1
 ## Breaking

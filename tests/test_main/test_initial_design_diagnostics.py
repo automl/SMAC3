@@ -24,7 +24,7 @@ def _scenario(tmp_path, mode, n_trials=20, seed=0, **kwargs):
         crash_cost=1000.0,
         initial_design_diagnostics=mode,
         output_directory=tmp_path,
-        overwrite=True,
+        continue_run=False,
         **kwargs,
     )
 
@@ -291,13 +291,13 @@ def test_multi_objective_diagnostics(tmp_path):
         objectives=["o1", "o2"],
         initial_design_diagnostics="warn",
         output_directory=tmp_path,
+        continue_run=False,
     )
 
     with _CaptureWarnings() as logs:
         smac = MultiObjectiveFacade(
             scenario,
             constant_multi_objective,
-            overwrite=True,
             multi_objective_algorithm=MultiObjectiveFacade.get_multi_objective_algorithm(scenario),
         )
         smac.optimize()
@@ -351,7 +351,6 @@ def test_partial_failures_report_the_correct_counts(tmp_path):
         smac = HyperparameterOptimizationFacade(
             scenario,
             some_broken,
-            overwrite=True,
             initial_design=HyperparameterOptimizationFacade.get_initial_design(
                 scenario, n_configs=n_configs
             ),

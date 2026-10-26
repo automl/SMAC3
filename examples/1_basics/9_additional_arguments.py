@@ -69,7 +69,6 @@ if __name__ == "__main__":
         seed = 0 if isinstance(model, AdditionalArgumentsClass) else 1
         scenario = Scenario(
             model.configspace,
-            overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
             deterministic=True,
             n_trials=100,
             seed=seed,

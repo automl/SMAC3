@@ -4,7 +4,6 @@ from abc import abstractmethod
 from typing import Any, Callable
 
 import warnings
-from dataclasses import replace
 from pathlib import Path
 
 import joblib
@@ -111,7 +110,9 @@ class AbstractFacade:
         be closed automatically and will have to be closed manually if provided explicitly. If none is provided
         (default), a local one will be created for you and closed upon completion.
     overwrite: bool | None, defaults to None
-        Deprecated since 2.4.2 and will be removed in future versions. Set `overwrite` in the Scenario instead.
+        Deprecated since 2.4.2 and will be removed in future versions. `overwrite` has been replaced by
+        `continue_run` in the Scenario, which has the opposite meaning. If set, the value is translated to
+        `continue_run = not overwrite` and overrides `Scenario.continue_run` (on the passed Scenario object).
         If True, the optimization will overwrite existing results. If False, it will continue from a previous run.
         If None, uses the behavior set by the Scenario.
     """
@@ -140,13 +141,15 @@ class AbstractFacade:
 
         if overwrite is not None:
             warnings.warn(
-                "Setting `overwrite` in the Facade is deprecated since 2.4.2 and will be removed in future versions. "
-                "Please set `overwrite` in the Scenario instead.",
+                "`overwrite` in the Facade is deprecated since 2.4.2 and will be removed in future versions. "
+                "It has been replaced by `continue_run` in the Scenario (`continue_run = not overwrite`). "
+                "Note that the value set in the Facade overrides `Scenario.continue_run` of the passed Scenario.",
                 FutureWarning,
                 stacklevel=2,
             )
-            # Scenario is frozen. We need to create a new scenario for internal use.
-            scenario = replace(scenario, overwrite=overwrite)
+            # The deprecated 'overwrite' takes precedence and overrides the Scenario's behavior
+            # (also for the user's object).
+            scenario.set_continue_run(not overwrite)
 
         if callbacks is None:
             callbacks = []

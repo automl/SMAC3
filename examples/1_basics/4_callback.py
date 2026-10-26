@@ -78,7 +78,7 @@ if __name__ == "__main__":
     model = Rosenbrock2D()
 
     # Scenario object specifying the optimization "environment"
-    scenario = Scenario(model.configspace, overwrite=True, n_trials=200)
+    scenario = Scenario(model.configspace, n_trials=200)
 
     # Now we use SMAC to find the best hyperparameters
     HPOFacade(

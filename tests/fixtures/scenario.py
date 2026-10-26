@@ -10,7 +10,7 @@ from smac.scenario import Scenario
 def make_scenario() -> Callable:
     def _make(
         configspace: ConfigurationSpace,
-        overwrite: bool = False,
+        continue_run: bool = True,
         deterministic: bool = False,
         use_multi_objective: bool = False,
         n_objectives: int = 2,
@@ -43,7 +43,7 @@ def make_scenario() -> Callable:
 
         return Scenario(
             configspace=configspace,
-            overwrite=overwrite,
+            continue_run=continue_run,
             experiment_name="test",
             output_directory="smac3_output_test",
             objectives=objectives,

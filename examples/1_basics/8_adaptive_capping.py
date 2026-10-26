@@ -71,7 +71,6 @@ if __name__ == "__main__":
 
     scenario = Scenario(
         capped_problem.configspace,
-        overwrite=True,
         walltime_limit=3600,  # After 3600 seconds, we stop the hyperparameter optimization
         n_trials=500,  # Evaluate max 500 different trials
         instances=['1', '2', '3'],

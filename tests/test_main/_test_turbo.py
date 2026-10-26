@@ -50,7 +50,7 @@ def test_choose_next(make_scenario):
     cs = _test_helpers.get_branin_config_space()
     config = cs.sample_configuration()
     scenario = make_scenario(cs)
-    scenario.overwrite = True
+    scenario.set_continue_run(False)
     rh = RunHistory()
     rh.add(config, 10, 10, StatusType.SUCCESS)
     tae = lambda x: x

@@ -142,7 +142,6 @@ if __name__ == "__main__":
     # Define our environment variables
     scenario = Scenario(
         mlp.configspace,
-        overwrite=True,
         objectives=objectives,
         walltime_limit=30,  # After 30 seconds, we stop the hyperparameter optimization
         n_trials=200,  # Evaluate max 200 different trials

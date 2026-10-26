@@ -8,7 +8,7 @@ def test_termination_cost_threshold(rosenbrock):
     scenario = Scenario(
         rosenbrock.configspace,
         experiment_name="test",
-        overwrite=True,
+        continue_run=False,
         n_trials=200,
         termination_cost_threshold=termination_cost_threshold,
     )
@@ -38,7 +38,7 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock, compute_cost):
     scenario = Scenario(
         rosenbrock.configspace,
         experiment_name="test",
-        overwrite=True,
+        continue_run=False,
         n_trials=200,
         min_budget=1,
         max_budget=max_budget,
@@ -64,7 +64,7 @@ def test_termination_cost_threshold_with_fidelities(rosenbrock, compute_cost):
 
 
 def test_smbo_reset(rosenbrock):
-    scenario = Scenario(rosenbrock.configspace, experiment_name="test", overwrite=True, n_trials=3)
+    scenario = Scenario(rosenbrock.configspace, experiment_name="test", continue_run=False, n_trials=3)
     smac = HyperparameterOptimizationFacade(
         scenario,
         rosenbrock.train,

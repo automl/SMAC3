@@ -23,20 +23,20 @@ FACADES = [BBFacade, HPOFacade, MFFacade, RFacade, HBFacade, ACFacade, MOFacade]
 @pytest.mark.parametrize("facade", FACADES)
 def test_continue_same_scenario(rosenbrock, facade):
     # We did not optimize in the first run
-    scenario = Scenario(rosenbrock.configspace, overwrite=True, n_trials=10, min_budget=1, max_budget=10)
+    scenario = Scenario(rosenbrock.configspace, continue_run=False, n_trials=10, min_budget=1, max_budget=10)
     smac = facade(scenario, rosenbrock.train)
 
-    scenario = Scenario(rosenbrock.configspace, overwrite=False, n_trials=10, min_budget=1, max_budget=10)
+    scenario = Scenario(rosenbrock.configspace, continue_run=True, n_trials=10, min_budget=1, max_budget=10)
     smac = facade(scenario, rosenbrock.train)
     smac.optimize()
 
     ##############
 
-    scenario = Scenario(rosenbrock.configspace, overwrite=True, n_trials=10, min_budget=1, max_budget=10)
+    scenario = Scenario(rosenbrock.configspace, continue_run=False, n_trials=10, min_budget=1, max_budget=10)
     smac = facade(scenario, rosenbrock.train)
     incumbent1 = smac.optimize()
 
-    scenario = Scenario(rosenbrock.configspace, overwrite=False, n_trials=10, min_budget=1, max_budget=10)
+    scenario = Scenario(rosenbrock.configspace, continue_run=True, n_trials=10, min_budget=1, max_budget=10)
     smac2 = facade(scenario, rosenbrock.train)
     incumbent2 = smac2.optimize()
 
@@ -52,13 +52,13 @@ def test_continue_different_scenario(rosenbrock, monkeypatch, facade):
     number_inputs = StringIO("1\n")
     monkeypatch.setattr("sys.stdin", number_inputs)
     scenario = Scenario(
-        rosenbrock.configspace, experiment_name="blub1", overwrite=True, n_trials=10, min_budget=1, max_budget=10
+        rosenbrock.configspace, experiment_name="blub1", continue_run=False, n_trials=10, min_budget=1, max_budget=10
     )
     smac = facade(scenario, rosenbrock.train)
     smac.optimize()
 
     scenario = Scenario(
-        rosenbrock.configspace, overwrite=False, experiment_name="blub1", n_trials=11, min_budget=1, max_budget=10
+        rosenbrock.configspace, continue_run=True, experiment_name="blub1", n_trials=11, min_budget=1, max_budget=10
     )
     smac = facade(scenario, rosenbrock.train)
 
@@ -72,12 +72,12 @@ def test_continue_different_scenario(rosenbrock, monkeypatch, facade):
     number_inputs = StringIO("2\n")
     monkeypatch.setattr("sys.stdin", number_inputs)
     scenario = Scenario(
-        rosenbrock.configspace, overwrite=True, experiment_name="blub2", n_trials=10, min_budget=1, max_budget=10
+        rosenbrock.configspace, continue_run=False, experiment_name="blub2", n_trials=10, min_budget=1, max_budget=10
     )
     smac = facade(scenario, rosenbrock.train)
     smac.optimize()
     scenario = Scenario(
-        rosenbrock.configspace, overwrite=False, experiment_name="blub2", n_trials=11, min_budget=1, max_budget=10
+        rosenbrock.configspace, continue_run=True, experiment_name="blub2", n_trials=11, min_budget=1, max_budget=10
     )
     smac = facade(scenario, rosenbrock.train)
     assert os.path.isdir("smac3_output/blub2-old")
@@ -94,7 +94,7 @@ def test_continue_when_trials_stopped(rosenbrock, facade):
 
     # We did not optimize in the first run
     scenario = Scenario(
-        rosenbrock.configspace, experiment_name="test", overwrite=True, n_trials=25, min_budget=1, max_budget=10
+        rosenbrock.configspace, experiment_name="test", continue_run=False, n_trials=25, min_budget=1, max_budget=10
     )
     smac = facade(scenario, rosenbrock.train, callbacks=[CustomCallbackTrials()])
     smac.optimize()
@@ -104,7 +104,7 @@ def test_continue_when_trials_stopped(rosenbrock, facade):
 
     # Now we want to continue the run
     scenario = Scenario(
-        rosenbrock.configspace, experiment_name="test", overwrite=False, n_trials=25, min_budget=1, max_budget=10
+        rosenbrock.configspace, experiment_name="test", continue_run=True, n_trials=25, min_budget=1, max_budget=10
     )
     smac2 = facade(scenario, rosenbrock.train)
 
@@ -134,7 +134,7 @@ def test_continue_when_walltime_stopped(rosenbrock, facade):
     scenario = Scenario(
         rosenbrock.configspace,
         experiment_name="test",
-        overwrite=True,
+        continue_run=False,
         n_trials=99999,
         walltime_limit=FINAL_LIMIT,
         min_budget=1,
@@ -148,7 +148,7 @@ def test_continue_when_walltime_stopped(rosenbrock, facade):
     scenario = Scenario(
         rosenbrock.configspace,
         experiment_name="test",
-        overwrite=False,
+        continue_run=True,
         n_trials=99999,
         walltime_limit=FINAL_LIMIT,
         min_budget=1,

@@ -20,7 +20,7 @@ def test_exhausted_configspace():
     scenario = Scenario(
         configspace=cs,
         experiment_name="test",
-        overwrite=True,
+        continue_run=False,
         n_trials=10,
     )
 

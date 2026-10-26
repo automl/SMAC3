@@ -5,11 +5,11 @@ SMAC can also be continued from a previous run. To do so, it reads in old files 
 output_directory and seed) and sets the corresponding components. In this example, an optimization of a simple quadratic
 function is continued.
 
-First, after creating a scenario with 50 trials, we run SMAC with `overwrite=True`. This will
+First, after creating a scenario with 50 trials, we run SMAC with `continue_run=False` (the default). This will
 overwrite any previous runs (in case the example was called before). We use a custom callback to artificially stop
 this first optimization after 10 trials.
 
-Second, we again run the SMAC optimization using the same scenario, but this time with `overwrite=False`. As
+Second, we again run the SMAC optimization using the same scenario, but this time with `continue_run=True`. As
 there already is a previous run with the same meta data, this run will be continued until the 50 trials are reached.
 """
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     # Scenario object specifying the optimization "environment"
     scenario = Scenario(
         model.configspace,
-        overwrite=True,  # Overrides any previous results that are found that are inconsistent with the meta-data
+        continue_run=False,  # Overrides any previous results that are found that are inconsistent with the meta-data
         deterministic=True,
         n_trials=50,
     )
@@ -79,8 +79,8 @@ if __name__ == "__main__":
     assert smac.runhistory.finished == stop_after
 
     # Now, we want to continue the optimization
-    # Make sure, we don't overwrite the last run
-    scenario.overwrite = False
+    # Make sure, we don't overwrite the last run. The scenario is frozen, so we create a new one.
+    scenario.set_continue_run(True)
     smac2 = HPOFacade(
         scenario,
         model.train,

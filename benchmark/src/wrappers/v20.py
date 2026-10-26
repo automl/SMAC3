@@ -36,7 +36,6 @@ class Version20(Wrapper):
         # Create scenario
         scenario = Scenario(
             self.model.configspace,
-            overwrite=True,
             n_trials=self.task.n_trials,
             walltime_limit=self.task.walltime_limit,
             deterministic=self.task.deterministic,

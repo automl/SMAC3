@@ -93,7 +93,7 @@ def _scenario(tmp_path, mode, **kwargs):
         crash_cost=1000.0,
         initial_design_diagnostics=mode,
         output_directory=tmp_path,
-        overwrite=True,
+        continue_run=False,
         **kwargs,
     )
 
@@ -287,7 +287,7 @@ def test_repeated_evaluations_of_one_configuration_are_not_counted_twice(tmp_pat
     scenario = Scenario(
         _configspace(),
         n_trials=30,
-        overwrite=True,
+        continue_run=False,
         deterministic=False,
         seed=0,
         crash_cost=1000.0,
@@ -383,7 +383,7 @@ def test_multi_objective_is_covered(tmp_path):
     scenario = Scenario(
         _configspace(),
         n_trials=N_TRIALS,
-        overwrite=True,
+        continue_run=False,
         deterministic=True,
         seed=0,
         crash_cost=1000.0,

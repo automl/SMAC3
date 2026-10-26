@@ -76,7 +76,7 @@ from smac import Scenario
 scenario = Scenario(
     configspace=cs,
     experiment_name="experiment_1",
-    overwrite=True,  # overwrite previous run with the same name/settings (else continue)
+    continue_run=False,  # overwrite previous run with the same name/settings (set to True to continue it)
     output_directory=Path("your_output_directory")
     walltime_limit=120,  # Limit to two minutes
     n_trials=500,  # Evaluated max 500 trials
@@ -86,7 +86,7 @@ scenario = Scenario(
 ```
 
 !!! warning "Deprecated"
-    The `overwrite` flag used to be set in the Facade, but is now set in the Scenario. For compatibility, setting the flag in the Facade takes precedence over the Scenario, but will show a deprecation warning, and setting it in the Facade will be removed in the future.
+    The `overwrite` flag of the Facade has been replaced by `continue_run` in the Scenario, which has the opposite meaning (`continue_run = not overwrite`). For compatibility, setting `overwrite` in the Facade still works and takes precedence over `Scenario.continue_run`, but it shows a deprecation warning and will be removed in the future.
 
 !!! info "Deterministic Behavior"
     The **`deterministic`** parameter controls whether the objective function is assumed to be noise-free.
@@ -94,7 +94,7 @@ scenario = Scenario(
     * **For Stochastic Objectives (`deterministic=False`):** Use this when the objective is noisy. Intensification parameters like `max_config_calls` and `n_seeds` must be set to enable repeated evaluations per configuration.
 
 !!! info
-    To continue from a previous run, set a `experiment_name` and set `overwrite=False`. This will load the previous run's history and continue where it stopped.
+    To continue from a previous run, set a `experiment_name` and set `continue_run=True`. This will load the previous run's history and continue where it stopped.
 
 !!! note
     If no `experiment_name` is given, a hash of the experiment is used. Running the same experiment again at a later time will result in exactly the same hash. This is important, because the optimization will warmstart on the preexisting evaluations, if not otherwise specified in the [Facade][smac.facade.abstract_facade].

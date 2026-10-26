@@ -25,7 +25,7 @@ from smac.utils import _test_helpers
 def test_init(make_scenario):
     scenario = make_scenario(
         configspace=_test_helpers.get_branin_config_space(),
-        overwrite=True,
+        continue_run=False,
     )
     tae = lambda x: x
     with pytest.raises(ValueError) as excinfo:
@@ -52,7 +52,7 @@ def test_chooser_next(make_scenario):
     configspace = _test_helpers.get_branin_config_space()
     scenario = make_scenario(
         configspace=configspace,
-        overwrite=True,
+        continue_run=False,
     )
     config = scenario.configspace.sample_configuration()
     rh = RunHistory()
@@ -85,7 +85,7 @@ def test_do_switching(make_scenario):
     configspace = _test_helpers.get_branin_config_space()
     scenario = make_scenario(
         configspace=configspace,
-        overwrite=True,
+        continue_run=False,
     )
     config = scenario.configspace.sample_configuration()
     rh = RunHistory()
