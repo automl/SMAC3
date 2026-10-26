@@ -20,6 +20,6 @@ The behavior can be controlled by setting the parameter ``continue_run`` in the 
 The `continue_run` parameter can also be set with `Scenario.set_continue_run(continue_run: bool)` after instantiation of Scenario.
 
 !!! warning "Deprecated"
-    The `overwrite` flag of the Facade has been replaced by `continue_run` in the Scenario, which has the opposite meaning (`continue_run = not overwrite`). For compatibility, setting `overwrite` in the Facade still works and takes precedence over `Scenario.continue_run`, but it shows a deprecation warning and will be removed in the future.
+    Since version 2.4.2, the `overwrite` flag of the Facade has been replaced by `continue_run` in the Scenario, which has the opposite meaning (`continue_run = not overwrite`). For compatibility, setting `overwrite` in the Facade still works and takes precedence over `Scenario.continue_run`, but it shows a deprecation warning and will be removed in the future.
 
 Please have a look at our [continue example](../examples/1%20Basics/5_continue.md).

@@ -86,7 +86,7 @@ scenario = Scenario(
 ```
 
 !!! warning "Deprecated"
-    The `overwrite` flag of the Facade has been replaced by `continue_run` in the Scenario, which has the opposite meaning (`continue_run = not overwrite`). For compatibility, setting `overwrite` in the Facade still works and takes precedence over `Scenario.continue_run`, but it shows a deprecation warning and will be removed in the future.
+    Since version 2.4.2, the `overwrite` flag of the Facade has been replaced by `continue_run` in the Scenario, which has the opposite meaning (`continue_run = not overwrite`). For compatibility, setting `overwrite` in the Facade still works and takes precedence over `Scenario.continue_run`, but it shows a deprecation warning and will be removed in the future.
 
 !!! info "Deterministic Behavior"
     The **`deterministic`** parameter controls whether the objective function is assumed to be noise-free.
