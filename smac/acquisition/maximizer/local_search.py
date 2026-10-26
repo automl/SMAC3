@@ -274,18 +274,16 @@ class LocalSearch(AbstractAcquisitionMaximizer):
             costs = self._acquisition_function.model.predict_marginalized(conf_array)[0]
             assert len(conf_array) == len(costs), (conf_array.shape, costs.shape)
 
-            # In case of the predictive model returning the prediction for more than one objective per configuration
-            # (for example multi-objective or EIPS) it is not immediately clear how to sort according to the cost
-            # of a configuration. Therefore, we simply follow the ParEGO approach and use a random scalarization.
+            sort_objectives = [costs.flatten()]
             if len(costs.shape) == 2 and costs.shape[1] > 1:
-                weights = np.array([self._rng.rand() for _ in range(costs.shape[1])])
-                weights = weights / np.sum(weights)
-                costs = costs @ weights
+                sort_objectives = self._create_sort_keys(costs=costs)
 
             # From here: make argsort result to be random between equal values
             # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
             random = self._rng.rand(len(costs))
-            indices = np.lexsort((random.flatten(), costs.flatten()))  # Last column is primary sort key!
+
+            # Last column is primary sort key!
+            indices = np.lexsort((random.flatten(), *sort_objectives))
 
             # Cannot use zip here because the indices array cannot index the
             # rand_configs list, because the second is a pure python list
@@ -298,14 +296,56 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         else:
             additional_start_points = []
 
-        return list(
-            dict.fromkeys(
-                itertools.chain(
-                    previous_configs_sorted_by_cost,
-                    additional_start_points,
-                )
-            )
+        candidates = itertools.chain(
+            previous_configs_sorted_by_cost,
+            additional_start_points,
         )
+        init_points = self._unique_list(candidates)
+
+        return init_points
+
+    def _create_sort_keys(self, costs: np.ndarray) -> list[list[float]]:
+        """Sort costs by random scalarization.
+
+        In case of the predictive model returning the prediction for more than one objective per configuration
+        (for example multi-objective or EIPS) it is not immediately clear how to sort according to the cost
+        of a configuration. Therefore, we simply follow the ParEGO approach and use a random scalarization.
+
+        Parameters
+        ----------
+        costs : np.ndarray
+            Cost(s) per config.
+
+        Returns
+        -------
+        list[list[float]]
+            Sorting sequence for lexsort.
+        """
+        weights = np.array([self._rng.rand() for _ in range(costs.shape[1])])
+        weights = weights / np.sum(weights)
+        costs = costs @ weights
+        return [costs.flatten()]
+
+    @staticmethod
+    def _unique_list(elements: list | itertools.chain) -> list:
+        """Return a list with only unique elements while preserving order.
+
+        Parameters
+        ----------
+        elements : list | itertools.chain
+
+        Returns
+        -------
+        list
+            A list with unique elements in their first-seen order.
+        """
+        return_list = []
+        seen: set = set()
+        for e in elements:
+            if e not in seen:
+                return_list.append(e)
+                seen.add(e)
+        return return_list
 
     def _search(
         self,

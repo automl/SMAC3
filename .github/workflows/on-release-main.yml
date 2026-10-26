@@ -29,7 +29,7 @@ jobs:
           python -m build --sdist --wheel
 
       - name: Export tag
-        id: vars
+        id: export_tag
         run: echo tag=${GITHUB_REF#refs/*/} >> $GITHUB_OUTPUT
         if: ${{ github.event_name == 'release' }}
 
@@ -37,7 +37,7 @@ jobs:
         run: |
           sed -i "s/^version = \".*\"/version = \"$RELEASE_VERSION\"/" pyproject.toml
         env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.export_tag.outputs.tag }}
         if: ${{ github.event_name == 'release' }}
 
       - name: Upload updated pyproject.toml
