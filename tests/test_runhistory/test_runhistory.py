@@ -272,6 +272,26 @@ def test_multiple_budgets(runhistory, config1, compute_cost):
     assert CostTransformer.min(raw_costs) == 10
 
 
+def test_budget_equal_to_seed(runhistory, config1):
+    runhistory.add(config=config1, cost=10, seed=3, budget=1)
+    runhistory.add(config=config1, cost=30, seed=3, budget=3)
+
+    assert len(runhistory) == 2
+    trials = runhistory.get_trials(config1, highest_observed_budget_only=False)
+    assert [trial.budget for trial in trials] == [1.0, 3.0]
+    assert runhistory.get_costs(config1) == [30.0]
+
+
+def test_overwrite_does_not_duplicate_budget(config1):
+    runhistory = RunHistory(overwrite_existing_trials=True)
+    runhistory.add(config=config1, cost=10, seed=7, budget=1)
+    runhistory.add(config=config1, cost=20, seed=7, budget=1)
+
+    assert len(runhistory) == 1
+    assert len(runhistory.get_trials(config1, highest_observed_budget_only=False)) == 1
+    assert runhistory.get_costs(config1, highest_observed_budget_only=False) == [20.0]
+
+
 def test_get_configs_per_budget(runhistory, config1, config2, config3):
     runhistory.add(
         config=config1,
