@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Callable
 
+import sys
 import time
 
 import pytest
@@ -57,6 +58,12 @@ def target_multi_objective2(
     return {"cost1": seed, "cost2": seed}
 
 
+def target_allocating(config: Configuration, seed: int) -> float:
+    """Target function which allocates around 50 MB of memory"""
+    data = bytearray(50 * 1024 * 1024)
+    return float(len(data) > 0)
+
+
 @pytest.fixture
 def make_runner(
     configspace_small: ConfigurationSpace,
@@ -68,10 +75,12 @@ def make_runner(
         target_function: Callable,
         use_multi_objective: bool = False,
         use_instances: bool = False,
+        trial_memory_limit: int | tuple[int, str] | None = None,
     ) -> TargetFunctionRunner:
         scenario = make_scenario(
             configspace=configspace_small,
             use_multi_objective=use_multi_objective,
+            trial_memory_limit=trial_memory_limit,
         )
 
         required_arguments = ["seed"]
@@ -173,3 +182,28 @@ def test_multi_objective(make_runner: Callable[..., TargetFunctionRunner]) -> No
         assert isinstance(cost, list)
         assert cost == [SEED, SEED]
         assert status == StatusType.SUCCESS
+
+
+def test_memory_limit(make_runner: Callable[..., TargetFunctionRunner]) -> None:
+    """Test memory limit is passed to pynisher as bytes or with the given unit"""
+    runner = make_runner(target_dummy, trial_memory_limit=8000)
+    assert runner._memory_limit == 8000
+
+    runner = make_runner(target_dummy, trial_memory_limit=(8, "GB"))
+    assert runner._memory_limit == (8, "GB")
+
+    # Tuples become lists when the scenario is saved and loaded again
+    runner = make_runner(target_dummy, trial_memory_limit=[8, "GB"])
+    assert runner._memory_limit == (8, "GB")
+
+
+@pytest.mark.skipif(sys.platform != "linux", reason="pynisher only enforces memory limits on Linux")
+def test_memory_limit_with_unit(make_runner: Callable[..., TargetFunctionRunner]) -> None:
+    """Test trial allocating 50 MB succeeds with a memory limit of 4 GB"""
+    runner = make_runner(target_allocating, trial_memory_limit=(4, "GB"))
+    config = runner._scenario.configspace.get_default_configuration()
+
+    status, cost, _, _, _ = runner.run(config=config, instance=None, seed=0, budget=None)
+
+    assert cost == 1.0
+    assert status == StatusType.SUCCESS

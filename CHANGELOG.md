@@ -34,6 +34,8 @@
   `TargetAlgorithmAbortException` classes were removed along with it; the initial design diagnostics
   replace them (#1320)
 - RunHistory._add skipped a budget when it equaled the instance or seed. A budget of 3 with seed=3 was never recorded in the budget list. Overwriting a trial also appended its budget a second time. (#1363)
+- The documentation of `trial_memory_limit` wrongly stated that the limit is given in MB. An integer is interpreted
+  as bytes; the documentation now says so and recommends passing a tuple with a unit, e.g. `(8, "GB")` (#1101)
 
 # 2.4.1
 ## Bugfixes
