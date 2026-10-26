@@ -1,27 +1,74 @@
-# 2.3.1
+# 2.4.2
+## Breaking
+- Drop support for Python 3.9 (minimum is now Python 3.10).
 
-## Bugfixes
-- Addressing situations where the acquisition function suggests configurations that have already been sampled in prior iterations (#1216)
+## Improvements
+- Add a `WandbRunner` for logging SMAC trials to Weights & Biases
+- `tell()` raises an error if no seed is passed and warns if the seed is not used by the intensifier, since such trials can not be matched, e.g., by Successive Halving/Hyperband (#1148)
+- Early diagnostics on the initial design evaluations: SMAC now reports when all configurations
+  failed, when some of them failed, or when all of them perform identically, and can abort the run
+  when the initial design carries no feedback signal for the surrogate model. Controlled via
+  `Scenario.initial_design_diagnostics` (`"off"` | `"warn"` (default) | `"abort"`) (#1320)
+- Include a new multi-objective method based on hypervolume
+- Added configurable `warn_mode` for ask-and-tell budget exhaustion behavior (#1197)
+- Batch model predictions when selecting the best predicted configuration.
+- Add `HPIRandomSearch`, an acquisition maximizer that dynamically restricts the configuration space to the
+  hyperparameters estimated to be most important (via HyperSHAP) for the current scalarization. Combined with
+  `ParEGO`, this implements HPI-ParEGO. Requires the optional `hypershap` dependency (`pip install smac[hpi]`).
+  Also works for single-objective optimization.
+- Add `HPIFacade`, which sets up HPI-ParEGO (`HPIRandomSearch`, `ParEGO` with `reweigh=5`, retraining every 2 configs).
 
-## Misc
-- New SMAC logo
-- Fix doc link in README
-- Rename retries to max_new_config_tries in ConfigSelector (#1207)
+## Dependencies
+- Add Weights & Biases as an optional dependency via `smac[wandb]`
 
 ## Examples
-- Add target function with additional arguments (#1134)
+- Add an example for using SMAC with Weights & Biases
+- An example on the new multi-objective method
+- An example on HPI-ParEGO
+- An example on HPIRandomSearch for single objective optimization
 
+## Bugfixes
+- Remove the dead `FirstRunCrashedException` safeguard in `SMBO._add_results`: its condition
+  (`runhistory.finished == 0`) was checked *after* `tell()` had already incremented that counter and
+  could therefore never hold. The unused `FirstRunCrashedException` and
+  `TargetAlgorithmAbortException` classes were removed along with it; the initial design diagnostics
+  replace them (#1320)
+
+# 2.4.1
+## Bugfixes
+- Scikit-learn 1.9 deprecated an alias for np.float32 called DTYPE. Change removes references to deprecated alias (#1314)
+- Forbidden clauses weren't being preserved. Change fixes that and adds a test (#1306)
+- Tests were failing due to an incompatibility between pytest and pytest-cases.  Pytest-cases is a dead stub, so simplest fix is to remove it.
+
+# 2.4.0
 ## Improvements
+- Replace random forest from pyrfr with random forest from sklearn (#1246)
 - Submit trials to runners in SMBO instead of running configs directly (#937)
-
-## Improvements
 - `target_function` becomes optional in Facade when using ask and tell exclusively (#946)
+- Added adaptive capping for algorithm configuration with runtime as target (#1247) 
+- Readded UCB as an acquisition function (#1255)
 
 ## Documentation
 - Ask and tell without initial design and warmstarting
+- Random forest replacement (sklearn instead of pyrfr)
+- Deterministic configuration of SMAC
+- Add a description of parallelization in the documentation (#1226)
+
+## Examples
+- Add target function with additional arguments (#1134)
+- Adapt parallelization example (#1214)
 
 ## Bugfixes 
-- Ask and tell without initial design may no longer return a config from the initial design - if it is not "removed".  
+- Ask and tell without initial design may no longer return a config from the initial design - if it is not "removed".
+- Addressing situations where the acquisition function suggests configurations that have already been sampled in prior iterations (#1216)
+
+## Misc
+- Rename retries to max_new_config_tries in ConfigSelector (#1207)
+
+# 2.3.1
+## Misc
+- New SMAC logo
+- Fix doc link in README
 
 # 2.3.0
 

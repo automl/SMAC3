@@ -27,10 +27,15 @@ class AbstractAcquisitionMaximizer:
 
     Parameters
     ----------
-    configspace : ConfigurationSpace acquisition_function : AbstractAcquisitionFunction
-    challengers : int, defaults to 5000 Number of configurations sampled during the optimization process,
-    details depend on the used maximizer. Also, the number of configurations that is returned by calling `maximize`.
+    configspace : ConfigurationSpace
+        Configuration space used for sampling.
+    acquisition_function : AbstractAcquisitionFunction | None, defaults to None
+        Acquisition function to maximize.
+    challengers : int, defaults to 5000
+        Number of configurations sampled during the optimization process. Details depend on the used maximizer.
+        Also, the number of configurations that is returned by calling `maximize`.
     seed : int, defaults to 0
+        Random seed.
     """
 
     def __init__(
@@ -45,6 +50,7 @@ class AbstractAcquisitionMaximizer:
         self._challengers = challengers
         self._seed = seed
         self._rng = np.random.RandomState(seed=seed)
+        self._n_evaluated_trials: int = 0
 
     @property
     def acquisition_function(self) -> AbstractAcquisitionFunction | None:
@@ -74,7 +80,7 @@ class AbstractAcquisitionMaximizer:
         previous_configs: list[Configuration],
         n_points: int | None = None,
         random_design: AbstractRandomDesign | None = None,
-        **kwargs: Any,
+        n_evaluated_trials: int | None = None,
     ) -> Iterator[Configuration]:
         """Maximize acquisition function using `_maximize`, implemented by a subclass.
 
@@ -89,6 +95,8 @@ class AbstractAcquisitionMaximizer:
             Part of the returned ChallengerList such that we can interleave random configurations
             by a scheme defined by the random design. The method `random_design.next_iteration()`
             is called at the end of this function.
+        n_evaluated_trials: int
+            Number of trials completed so far
 
         Returns
         -------
@@ -97,6 +105,9 @@ class AbstractAcquisitionMaximizer:
         """
         if n_points is None:
             n_points = self._challengers
+
+        if n_evaluated_trials is not None:
+            self._n_evaluated_trials = n_evaluated_trials
 
         def next_configs_by_acquisition_value() -> list[Configuration]:
             assert n_points is not None

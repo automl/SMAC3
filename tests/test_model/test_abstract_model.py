@@ -3,6 +3,7 @@ import pytest
 
 from smac.model.abstract_model import AbstractModel
 from smac.utils.configspace import convert_configurations_to_array
+from smac.model.surrogate_transformer import SurrogateTransformer
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -38,11 +39,17 @@ def test_no_pca(configspace_small, make_scenario):
     model = AbstractModel(configspace_small, scenario.instance_features, pca_components=7)
     # We just overwrite the function as mock here
     model._train = _train
+    model.transformer = SurrogateTransformer(
+        n_hps=model._n_hps,
+        n_features=model._n_features,
+        instance_features=scenario.instance_features,
+        normalize_y=False,
+    )
 
     # No PCA
     X, y = get_X_y(configspace_small, n_samples, n_instance_features)
     model.train(X, y)
-    assert not model._apply_pca
+    assert not model.transformer._pca_active
 
     X, y = get_X_y(configspace_small, n_samples, n_instance_features + 1)
     with pytest.raises(ValueError, match="Feature mismatch.*"):
@@ -71,11 +78,17 @@ def test_pca(configspace_small, make_scenario):
     model = AbstractModel(configspace_small, scenario.instance_features, pca_components=7)
     # We just overwrite the function as mock here
     model._train = _train
+    model.transformer = SurrogateTransformer(
+        n_hps=model._n_hps,
+        n_features=model._n_features,
+        instance_features=scenario.instance_features,
+        normalize_y=False,
+    )
 
     # PCA
     X, y = get_X_y(configspace_small, n_samples, n_instance_features)
     model.train(X, y)
-    assert model._apply_pca
+    assert model.transformer._pca_active
 
     X, y = get_X_y(configspace_small, n_samples, n_instance_features + 1)
     with pytest.raises(ValueError, match="Feature mismatch.*"):

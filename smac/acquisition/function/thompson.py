@@ -21,13 +21,8 @@ class TS(AbstractAcquisitionFunction):
     Thompson Sampling can only be used together with `RandomSearch`. Please do not use `LocalAndSortedRandomSearch` to
     optimize the TS acquisition function!
 
-    :math:`TS(X) ~ \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))'
+    $TS(X) \sim \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))$
     Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.
-
-    Parameters
-    ----------
-    xi : float, defaults to 0.0
-        TS does not require xi here, we only wants to make it consistent with other acquisition functions.
     """
 
     @property

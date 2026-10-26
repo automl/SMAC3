@@ -7,6 +7,7 @@ from smac.acquisition.function.expected_improvement import (
     EIPS,
     QExpectedImprovement,
 )
+from smac.acquisition.function.hypervolume import PHVI
 from smac.acquisition.function.integrated_acquisition_function import (
     IntegratedAcquisitionFunction,
 )
@@ -26,4 +27,5 @@ __all__ = [
     "TS",
     "PriorAcquisitionFunction",
     "IntegratedAcquisitionFunction",
+    "PHVI",
 ]

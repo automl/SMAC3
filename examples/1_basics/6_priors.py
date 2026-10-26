@@ -192,10 +192,10 @@ class MLP:
 
 if __name__ == "__main__":
     mlp = MLP()
-    default_config = mlp.configspace.get_default_configuration()
+    default_config = mlp.prior_configspace.get_default_configuration()
 
     # Define our environment variables
-    scenario = Scenario(mlp.configspace, n_trials=40)
+    scenario = Scenario(mlp.prior_configspace, n_trials=40)
 
     # We also want to include our default configuration in the initial design
     initial_design = HyperparameterOptimizationFacade.get_initial_design(

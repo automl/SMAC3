@@ -32,6 +32,7 @@ from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import Scenario
 from smac.facade.abstract_facade import AbstractFacade
 from smac.multi_objective.parego import ParEGO
+from smac.utils.cost_transformer import CostTransformer
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -101,7 +102,8 @@ def plot_pareto(smac: AbstractFacade, incumbents: list[Configuration]) -> None:
     average_pareto_costs = []
     for config in smac.runhistory.get_configs():
         # Since we use multiple seeds, we have to average them to get only one cost value pair for each configuration
-        average_cost = smac.runhistory.average_cost(config)
+        raw_costs = smac.runhistory.get_costs(config)
+        average_cost = CostTransformer.mean(raw_costs)
 
         if config in incumbents:
             average_pareto_costs += [average_cost]

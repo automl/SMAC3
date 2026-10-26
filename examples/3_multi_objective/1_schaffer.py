@@ -78,15 +78,13 @@ if __name__ == "__main__":
         deterministic=True,  # Only one seed
         n_trials=150,
         objectives=["metric1", "metric2"],
+        objective_weights=[1, 2] # Weight metric2 twice as much as metric1
     )
 
     smac = HPOFacade(
         scenario=scenario,
         target_function=target_function,
-        multi_objective_algorithm=HPOFacade.get_multi_objective_algorithm(
-            scenario,
-            objective_weights=[1, 2],  # Weight metric2 twice as much as metric1
-        ),
+        multi_objective_algorithm=HPOFacade.get_multi_objective_algorithm(scenario),
         overwrite=True,
     )
     incumbents = smac.optimize()

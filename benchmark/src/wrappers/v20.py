@@ -3,6 +3,7 @@ from __future__ import annotations
 from src.tasks.task import Task
 from src.utils.exceptions import NotSupportedError
 from src.wrappers.wrapper import Wrapper
+from smac.utils.cost_transformer import CostTransformer
 
 
 class Version20(Wrapper):
@@ -104,7 +105,15 @@ class Version20(Wrapper):
             config_id = traj.config_ids[0]
             config = rh.get_config(config_id)
 
-            cost = rh.get_cost(config)
+            raw_costs = rh.get_costs()
+            cost = CostTransformer.aggregate(
+                raw_costs,
+                method="mean",
+                normalize=True,
+                bounds=rh.objective_bounds,
+                scalarize=True,
+                algorithm=rh.multi_objective_algorithm,
+            )
             if cost > 1e6:
                 continue
 

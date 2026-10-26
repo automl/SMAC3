@@ -5,3 +5,11 @@ class ConfigurationSpaceExhaustedException(Exception):
     """
 
     pass
+
+
+class AskAndTellBudgetExhaustedError(RuntimeError):
+    """Raised in ask/tell mode when ``ask()`` is called after the scenario budget is exhausted
+    and the respective warn mode is configured to raise.
+    """
+
+    pass

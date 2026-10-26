@@ -81,7 +81,8 @@ for more information about acquisition functions.
 ## [Acquisition Maximize][smac.acquisition.maximizer.abstract_acquisition_maximizer]
 
 The acquisition maximizer is a wrapper for the acquisition function. It returns the next configurations. SMAC
-supports local search, (sorted) random search, local and (sorted) random search, and differential evolution.
+supports local search, (sorted) random search, local and (sorted) random search, differential evolution, and
+HPI-based random search[[TWL26][TWL26]].
 While local search checks neighbours of the best configurations, random search makes sure to explore the configuration
 space. When using sorted random search, random configurations are sorted by the value of the acquisition function.
 
@@ -96,14 +97,17 @@ The acquisition maximizer also incorporates the [Random Design][random-design]. 
 ## [Initial Design][smac.initial_design.abstract_initial_design]
 
 The surrogate model needs data to be trained. Therefore, the initial design is used to generate the initial data points.
-We provide random, latin hypercube, sobol, factorial and default initial designs. The default initial design uses
-the default configuration from the configuration space and with the factorial initial design, we generate corner
-points of the configuration space. The sobol sequences are an example of quasi-random low-discrepancy sequences and
-the latin hypercube design is a statistical method for generating a near-random sample of parameter values from
+We provide [random][smac.initial_design.random_design], [latin hypercube][smac.initial_design.latin_hypercube_design], [sobol][smac.initial_design.sobol_design], [factorial][smac.initial_design.factorial_design] and [default-based][smac.initial_design.default_design] initial designs. The [default-based][smac.initial_design.default_design] initial design uses
+the default configuration from the configuration space and with the [factorial initial design][smac.initial_design.factorial_design], we generate corner
+points of the configuration space. The [sobol initial design][smac.initial_design.sobol_design] uses quasi-random low-discrepancy sequences and
+the [latin hypercube initial design][smac.initial_design.latin_hypercube_design] is a statistical method for generating a near-random sample of parameter values from
 a multidimensional distribution.
 
 The initial design configurations are yielded by the config selector first. Moreover, the config selector keeps
 track of which configurations already have been returned to make sure a configuration is not returned twice.
+
+!!! warning
+    Distributions provided in the initial design are ignored. 
 
 [](){#random-design}
 ## [Random Design][smac.initial_design.random_design]
@@ -216,7 +220,8 @@ for trial_info, trial_value in smac.runhistory.items():
 # Iterate over all configs
 for config in smac.runhistory.get_configs():
     # Get the cost of all trials of this config
-    average_cost = smac.runhistory.average_cost(config)
+    raw_costs = smac.runhistory.get_costs(config)
+    average_cost = CostTransformer.mean(raw_costs)
 ```
 
 !!! warning

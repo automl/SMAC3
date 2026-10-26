@@ -51,15 +51,15 @@ class DynamicModulusRandomDesign(AbstractRandomDesign):
     Parameters
     ----------
     start_modulus : float, defaults to 2.0
-       Initially, every modulus-th configuration will be at random.
+          Initially, every modulus-th configuration will be at random.
     modulus_increment : float, defaults to 0.3
-       Increase modulus by this amount in every iteration.
+          Increase modulus by this amount in every iteration.
     end_modulus : float, defaults to np.inf
-       The maximum modulus ever used. If the value is reached before the optimization
-       is over, it is not further increased. If it is not reached before the optimization is over,
-       there will be no adjustment to make sure that the `end_modulus` is reached.
+          The maximum modulus ever used. If the value is reached before the optimization
+          is over, it is not further increased. If it is not reached before the optimization is over,
+          there will be no adjustment to make sure that the `end_modulus` is reached.
     seed : int, defaults to 0
-        Integer used to initialize the random state. This class does not use the seed.
+          Integer used to initialize the random state. This class does not use the seed.
     """
 
     def __init__(

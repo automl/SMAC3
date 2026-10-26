@@ -12,11 +12,12 @@ from smac import HyperbandFacade as HBFacade
 from smac import HyperparameterOptimizationFacade as HPOFacade
 from smac import MultiFidelityFacade as MFFacade
 from smac import RandomFacade as RFacade
+from smac import MultiObjectiveFacade as MOFacade
 from smac import Scenario
 from smac.callback.callback import Callback
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
 
-FACADES = [BBFacade, HPOFacade, MFFacade, RFacade, HBFacade, ACFacade]
+FACADES = [BBFacade, HPOFacade, MFFacade, RFacade, HBFacade, ACFacade, MOFacade]
 
 
 @pytest.mark.parametrize("facade", FACADES)

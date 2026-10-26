@@ -8,11 +8,11 @@ author = (
     "Difan Deng,\n\tCarolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter"
 )
 
-author_email = "fh@cs.uni-freiburg.de"
+author_email = "smac@ai.uni-hannover.de"
 description = "SMAC3, a Python implementation of 'Sequential Model-based Algorithm Configuration'."
 url = "https://www.automl.org/"
 project_urls = {
-    "Documentation": "https://automl.github.io/SMAC3/main",
+    "Documentation": "https://automl.github.io/SMAC3/latest",
     "Source Code": "https://github.com/automl/SMAC3",
 }
 copyright = (
@@ -20,7 +20,7 @@ copyright = (
     "Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass "
     "and Frank Hutter"
 )
-version = "2.3.1"
+version = "2.4.1"
 
 
 try:
@@ -28,9 +28,11 @@ try:
     from smac.facade import (
         AlgorithmConfigurationFacade,
         BlackBoxFacade,
+        HPIFacade,
         HyperbandFacade,
         HyperparameterOptimizationFacade,
         MultiFidelityFacade,
+        MultiObjectiveFacade,
         RandomFacade,
     )
     from smac.runhistory.runhistory import RunHistory
@@ -44,7 +46,9 @@ try:
         "MultiFidelityFacade",
         "AlgorithmConfigurationFacade",
         "RandomFacade",
+        "HPIFacade",
         "HyperbandFacade",
+        "MultiObjectiveFacade",
         "Callback",
     ]
 except ModuleNotFoundError as e:

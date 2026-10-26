@@ -11,7 +11,10 @@ from smac.scenario import Scenario
 
 
 class ParEGO(AbstractMultiObjectiveAlgorithm):
-    """ParEGO implementation based on https://www.cs.bham.ac.uk/~jdk/UKCI-2015.pdf.
+    """
+    ParEGO implementation based on https://ieeexplore.ieee.org/abstract/document/1583627.
+    If `objective_weights` are provided via the scenario, scalarization weights
+    are sampled from a Dirichlet distribution centered around these weights.
 
     Parameters
     ----------
@@ -19,6 +22,13 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
     rho : float, defaults to 0.05
         A small positive value.
     seed : int | None, defaults to None
+    concentration_scale : float, defaults to 10.0
+        Scaling factor for the Dirichlet distribution when `objective_weights` are provided:
+        - Low values -> more exploration (weights vary strongly)
+        - High values -> stronger focus on the scenario-provided objective_weights
+    reweigh : int, defaults to 1
+        Resample scalarization weights only every `reweigh`-th call to `update_on_iteration_start`.
+        A value of 1 (default) resamples on every call, matching standard ParEGO.
     """
 
     def __init__(
@@ -26,8 +36,13 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
         scenario: Scenario,
         rho: float = 0.05,
         seed: int | None = None,
+        concentration_scale: float = 10.0,
+        reweigh: int = 1,
     ):
         super(ParEGO, self).__init__()
+
+        if reweigh < 1:
+            raise ValueError("reweigh must be at least 1.")
 
         if seed is None:
             seed = scenario.seed
@@ -35,6 +50,14 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
         self._n_objectives = scenario.count_objectives()
         self._seed = seed
         self._rng = np.random.RandomState(seed)
+        self.concentration_scale = concentration_scale
+        self._reweigh = reweigh
+        self._reweigh_count = 0
+
+        self._objective_weights = None
+        if scenario.objective_weights is not None:
+            w = np.asarray(scenario.objective_weights, dtype=float)
+            self._objective_weights = w / np.sum(w)
 
         self._rho = rho
         # Will be set on starting an SMBO iteration
@@ -48,21 +71,35 @@ class ParEGO(AbstractMultiObjectiveAlgorithm):
                 "name": self.__class__.__name__,
                 "rho": self._rho,
                 "seed": self._seed,
+                "objective_weights": self._objective_weights,
+                "concentration_scale": self.concentration_scale,
+                "reweigh": self._reweigh,
             }
         )
 
         return meta
 
-    def update_on_iteration_start(self) -> None:  # noqa: D102
-        self._theta = self._rng.rand(self._n_objectives)
+    def update_on_iteration_start(self) -> None:
+        """Samples new scalarization weights for the current iteration, but only every `reweigh`-th call; keeps
+        the previous weights otherwise.
+        """
+        if self._reweigh_count % self._reweigh == 0:
+            if self._objective_weights is None:
+                # Sample uniformly and normalize to simplex
+                self._theta = self._rng.rand(self._n_objectives)
+                self._theta = self._theta / (np.sum(self._theta) + 1e-10)
+            else:
+                # Dirichlet sampling around user preference vector
+                w = self._objective_weights
+                alpha = self.concentration_scale * w
+                self._theta = self._rng.dirichlet(alpha)
 
-        # Normalize so that all theta values sum up to 1
-        self._theta = self._theta / (np.sum(self._theta) + 1e-10)
+        self._reweigh_count += 1
 
     def __call__(self, values: list[float]) -> float:  # noqa: D102
         # Weight the values
         if self._theta is None:
-            raise ValueError("Iteration not yet initalized; Call `update_on_iteration_start()` first")
+            raise ValueError("Iteration not yet initialized; Call `update_on_iteration_start()` first")
 
         theta_f = self._theta * values
         return float(np.max(theta_f, axis=0) + self._rho * np.sum(theta_f, axis=0))

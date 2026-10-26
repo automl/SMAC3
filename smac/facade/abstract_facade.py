@@ -18,6 +18,9 @@ from smac.acquisition.maximizer.abstract_acquisition_maximizer import (
     AbstractAcquisitionMaximizer,
 )
 from smac.callback.callback import Callback
+from smac.callback.initial_design_diagnostics_callback import (
+    InitialDesignDiagnosticsCallback,
+)
 from smac.initial_design.abstract_initial_design import AbstractInitialDesign
 from smac.intensifier.abstract_intensifier import AbstractIntensifier
 from smac.main.config_selector import ConfigSelector
@@ -35,6 +38,7 @@ from smac.runner.dask_runner import DaskParallelRunner
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.runner.target_function_script_runner import TargetFunctionScriptRunner
 from smac.scenario import Scenario
+from smac.utils.ask_and_tell import validate_warn_mode
 from smac.utils.logging import get_logger, setup_logging
 
 logger = get_logger(__name__)
@@ -91,6 +95,13 @@ class AbstractFacade:
         expected with the logging configuration. If nothing is passed, the default logging.yml from SMAC is used.
         If False is passed, SMAC will not do any customization of the logging setup and the responsibility is left
         to the user.
+    warn_mode: str, defaults to "warn_always"
+        The warn_mode to consider for the warning levels for trials
+        after the budget is exploited. The default is "warn_always",
+        which means that the user will get repeated warnings.
+        The other values are "warn_once", "warn_never", "exception",
+        which means that the user will get a warning only once,
+        never, or an exception, respectively.
     callbacks: list[Callback], defaults to []
         Callbacks, which are incorporated into the optimization loop.
     overwrite: bool, defaults to False
@@ -120,7 +131,8 @@ class AbstractFacade:
         runhistory_encoder: AbstractRunHistoryEncoder | None = None,
         config_selector: ConfigSelector | None = None,
         logging_level: int | Path | Literal[False] | None = None,
-        callbacks: list[Callback] = None,
+        warn_mode: str = "warn_always",
+        callbacks: list[Callback] | None = None,
         overwrite: bool = False,
         dask_client: Client | None = None,
     ):
@@ -128,6 +140,12 @@ class AbstractFacade:
 
         if callbacks is None:
             callbacks = []
+
+        # Early diagnostics on the initial design are opt-in via the scenario. We prepend the
+        # callback so that a degenerate initial design is reported before user callbacks run.
+        if scenario.initial_design_diagnostics != "off":
+            diagnostics_callback: Callback = InitialDesignDiagnosticsCallback(mode=scenario.initial_design_diagnostics)
+            callbacks = [diagnostics_callback] + callbacks
 
         if model is None:
             model = self.get_model(scenario)
@@ -174,9 +192,12 @@ class AbstractFacade:
         self._multi_objective_algorithm = multi_objective_algorithm
         self._runhistory = runhistory
         self._runhistory_encoder = runhistory_encoder
+        self._warn_mode = validate_warn_mode(warn_mode)
         self._config_selector = config_selector
         self._callbacks = callbacks
         self._overwrite = overwrite
+
+        self._model.set_y_transform(func=self._runhistory_encoder.transform_response_values)
 
         # Prepare the algorithm executer
         runner: AbstractRunner | None
@@ -347,9 +368,6 @@ class AbstractFacade:
         ----------
         config : Configuration
             Configuration to validate
-        instances : list[str] | None, defaults to None
-            Which instances to validate. If None, all instances specified in the scenario are used.
-            In case that the budget type is real-valued, this argument is ignored.
         seed : int | None, defaults to None
             If None, the seed from the scenario is used.
 
@@ -427,48 +445,19 @@ class AbstractFacade:
     def get_config_selector(
         scenario: Scenario,
         *,
-        retrain_after: int = 8,
+        retrain_after: int | None = 8,
+        retrain_wallclock_ratio: int | None = None,
         retries: int = 16,
         min_trials: int = 1,
         batch_sampling_estimation_strategy: str = "no_estimate",
     ) -> ConfigSelector:
-        """Returns the default configuration selector.
-
-        Parameters
-        ----------
-        retrain_after : int, defaults to 8
-            How many configurations should be returned before the surrogate model is retrained.
-        retries : int, defaults to 16
-            How often to retry receiving a new configuration before giving up.
-        min_trials: int, defaults to 1
-            How many samples are required to train the surrogate model. If budgets are involved,
-            the highest budgets are checked first. For example, if min_trials is three, but we find only
-            two trials in the runhistory for the highest budget, we will use trials of a lower budget
-            instead.
-        batch_sampling_estimation_strategy: str, defaults to no_estimate
-
-            Warning: This is intended to work in the black box optimization setting with a Gaussian Process and
-            only works sensibly for non-multifidelity.
-
-            Batch sample setting, this is applied for parallel setting. During batch sampling, ConfigSelectors might
-            need to suggest new samples while some configurations are still running. This argument determines if we want
-            to make use of this information and fantasize the new estimations. If no_estimate is applied, we do not use
-            the information from the running configurations. If the strategy is kriging_believer, we use the predicted
-            mean from our surrogate model as the estimations for the new samples. If the strategy is CL_min/mean/max, we
-            use the min/mean/max from the existing evaluations as the estimations for the new samples. If the strategy
-            is sample, we use our surrogate model (in this case, only GP is allowed) to sample new configurations.
-
-        Returns
-        -------
-        ConfigSelector
-            The instantiated configuration selector proposing new configurations (optimize acquisition function).
-        """
+        """Returns the default configuration selector."""
         return ConfigSelector(
             scenario,
             retrain_after=retrain_after,
+            retrain_wallclock_ratio=retrain_wallclock_ratio,
+            # retries=retries,
             max_new_config_tries=retries,
-            min_trials=min_trials,
-            batch_sampling_estimation_strategy=batch_sampling_estimation_strategy,
         )
 
     def _get_optimizer(self) -> SMBO:
@@ -479,6 +468,7 @@ class AbstractFacade:
             runhistory=self._runhistory,
             intensifier=self._intensifier,
             overwrite=self._overwrite,
+            warn_mode=self._warn_mode,
         )
 
     def _update_dependencies(self) -> None:
@@ -522,5 +512,8 @@ class AbstractFacade:
 
         if self._intensifier.uses_instances:
             arguments += ["instance"]
+
+        if self._intensifier.uses_cutoffs:
+            arguments += ["cutoff"]
 
         return arguments

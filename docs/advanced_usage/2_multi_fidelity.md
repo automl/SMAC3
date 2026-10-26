@@ -19,5 +19,5 @@ The ``max_budget`` is simply the max number of instances, whereas the ``min_budg
     are checked first. For example, if min_trials is three, but we find only two trials in the runhistory for
     the highest budget, we will use trials of a lower budget instead.
 
-Please have a look into our [multi-fidelity examples](Multi-Fidelity and Multi-Instances) to see how to use
+Please have a look into our [multi-fidelity examples](../examples/2%20Multi-Fidelity%20and%20Multi-Instances/1_mlp_epochs.md) to see how to use
 multi-fidelity optimization in real-world applications.

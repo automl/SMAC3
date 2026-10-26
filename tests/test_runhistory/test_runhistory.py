@@ -8,6 +8,7 @@ import pytest
 
 from smac.runhistory.runhistory import RunHistory, TrialKey
 from smac.runner.abstract_runner import StatusType
+from smac.utils.cost_transformer import CostTransformer
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -211,7 +212,14 @@ def test_get_config_runs2(runhistory, config1, config2):
     assert ist[1].budget == 2
 
 
-def test_full_update(runhistory, config1, config2):
+def test_cost_transformer():
+    raw_costs = [10.0, 20.0, 30.0]
+
+    assert CostTransformer.mean(raw_costs) == pytest.approx(20.0)
+    assert CostTransformer.sum(raw_costs) == pytest.approx(60.0)
+    assert CostTransformer.min(raw_costs) == pytest.approx(10.0)
+
+def test_incremental_update(runhistory, config1, compute_cost):
     runhistory.add(
         config=config1,
         cost=10,
@@ -221,87 +229,7 @@ def test_full_update(runhistory, config1, config2):
         seed=1,
     )
 
-    runhistory.add(
-        config=config2,
-        cost=10,
-        time=20,
-        status=StatusType.SUCCESS,
-        instance=1,
-        seed=1,
-    )
-
-    runhistory.add(
-        config=config2,
-        cost=20,
-        time=20,
-        status=StatusType.SUCCESS,
-        instance=2,
-        seed=2,
-    )
-
-    cost_config2 = runhistory.get_cost(config2)
-
-    runhistory.update_costs()
-    updated_cost_config2 = runhistory.get_cost(config2)
-    assert cost_config2 == updated_cost_config2
-
-    runhistory.update_costs(instances=[2])
-    updated_cost_config2 = runhistory.get_cost(config2)
-    assert cost_config2 != updated_cost_config2
-    assert updated_cost_config2 == 20
-
-
-def test_full_update2(runhistory, config1, config2):
-    runhistory.add(
-        config=config1,
-        cost=[10],
-        time=20,
-        status=StatusType.SUCCESS,
-        instance=1,
-        seed=1,
-    )
-
-    runhistory.add(
-        config=config2,
-        cost=[10],
-        time=20,
-        status=StatusType.SUCCESS,
-        instance=1,
-        seed=1,
-    )
-
-    runhistory.add(
-        config=config2,
-        cost=[20],
-        time=20,
-        status=StatusType.SUCCESS,
-        instance=2,
-        seed=2,
-    )
-
-    cost_config2 = runhistory.get_cost(config2)
-
-    runhistory.update_costs()
-    updated_cost_config2 = runhistory.get_cost(config2)
-    assert cost_config2 == updated_cost_config2
-
-    runhistory.update_costs(instances=[2])
-    updated_cost_config2 = runhistory.get_cost(config2)
-    assert cost_config2 != updated_cost_config2
-    assert updated_cost_config2 == 20
-
-
-def test_incremental_update(runhistory, config1):
-    runhistory.add(
-        config=config1,
-        cost=10,
-        time=20,
-        status=StatusType.SUCCESS,
-        instance=1,
-        seed=1,
-    )
-
-    assert runhistory.get_cost(config1) == 10
+    assert compute_cost(runhistory, config1) == 10
 
     runhistory.add(
         config=config1,
@@ -312,10 +240,10 @@ def test_incremental_update(runhistory, config1):
         seed=1,
     )
 
-    assert runhistory.get_cost(config1) == 15
+    assert compute_cost(runhistory, config1) == 15
 
 
-def test_multiple_budgets(runhistory, config1):
+def test_multiple_budgets(runhistory, config1, compute_cost):
     runhistory.add(
         config=config1,
         cost=10,
@@ -326,7 +254,7 @@ def test_multiple_budgets(runhistory, config1):
         budget=1,
     )
 
-    assert runhistory.get_cost(config1) == 10
+    assert compute_cost(runhistory, config1) == 10
 
     # only the higher budget gets included in the config cost
     runhistory.add(
@@ -339,8 +267,9 @@ def test_multiple_budgets(runhistory, config1):
         budget=2,
     )
 
-    assert runhistory.get_cost(config1) == 20
-    assert runhistory.get_min_cost(config1) == 10
+    assert compute_cost(runhistory, config1) == 20
+    raw_costs = runhistory.get_costs(config1, highest_observed_budget_only=False)
+    assert CostTransformer.min(raw_costs) == 10
 
 
 def test_get_configs_per_budget(runhistory, config1, config2, config3):

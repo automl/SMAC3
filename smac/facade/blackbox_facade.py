@@ -239,7 +239,7 @@ class BlackBoxFacade(AbstractFacade):
         scenario: Scenario,
         *,
         n_configs: int | None = None,
-        n_configs_per_hyperparamter: int = 8,
+        n_configs_per_hyperparameter: int = 8,
         max_ratio: float = 0.25,
         additional_configs: list[Configuration] = None,
     ) -> SobolInitialDesign:
@@ -257,7 +257,7 @@ class BlackBoxFacade(AbstractFacade):
         max_ratio: float, defaults to 0.25
             Use at most ``scenario.n_trials`` * ``max_ratio`` number of configurations in the initial design.
             Additional configurations are not affected by this parameter.
-        additional_configs: list[Configuration], defaults to []
+        additional_configs: list[Configuration], defaults to None
             Adds additional configurations to the initial design.
         """
         if additional_configs is None:
@@ -265,7 +265,7 @@ class BlackBoxFacade(AbstractFacade):
         return SobolInitialDesign(
             scenario=scenario,
             n_configs=n_configs,
-            n_configs_per_hyperparameter=n_configs_per_hyperparamter,
+            n_configs_per_hyperparameter=n_configs_per_hyperparameter,
             max_ratio=max_ratio,
             additional_configs=additional_configs,
             seed=scenario.seed,
@@ -289,22 +289,14 @@ class BlackBoxFacade(AbstractFacade):
     @staticmethod
     def get_multi_objective_algorithm(  # type: ignore
         scenario: Scenario,
-        *,
-        objective_weights: list[float] | None = None,
     ) -> MeanAggregationStrategy:
-        """Returns the mean aggregation strategy for the multi-objective algorithm.
+        """Returns the mean aggregation strategy for the multi objective algorithm.
 
         Parameters
         ----------
         scenario : Scenario
-        objective_weights : list[float] | None, defaults to None
-            Weights for averaging the objectives in a weighted manner. Must be of the same length as the number of
-            objectives.
         """
-        return MeanAggregationStrategy(
-            scenario=scenario,
-            objective_weights=objective_weights,
-        )
+        return MeanAggregationStrategy(scenario=scenario)
 
     @staticmethod
     def get_runhistory_encoder(
@@ -314,7 +306,7 @@ class BlackBoxFacade(AbstractFacade):
         return RunHistoryEncoder(scenario)
 
     @staticmethod
-    def get_config_selector(
+    def get_config_selector(  # type: ignore[override]
         scenario: Scenario,
         *,
         retrain_after: int = 1,

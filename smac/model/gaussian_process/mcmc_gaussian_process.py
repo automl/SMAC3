@@ -85,13 +85,13 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
             instance_features=instance_features,
             pca_components=pca_components,
             seed=seed,
+            normalize_y=normalize_y,
         )
 
         self._n_mcmc_walkers = n_mcmc_walkers
         self._chain_length = chain_length
         self._burning_steps = burning_steps
         self._models: list[GaussianProcess] = []
-        self._normalize_y = normalize_y
         self._mcmc_sampler = mcmc_sampler
         self._average_samples = average_samples
         self._set_has_conditions()
@@ -112,7 +112,6 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
                 "burning_steps": self._burning_steps,
                 "mcmc_sampler": self._mcmc_sampler,
                 "average_samples": self._average_samples,
-                "normalize_y": self._normalize_y,
             }
         )
 
@@ -141,16 +140,6 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
         optimize_hyperparameters: boolean
             If set to true, we perform MCMC sampling. Otherwise, we just use the hyperparameter specified in the kernel.
         """
-        X = self._impute_inactive(X)
-        if self._normalize_y:
-            # A note on normalization for the Gaussian process with MCMC:
-            # Scikit-learn uses a different "normalization" than we use in SMAC3. Scikit-learn normalizes the data to
-            # have zero mean, while we normalize it to have zero mean unit variance. To make sure the scikit-learn GP
-            # behaves the same when we use it directly or indirectly (through the gaussian_process.py file), we
-            # normalize the data here. Then, after the individual GPs are fit, we inject the statistics into them, so
-            # they unnormalize the data at prediction time.
-            y = self._normalize(y)
-
         self._gp = self._get_gaussian_process()
 
         if optimize_hyperparameters:
@@ -279,13 +268,15 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
             model._train(X, y, optimize_hyperparameters=False)
             self._models.append(model)
 
-        if self._normalize_y:
+        print(f"normalize: {self.transformer.normalize_y}, mean_y: {self.transformer.mean_y_}")
+
+        if self.transformer.normalize_y:
             # Inject the normalization statistics into the individual models. Setting normalize_y to True makes the
             # individual GPs unnormalize the data at predict time.
             for model in self._models:
-                model._normalize_y = True
-                model.mean_y_ = self.mean_y_
-                model.std_y_ = self.std_y_
+                model.transformer.normalize_y = True
+                model.transformer.mean_y_ = self.transformer.mean_y_
+                model.transformer.std_y_ = self.transformer.std_y_
 
         self._is_trained = True
         return self
@@ -397,12 +388,10 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
         if covariance_type != "diagonal":
             raise ValueError("`covariance_type` can only take `diagonal` for this model.")
 
-        X_test = self._impute_inactive(X)
-
-        mu = np.zeros([len(self._models), X_test.shape[0]])
-        var = np.zeros([len(self._models), X_test.shape[0]])
+        mu = np.zeros([len(self._models), X.shape[0]])
+        var = np.zeros([len(self._models), X.shape[0]])
         for i, model in enumerate(self._models):
-            mu_tmp, var_tmp = model.predict(X_test)
+            mu_tmp, var_tmp = model.predict(X)
             assert var_tmp is not None
             mu[i] = mu_tmp.flatten()
             var[i] = var_tmp.flatten()
