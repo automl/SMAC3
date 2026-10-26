@@ -76,4 +76,4 @@ Branches are named as follows:
 
 ## Reporting Security Issues
 
-If you find security related issues, vulnerabilities or bugs including sensitive information, please do *not* report this to the issue tracker, or elsewhere public. Instead, please let us know via security@automl.org
+If you find security related issues, vulnerabilities or bugs including sensitive information, please do *not* report this to the issue tracker, or elsewhere public. Instead, please let us know via smac@ai.uni-hannover.de
