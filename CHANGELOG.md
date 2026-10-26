@@ -28,11 +28,16 @@
 - An example on HPIRandomSearch for single objective optimization
 
 ## Bugfixes
+- Resource limits (`trial_walltime_limit`, `trial_memory_limit`) now also work with user-provided dask clients
+  whose workers are started by a nanny. Previously every trial crashed silently, because pynisher cannot start its
+  child process in a daemonic worker; SMAC now clears the daemon flag of the worker process before running such a
+  trial. Added tests for pynisher within dask workers (#1031)
 - Remove the dead `FirstRunCrashedException` safeguard in `SMBO._add_results`: its condition
   (`runhistory.finished == 0`) was checked *after* `tell()` had already incremented that counter and
   could therefore never hold. The unused `FirstRunCrashedException` and
   `TargetAlgorithmAbortException` classes were removed along with it; the initial design diagnostics
   replace them (#1320)
+- Fix crash in `update_incumbents` and `_cut_incumbents` for multi-objective multi-fidelity runs (e.g. ParEGO with Hyperband) when incumbents share no instance-seed-budget keys (#1369)
 - RunHistory._add skipped a budget when it equaled the instance or seed. A budget of 3 with seed=3 was never recorded in the budget list. Overwriting a trial also appended its budget a second time. (#1363)
 - The documentation of `trial_memory_limit` wrongly stated that the limit is given in MB. An integer is interpreted
   as bytes; the documentation now says so and recommends passing a tuple with a unit, e.g. `(8, "GB")` (#1101)
