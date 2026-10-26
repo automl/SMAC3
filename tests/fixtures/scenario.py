@@ -1,4 +1,4 @@
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, Tuple, Union
 
 import pytest
 from ConfigSpace import ConfigurationSpace
@@ -23,6 +23,7 @@ def make_scenario() -> Callable:
         use_default_config: bool = False,
         objective_weights: Optional[List[float]] = None,
         walltime_limit: float = 30,
+        trial_memory_limit: Optional[Union[int, Tuple[int, str]]] = None,
     ) -> Scenario:
         objectives = "cost"
         if use_multi_objective:
@@ -48,6 +49,7 @@ def make_scenario() -> Callable:
             objective_weights=objective_weights,
             deterministic=deterministic,
             walltime_limit=walltime_limit,
+            trial_memory_limit=trial_memory_limit,
             n_trials=n_trials,
             n_workers=n_workers,
             instances=instances,
