@@ -298,13 +298,14 @@ class LocalSearch(AbstractAcquisitionMaximizer):
         else:
             additional_start_points = []
 
-        init_points_as_set: set[Configuration] = set(
-            itertools.chain(
-                previous_configs_sorted_by_cost,
-                additional_start_points,
+        return list(
+            dict.fromkeys(
+                itertools.chain(
+                    previous_configs_sorted_by_cost,
+                    additional_start_points,
+                )
             )
         )
-        return list(init_points_as_set)
 
     def _search(
         self,
