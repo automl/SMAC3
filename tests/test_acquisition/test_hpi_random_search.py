@@ -81,7 +81,7 @@ def acquisition_function(configspace: ConfigurationSpace) -> EI:
 
 def test_default_construction():
     rs = HPIRandomSearch()
-    assert rs._threshold == [0.0, 0.8, 0.0]
+    assert rs._threshold == [0.0, 0.8, 0.8]
     assert rs._fixing_strategy == "incumbent"
 
 
