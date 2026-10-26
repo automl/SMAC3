@@ -4,6 +4,9 @@ from typing import Any
 
 from smac.intensifier.successive_halving import SuccessiveHalving
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 
 class Hyperband(SuccessiveHalving):
     """See ``SuccessiveHalving`` for documentation."""

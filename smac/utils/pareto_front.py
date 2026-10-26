@@ -7,6 +7,9 @@ from smac.runhistory import RunHistory
 from smac.runhistory.dataclasses import InstanceSeedBudgetKey
 from smac.utils.cost_transformer import CostTransformer
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 
 def _get_costs(
     runhistory: RunHistory,

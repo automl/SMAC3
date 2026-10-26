@@ -16,6 +16,9 @@ from smac.constants import INITIAL_DESIGN_VALID_DIAGNOSTICS_MODES
 from smac.utils.logging import get_logger
 from smac.utils.numpyencoder import NumpyEncoder
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 logger = get_logger(__name__)
 
 

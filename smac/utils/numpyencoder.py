@@ -6,6 +6,9 @@ import json
 
 import numpy as np
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 
 class NumpyEncoder(json.JSONEncoder):
     """Custom encoder for numpy data types

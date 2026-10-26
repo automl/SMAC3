@@ -4,6 +4,9 @@ from typing import Iterable
 
 from smac.utils.logging import get_logger
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 logger = get_logger(__name__)
 
 
