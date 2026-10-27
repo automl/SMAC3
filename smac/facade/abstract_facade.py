@@ -209,6 +209,10 @@ class AbstractFacade:
                 required_arguments=self._get_signature_arguments(),
             )
 
+        # Runners may require that certain callbacks exist
+        if isinstance(runner, AbstractRunner):
+            callbacks.extend(runner.get_additional_callbacks(callbacks))
+
         # In case of multiple jobs, we need to wrap the runner again using DaskParallelRunner
         if ((n_workers := scenario.n_workers) > 1 or dask_client is not None) and runner is not None:
             if dask_client is not None and n_workers > 1:
@@ -250,6 +254,9 @@ class AbstractFacade:
         # Additionally, we register the runhistory callback from the intensifier to efficiently update our incumbent
         # every time new information are available
         self._optimizer.register_callback(self._intensifier.get_callback(), index=0)
+
+        for callback in callbacks:
+            callback.on_init(self._optimizer)
 
     @property
     def scenario(self) -> Scenario:

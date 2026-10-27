@@ -100,6 +100,9 @@ class SMBO:
         # Set walltime used method for intensifier
         self._intensifier.used_walltime = lambda: self.used_walltime  # type: ignore
 
+        # Whether a previous optimization was successfully restored.
+        self._is_resumed = False
+
         # We initialize the state based on previous data.
         # If no previous data is found then we take care of the initial design.
         self._initialize_state()
@@ -156,6 +159,11 @@ class SMBO:
     def used_target_function_cputime(self) -> float:
         """Returns how much time the target function spend on the hardware so far."""
         return self._used_target_function_cputime
+
+    @property
+    def is_resumed(self) -> bool:
+        """Whether the optimizer restored a previous optimization."""
+        return self._is_resumed
 
     def ask(self) -> TrialInfo:
         """Asks the intensifier for the next trial.
@@ -543,7 +551,7 @@ class SMBO:
         # The SMBO object recognizes that stats (based on runhistory) is not empty and hence does not the run initial
         # design anymore.
         # Since the runhistory is already updated, the model uses previous data directly.
-        resumed = False
+        self._is_resumed = False
 
         if not self._overwrite:
             old_output_directory = self._scenario.output_directory
@@ -562,7 +570,7 @@ class SMBO:
                         logger.info("Since the previous run was not successful, SMAC will start from scratch again.")
                         self.reset()
                     else:
-                        resumed = True
+                        self._is_resumed = True
                 else:
                     # Here, we run into different scenarios
                     diff = recursively_compare_dicts(
@@ -600,9 +608,6 @@ class SMBO:
         # And now we save everything
         self._scenario.save()
         self.save()
-
-        if isinstance(self._runner, AbstractRunner):
-            self._runner.on_start(resumed)
 
     def validate(
         self,

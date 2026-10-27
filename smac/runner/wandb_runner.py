@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-import json
 from numbers import Real
 
 import wandb
@@ -15,6 +14,9 @@ from ConfigSpace.hyperparameters import (
     OrdinalHyperparameter,
 )
 
+from smac.callback.callback import Callback
+from smac.callback.wandb_callback import WandbCallback
+from smac.runhistory import TrialInfo, TrialValue
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.scenario import Scenario
 
@@ -38,7 +40,8 @@ class WandbRunner(TargetFunctionRunner):
     sweep_id : str | None, defaults to None
         Existing W&B Sweep ID. If ``None``, a new Sweep is created.
     required_arguments : list[str] | None, defaults to None
-        A list of arguments passed to the target function by SMAC.
+        Additional arguments passed to the target function, e.g., seed, instance, budget, or cutoff.
+        These must be specified explicitly if required.
     """
 
     def __init__(
@@ -60,6 +63,7 @@ class WandbRunner(TargetFunctionRunner):
         self._scenario = scenario
         self._entity = entity
         self._project = project
+        self._trial_number_width = len(str(scenario.n_trials)) if scenario.n_trials is not None else 4
 
         if isinstance(scenario.objectives, str):
             self._objectives = [scenario.objectives]
@@ -68,32 +72,26 @@ class WandbRunner(TargetFunctionRunner):
 
         self._sweep_id = sweep_id
 
-    def on_start(self, resumed: bool) -> None:
-        """Initializes the W&B Sweep for the optimization.
+    @property
+    def sweep_id(self) -> str | None:
+        """Return the W&B Sweep ID associated with this runner."""
+        return self._sweep_id
 
-        Reuses the stored Sweep when resuming an optimization and creates a new
-        Sweep otherwise.
+    def set_sweep_id(self, sweep_id: str) -> None:
+        """Set the W&B Sweep ID used to associate trial runs.
+        The ID is typically initialized or restored by WandbCallback.
 
         Parameters
         ----------
-        resumed : bool
-            Whether the optimization is continued from a previous run.
+        sweep_id : str
+            ID of the W&B Sweep to associate with this runner.
         """
-        sweep_file = self._scenario.output_directory / "wandb_sweep.json"
+        if self._sweep_id is not None and self._sweep_id != sweep_id:
+            raise ValueError(
+                f"W&B Sweep ID mismatch: runner has {self._sweep_id!r}, " f"but callback supplied {sweep_id!r}."
+            )
 
-        if resumed and self._sweep_id is None:
-            if not sweep_file.exists():
-                raise RuntimeError(
-                    f"SMAC is continuing a previous run, but no W&B Sweep ID was found at `{sweep_file}`. "
-                    "Provide `sweep_id` explicitly to continue this optimization."
-                )
-            with sweep_file.open() as f:
-                self._sweep_id = json.load(f)["sweep_id"]
-
-            self._delete_running_runs()
-            return
-
-        self._initialize_sweep_id()
+        self._sweep_id = sweep_id
 
     def __call__(
         self, config: Configuration, algorithm: Callable, algorithm_kwargs: dict[str, Any]
@@ -117,19 +115,9 @@ class WandbRunner(TargetFunctionRunner):
             Additional information returned by the target function.
         """
         if self._sweep_id is None:
-            raise RuntimeError(
-                "WandbRunner has not been initialized. on_start() must be called before running a trial."
-            )
+            raise RuntimeError("WandbRunner has not been initialized. on_init() must be called before running a trial.")
 
-        smac_config = {}
-        if "seed" in self._required_arguments:
-            smac_config["smac/seed"] = algorithm_kwargs.get("seed")
-        if "instance" in self._required_arguments:
-            smac_config["smac/instance"] = algorithm_kwargs.get("instance")
-        if "budget" in self._required_arguments:
-            smac_config["smac/budget"] = algorithm_kwargs.get("budget")
-
-        wandb_config = {**dict(config), **smac_config}
+        wandb_config = dict(config)
         with wandb.init(
             entity=self._entity,
             project=self._project,
@@ -137,6 +125,7 @@ class WandbRunner(TargetFunctionRunner):
             settings=wandb.Settings(sweep_id=self._sweep_id),
             reinit="create_new",
         ) as run:
+            self._current_trial_run_id = run.id
             result = algorithm(config, **algorithm_kwargs)
 
             if isinstance(result, tuple) and len(result) == 2 and isinstance(result[1], dict):
@@ -145,9 +134,53 @@ class WandbRunner(TargetFunctionRunner):
                 objective_result = result
                 additional_info = {}
 
-            run.log(self._result_for_wandb(objective_result))
+            metrics = self._result_for_wandb(objective_result)
+
+            # Prevent additional information from overwriting objective values.
+            overlapping_keys = metrics.keys() & additional_info.keys()
+            if overlapping_keys:
+                raise ValueError(
+                    f"Additional information contains keys that conflict with "
+                    f"objective metrics: {sorted(overlapping_keys)}"
+                )
+
+            # Log objectives and custom trial metrics together.
+            run.log({**metrics, **additional_info})
 
             return objective_result, additional_info
+
+    def run_wrapper(
+        self,
+        trial_info: TrialInfo,
+        **dask_data_to_scatter: dict[str, Any],
+    ) -> tuple[TrialInfo, TrialValue]:
+        """Execute a trial and preserve its W&B run ID.
+
+        Parameters
+        ----------
+        trial_info : TrialInfo
+            Information describing the trial.
+        **dask_data_to_scatter : dict[str, Any]
+            Data to scatter to Dask workers.
+
+        Returns
+        -------
+        info : TrialInfo
+            Trial information.
+        value : TrialValue
+            Trial result and additional information.
+        """
+        self._current_trial_run_id = None
+
+        info, value = super().run_wrapper(
+            trial_info,
+            **dask_data_to_scatter,
+        )
+
+        if self._current_trial_run_id is not None:
+            value.additional_info["wandb_run_id"] = self._current_trial_run_id
+
+        return info, value
 
     def _result_for_wandb(self, result: Any) -> dict[str, float]:
         """Converts target-function results into W&B metrics.
@@ -185,31 +218,6 @@ class WandbRunner(TargetFunctionRunner):
 
         raise TypeError(f"Unsupported target-function result type: {type(result).__name__}")
 
-    def _initialize_sweep_id(self) -> None:
-        """Initializes and stores the W&B Sweep ID.
-
-        Uses an explicitly provided Sweep ID if available, otherwise creates a
-        new W&B Sweep.
-        """
-        sweep_config: dict[str, Any] = {
-            "method": "random",  # W&B is only used for tracking/grouping.
-            "parameters": self._parameters_from_configspace(),
-        }
-        if len(self._objectives) == 1:
-            sweep_config["metric"] = {
-                "name": self._objectives[0],
-                "goal": "minimize",
-            }
-
-        if self._sweep_id is None:
-            self._sweep_id = wandb.sweep(sweep=sweep_config, entity=self._entity, project=self._project)
-
-        sweep_file = self._scenario.output_directory / "wandb_sweep.json"
-        self._scenario.output_directory.mkdir(parents=True, exist_ok=True)
-
-        with sweep_file.open("w") as f:
-            json.dump({"sweep_id": self._sweep_id}, f, indent=2)
-
     def _parameters_from_configspace(self) -> dict[str, dict[str, Any]]:
         """Converts the SMAC configuration space to W&B sweep parameters.
 
@@ -242,14 +250,44 @@ class WandbRunner(TargetFunctionRunner):
 
         return parameters
 
-    def _delete_running_runs(self) -> None:
-        """Deletes unfinished runs from the current W&B Sweep.
+    def get_wandb_run(self, run_id: str) -> wandb.Run:
+        """Reopens a W&B run by its ID.
 
-        Running W&B runs may remain after an interrupted SMAC optimization and
-        cannot be continued by SMAC after restoring its state.
+        Returns
+        -------
+        wandb.Run
+            Reopened run.
         """
-        api = wandb.Api()
-        sweep = api.sweep(f"{self._entity}/{self._project}/{self._sweep_id}")
-        for run in sweep.runs:
-            if run.state == "running":
-                run.delete()
+        return wandb.init(
+            entity=self._entity,
+            project=self._project,
+            id=run_id,
+            resume="must",
+            reinit="create_new",
+        )
+
+    def get_additional_callbacks(
+        self,
+        existing_callbacks: list[Callback],
+    ) -> list[Callback]:
+        """Return the required WandbCallback if it is not already registered.
+
+        Parameters
+        ----------
+        existing_callbacks : list[Callback]
+            Callbacks already registered with SMAC.
+
+        Returns
+        -------
+        list[Callback]
+            Additional Callback(s) to register.
+        """
+        wandb_callbacks = [callback for callback in existing_callbacks if isinstance(callback, WandbCallback)]
+        if wandb_callbacks:
+            if len(wandb_callbacks) > 1:
+                raise ValueError("Only one WandbCallback can be registered.")
+            if wandb_callbacks[0]._runner is not self:
+                raise ValueError("The supplied WandbCallback must use this WandbRunner.")
+            return []
+
+        return [WandbCallback(runner=self)]
