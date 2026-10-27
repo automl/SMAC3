@@ -19,12 +19,14 @@ def read_file(filepath: str) -> str:
     with open(filepath, "r", encoding="utf-8") as fh:
         return fh.read()
 
+
 def read_version() -> str:
     pyproject = read_file(os.path.join(HERE, "pyproject.toml"))
     match = re.search(r'^version = "(.+)"', pyproject, re.MULTILINE)
     if match is None:
         raise RuntimeError("No version found in pyproject.toml")
     return match.group(1)
+
 
 extras_require = {
     "pyrfr": [
