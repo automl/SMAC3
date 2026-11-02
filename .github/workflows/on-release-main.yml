@@ -1,57 +1,62 @@
 name: release-main
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
 
 jobs:
-  set-version:
+  check-version:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: '3.10'
-
-      - name: Install build tools
-        run: |
-          python -m pip install --upgrade pip setuptools wheel build twine
-
-      - name: Determine package version
-        id: package-version
-        run: |
-          echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
-
-      - name: Build package
-        run: |
-          python -m build --sdist --wheel
-
-      - name: Export tag
-        id: export-tag
-        run: echo tag=${GITHUB_REF#refs/*/} >> $GITHUB_OUTPUT
-        if: ${{ github.event_name == 'release' }}
-
-      - name: Update project version
-        run: |
-          sed -i "s/^version = \".*\"/version = \"$RELEASE_VERSION\"/" pyproject.toml
-        env:
-          RELEASE_VERSION: ${{ steps.export-tag.outputs.tag }}
-        if: ${{ github.event_name == 'release' }}
-
-      - name: Upload updated pyproject.toml
-        uses: actions/upload-artifact@v7
-        with:
-          name: pyproject-toml
-          path: pyproject.toml
-
-  publish:
-    runs-on: ubuntu-latest
-    needs: [set-version]
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      release: ${{ steps.tag.outputs.release }}
     steps:
       - name: Check out
         uses: actions/checkout@v7
+
+      - name: Read version from pyproject.toml
+        id: version
+        run: |
+          VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml)
+          if [ -z "$VERSION" ]; then
+            echo "::error::No version found in pyproject.toml"
+            exit 1
+          fi
+          echo "Version: $VERSION  Tag: v$VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if tag already exists
+        id: tag
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/v${{ steps.version.outputs.version }}" > /dev/null; then
+            echo "Tag v${{ steps.version.outputs.version }} already exists, nothing to release"
+            echo "release=false" >> $GITHUB_OUTPUT
+          else
+            echo "release=true" >> $GITHUB_OUTPUT
+          fi
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [check-version]
+    if: needs.check-version.outputs.release == 'true'
+    permissions:
+      contents: write
+      id-token: write
+    env:
+      VERSION: ${{ needs.check-version.outputs.version }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Extract release notes from CHANGELOG.md
+        run: |
+          awk -v v="$VERSION" '/^# [0-9]/ { if (found) exit; if ($2 == v) { found=1; next } } found { print }' CHANGELOG.md > release_notes.md
+          if [ ! -s release_notes.md ]; then
+            echo "::error::No section '# $VERSION' found in CHANGELOG.md"
+            exit 1
+          fi
+          cat release_notes.md
 
       - name: Set up the environment
         uses: actions/setup-python@v7
@@ -60,35 +65,44 @@ jobs:
 
       - name: Build dist
         run: |
-          python setup.py sdist
+          pip install build
+          python -m build
 
       - name: Twine check
         run: |
           pip install twine
-          last_dist=$(ls -t dist/smac-*.tar.gz | head -n 1)
-          twine_output=`twine check "$last_dist"`
-          if [[ "$twine_output" != "Checking $last_dist: PASSED" ]]
-          then
-            echo $twine_output
-          else
-            pip install $last_dist
-          fi
+          twine check --strict dist/*
+          pip install dist/*.whl
 
       - name: Publish package
-        run: python -m twine upload --repository testpypi dist/*
-        env:
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: python -m twine upload dist/*
 
+      - name: Create tag and GitHub release
+        run: gh release create "v$VERSION" --target "$GITHUB_SHA" --title "v$VERSION" --notes-file release_notes.md
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   deploy-docs:
-    needs: publish
+    needs: [check-version, publish]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Check out
         uses: actions/checkout@v7
 
       - name: Set up the environment
         uses: ./.github/actions/setup-python-env
+        with:
+          extra-packages: "pymdown-extensions<12.2"
+
+      - name: Configure git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch gh-pages branch
+        run: git fetch origin gh-pages --depth=1 || true
 
       - name: Deploy documentation
-        run: uv run properdocs gh-deploy -f mkdocs.yaml --force
+        run: uv run mike deploy -F mkdocs.yaml --push --update-aliases "v${{ needs.check-version.outputs.version }}" latest

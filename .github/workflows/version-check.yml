@@ -1,0 +1,36 @@
+name: version-check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  version-bumped:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.10"
+
+      - name: Compare version with target branch
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git fetch origin "$BASE_REF" --depth=1
+          NEW=$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml)
+          OLD=$(git show "origin/$BASE_REF:pyproject.toml" | sed -n 's/^version = "\(.*\)"/\1/p')
+          echo "$BASE_REF: $OLD  ->  PR: $NEW"
+          if [ -z "$OLD" ]; then
+            echo "No version on $BASE_REF yet, skipping check"
+            exit 0
+          fi
+          pip install packaging
+          if ! python -c "import sys; from packaging.version import Version; sys.exit(0 if Version(sys.argv[2]) > Version(sys.argv[1]) else 1)" "$OLD" "$NEW"; then
+            echo "::error::Version in pyproject.toml ($NEW) must be higher than on $BASE_REF ($OLD)."
+            exit 1
+          fi
