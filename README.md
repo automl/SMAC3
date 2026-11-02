@@ -130,8 +130,21 @@ For all other inquiries, please write an email to smac[at]ai[dot]uni[dash]hannov
 
 ## Miscellaneous
 
-SMAC3 is developed by the [AutoML Groups of the Universities of Hannover and
-Freiburg](http://www.automl.org/). It is a featured optimizer on [AutoML Space](https://automl.space/automl-tools/).
+SMAC3 is developed by [Leibniz University Hanover, Institute of AI
+(LUHAI)](https://www.ai.uni-hannover.de/). It is a featured optimizer on [AutoML Space](https://automl.space/automl-tools/).
+
+### Maintainers
+
+SMAC3 is currently maintained by Marcel Wever, Anthony Angrimson, Lukas Fehring, Michael Gratius, Leona Hennig,
+Daphne Theodorakopoulos, René Traoré, Eva Vormschlag and Andreas Bentzen Winje.
+
+### Contributors
+
+Besides the authors of the [JMLR paper](https://jmlr.org/papers/v23/21-0888.html) and the current maintainers,
+SMAC3 has been shaped by many contributors, in particular Eddie Bergman, Stefan Falkner, Helena Graf, Jannis Kastner,
+Aaron Kimmig, Aaron Klein, Joshua Marben, Ashwin Raaghav, Francisco Rivera Valverde, Jeroen Rook, Sarah Segel,
+Jost Tobias Springenberg and Alexander Tornede. A full list can be found on
+[GitHub](https://github.com/automl/SMAC3/graphs/contributors).
 
 If you have found a bug, please report to [issues](https://github.com/automl/SMAC3/issues). Moreover, we are 
 appreciating any kind of help. Find our guidelines for contributing to this package 
@@ -152,4 +165,4 @@ If you use SMAC in one of your research projects, please cite our
 }
 ```
 
-Copyright (c) 2025, [Leibniz University Hannover - Institute of AI](https://www.ai.uni-hannover.de/)
+Copyright (c) 2026, [Leibniz University Hanover, Institute of AI](https://www.ai.uni-hannover.de/)

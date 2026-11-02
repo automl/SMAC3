@@ -6,6 +6,9 @@ import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 
 class SurrogateTransformer:
     """

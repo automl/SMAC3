@@ -4,6 +4,9 @@ import numpy as np
 
 from smac.intensifier.successive_halving import SuccessiveHalving
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 
 def determine_HB(min_budget: float, max_budget: float, eta: int = 3) -> dict:
     """Determine one Hyperband round

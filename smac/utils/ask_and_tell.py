@@ -2,6 +2,9 @@
 
 from smac.constants import ASK_AND_TELL_VALID_WARN_MODES
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 
 def validate_warn_mode(value: str) -> str:
     """Validate that the warn_mode value is supported.

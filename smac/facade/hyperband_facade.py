@@ -4,7 +4,7 @@ from smac.facade.random_facade import RandomFacade
 from smac.intensifier.hyperband import Hyperband
 from smac.scenario import Scenario
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

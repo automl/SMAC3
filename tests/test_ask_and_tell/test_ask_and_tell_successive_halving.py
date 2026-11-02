@@ -8,7 +8,7 @@ from smac import MultiFidelityFacade, Scenario
 from smac.main.exceptions import AskAndTellBudgetExhaustedError
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
