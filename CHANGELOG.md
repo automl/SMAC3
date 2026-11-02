@@ -17,6 +17,10 @@
   `ParEGO`, this implements HPI-ParEGO. Requires the optional `hypershap` dependency (`pip install smac[hpi]`).
   Also works for single-objective optimization.
 - Add `HPIFacade`, which sets up HPI-ParEGO (`HPIRandomSearch`, `ParEGO` with `reweigh=5`, retraining every 2 configs).
+- Added cost-aware Bayesian optimization via `CostAwareFacade`, `CostAwareInitialDesign`,
+  and `CostAwareAcquisitionFunction` (EI-Cool). Evaluations are weighted by a user-supplied cost
+  formula, and the resource budget is tracked cumulatively rather than by trial count. See
+  `examples/4_advanced_optimizer/6_cost_aware_facade.py`.
 
 ## Dependencies
 - Add Weights & Biases as an optional dependency via `smac[wandb]`
@@ -26,6 +30,7 @@
 - An example on the new multi-objective method
 - An example on HPI-ParEGO
 - An example on HPIRandomSearch for single objective optimization
+- An example for the cost-aware Bayesian optimization feature
 
 ## Bugfixes
 - Resource limits (`trial_walltime_limit`, `trial_memory_limit`) now also work with user-provided dask clients
