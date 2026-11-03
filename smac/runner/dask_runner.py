@@ -201,7 +201,12 @@ class DaskParallelRunner(AbstractRunner):
         # Move the done run from the worker to the results queue
         done = [trial for trial in self._pending_trials if trial.done()]
         for trial in done:
-            self._results_queue.append(trial.result())
+            trial_info, trial_value = trial.result()
+
+            # Restore the original configuration space after Dask serialization.
+            trial_info.config.config_space = self._scenario.configspace
+
+            self._results_queue.append((trial_info, trial_value))
             self._pending_trials.remove(trial)
 
     def __del__(self) -> None:
