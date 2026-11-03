@@ -204,7 +204,8 @@ class DaskParallelRunner(AbstractRunner):
             trial_info, trial_value = trial.result()
 
             # Restore the original configuration space after Dask serialization.
-            trial_info.config.config_space = self._scenario.configspace
+            if isinstance(trial_info.config, Configuration):
+                trial_info.config.config_space = self._scenario.configspace
 
             self._results_queue.append((trial_info, trial_value))
             self._pending_trials.remove(trial)
