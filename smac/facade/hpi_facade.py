@@ -87,6 +87,8 @@ class HPIFacade(HyperparameterOptimizationFacade):
         retrain_after: int | None = 2,
         retrain_wallclock_ratio: int | None = None,
         retries: int = 16,
+        min_trials: int = 1,
+        batch_sampling_estimation_strategy: str = "no_estimate",
     ) -> ConfigSelector:
         """Returns the configuration selector. The surrogate model is retrained after every two configurations by
         default so that the hyperparameter importance estimates stay up to date.
@@ -96,10 +98,14 @@ class HPIFacade(HyperparameterOptimizationFacade):
         scenario : Scenario
         retrain_after : int | None, defaults to 2
         retrain_wallclock_ratio : int | None, defaults to None
+        min_trials : int, defaults to 1
+        batch_sampling_estimation_strategy : str, defaults to "no_estimate"
         """
         return ConfigSelector(
             scenario,
             retrain_after=retrain_after,
             retrain_wallclock_ratio=retrain_wallclock_ratio,
             max_new_config_tries=retries,
+            min_trials=min_trials,
+            batch_sampling_estimation_strategy=batch_sampling_estimation_strategy,
         )

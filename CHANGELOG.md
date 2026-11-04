@@ -22,6 +22,8 @@
   formula, and the resource budget is tracked cumulatively rather than by trial count. See
   `examples/4_advanced_optimizer/6_cost_aware_facade.py`.
 
+- Add `QExpectedImprovement`, a Monte Carlo q-EI acquisition function for batch Bayesian optimization. Use it with `batch_sampling_estimation_strategy="q_ei"`, the running configurations are then treated as pending points (#1229).
+
 ## Dependencies
 - Add Weights & Biases as an optional dependency via `smac[wandb]`
 
@@ -82,6 +84,9 @@
 - Fix doc link in README
 
 # 2.3.0
+
+## Features
+- Improved batch sampling: Fantasize points in batch/parallel mode (#1154).
 
 ## Documentation
 - Update windows install guide (#952)
