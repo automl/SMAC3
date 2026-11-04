@@ -1,0 +1,47 @@
+# GitHub only auto-closes issues referenced via keywords (e.g. "Fixes #123")
+# when a PR is merged into the default branch (main). This workflow does the
+# same for PRs merged into development.
+# Triggered on push (not pull_request_target) so the workflow file only needs
+# to live on development and the token can write even for PRs from forks.
+
+
+
+on:
+  push:
+
+    branches: [development]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  close-issues:
+
+    runs-on: ubuntu-latest
+    steps:
+    - name: Close issues referenced by the merged PR
+      env:
+        GH_TOKEN: ${{ github.token }}
+
+
+        REPO: ${{ github.repository }}
+        SHA: ${{ github.sha }}
+      run: |
+        # Merged PRs into development that contain the pushed commit
+        prs=$(gh api "repos/$REPO/commits/$SHA/pulls" \
+          --jq '.[] | select(.merged_at != null and .base.ref == "development") | .number')
+        for pr in $prs; do
+          body=$(gh pr view "$pr" --repo "$REPO" --json body --jq '.body')
+          # Skip quoted template lines (e.g. "> Example: Fixes #1234.")
+          issues=$(echo "$body" \
+            | grep -v '^[[:space:]]*>' \
+            | grep -oiE '(close[sd]?|fix(e[sd])?|resolve[sd]?)[[:space:]]*:?[[:space:]]+#[0-9]+' \
+            | grep -oE '[0-9]+' | sort -u)
+          for issue in $issues; do
+            echo "Closing #$issue (from PR #$pr)"
+            gh issue close "$issue" --repo "$REPO" \
+              --comment "Closed by #$pr (merged into development)." || true
+          done
+        done
