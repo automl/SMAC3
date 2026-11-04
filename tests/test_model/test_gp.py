@@ -331,26 +331,27 @@ def test_predict_with_actual_values():
     assert pytest.approx(var_sd[0][0] ** 2) == var_hat[0][0]
 
 
-# def test_gp_on_sklearn_data():
-#     X, y = sklearn.datasets.load_boston(return_X_y=True)
-#     # Normalize such that the bounds in get_gp (10) hold
-#     X = X / X.max(axis=0)
-#     seed = 1
-#     rs = np.random.RandomState(seed)
-#     model = get_gp(X.shape[1], seed)
-#     cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
+def test_gp_on_sklearn_data():
+    X, y = sklearn.datasets.load_diabetes(return_X_y=True, scaled=False)
+    # Normalize such that the bounds in get_gp (10) hold
+    X = X / X.max(axis=0)
+    seed = 1
+    rs = np.random.RandomState(seed)
+    model = get_gp(X.shape[1], seed)
+    cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-#     maes = [8.886514052493349145, 8.868823494592284107]
+    maes = [63.01075893944376, 68.98030343359063]
 
-#     for i, (train_split, test_split) in enumerate(cv.split(X, y)):
-#         X_train = X[train_split]
-#         y_train = y[train_split]
-#         X_test = X[test_split]
-#         y_test = y[test_split]
-#         model.train(X_train, y_train)
-#         y_hat, mu_hat = model.predict(X_test)
-#         mae = np.mean(np.abs(y_hat - y_test), dtype=float)
-#         assert pytest.approx(mae) == maes[i]
+    for i, (train_split, test_split) in enumerate(cv.split(X, y)):
+        X_train = X[train_split]
+        y_train = y[train_split]
+        X_test = X[test_split]
+        y_test = y[test_split]
+        model.train(X_train, y_train)
+        y_hat, mu_hat = model.predict(X_test)
+        mae = np.mean(np.abs(y_hat.flatten() - y_test), dtype=float)
+        # The GP hyperparameter optimization differs slightly across platforms
+        assert pytest.approx(mae, rel=0.01) == maes[i]
 
 
 def test_nll():
@@ -416,7 +417,6 @@ def test_normalization():
     np.testing.assert_array_almost_equal(func, func_prime, decimal=1)
 
 
-"""
 def test_impute_inactive_hyperparameters():
     cs = ConfigurationSpace()
     a = CategoricalHyperparameter("a", [0, 1])
@@ -441,4 +441,3 @@ def test_impute_inactive_hyperparameters():
             assert line[1] == -1
         elif line[0] == 1:
             assert line[2] == -1
-"""
