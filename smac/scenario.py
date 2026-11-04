@@ -59,8 +59,9 @@ class Scenario:
     trial_walltime_limit : float | None, defaults to None
         The maximum time in seconds that a trial is allowed to run. If not specified,
         no constraints are enforced. Otherwise, the process will be spawned by pynisher.
-    trial_memory_limit : int | None, defaults to None
-        The maximum memory in MB that a trial is allowed to use. If not specified,
+    trial_memory_limit : int | tuple[int, str] | None, defaults to None
+        The maximum memory that a trial is allowed to use. An integer is interpreted as bytes. We recommend passing
+        a tuple with a unit instead, e.g. `(8, "GB")`. Possible units are "B", "KB", "MB" and "GB". If not specified,
         no constraints are enforced. Otherwise, the process will be spawned by pynisher.
     n_trials : int, defaults to 100
         The maximum number of trials (combination of configuration, seed, budget, and instance, depending on the task)
@@ -145,7 +146,7 @@ class Scenario:
     walltime_limit: float = np.inf
     cputime_limit: float = np.inf
     trial_walltime_limit: float | None = None
-    trial_memory_limit: int | None = None
+    trial_memory_limit: int | tuple[int, str] | None = None
     n_trials: int = 100
     use_default_config: bool = False
     initial_design_warmstart_mode: str = "additional"
