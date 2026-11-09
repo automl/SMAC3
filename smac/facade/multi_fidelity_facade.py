@@ -44,7 +44,7 @@ class MultiFidelityFacade(HyperparameterOptimizationFacade):
             * None: No shuffling at all and use the instance-seed order provided by the user.
             * "shuffle_once": Shuffle the instance-seed keys once and use the same order across all runs.
             * "shuffle": Shuffles the instance-seed keys for each bracket individually.
-        incumbent_selection : str, defaults to "any_budget"
+        incumbent_selection : str, defaults to "highest_observed_budget"
             How to select the incumbent when using budgets. Can be set to:
             * "any_budget": Incumbent is the best on any budget, i.e., the best performance regardless of budget.
             * "highest_observed_budget": Incumbent is the best in the highest budget run so far.
