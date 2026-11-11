@@ -6,6 +6,9 @@ from smac.facade.hyperparameter_optimization_facade import (
 from smac.model.random_forest.pyrfr.random_forest_pyrfr import PyrfrRandomForest
 from smac.scenario import Scenario
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 
 class HyperparameterOptimizationRFRFacade(HyperparameterOptimizationFacade):
     @staticmethod

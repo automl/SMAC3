@@ -17,7 +17,7 @@ from sklearn.utils.validation import check_is_fitted, validate_data
 from smac.constants import N_TREES
 from smac.model.random_forest import AbstractRandomForest
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

@@ -53,7 +53,7 @@ from smac.model.random_forest.random_forest import RandomForest
 from smac.model.multi_objective_model import MultiObjectiveModel
 from smac.runhistory.encoder.eips_encoder import RunHistoryEIPSEncoder
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

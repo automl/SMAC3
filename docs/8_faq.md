@@ -1,7 +1,7 @@
 # F.A.Q.
 
 #### Should I use SMAC2 or SMAC3?
-  SMAC3 is a reimplementation of the original SMAC tool ([Sequential Model-Based Optimization for General Algorithm Configuration](https://ml.informatik.uni-freiburg.de/wp-content/uploads/papers/11-LION5-SMAC.pdf), Hutter et al., 2021). However, the reimplementation slightly differs from the original
+  SMAC3 is a reimplementation of the original SMAC tool ([Sequential Model-Based Optimization for General Algorithm Configuration](https://ml.informatik.uni-freiburg.de/wp-content/uploads/papers/11-LION5-SMAC.pdf), Hutter et al., 2011). However, the reimplementation slightly differs from the original
   SMAC. For comparisons against the original SMAC, we refer to a stable release of SMAC (v2) in Java
   which can be found [here](https://www.cs.ubc.ca/labs/algorithms/Projects/SMAC/).
   Since SMAC3 is actively maintained, we recommend to use SMAC3 for any AutoML applications.

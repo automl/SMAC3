@@ -5,6 +5,9 @@ from typing import Iterator
 from smac.runhistory.dataclasses import TrialInfo, TrialValue
 from smac.runner.abstract_runner import AbstractRunner
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 
 class AbstractSerialRunner(AbstractRunner):
     def submit_trial(self, trial_info: TrialInfo) -> None:
