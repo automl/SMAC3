@@ -220,22 +220,20 @@ class WandbCallback(Callback):
         self._trial_counter += 1
         self._save_state()
 
-        run = self._runner.get_wandb_run(run_id)
+        # Associate the W&B run with its SMAC trial.
+        trial_metadata = {"smac/config_id": smbo.runhistory.get_config_id(info.config)}
+        for name in ("instance", "seed", "budget"):
+            value_ = getattr(info, name)
+            if value_ is not None:
+                trial_metadata[f"smac/{name}"] = value_
 
-        try:
-            # Associate the W&B run with its SMAC trial.
-            trial_metadata = {"smac/config_id": smbo.runhistory.get_config_id(info.config)}
-            for name in ("instance", "seed", "budget"):
-                value_ = getattr(info, name)
-                if value_ is not None:
-                    trial_metadata[f"smac/{name}"] = value_
+        formatted_trial_number = str(trial_number).zfill(self._runner._trial_number_width)
 
-            run.config.update(trial_metadata, allow_val_change=True)
-
-            formatted_trial_number = str(trial_number).zfill(self._runner._trial_number_width)
-            run.name = f"{self._runner._sweep_id}-trial-{formatted_trial_number}"
-        finally:
-            run.finish()
+        self._runner.update_wandb_run(
+            run_id=run_id,
+            name=f"{self._runner._sweep_id}-trial-{formatted_trial_number}",
+            config=trial_metadata,
+        )
 
         return None
 

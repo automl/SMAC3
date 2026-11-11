@@ -250,21 +250,30 @@ class WandbRunner(TargetFunctionRunner):
 
         return parameters
 
-    def get_wandb_run(self, run_id: str) -> wandb.Run:
-        """Reopens a W&B run by its ID.
+    def update_wandb_run(
+        self,
+        run_id: str,
+        *,
+        name: str,
+        config: dict[str, Any],
+    ) -> None:
+        """Update the name and configuration of an existing W&B run.
 
-        Returns
-        -------
-        wandb.Run
-            Reopened run.
+        Parameters
+        ----------
+        run_id : str
+            ID of the W&B run.
+        name : str
+            New run name.
+        config : dict[str, Any]
+            Additional configuration metadata to store in the run.
         """
-        return wandb.init(
-            entity=self._entity,
-            project=self._project,
-            id=run_id,
-            resume="must",
-            reinit="create_new",
-        )
+        api = wandb.Api()
+        run = api.run(f"{self._entity}/{self._project}/{run_id}")
+
+        run.config.update(config)
+        run.name = name
+        run.update()
 
     def get_additional_callbacks(
         self,

@@ -124,8 +124,6 @@ def test_smac_metadata_is_logged(tmp_path) -> None:
     mock_smbo = SimpleNamespace(runhistory=MagicMock())
     mock_smbo.runhistory.get_config_id.return_value = 3
 
-    mock_run = MagicMock()
-
     info = SimpleNamespace(
         config=config,
         instance="instance-1",
@@ -134,7 +132,7 @@ def test_smac_metadata_is_logged(tmp_path) -> None:
     )
     value = SimpleNamespace(additional_info={"wandb_run_id": "mock-run-id"})
 
-    with patch.object(runner, "get_wandb_run", return_value=mock_run):
+    with patch.object(runner, "update_wandb_run") as mock_update:
         callback.on_tell_end(
             smbo=mock_smbo,
             info=info,
@@ -143,9 +141,11 @@ def test_smac_metadata_is_logged(tmp_path) -> None:
 
     mock_smbo.runhistory.get_config_id.assert_called_once_with(config)
 
-    logged_config = mock_run.config.update.call_args.args[0]
+    mock_update.assert_called_once()
+    call_kwargs = mock_update.call_args.kwargs
 
-    assert logged_config == {
+    assert call_kwargs["run_id"] == "mock-run-id"
+    assert call_kwargs["config"] == {
         "smac/config_id": 3,
         "smac/instance": "instance-1",
         "smac/seed": 42,
@@ -165,15 +165,10 @@ def test_runner_works_with_hpo_facade(tmp_path) -> None:
     )
 
     mock_init, _ = _mock_wandb_run()
-    renamed_runs = [MagicMock(), MagicMock()]
 
     with (
         patch("smac.runner.wandb_runner.wandb.init", mock_init),
-        patch.object(
-            runner,
-            "get_wandb_run",
-            side_effect=renamed_runs,
-        ) as mock_get_run,
+        patch.object(runner, "update_wandb_run") as mock_update,
     ):
         smac = HyperparameterOptimizationFacade(
             scenario=scenario,
@@ -183,9 +178,13 @@ def test_runner_works_with_hpo_facade(tmp_path) -> None:
         incumbent = smac.optimize()
 
     assert incumbent is not None
-    assert mock_get_run.call_count == 2
-    assert renamed_runs[0].name == "test-sweep-trial-0"
-    assert renamed_runs[1].name == "test-sweep-trial-1"
+    assert mock_update.call_count == 2
+    names = [call.kwargs["name"] for call in mock_update.call_args_list]
+
+    assert names == [
+        "test-sweep-trial-0",
+        "test-sweep-trial-1",
+    ]
 
 def test_callback_initializes_and_persists_state(tmp_path) -> None:
     """Test that a fresh optimization initializes and persists W&B state."""
