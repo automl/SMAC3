@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import itertools
+
 import numpy as np
 import pytest
 from ConfigSpace import (
@@ -17,6 +19,7 @@ from ConfigSpace.hyperparameters import Constant
 from smac.acquisition.function import EI
 from smac.acquisition.maximizer import HPIRandomSearch
 from smac.model.random_forest.random_forest import RandomForest
+from smac.runhistory.runhistory import RunHistory
 from smac.utils.configspace import convert_configurations_to_array
 
 pytest.importorskip("hypershap")
@@ -173,17 +176,71 @@ def test_get_reference_configuration_incumbent_strategy_picks_best_predicted_and
     assert reference == previous_configs[int(np.argmin(predicted))]
 
 
-# --------------------------------------------------------------
-# _compute_important_hps / _predict_config
-# --------------------------------------------------------------
-
-
-def test_predict_config_returns_negated_model_prediction(configspace, acquisition_function):
+def test_get_reference_configuration_incumbent_strategy_prefers_observed_costs(configspace, acquisition_function):
     rs = HPIRandomSearch(configspace, acquisition_function=acquisition_function)
-    config = configspace.get_default_configuration()
+    previous_configs = configspace.sample_configuration(5)
+    rs.runhistory = _runhistory(previous_configs[:4], [3.0, 2.5, 0.5, 2.0])
 
-    expected = -acquisition_function.model.predict(np.array([config.get_array()]))[0][0]
-    assert rs._predict_config(config) == pytest.approx(expected)
+    assert rs._get_reference_configuration(previous_configs) == previous_configs[2]
+    assert np.array_equal(rs._context_Y, [3.0, 2.5, 0.5, 2.0, np.inf])
+
+
+# --------------------------------------------------------------
+# _observed_costs / _importance_model
+# --------------------------------------------------------------
+
+
+def _runhistory(configs, costs, n_objectives=1):
+    runhistory = RunHistory(n_objectives=n_objectives)
+    for config, cost in zip(configs, costs):
+        runhistory.add(config, cost, seed=0)
+    return runhistory
+
+
+def test_observed_costs_without_runhistory_is_none(configspace):
+    assert HPIRandomSearch(configspace)._observed_costs(configspace.sample_configuration(3)) is None
+
+
+def test_observed_costs_single_objective(configspace):
+    configs = configspace.sample_configuration(3)
+    rs = HPIRandomSearch(configspace)
+    rs.runhistory = _runhistory(configs[:2], [2.0, 1.0])
+
+    assert np.array_equal(rs._observed_costs(configs), [2.0, 1.0, np.inf])
+
+
+def test_observed_costs_scalarizes_multiple_objectives(configspace):
+    from smac.multi_objective.parego import ParEGO
+
+    configs = configspace.sample_configuration(3)
+    rs = HPIRandomSearch(configspace)
+    rs.runhistory = _runhistory(configs, [[0.0, 2.0], [1.0, 1.0], [2.0, 0.0]], n_objectives=2)
+    parego = ParEGO.__new__(ParEGO)
+    parego._theta, parego._rho = np.array([1.0, 0.0]), 0.0
+    rs.runhistory.multi_objective_algorithm = parego
+
+    assert np.allclose(rs._observed_costs(configs), [0.0, 0.5, 1.0])
+
+
+def test_importance_model_fits_gp_on_observed_costs(configspace, acquisition_function):
+    from smac.model.gaussian_process.abstract_gaussian_process import (
+        AbstractGaussianProcess,
+    )
+
+    rs = HPIRandomSearch(configspace, acquisition_function=acquisition_function)
+    configs = configspace.sample_configuration(10)
+
+    assert rs._importance_model(configs) is acquisition_function.model
+
+    rs.runhistory = _runhistory(configs[:9], np.linspace(0, 1, 9))
+    model = rs._importance_model(configs)
+    assert isinstance(model, AbstractGaussianProcess)
+    assert rs._importance_model(configs) is model
+
+
+# --------------------------------------------------------------
+# _compute_important_hps
+# --------------------------------------------------------------
 
 
 def test_compute_important_hps_returns_hyperparameter_names(configspace, acquisition_function):
@@ -192,10 +249,22 @@ def test_compute_important_hps_returns_hyperparameter_names(configspace, acquisi
     rs = HPIRandomSearch(configspace, acquisition_function=acquisition_function)
     reference = configspace.get_default_configuration()
 
-    important_hps = rs._compute_important_hps(reference, threshold=0.8)
+    important_hps = rs._compute_important_hps(configspace.sample_configuration(10), reference, threshold=0.8)
 
-    assert len(important_hps) > 0
+    assert len(important_hps) >= 2
     assert all(isinstance(hp, str) and hp in configspace.keys() for hp in important_hps)
+
+
+def test_compute_important_hps_fills_single_selection_up_to_two(configspace, acquisition_function, monkeypatch):
+    rs = HPIRandomSearch(configspace, acquisition_function=acquisition_function)
+    reference = configspace.get_default_configuration()
+
+    monkeypatch.setattr(rs, "_select_important_hps", lambda *args: ["a"])
+    important_hps = rs._compute_important_hps(configspace.sample_configuration(10), reference, threshold=0.8)
+    assert important_hps[0] == "a" and len(important_hps) == 2 and important_hps[1] in ("b", "c")
+
+    monkeypatch.setattr(rs, "_select_important_hps", lambda *args: [])
+    assert rs._compute_important_hps(configspace.sample_configuration(10), reference, threshold=0.8) == []
 
 
 # --------------------------------------------------------------
@@ -396,6 +465,7 @@ def test_maximize_reduction_path_produces_sorted_configs(configspace, acquisitio
     acq_values = [v for v, _ in values]
     assert acq_values == sorted(acq_values, reverse=True)
 
+
 def test_threshold_list_longer_than_n_trials_raises(configspace):
     with pytest.raises(ValueError):
         HPIRandomSearch(configspace, n_trials=2)
@@ -409,6 +479,33 @@ def test_empty_important_hps_restores_original_space(configspace, acquisition_fu
     rs._maximize(configspace.sample_configuration(5), 3)
 
     assert rs._configspace is rs._original_cs
+
+
+def test_maximize_maps_reduced_configs_to_original_space(configspace, acquisition_function, monkeypatch):
+    """Constants of the reduced space are encoded differently in the array, which would corrupt the model inputs."""
+    rs = HPIRandomSearch(configspace, acquisition_function=acquisition_function, threshold=0.8, random_prob=0.0)
+    monkeypatch.setattr(rs, "_compute_important_hps", lambda *args: ["a"])
+
+    values = rs._maximize(configspace.sample_configuration(5), 5)
+
+    assert all(config.config_space is rs._original_cs for _, config in values)
+    for _, config in values:
+        assert np.array_equal(config.get_array(), Configuration(configspace, values=dict(config)).get_array())
+
+
+def test_maximize_maps_random_design_configs_to_original_space(configspace, acquisition_function):
+    from smac.random_design import ProbabilityRandomDesign
+
+    rs = HPIRandomSearch(configspace, acquisition_function=acquisition_function, threshold=0.0, random_prob=0.0)
+    rs._reduce_configspace(["a"], configspace.get_default_configuration())
+
+    challengers = rs.maximize(configspace.sample_configuration(5), 4, random_design=ProbabilityRandomDesign(1.0))
+
+    # With probability 1, the random design yields configurations endlessly.
+    configs = list(itertools.islice(challengers, 4))
+
+    assert len(configs) == 4
+    assert all(config.config_space is rs._original_cs for config in configs)
 
 
 def test_reduce_configspace_handles_conjunction_conditions():

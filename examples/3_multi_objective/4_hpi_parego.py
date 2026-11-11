@@ -3,8 +3,9 @@
 
 An example of how to use multi-objective optimization with HPI-ParEGO. HPI-ParEGO extends ParEGO by dynamically
 reducing the configuration space to the hyperparameters that matter most for the current scalarization, estimated
-via HyperSHAP on the trained surrogate model. Both accuracy and run-time are going to be optimized on the digits
-dataset using an MLP, and the configurations are shown in a plot, highlighting the best ones in a Pareto front.
+via HyperSHAP on a Gaussian process fitted on the observed costs. Both accuracy and run-time are going to be
+optimized on the digits dataset using an MLP, and the configurations are shown in a plot, highlighting the best ones
+in a Pareto front.
 
 The ``HPIFacade`` uses ``ParEGO`` (with ``reweigh=5``, so a scalarization is kept for several iterations), and
 ``HPIRandomSearch`` as acquisition maximizer. Since the configuration selector retrains the surrogate model every

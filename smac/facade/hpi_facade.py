@@ -26,6 +26,12 @@ class HPIFacade(HyperparameterOptimizationFacade):
     Requires the optional ``hypershap`` dependency: ``pip install smac[hpi]``.
     """
 
+    def _update_dependencies(self) -> None:
+        super()._update_dependencies()
+        # HPIRandomSearch reads the observed costs to determine the incumbent and to fit its importance model.
+        if isinstance(self._acquisition_maximizer, HPIRandomSearch):
+            self._acquisition_maximizer.runhistory = self._runhistory
+
     @staticmethod
     def get_acquisition_maximizer(  # type: ignore
         scenario: Scenario,

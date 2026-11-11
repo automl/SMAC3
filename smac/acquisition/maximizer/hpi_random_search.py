@@ -1,21 +1,30 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Iterator
 
 import copy
+from types import SimpleNamespace
 
 import numpy as np
-from ConfigSpace import Configuration, ConfigurationSpace
+from ConfigSpace import Configuration, ConfigurationSpace, Constant
 from ConfigSpace.exceptions import ForbiddenValueError
 from ConfigSpace.hyperparameters import Hyperparameter
+from ConfigSpace.util import deactivate_inactive_hyperparameters
 
 from smac.acquisition.function.abstract_acquisition_function import (
     AbstractAcquisitionFunction,
 )
 from smac.acquisition.maximizer.helpers import PseudoConstant
 from smac.acquisition.maximizer.random_search import RandomSearch
+from smac.model.abstract_model import AbstractModel
+from smac.model.gaussian_process.abstract_gaussian_process import (
+    AbstractGaussianProcess,
+)
+from smac.random_design.abstract_random_design import AbstractRandomDesign
+from smac.runhistory.runhistory import RunHistory
 from smac.utils.configspace import convert_configurations_to_array
 from smac.utils.logging import get_logger
+from smac.utils.multi_objective import normalize_costs
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -25,14 +34,17 @@ logger = get_logger(__name__)
 
 class HPIRandomSearch(RandomSearch):
     """Sorted random search that dynamically restricts the configuration space to the currently most important
-    hyperparameters, estimated via HyperSHAP (Wever et al., 2026) on the trained surrogate model and sets the
-    other hyperparameters to a constant value. Combined with ``ParEGO`` as the ``multi_objective_algorithm``,
-    this implements HPI-ParEGO (Theodorakopoulos et al., 2026), concentrating the search on the hyperparameters
-    that matter most for the current scalarization.
+    hyperparameters, estimated via HyperSHAP (Wever et al., 2026) on a Gaussian process fitted on the observed costs
+    and sets the other hyperparameters to a constant value. Combined with ``ParEGO`` as the
+    ``multi_objective_algorithm``, this implements HPI-ParEGO (Theodorakopoulos et al., 2026), concentrating the
+    search on the hyperparameters that matter most for the current scalarization.
 
     Note
     ----
     Requires the optional ``hypershap`` dependency, install it with ``pip install smac[hpi]``.
+
+    The observed costs are read from ``runhistory``, which is set by the ``HPIFacade``. Without it, the surrogate
+    model is used instead.
 
     For HPI-ParEGO, construct ``ParEGO`` with ``reweigh=10`` (``ParEGO(scenario, reweigh=10)``), to give HPI-ParEGO
     the chance to exploit a scalarization before resampling.
@@ -110,10 +122,16 @@ class HPIRandomSearch(RandomSearch):
         self._random_prob = random_prob
 
         self._original_cs = copy.deepcopy(configspace)
-        self.incumbent = self._original_cs.sample_configuration()
 
         self._configspace.seed(seed)
         self._original_cs.seed(seed)
+
+        # Separate generators, so that the random branch and the selection do not shift each other's draws.
+        self._random_branch_rng = np.random.RandomState(seed)
+        self._hpi_rng = np.random.RandomState(seed)
+
+        self.runhistory: RunHistory | None = None
+        self._gp: AbstractGaussianProcess | None = None
 
         # Used by `_incumbent_value_for` to fix inactive conditional hyperparameters.
         self._context_configs: list[Configuration] = []
@@ -133,6 +151,20 @@ class HPIRandomSearch(RandomSearch):
         )
 
         return meta
+
+    def maximize(
+        self,
+        previous_configs: list[Configuration],
+        n_points: int | None = None,
+        random_design: AbstractRandomDesign | None = None,
+        n_evaluated_trials: int | None = None,
+    ) -> Iterator[Configuration]:
+        """Maximizes the acquisition function, see ``AbstractAcquisitionMaximizer.maximize``. The random design
+        samples from the (possibly reduced) configuration space, so its configurations are mapped back to the original
+        configuration space.
+        """
+        for config in super().maximize(previous_configs, n_points, random_design, n_evaluated_trials):
+            yield self._to_space(config, self._original_cs)
 
     def _maximize(
         self,
@@ -158,7 +190,7 @@ class HPIRandomSearch(RandomSearch):
         list[tuple[float, Configuration]]
             Candidates with their acquisition function value. (acq value, candidate)
         """
-        if self._rng.rand() < self._random_prob:
+        if self._random_branch_rng.rand() < self._random_prob:
             logger.debug("Sampling configurations from the original configuration space at random.")
             random_configs = (
                 self._original_cs.sample_configuration(n_points)
@@ -167,8 +199,7 @@ class HPIRandomSearch(RandomSearch):
             )
             for config in random_configs:
                 config.origin = "Acquisition Function Maximizer: HPI Random Search (random)"
-            random_configs = [(0, cfg) for cfg in random_configs if cfg not in previous_configs]
-            return random_configs
+            return [(0, cfg) for cfg in random_configs if cfg not in previous_configs]
 
         threshold = self._get_current_threshold()
 
@@ -177,7 +208,7 @@ class HPIRandomSearch(RandomSearch):
             return super()._maximize(previous_configs, n_points, _sorted=_sorted)
 
         reference_config = self._get_reference_configuration(previous_configs)
-        important_hps = self._compute_important_hps(reference_config, threshold)
+        important_hps = self._compute_important_hps(previous_configs, reference_config, threshold)
 
         if len(important_hps) > 0:
             self._reduce_configspace(important_hps, reference_config)
@@ -190,7 +221,8 @@ class HPIRandomSearch(RandomSearch):
             if n_points > 1
             else [self._configspace.sample_configuration()]
         )
-        configs = self._drop_forbidden(configs)
+        # Constants of the reduced space are encoded differently, which would corrupt the surrogate model's inputs.
+        configs = self._drop_forbidden([self._to_space(config, self._original_cs) for config in configs])
 
         if len(configs) < min(2, n_points):
             logger.info(
@@ -255,21 +287,29 @@ class HPIRandomSearch(RandomSearch):
         if self._fixing_strategy == "random":
             return self._original_cs.sample_configuration()
 
-        assert self._acquisition_function is not None and self._acquisition_function.model is not None
+        costs = self._observed_costs(previous_configs)
+        if costs is None:
+            assert self._acquisition_function is not None and self._acquisition_function.model is not None
+            X = convert_configurations_to_array(previous_configs)
+            costs = self._acquisition_function.model.predict_marginalized(X)[0]
 
-        X = convert_configurations_to_array(previous_configs)
-        self._context_Y = self._acquisition_function.model.predict_marginalized(X)[0]
+        self._context_Y = costs
         self._context_configs = previous_configs
 
         return previous_configs[int(np.argmin(self._context_Y))]
 
-    def _compute_important_hps(self, reference_config: Configuration, threshold: float) -> list[str]:
+    def _compute_important_hps(
+        self, previous_configs: list[Configuration], reference_config: Configuration, threshold: float
+    ) -> list[str]:
         """Estimates the HyperSHAP tunability of each hyperparameter relative to ``reference_config`` on the
-        trained surrogate model, and returns the smallest set of hyperparameters that jointly explain at least
-        ``threshold`` of the cumulative tunability gain.
+        importance model, and returns the smallest set of hyperparameters that jointly explain at least
+        ``threshold`` of the cumulative tunability gain. Constants are excluded from the game. A non-empty selection
+        is filled up with random tunable hyperparameters to at least two.
 
         Parameters
         ----------
+        previous_configs : list[Configuration]
+            Previously evaluated configurations, used to fit the importance model.
         reference_config : Configuration
         threshold : float
 
@@ -286,40 +326,123 @@ class HPIRandomSearch(RandomSearch):
                 "Install it with `pip install smac[hpi]`."
             ) from e
 
-        explanation_task = ExplanationTask.from_function(config_space=self._original_cs, function=self._predict_config)
-        hyper_shap = HyperSHAP(explanation_task, n_workers=4)
+        # Constants would only double the number of coalitions.
+        reduced_cs = ConfigurationSpace()
+        reduced_cs.add([hp for hp in self._original_cs.values() if not isinstance(hp, Constant)])
+        reduced_cs.add(self._original_cs.conditions)
+
+        # The model is explained directly, as `ExplanationTask.from_function` would fit a proxy forest on uniform
+        # samples, which loses the structure around the incumbent.
+        model = _NegatedModel(self._importance_model(previous_configs), self._original_cs, reduced_cs)
+        explanation_task = ExplanationTask.from_base_model(reduced_cs, model)
+        hyper_shap = HyperSHAP(explanation_task, approximation_budget=10_000)
+        settings: dict[str, Any] = {"order": 1, "index": "SV", "n_samples": 2000, "fast_mode": True}
 
         try:
-            interaction_values = hyper_shap.tunability(baseline_config=reference_config, order=1, index="SV")
+            interaction_values = hyper_shap.tunability(
+                baseline_config=self._to_space(reference_config, reduced_cs), **settings
+            )
         except Exception:
             logger.debug("HyperSHAP failed with the reference configuration as baseline; using the default.")
             interaction_values = hyper_shap.tunability(
-                baseline_config=self._original_cs.get_default_configuration(), order=1, index="SV"
+                baseline_config=reduced_cs.get_default_configuration(), **settings
             )
 
         shapley_values = hyper_shap.get_interaction_values_with_names(interaction_values)
         shapley_values = {hp[0]: value for hp, value in shapley_values.items() if len(hp) == 1}
+        selected_hps = self._select_important_hps(shapley_values, threshold)
 
-        del explanation_task, hyper_shap
-        return self._select_important_hps(shapley_values, threshold)
+        if len(selected_hps) == 1:
+            tunable_hps = [
+                hp.name
+                for hp in self._original_cs.values()
+                if not isinstance(hp, Constant)
+                and len(getattr(hp, "choices", (0, 1))) > 1
+                and hp.name not in selected_hps
+            ]
+            if len(tunable_hps) > 0:
+                selected_hps.append(str(self._hpi_rng.choice(tunable_hps)))
 
-    def _predict_config(self, config: Configuration) -> float:
-        """Predicts the (negated) cost of ``config`` using the trained surrogate model.
+        return selected_hps
 
-        HyperSHAP maximizes, so the costs need to be negated.
+    def _observed_costs(self, configs: list[Configuration]) -> np.ndarray | None:
+        """Observed costs of ``configs``, averaged over their trials. With several objectives, they are normalized
+        and scalarized as the surrogate model's training data, e.g., with the current ParEGO weights. Configurations
+        without a finite cost (e.g., crashed or running) get an infinite cost.
 
         Parameters
         ----------
-        config : Configuration
+        configs : list[Configuration]
 
         Returns
         -------
-        float
+        np.ndarray | None
+            Costs of ``configs``, or None if the runhistory is not available or no cost is finite.
+        """
+        if self.runhistory is None:
+            return None
+
+        mo = self.runhistory.multi_objective_algorithm
+        costs = []
+        for config in configs:
+            cost = np.mean(np.asarray(self.runhistory.get_costs(config) or [np.inf], dtype=float), axis=0)
+            if not np.all(np.isfinite(cost)):
+                cost = np.inf
+            elif np.size(cost) > 1:
+                if mo is None:
+                    return None
+                cost = mo(normalize_costs(cost.tolist(), self.runhistory.objective_bounds))
+            costs.append(float(cost))
+
+        costs_array = np.array(costs, dtype=float)
+        return costs_array if np.isfinite(costs_array).any() else None
+
+    def _importance_model(self, configs: list[Configuration]) -> AbstractModel:
+        """The model HyperSHAP explains. If the surrogate model is a Gaussian process, it is used directly. Otherwise,
+        a Gaussian process is fitted on the observed costs, as tree-based models predict their best training point
+        almost exactly and rarely predict an improvement near it. Falls back to the surrogate model without observed
+        costs.
+
+        Parameters
+        ----------
+        configs : list[Configuration]
+
+        Returns
+        -------
+        AbstractModel
         """
         assert self._acquisition_function is not None and self._acquisition_function.model is not None
 
-        arr = config.get_array()
-        return (-1) * self._acquisition_function.model.predict(np.array([arr]))[0][0]
+        model = self._acquisition_function.model
+        costs = self._observed_costs(configs)
+        if isinstance(model, AbstractGaussianProcess) or costs is None:
+            return model
+
+        if self._gp is None:
+            # Imported here to avoid a circular import.
+            from smac.facade.blackbox_facade import BlackBoxFacade
+
+            # Reused across iterations, so the kernel's hyperparameter optimization starts from the last fit.
+            scenario = SimpleNamespace(configspace=self._original_cs, seed=self._seed)
+            self._gp = BlackBoxFacade.get_model(scenario)  # type: ignore[arg-type]
+
+        valid = np.isfinite(costs)
+        self._gp.train(convert_configurations_to_array(configs)[valid], costs[valid].reshape(-1, 1))
+
+        return self._gp
+
+    @staticmethod
+    def _to_space(config: Configuration, configspace: ConfigurationSpace) -> Configuration:
+        """Maps ``config`` to ``configspace``, e.g., from the reduced to the original configuration space. Values of
+        hyperparameters that are not in ``configspace`` or inactive are dropped.
+        """
+        if config.config_space is configspace:
+            return config
+
+        values = {name: value for name, value in dict(config).items() if name in configspace}
+        mapped_config = deactivate_inactive_hyperparameters(values, configspace)
+        mapped_config.origin = config.origin
+        return mapped_config
 
     def _select_important_hps(self, shapley_values: dict[str, float], threshold: float) -> list[str]:
         """Greedily selects hyperparameters by descending Shapley value until their cumulative share of the total
@@ -337,7 +460,10 @@ class HPIRandomSearch(RandomSearch):
         list[str]
             Names of the selected, important hyperparameters.
         """
-        contributions = sorted(((value, hp) for hp, value in shapley_values.items() if value > 0), reverse=True)
+        # Shapley values of zero come out as tiny positive or negative numbers due to rounding, which must not count
+        # as an improvement.
+        tolerance = max(1e-12, 1e-9 * max((abs(v) for v in shapley_values.values()), default=0.0))
+        contributions = sorted(((value, hp) for hp, value in shapley_values.items() if value > tolerance), reverse=True)
 
         total = sum(value for value, _ in contributions)
         cumulative_target = threshold * total
@@ -381,7 +507,7 @@ class HPIRandomSearch(RandomSearch):
                 best_value, best_y = cfg_dict[hp.name], y
         return best_value if best_value is not None else hp.default_value
 
-    def _reduce_configspace(self, important_hps: list[str], reference_config: Configuration) -> ConfigurationSpace:
+    def _reduce_configspace(self, important_hps: list[str], reference_config: Configuration) -> None:
         """Builds a reduced configuration space in which unimportant hyperparameters are fixed to their
         value in ``reference_config``. Parents of important, conditional hyperparameters are kept
         important themselves so that the condition remains.
@@ -429,6 +555,7 @@ class HPIRandomSearch(RandomSearch):
                     fixed_value = self._incumbent_value_for(hp)
                 else:
                     fixed_value = reference_config[hp.name] if hp.name in reference_config else hp.default_value
+                new_hp: Hyperparameter
                 try:
                     new_hp = PseudoConstant(hp.name, fixed_value)
                 except Exception:
@@ -476,3 +603,21 @@ class HPIRandomSearch(RandomSearch):
             valid_configs.append(config)
 
         return valid_configs
+
+
+class _NegatedModel:
+    """Wraps a model for HyperSHAP, which maximizes, so ``predict`` returns the negated predicted mean. It takes arrays
+    of ``reduced_cs`` and fills the remaining columns of ``configspace`` with the default configuration's values, as
+    the model expects the full width.
+    """
+
+    def __init__(self, model: AbstractModel, configspace: ConfigurationSpace, reduced_cs: ConfigurationSpace):
+        self._model = model
+        names = list(configspace.keys())
+        self._columns = [names.index(name) for name in reduced_cs.keys()]
+        self._template = configspace.get_default_configuration().get_array()
+
+    def predict(self, X: np.ndarray) -> np.ndarray:  # noqa: D102
+        full = np.tile(self._template, (len(X), 1))
+        full[:, self._columns] = X
+        return (-1) * self._model.predict(full)[0][:, 0]
