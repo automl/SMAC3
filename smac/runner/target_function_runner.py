@@ -5,6 +5,7 @@ from typing import Any, Callable, Optional, Union
 import copy
 import inspect
 import math
+import multiprocessing
 import time
 import traceback
 from functools import partial
@@ -177,6 +178,14 @@ class TargetFunctionRunner(AbstractSerialRunner):
         # If memory limit or walltime limit is set, we wanna use pynisher
         target_function: Callable
         if self._memory_limit is not None or self._algorithm_walltime_limit is not None:
+            # Pynisher runs the target function in a child process, but daemonic processes are not allowed to have
+            # children. Dask workers started by a nanny are daemonic by default. Within the worker, the flag only
+            # guards starting children; the nanny keeps managing the worker as before. It is not reset afterwards,
+            # as other threads of the worker might start pynisher concurrently.
+            if multiprocessing.current_process().daemon:
+                logger.debug("Running in a daemonic process (e.g. a dask worker with nanny); clearing its daemon flag.")
+                multiprocessing.current_process().daemon = False
+
             target_function = limit(
                 self._target_function,
                 memory=self._memory_limit,

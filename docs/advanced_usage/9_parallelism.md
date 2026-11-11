@@ -45,7 +45,7 @@ cluster = SLURMCluster(
     walltime="00:10:00",                    # Walltime limit for a runner job. 
     processes=1,                            # Number of processes per worker
     log_directory="tmp/smac_dask_slurm",    # Logging directory
-    nanny=False,                            # False unless you want to use pynisher
+    nanny=False,                            # Whether dask restarts crashed workers
     worker_extra_args=[
         "--worker-port",                    # Worker port range 
         "60010:60100"],                     # Worker port range 
@@ -74,3 +74,18 @@ incumbent = smac.optimize()
 ```
 
 The full example of this code is given in [parallelism example](../examples/1%20Basics/7_parallelization_cluster.md).
+
+
+## Resource Limits with Parallelism
+
+Resource limits per trial (`trial_walltime_limit`, `trial_memory_limit`) can be combined with parallelism, both
+with `n_workers` and with your own `dask_client`. SMAC enforces them with
+[pynisher](https://github.com/automl/pynisher), which runs the target function in a child process of the Dask
+worker.
+
+!!! note
+
+    Python does not allow daemonic processes to have children, and Dask workers started by a nanny are daemonic by
+    default. Before running a trial with resource limits, SMAC therefore clears the daemon flag of the worker
+    process it runs in. This only affects whether the worker may start child processes; the nanny keeps managing
+    the worker as before.

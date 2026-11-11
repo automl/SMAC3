@@ -434,3 +434,54 @@ def test_promoting(make_scenario, configspace_small, make_config_selector):
     # However, the first batch should still be there
     assert len(intensifier._tracker[(0, 0)]) == 1
     assert len(intensifier._tracker[(0, 0)][0][1]) == n_configs[0][0]
+
+
+def test_update_incumbents_without_common_isb_keys(make_scenario, configspace_small, make_config_selector):
+    """Incumbents evaluated on different instance-seed-budget keys share none, which should not raise."""
+    scenario: Scenario = make_scenario(
+        configspace_small, use_instances=False, use_multi_objective=True, min_budget=1, max_budget=3
+    )
+    runhistory = RunHistory()
+    intensifier = SuccessiveHalving(
+        scenario=scenario, eta=3, n_seeds=1, instance_seed_order=None, incumbent_selection="any_budget"
+    )
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
+    intensifier.runhistory = runhistory
+    configs = configspace_small.sample_configuration(3)
+
+    runhistory.add(config=configs[0], cost=[0.1, 0.9], time=0.0, seed=8, budget=1, status=StatusType.SUCCESS)
+    runhistory.add(config=configs[1], cost=[0.9, 0.1], time=0.0, seed=9, budget=3, status=StatusType.SUCCESS)
+    runhistory.add(config=configs[2], cost=[0.5, 0.5], time=0.0, seed=8, budget=3, status=StatusType.SUCCESS)
+    intensifier._incumbents = [configs[0], configs[1]]
+    assert intensifier.get_incumbent_instance_seed_budget_keys(compare=True) == []
+
+    intensifier.update_incumbents(configs[2])
+    assert intensifier.get_incumbents() == [configs[0], configs[1]]
+
+
+def test_cut_incumbents_adds_budgets(make_scenario, configspace_small, make_config_selector):
+    """Cutting incumbents needs the budgets of the keys, which are removed for comparing."""
+    scenario: Scenario = make_scenario(
+        configspace_small, use_instances=False, use_multi_objective=True, min_budget=1, max_budget=3
+    )
+    runhistory = RunHistory()
+    intensifier = SuccessiveHalving(
+        scenario=scenario,
+        eta=3,
+        n_seeds=1,
+        instance_seed_order=None,
+        incumbent_selection="highest_budget",
+        max_incumbents=2,
+    )
+    intensifier.config_selector = make_config_selector(scenario, runhistory, n_initial_configs=1)
+    intensifier.runhistory = runhistory
+    intensifier.__post_init__()
+    configs = configspace_small.sample_configuration(3)
+
+    for config, cost in zip(configs, [[0.1, 0.9], [0.5, 0.5], [0.9, 0.1]]):
+        runhistory.add(config=config, cost=cost, time=0.0, seed=8, budget=3, status=StatusType.SUCCESS)
+
+    isb_keys = [InstanceSeedBudgetKey(instance=None, seed=8, budget=None)]
+    new_incumbents = intensifier._cut_incumbents(configs, [isb_keys for _ in configs])
+
+    assert len(new_incumbents) == 2
