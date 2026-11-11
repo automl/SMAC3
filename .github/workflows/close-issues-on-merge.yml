@@ -18,30 +18,49 @@ permissions:
 
 jobs:
   close-issues:
-
     runs-on: ubuntu-latest
     steps:
-    - name: Close issues referenced by the merged PR
-      env:
-        GH_TOKEN: ${{ github.token }}
-
-
-        REPO: ${{ github.repository }}
-        SHA: ${{ github.sha }}
-      run: |
-        # Merged PRs into development that contain the pushed commit
-        prs=$(gh api "repos/$REPO/commits/$SHA/pulls" \
-          --jq '.[] | select(.merged_at != null and .base.ref == "development") | .number')
-        for pr in $prs; do
-          body=$(gh pr view "$pr" --repo "$REPO" --json body --jq '.body')
-          # Skip quoted template lines (e.g. "> Example: Fixes #1234.")
-          issues=$(echo "$body" \
-            | grep -v '^[[:space:]]*>' \
-            | grep -oiE '(close[sd]?|fix(e[sd])?|resolve[sd]?)[[:space:]]*:?[[:space:]]+#[0-9]+' \
-            | grep -oE '[0-9]+' | sort -u)
-          for issue in $issues; do
-            echo "Closing #$issue (from PR #$pr)"
-            gh issue close "$issue" --repo "$REPO" \
-              --comment "Closed by #$pr (merged into development)." || true
+      - name: Close issues linked to the merged PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          owner="${REPO%/*}"
+          name="${REPO#*/}"
+ 
+          # Merged PRs into development that contain the pushed commit
+          prs=$(gh api "repos/$REPO/commits/$SHA/pulls" \
+            --jq '.[] | select(.merged_at != null and .base.ref == "development") | .number')
+ 
+          for pr in $prs; do
+            # 1. Issues from the "Development" sidebar (same repo only)
+            linked=$(gh api graphql \
+              -f query='query($owner:String!,$name:String!,$pr:Int!){
+                repository(owner:$owner,name:$name){
+                  pullRequest(number:$pr){
+                    closingIssuesReferences(first:50){
+                      nodes{ number repository{ nameWithOwner } }
+                    }
+                  }
+                }
+              }' \
+              -F owner="$owner" -F name="$name" -F pr="$pr" \
+              --jq ".data.repository.pullRequest.closingIssuesReferences.nodes[]
+                    | select(.repository.nameWithOwner == \"$REPO\") | .number")
+ 
+            # 2. Issues from closing keywords in the description
+            body=$(gh pr view "$pr" --repo "$REPO" --json body --jq '.body')
+            keyword=$(echo "$body" \
+              | grep -v 'Example: Fixes #1234' \
+              | grep -oiE '\b(close[sd]?|fix(e[sd])?|resolve[sd]?)[[:space:]]*:?[[:space:]]+#[0-9]+' \
+              | grep -oE '[0-9]+' || true)
+ 
+            issues=$(printf '%s\n%s\n' "$linked" "$keyword" | grep -E '^[0-9]+$' | sort -un || true)
+ 
+            for issue in $issues; do
+              echo "Closing #$issue (from PR #$pr)"
+              gh issue close "$issue" --repo "$REPO" \
+                --comment "Closed by #$pr (merged into development)." || true
+            done
           done
-        done
