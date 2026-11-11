@@ -20,7 +20,14 @@ copyright = (
     "Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass "
     "and Frank Hutter"
 )
-version = "2.4.1"
+
+try:
+    from importlib.metadata import PackageNotFoundError
+    from importlib.metadata import version as _get_version
+
+    version = _get_version(package_name)
+except PackageNotFoundError:
+    version = "unknown"
 
 
 try:

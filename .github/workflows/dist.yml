@@ -42,11 +42,6 @@ jobs:
     - name: Twine check
       run: |
         pip install twine
-        last_dist=$(ls -t dist/smac-*.tar.gz | head -n 1)
-        twine_output=`twine check "$last_dist"`
-        if [[ "$twine_output" != "Checking $last_dist: PASSED" ]]
-        then
-          echo $twine_output
-        else
-          pip install $last_dist
-        fi
+        last_dist=$(ls -t dist/*.tar.gz | head -n 1)
+        twine check --strict "$last_dist"
+        pip install "$last_dist"

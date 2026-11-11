@@ -1,5 +1,7 @@
 # For TOML reference
 # https://learnxinyminutes.com/docs/toml/
+[tool.smac]
+version = "2.4.2"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]  # path to the test directory
