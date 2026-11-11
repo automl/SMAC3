@@ -161,16 +161,11 @@ def test_get_reference_configuration_random_strategy_samples_a_configuration(con
     assert set(reference.keys()) == set(configspace.keys())
 
 
-def test_get_reference_configuration_incumbent_strategy_picks_best_predicted_and_caches_context(
-    configspace, acquisition_function
-):
+def test_get_reference_configuration_incumbent_strategy_picks_best_predicted(configspace, acquisition_function):
     rs = HPIRandomSearch(configspace, acquisition_function=acquisition_function)
     previous_configs = configspace.sample_configuration(10)
 
     reference = rs._get_reference_configuration(previous_configs)
-
-    assert rs._context_configs == previous_configs
-    assert len(rs._context_Y) == len(previous_configs)
 
     predicted = acquisition_function.model.predict_marginalized(convert_configurations_to_array(previous_configs))[0]
     assert reference == previous_configs[int(np.argmin(predicted))]
@@ -182,7 +177,6 @@ def test_get_reference_configuration_incumbent_strategy_prefers_observed_costs(c
     rs.runhistory = _runhistory(previous_configs[:4], [3.0, 2.5, 0.5, 2.0])
 
     assert rs._get_reference_configuration(previous_configs) == previous_configs[2]
-    assert np.array_equal(rs._context_Y, [3.0, 2.5, 0.5, 2.0, np.inf])
 
 
 # --------------------------------------------------------------
@@ -255,13 +249,26 @@ def test_compute_important_hps_returns_hyperparameter_names(configspace, acquisi
     assert all(isinstance(hp, str) and hp in configspace.keys() for hp in important_hps)
 
 
-def test_compute_important_hps_fills_single_selection_up_to_two(configspace, acquisition_function, monkeypatch):
+def test_compute_important_hps_fills_single_selection_with_next_positive(
+    configspace, acquisition_function, monkeypatch
+):
     rs = HPIRandomSearch(configspace, acquisition_function=acquisition_function)
     reference = configspace.get_default_configuration()
 
-    monkeypatch.setattr(rs, "_select_important_hps", lambda *args: ["a"])
+    shapley_values: dict[str, float] = {}
+
+    def select_only_a(values, threshold):
+        shapley_values.update(values)
+        return ["a"]
+
+    monkeypatch.setattr(rs, "_select_important_hps", select_only_a)
     important_hps = rs._compute_important_hps(configspace.sample_configuration(10), reference, threshold=0.8)
-    assert important_hps[0] == "a" and len(important_hps) == 2 and important_hps[1] in ("b", "c")
+    assert important_hps[0] == "a" and len(important_hps) == 2
+    positive_hps = {hp: value for hp, value in shapley_values.items() if value > 0 and hp != "a"}
+    if positive_hps:
+        assert important_hps[1] == max(positive_hps, key=positive_hps.__getitem__)
+    else:
+        assert important_hps[1] in ("b", "c")
 
     monkeypatch.setattr(rs, "_select_important_hps", lambda *args: [])
     assert rs._compute_important_hps(configspace.sample_configuration(10), reference, threshold=0.8) == []
@@ -358,43 +365,22 @@ def test_reduce_configspace_default_strategy_uses_reference_value_or_default(con
     )
 
 
-# --------------------------------------------------------------
-# _incumbent_value_for
-# --------------------------------------------------------------
-
-
-def test_incumbent_value_for_uses_best_config_where_hp_is_active():
+def test_reduce_configspace_incumbent_strategy_uses_incumbent_value_or_default():
+    """As in the research code: a conditional hyperparameter that is inactive in the incumbent is fixed to its
+    default, even if it was active in other evaluated configurations."""
     cs = ConfigurationSpace(seed=0)
     solver = Categorical("solver", ["sgd", "adam"], default="sgd")
     lr = Float("learning_rate_init", (0.0001, 1.0), default=0.001, log=True)
-    cs.add([solver, lr])
+    n_layer = Integer("n_layer", (1, 5), default=1)
+    cs.add([solver, lr, n_layer])
     cs.add(InCondition(child=lr, parent=solver, values=["adam"]))
 
     rs = HPIRandomSearch(cs)
-    rs._context_configs = [
-        Configuration(cs, values={"solver": "adam", "learning_rate_init": 0.5}),
-        Configuration(cs, values={"solver": "adam", "learning_rate_init": 0.01}),
-        Configuration(cs, values={"solver": "sgd"}),
-    ]
-    rs._context_Y = np.array([[10.0], [1.0], [5.0]])
+    incumbent = Configuration(cs, values={"solver": "sgd", "n_layer": 3})
+    rs._reduce_configspace(["solver"], incumbent)
 
-    # The global incumbent (config with lowest y overall) has solver="adam", lr=0.01, so this matches the
-    # simple case; the interesting part is that this is derived from "adam" trials specifically, not sgd ones.
-    assert rs._incumbent_value_for(cs["learning_rate_init"]) == 0.01
-
-
-def test_incumbent_value_for_falls_back_to_default_if_never_active():
-    cs = ConfigurationSpace(seed=0)
-    solver = Categorical("solver", ["sgd", "adam", "lbfgs"], default="lbfgs")
-    momentum = Float("momentum", (0, 1), default=0.9)
-    cs.add([solver, momentum])
-    cs.add(InCondition(child=momentum, parent=solver, values=["sgd"]))
-
-    rs = HPIRandomSearch(cs)
-    rs._context_configs = [Configuration(cs, values={"solver": "adam"})]
-    rs._context_Y = np.array([[1.0]])
-
-    assert rs._incumbent_value_for(cs["momentum"]) == momentum.default_value
+    assert rs._configspace["n_layer"].default_value == 3
+    assert rs._configspace["learning_rate_init"].default_value == lr.default_value
 
 
 # --------------------------------------------------------------
@@ -427,13 +413,18 @@ def test_drop_forbidden_filters_violations(configspace_forbidden):
 # --------------------------------------------------------------
 
 
-def test_maximize_zero_threshold_uses_plain_random_search(configspace, acquisition_function):
+def test_maximize_zero_threshold_samples_new_configs_from_original_space(configspace, acquisition_function):
     rs = HPIRandomSearch(configspace, acquisition_function=acquisition_function, threshold=0.0, random_prob=0.0)
+    rs._configspace = ConfigurationSpace()
+    previous_configs = rs._original_cs.sample_configuration(10)
 
-    values = rs._maximize(configspace.sample_configuration(10), 10)
+    values = rs._maximize(previous_configs, 10)
 
+    assert rs._configspace is rs._original_cs
     assert len(values) == 10
-    assert all(config.origin == "Acquisition Function Maximizer: Random Search (sorted)" for _, config in values)
+    assert all(config not in previous_configs for _, config in values)
+    acq_values = [v for v, _ in values]
+    assert acq_values == sorted(acq_values, reverse=True)
 
 
 def test_maximize_random_prob_one_always_samples_from_original_space(configspace, acquisition_function):

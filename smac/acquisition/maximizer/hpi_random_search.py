@@ -133,10 +133,6 @@ class HPIRandomSearch(RandomSearch):
         self.runhistory: RunHistory | None = None
         self._gp: AbstractGaussianProcess | None = None
 
-        # Used by `_incumbent_value_for` to fix inactive conditional hyperparameters.
-        self._context_configs: list[Configuration] = []
-        self._context_Y: np.ndarray = np.empty((0, 1))
-
     @property
     def meta(self) -> dict[str, Any]:
         """Return the meta-data of the created object."""
@@ -202,13 +198,11 @@ class HPIRandomSearch(RandomSearch):
             return [(0, cfg) for cfg in random_configs if cfg not in previous_configs]
 
         threshold = self._get_current_threshold()
+        important_hps: list[str] = []
 
-        if threshold <= 0:
-            self._configspace = self._original_cs
-            return super()._maximize(previous_configs, n_points, _sorted=_sorted)
-
-        reference_config = self._get_reference_configuration(previous_configs)
-        important_hps = self._compute_important_hps(previous_configs, reference_config, threshold)
+        if threshold > 0:
+            reference_config = self._get_reference_configuration(previous_configs)
+            important_hps = self._compute_important_hps(previous_configs, reference_config, threshold)
 
         if len(important_hps) > 0:
             self._reduce_configspace(important_hps, reference_config)
@@ -223,6 +217,7 @@ class HPIRandomSearch(RandomSearch):
         )
         # Constants of the reduced space are encoded differently, which would corrupt the surrogate model's inputs.
         configs = self._drop_forbidden([self._to_space(config, self._original_cs) for config in configs])
+        configs = [c for c in configs if c not in seen]
 
         if len(configs) < min(2, n_points):
             logger.info(
@@ -230,7 +225,6 @@ class HPIRandomSearch(RandomSearch):
                 "original configuration space for this iteration."
             )
 
-        configs = [c for c in configs if c not in seen]
         attempts = 0
         while len(configs) < min(2, n_points) and attempts < 30:
             configs = (
@@ -293,18 +287,15 @@ class HPIRandomSearch(RandomSearch):
             X = convert_configurations_to_array(previous_configs)
             costs = self._acquisition_function.model.predict_marginalized(X)[0]
 
-        self._context_Y = costs
-        self._context_configs = previous_configs
-
-        return previous_configs[int(np.argmin(self._context_Y))]
+        return previous_configs[int(np.argmin(costs))]
 
     def _compute_important_hps(
         self, previous_configs: list[Configuration], reference_config: Configuration, threshold: float
     ) -> list[str]:
         """Estimates the HyperSHAP tunability of each hyperparameter relative to ``reference_config`` on the
         importance model, and returns the smallest set of hyperparameters that jointly explain at least
-        ``threshold`` of the cumulative tunability gain. Constants are excluded from the game. A non-empty selection
-        is filled up with random tunable hyperparameters to at least two.
+        ``threshold`` of the cumulative tunability gain. Constants are excluded from the game. A single selected
+        hyperparameter is complemented by the next one with a positive Shapley value, or by a random one.
 
         Parameters
         ----------
@@ -350,9 +341,15 @@ class HPIRandomSearch(RandomSearch):
 
         shapley_values = hyper_shap.get_interaction_values_with_names(interaction_values)
         shapley_values = {hp[0]: value for hp, value in shapley_values.items() if len(hp) == 1}
+
+        # Shapley values of zero come out as tiny positive or negative numbers due to rounding, which must not count
+        # as an improvement.
+        tolerance = max(1e-12, 1e-9 * max((abs(v) for v in shapley_values.values()), default=0.0))
+        shapley_values = {hp: (value if abs(value) > tolerance else 0.0) for hp, value in shapley_values.items()}
         selected_hps = self._select_important_hps(shapley_values, threshold)
 
         if len(selected_hps) == 1:
+            positive_hps = {hp: value for hp, value in shapley_values.items() if value > 0 and hp not in selected_hps}
             tunable_hps = [
                 hp.name
                 for hp in self._original_cs.values()
@@ -360,7 +357,9 @@ class HPIRandomSearch(RandomSearch):
                 and len(getattr(hp, "choices", (0, 1))) > 1
                 and hp.name not in selected_hps
             ]
-            if len(tunable_hps) > 0:
+            if len(positive_hps) > 0:
+                selected_hps.append(max(positive_hps, key=positive_hps.__getitem__))
+            elif len(tunable_hps) > 0:
                 selected_hps.append(str(self._hpi_rng.choice(tunable_hps)))
 
         return selected_hps
@@ -460,10 +459,7 @@ class HPIRandomSearch(RandomSearch):
         list[str]
             Names of the selected, important hyperparameters.
         """
-        # Shapley values of zero come out as tiny positive or negative numbers due to rounding, which must not count
-        # as an improvement.
-        tolerance = max(1e-12, 1e-9 * max((abs(v) for v in shapley_values.values()), default=0.0))
-        contributions = sorted(((value, hp) for hp, value in shapley_values.items() if value > tolerance), reverse=True)
+        contributions = sorted(((value, hp) for hp, value in shapley_values.items() if value > 0), reverse=True)
 
         total = sum(value for value, _ in contributions)
         cumulative_target = threshold * total
@@ -480,32 +476,6 @@ class HPIRandomSearch(RandomSearch):
                 cum_sum += value
         logger.info(f"Important hyperparameters: {selected_hps}.")
         return selected_hps
-
-    def _incumbent_value_for(self, hp: Hyperparameter) -> Any:
-        """Best value for `hp` among previously evaluated configs that satisfy its parent conditions.
-
-        Generalizes "freeze at the incumbent" to conditional hyperparameters: the global incumbent only
-        has a value for the region where it's active, so `hp` would otherwise always fall back to
-        `hp.default_value` when active elsewhere. Falls back to it here too, only if `hp` was never active
-        in any evaluated config.
-
-        Parameters
-        ----------
-        hp : Hyperparameter
-
-        Returns
-        -------
-        The best value for `hp` among previously evaluated configs that satisfy its parent conditions, or
-        `hp.default_value` if none of the evaluated configs satisfy the conditions.
-        """
-        conditions = self._original_cs.parent_conditions_of[hp.name]
-        best_value, best_y = None, float("inf")
-        for cfg, y in zip(self._context_configs, self._context_Y):
-            y = float(np.asarray(y).reshape(-1)[0])
-            cfg_dict = dict(cfg)
-            if hp.name in cfg_dict and all(cond.satisfied_by_value(cfg_dict) for cond in conditions) and y < best_y:
-                best_value, best_y = cfg_dict[hp.name], y
-        return best_value if best_value is not None else hp.default_value
 
     def _reduce_configspace(self, important_hps: list[str], reference_config: Configuration) -> None:
         """Builds a reduced configuration space in which unimportant hyperparameters are fixed to their
@@ -551,10 +521,7 @@ class HPIRandomSearch(RandomSearch):
                 except Exception:
                     reduced_cs.add_hyperparameter(hp)
             else:
-                if self._fixing_strategy == "incumbent":
-                    fixed_value = self._incumbent_value_for(hp)
-                else:
-                    fixed_value = reference_config[hp.name] if hp.name in reference_config else hp.default_value
+                fixed_value = reference_config[hp.name] if hp.name in reference_config else hp.default_value
                 new_hp: Hyperparameter
                 try:
                     new_hp = PseudoConstant(hp.name, fixed_value)
