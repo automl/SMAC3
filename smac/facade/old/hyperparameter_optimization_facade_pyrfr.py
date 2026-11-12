@@ -25,13 +25,13 @@ class HyperparameterOptimizationRFRFacade(HyperparameterOptimizationFacade):
         ----------
         n_trees : int, defaults to 10
             The number of trees in the random forest.
-        ratio_features : float, defaults to 5.0 / 6.0
+        ratio_features : float, defaults to 1.0
             The ratio of features that are considered for splitting.
-        min_samples_split : int, defaults to 3
+        min_samples_split : int, defaults to 2
             The minimum number of data points to perform a split.
-        min_samples_leaf : int, defaults to 3
+        min_samples_leaf : int, defaults to 1
             The minimum number of data points in a leaf.
-        max_depth : int, defaults to 20
+        max_depth : int, defaults to 2**20
             The maximum depth of a single tree.
         bootstrapping : bool, defaults to True
             Enables bootstrapping.
