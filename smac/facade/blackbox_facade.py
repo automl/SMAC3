@@ -225,7 +225,7 @@ class BlackBoxFacade(AbstractFacade):
         max_config_calls : int, defaults to 3
             Maximum number of configuration evaluations. Basically, how many instance-seed keys should be evaluated at
             maximum for a configuration.
-        max_incumbents : int, defaults to 10
+        max_incumbents : int, defaults to 20
             How many incumbents to keep track of in the case of multi-objective.
         """
         return Intensifier(
