@@ -249,26 +249,13 @@ def test_compute_important_hps_returns_hyperparameter_names(configspace, acquisi
     assert all(isinstance(hp, str) and hp in configspace.keys() for hp in important_hps)
 
 
-def test_compute_important_hps_fills_single_selection_with_next_positive(
-    configspace, acquisition_function, monkeypatch
-):
+def test_compute_important_hps_fills_single_selection_up_to_two(configspace, acquisition_function, monkeypatch):
     rs = HPIRandomSearch(configspace, acquisition_function=acquisition_function)
     reference = configspace.get_default_configuration()
 
-    shapley_values: dict[str, float] = {}
-
-    def select_only_a(values, threshold):
-        shapley_values.update(values)
-        return ["a"]
-
-    monkeypatch.setattr(rs, "_select_important_hps", select_only_a)
+    monkeypatch.setattr(rs, "_select_important_hps", lambda *args: ["a"])
     important_hps = rs._compute_important_hps(configspace.sample_configuration(10), reference, threshold=0.8)
-    assert important_hps[0] == "a" and len(important_hps) == 2
-    positive_hps = {hp: value for hp, value in shapley_values.items() if value > 0 and hp != "a"}
-    if positive_hps:
-        assert important_hps[1] == max(positive_hps, key=positive_hps.__getitem__)
-    else:
-        assert important_hps[1] in ("b", "c")
+    assert important_hps[0] == "a" and len(important_hps) == 2 and important_hps[1] in ("b", "c")
 
     monkeypatch.setattr(rs, "_select_important_hps", lambda *args: [])
     assert rs._compute_important_hps(configspace.sample_configuration(10), reference, threshold=0.8) == []

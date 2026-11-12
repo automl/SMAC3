@@ -295,7 +295,7 @@ class HPIRandomSearch(RandomSearch):
         """Estimates the HyperSHAP tunability of each hyperparameter relative to ``reference_config`` on the
         importance model, and returns the smallest set of hyperparameters that jointly explain at least
         ``threshold`` of the cumulative tunability gain. Constants are excluded from the game. A single selected
-        hyperparameter is complemented by the next one with a positive Shapley value, or by a random one.
+        hyperparameter is complemented by a random tunable one, to keep some diversity in the search.
 
         Parameters
         ----------
@@ -349,7 +349,6 @@ class HPIRandomSearch(RandomSearch):
         selected_hps = self._select_important_hps(shapley_values, threshold)
 
         if len(selected_hps) == 1:
-            positive_hps = {hp: value for hp, value in shapley_values.items() if value > 0 and hp not in selected_hps}
             tunable_hps = [
                 hp.name
                 for hp in self._original_cs.values()
@@ -357,9 +356,7 @@ class HPIRandomSearch(RandomSearch):
                 and len(getattr(hp, "choices", (0, 1))) > 1
                 and hp.name not in selected_hps
             ]
-            if len(positive_hps) > 0:
-                selected_hps.append(max(positive_hps, key=positive_hps.__getitem__))
-            elif len(tunable_hps) > 0:
+            if len(tunable_hps) > 0:
                 selected_hps.append(str(self._hpi_rng.choice(tunable_hps)))
 
         return selected_hps
