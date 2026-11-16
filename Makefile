@@ -147,7 +147,7 @@ clean-data:
 # This is done to prevent accidental publishing but provide the same conveniences
 publish: clean build
 	read -p "Did you update the version number in Makefile, smac/__init__.py, benchmark/src/wrappers/v20.py, CITATION.cff? \
-	Did you add the old version to docs/conf.py? Did you add changes to CHANGELOG.md?"
+	Did you add changes to CHANGELOG.md?"
 	
 	$(PIP) install twine
 	$(PYTHON) -m twine upload --repository testpypi ${DIST}/*

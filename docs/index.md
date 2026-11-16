@@ -67,4 +67,4 @@ In: Proceedings of the conference on Learning and Intelligent Optimization (LION
 
 ## Contact
 
-SMAC3 is developed by [AutoML.org](https://www.automl.org). If you want to contribute or found an issue, please visit our [GitHub page](https://github.com/automl/SMAC3). Our guidelines for contributing to this package can be found [here](https://github.com/automl/SMAC3/blob/main/CONTRIBUTING.md).
+SMAC3 is developed by [Leibniz University Hanover, Institute of AI (LUHAI)](https://www.ai.uni-hannover.de/). If you want to contribute or found an issue, please visit our [GitHub page](https://github.com/automl/SMAC3). Our guidelines for contributing to this package can be found [here](https://github.com/automl/SMAC3/blob/main/CONTRIBUTING.md).

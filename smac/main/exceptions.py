@@ -1,3 +1,7 @@
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
+
 class ConfigurationSpaceExhaustedException(Exception):
     """Exception indicating that the configuration space is exhausted and no more configurations
     can be sampled. This is usually raised when the maximum number of configurations has been

@@ -17,6 +17,9 @@ from ConfigSpace.hyperparameters import (
 from smac.runner.target_function_runner import TargetFunctionRunner
 from smac.scenario import Scenario
 
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
+__license__ = "3-clause BSD"
+
 
 class WandbRunner(TargetFunctionRunner):
     """Target function runner that logs SMAC trials to Weights & Biases.

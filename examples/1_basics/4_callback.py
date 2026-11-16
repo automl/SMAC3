@@ -17,7 +17,7 @@ from smac import Scenario
 from smac.runhistory import TrialInfo, TrialValue
 from smac.utils.cost_transformer import CostTransformer
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

@@ -10,7 +10,7 @@ from smac.runhistory.runhistory import RunHistory, TrialKey
 from smac.runner.abstract_runner import StatusType
 from smac.utils.cost_transformer import CostTransformer
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

@@ -9,7 +9,7 @@ from dask.distributed import Client
 from dask_jobqueue import SLURMCluster
 from smac import BlackBoxFacade, Scenario
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 import numpy as np

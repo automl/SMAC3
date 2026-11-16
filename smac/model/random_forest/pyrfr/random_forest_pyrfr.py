@@ -25,7 +25,7 @@ except ImportError as e:
 from smac.constants import N_TREES, VERY_SMALL_NUMBER
 from smac.model.random_forest import AbstractRandomForest
 
-__copyright__ = "Copyright 2022, automl.org"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

@@ -19,7 +19,7 @@ and also allocates the right amount of budget. This test logs any unexpected eva
 (stored in the `expected_behavior_violations`) to facilitate debugging and informing what behavior exactly did not match  
 the expectation of adaptive capping.
 """
-__copyright__ = "Copyright 2025, automl.org"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 logger = get_logger(__name__)

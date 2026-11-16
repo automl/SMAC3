@@ -26,7 +26,7 @@ from ConfigSpace.util import (
     get_one_exchange_neighbourhood,
 )
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

@@ -14,7 +14,7 @@ from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 from smac.model.gaussian_process.priors.tophat_prior import SoftTopHatPrior, TophatPrior
 from smac.model.surrogate_transformer import SurrogateTransformer
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 

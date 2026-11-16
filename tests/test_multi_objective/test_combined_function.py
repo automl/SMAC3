@@ -22,7 +22,7 @@ from dataclasses import replace
 
 FACADES = [BBFacade, HPOFacade, MFFacade, RFacade, HBFacade, ACFacade]
 
-__copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
+__copyright__ = "Copyright 2026, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
 
 
