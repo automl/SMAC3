@@ -104,7 +104,7 @@ class AlgorithmConfigurationFacade(AbstractFacade):
 
         Parameters
         ----------
-        max_config_calls : int, defaults to 3
+        max_config_calls : int, defaults to 2000
             Maximum number of configuration evaluations. Basically, how many instance-seed keys should be evaluated at
             maximum for a configuration.
         max_incumbents : int, defaults to 10
