@@ -491,8 +491,8 @@ class Intensifier(AbstractIntensifier):
         challenger : Configuration
             Configuration which challenges incumbent
 
-        inc_sum_cost: float
-            Sum of runtimes of all incumbent runs
+        on_keys : list[InstanceSeedKey]
+            Instance-seed keys the challenger is evaluated on
 
         Returns
         -------

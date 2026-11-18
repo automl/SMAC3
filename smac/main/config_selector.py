@@ -413,14 +413,14 @@ class ConfigSelector:
     def _get_x_best(self, X: np.ndarray) -> tuple[np.ndarray, float]:
         """Get value, configuration, and array representation of the *best* configuration.
 
-        The definition of best varies depending on the argument ``predict``. If set to `True`,
-        this function will return the stats of the best configuration as predicted by the model,
-        otherwise it will return the stats for the best observed configuration.
+        The definition of best varies depending on the attribute ``_predict_x_best``. If set to
+        `True`, this function will return the stats of the best configuration as predicted by the
+        model, otherwise it will return the stats for the best observed configuration.
 
         Parameters
         ----------
-        predict : bool
-            Whether to use the predicted or observed best.
+        X : np.ndarray
+            Configurations in array format to evaluate.
 
         Returns
         -------
