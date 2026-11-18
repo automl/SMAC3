@@ -44,6 +44,10 @@
   replace them (#1320)
 - Fix crash in `update_incumbents` and `_cut_incumbents` for multi-objective multi-fidelity runs (e.g. ParEGO with Hyperband) when incumbents share no instance-seed-budget keys (#1369)
 - RunHistory._add skipped a budget when it equaled the instance or seed. A budget of 3 with seed=3 was never recorded in the budget list. Overwriting a trial also appended its budget a second time. (#1363)
+- `MCMCGaussianProcess` predicted the training mean only: its walkers were initialized from the priors, mostly at
+  tiny lengthscales, which the chains did not leave. The walkers now start around the kernel's initial
+  hyperparameters. Also, a typo (`self.burned` instead of `self._burned`) restarted the burn-in from scratch in
+  every training, so the chains were never continued across iterations (#1401)
 
 # 2.4.1
 ## Bugfixes
