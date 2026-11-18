@@ -142,7 +142,6 @@ class AbstractRunHistoryEncoder:
         Parameters
         ----------
         trials : Mapping[TrialKey, TrialValue]
-        runhistory : RunHistory
         store_statistics: bool, defaults to false
             Whether to store statistics about the data (to be used at subsequent calls).
 

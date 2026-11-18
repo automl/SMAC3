@@ -175,7 +175,7 @@ class PyrfrRandomForest(AbstractRandomForest):
         ----------
         X : np.ndarray [#samples, #hyperparameter + #features]
             Input data points.
-        Y : np.ndarray [#samples, #objectives]
+        y : np.ndarray [#samples, #objectives]
             The corresponding target values.
 
         Returns

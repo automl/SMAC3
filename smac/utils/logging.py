@@ -20,7 +20,7 @@ def setup_logging(
 
     Parameters
     ----------
-    level : int | Path | Literal[False] | None, defaults to None
+    level : int | Path | Literal[False] | None, defaults to False
         An integer representing the logging level. An custom logging configuration can be used when passing a path.
         If False, no logging setup is performed.
     """

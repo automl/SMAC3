@@ -135,7 +135,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
         ----------
         X : np.ndarray [#samples, #hyperparameters + #features]
             Input data points.
-        Y : np.ndarray [#samples, #objectives]
+        y : np.ndarray [#samples, #objectives]
             The corresponding target values.
         optimize_hyperparameters: boolean
             If set to true, we perform MCMC sampling. Otherwise, we just use the hyperparameter specified in the kernel.
