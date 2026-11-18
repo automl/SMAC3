@@ -15,6 +15,10 @@ class Callback:
     def __init__(self) -> None:
         pass
 
+    def on_init(self, smbo: smac.main.smbo.SMBO) -> None:
+        """Called inside the facade after SMBO initialization and callback registration."""
+        pass
+
     def on_start(self, smbo: smac.main.smbo.SMBO) -> None:
         """Called before the optimization starts."""
         pass

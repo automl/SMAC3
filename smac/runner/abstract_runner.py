@@ -13,6 +13,7 @@ import traceback
 import numpy as np
 from ConfigSpace import Configuration
 
+from smac.callback.callback import Callback
 from smac.runhistory import StatusType, TrialInfo, TrialValue
 from smac.scenario import Scenario
 from smac.utils.logging import get_logger
@@ -77,6 +78,19 @@ class AbstractRunner(ABC):
             if not isinstance(scenario.crash_cost, list):
                 assert isinstance(scenario.crash_cost, float)
                 self._crash_cost = [scenario.crash_cost for _ in range(self._n_objectives)]
+
+    def on_start(self, resumed: bool) -> None:
+        """Hook called after the optimization state has been initialized.
+
+        This method can be overridden by runners that require initialization
+        depending on whether the optimization is resumed.
+
+        Parameters
+        ----------
+        resumed : bool
+            Whether the optimization is continued from a previous run.
+        """
+        pass
 
     def run_wrapper(
         self, trial_info: TrialInfo, **dask_data_to_scatter: dict[str, Any]
@@ -255,3 +269,13 @@ class AbstractRunner(ABC):
     def count_available_workers(self) -> int:
         """Returns the number of available workers."""
         raise NotImplementedError
+
+    def get_additional_callbacks(self, existing_callbacks: list[Callback]) -> list[Callback]:
+        """Return callbacks required by this runner, if any.
+
+        Parameters
+        ----------
+        existing_callbacks : list[Callback]
+            Callbacks already registered with SMAC.
+        """
+        return []
