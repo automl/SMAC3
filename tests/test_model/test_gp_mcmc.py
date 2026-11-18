@@ -242,3 +242,17 @@ def test_normalization():
     mu_hat_prime, var_hat_prime = gp_norm.predict(X_test)
     np.testing.assert_array_almost_equal(mu_hat, mu_hat_prime, decimal=4)
     np.testing.assert_array_almost_equal(var_hat, var_hat_prime, decimal=4)
+
+
+def test_does_not_collapse_to_mean_prediction():
+    # With walkers initialized from the priors, the MCMC GP predicted the training mean only (#1401)
+    X, y = sklearn.datasets.make_friedman1(n_samples=200, noise=1.0, random_state=0)
+    X_train, y_train, X_test, y_test = X[:100], y[:100], X[100:], y[100:]
+
+    model = get_gp(X.shape[1], seed=1, noise=1e-10)
+    model.train(X_train, y_train)
+    y_hat, _ = model.predict(X_test)
+
+    mae = np.mean(np.abs(y_hat.flatten() - y_test))
+    mae_mean_prediction = np.mean(np.abs(y_train.mean() - y_test))
+    assert mae < 0.5 * mae_mean_prediction

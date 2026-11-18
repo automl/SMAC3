@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Optional, TypeVar, cast
+from typing import Any, TypeVar
 
 import logging
 import warnings
@@ -16,7 +16,6 @@ from smac.model.gaussian_process.abstract_gaussian_process import (
     AbstractGaussianProcess,
 )
 from smac.model.gaussian_process.gaussian_process import GaussianProcess
-from smac.model.gaussian_process.priors.abstract_prior import AbstractPrior
 
 __copyright__ = "Copyright 2025, Leibniz University Hanover, Institute of AI"
 __license__ = "3-clause BSD"
@@ -154,30 +153,19 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
                 sampler.random_state = self._rng.get_state()
                 # Do a burn-in in the first iteration
                 if not self._burned:
-                    # Initialize the walkers by sampling from the prior
-                    dim_samples = []
-
-                    prior: AbstractPrior | list[AbstractPrior] | None = None
-                    for dim, prior in enumerate(self._all_priors):
-                        # Always sample from the first prior
-                        if isinstance(prior, list):
-                            if len(prior) == 0:
-                                prior = None
-                            else:
-                                prior = prior[0]
-                        prior = cast(Optional[AbstractPrior], prior)
-                        if prior is None:
-                            raise NotImplementedError()
-                        else:
-                            dim_samples.append(prior.sample_from_prior(self._n_mcmc_walkers).flatten())
-                    self.p0 = np.vstack(dim_samples).transpose()
+                    # Initialize the walkers in a small ball around the initial hyperparameters of the kernel.
+                    # Sampling them from the priors instead places most walkers at tiny lengthscales (the lengthscale
+                    # prior is uniform over a wide log-range). There, all correlations between distinct points vanish
+                    # and the GP predicts the mean only. The chains do not leave this region within a feasible number
+                    # of steps.
+                    self.p0 = self._get_initial_walker_positions()
 
                     # Run MCMC sampling
                     with warnings.catch_warnings():
                         warnings.filterwarnings("ignore", r"invalid value encountered in double_scalars.*")
                         self.p0, _, _ = sampler.run_mcmc(self.p0, self._burning_steps)
 
-                    self.burned = True
+                    self._burned = True
 
                 # Start sampling & save the current position, it will be the start point in the next iteration
                 with warnings.catch_warnings():
@@ -199,7 +187,7 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
                 import nuts.nuts  # type: ignore
 
                 # Perform initial fit to the data to obtain theta0
-                if not self.burned:
+                if not self._burned:
                     theta0 = self._gp.kernel.theta
                     self._burned = True
                 else:
@@ -280,6 +268,21 @@ class MCMCGaussianProcess(AbstractGaussianProcess):
 
         self._is_trained = True
         return self
+
+    def _get_initial_walker_positions(self) -> np.ndarray:
+        """Returns the initial positions of the MCMC walkers: The initial hyperparameters of the kernel plus a small
+        Gaussian perturbation (on the log scale), clipped to the bounds of the hyperparameters.
+
+        Returns
+        -------
+        p0 : np.ndarray [#walkers, #hyperparameters]
+            Initial positions of the walkers.
+        """
+        theta = self._kernel.theta
+        bounds = self._kernel.bounds
+        p0 = theta + 0.1 * self._rng.randn(self._n_mcmc_walkers, len(theta))
+
+        return np.clip(p0, bounds[:, 0], bounds[:, 1])
 
     def _get_gaussian_process(self) -> GaussianProcessRegressor:
         return GaussianProcessRegressor(
