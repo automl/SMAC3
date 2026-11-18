@@ -18,6 +18,8 @@ from smac.callback.callback import Callback
 from smac.initial_design import AbstractInitialDesign
 from smac.main.exceptions import ConfigurationSpaceExhaustedException
 from smac.model.abstract_model import AbstractModel
+from smac.model.gaussian_process import GaussianProcess
+from smac.model.random_forest import RandomForest
 from smac.random_design.abstract_random_design import AbstractRandomDesign
 from smac.runhistory.encoder.abstract_encoder import AbstractRunHistoryEncoder
 from smac.runhistory.runhistory import RunHistory
@@ -53,6 +55,16 @@ class ConfigSelector:
         the highest budgets are checked first. For example, if min_trials is three, but we find only
         two trials in the runhistory for the highest budget, we will use trials of a lower budget
         instead.
+    batch_sampling_estimation_strategy: str, defaults to no_estimation
+        Batch sample setting, this is applied for parallel setting. During batch sampling, ConfigSelectors might need
+        to suggest new samples while some configurations are still running. This argument determines if we want to make
+        use of this information and fantasize the new estimations. If no_estimate is applied, we do not use the
+        information from the running configurations. If the strategy is kriging_believer, we use the predicted mean from
+        our surrogate model as the estimations for the new samples. If the strategy is CL_min/mean/max, we use the
+        min/mean/max from the existing evaluations as the estimations for the new samples. If the strategy is sample,
+        we use our surrogate model (in this case, only GP is allowed) to sample new configurations. If the strategy is
+        q_ei, no values are estimated, instead the running configurations are passed as pending points to the
+        acquisition function (use QExpectedImprovement).
     """
 
     def __init__(
@@ -64,6 +76,7 @@ class ConfigSelector:
         min_configurations: int = 1,
         max_new_config_tries: int = 16,
         min_trials: int = 1,
+        batch_sampling_estimation_strategy: str = "no_estimate",
     ) -> None:
         # Those are the configs sampled from the passed initial design
         # Selecting configurations from initial design
@@ -106,6 +119,9 @@ class ConfigSelector:
         if self._retrain_after is not None:
             if self._retrain_after < self._min_configurations:
                 raise ValueError("retrain_after should be higher or equal to min_configurations")
+
+        # for batch sampling setting
+        self._batch_sampling_estimation_strategy = batch_sampling_estimation_strategy
 
     def _set_components(
         self,
@@ -231,8 +247,11 @@ class ConfigSelector:
 
             # Check if X/Y differs from the last run, otherwise use cached results
             train_start_time = time.time()
-            if self._previous_entries != Y.shape[0]:
-                self._model.train(X, Y)
+            # q_ei needs the pending configurations, which can change without new data
+            update_acquisition = self._batch_sampling_estimation_strategy == "q_ei"
+            if self._previous_entries != Y.shape[0] or update_acquisition:
+                if self._previous_entries != Y.shape[0]:
+                    self._model.train(X, Y)
 
                 x_best_array: np.ndarray | None = None
                 if incumbent_value is not None:
@@ -252,6 +271,11 @@ class ConfigSelector:
                     incumbents=self._runhistory.incumbents,
                     runhistory=self._runhistory,
                     runhistory_encoder=self._runhistory_encoder,
+                    X_pending=(
+                        self._runhistory_encoder.transform_running_configs(budget_subset=self._considered_budgets)
+                        if update_acquisition
+                        else None
+                    ),
                 )
 
             # We want to cache how many entries we used because if we have the same number of entries
@@ -394,6 +418,24 @@ class ConfigSelector:
                 # Possible add running configs?
                 configs_array = self._runhistory_encoder.get_configurations(budget_subset=self._considered_budgets)
 
+                # add running configurations
+                # If our batch size is 1, then no running configuration should exist, we could then skip this part.
+                # Therefore, there is no need to check the number of workers in this case
+
+                X_running = self._runhistory_encoder.transform_running_configs(budget_subset=[b])
+                if self._batch_sampling_estimation_strategy != "no_estimate":
+                    Y_estimated = self.estimate_running_config_costs(
+                        X_running, Y, self._batch_sampling_estimation_strategy
+                    )
+                    # if there is no running configurations, we directly return X, Y and configs_array
+                    if Y_estimated is not None:
+                        configs_array_running = self._runhistory_encoder.get_running_configurations(
+                            budget_subset=self._considered_budgets
+                        )
+                        X = np.concatenate([X, X_running], axis=0)
+                        Y = np.concatenate([Y, Y_estimated], axis=0)
+                        configs_array = np.concatenate([configs_array, configs_array_running], axis=0)
+
                 return X, Y, configs_array
 
         return (
@@ -409,6 +451,80 @@ class ConfigSelector:
     def _get_evaluated_configs(self) -> list[Configuration]:
         assert self._runhistory is not None
         return self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)
+
+    def estimate_running_config_costs(
+        self, X_running: np.ndarray, Y_evaluated: np.ndarray, estimation_strategy: str = "CL_max"
+    ) -> np.ndarray | None:
+        """This function is implemented to estimate the still pending/ running configurations
+
+        Parameters
+        ----------
+        X_running : np.ndarray
+            a np array with size (n_running_configs, D) that represents the array values of the running configurations
+        Y_evaluated : np.ndarray
+            a np array with size (n_evaluated_configs, n_obj) that records the costs of all the previous evaluated
+            configurations
+
+        estimation_strategy: str
+            how do we estimate the target y_running values, we have the following strategy:
+            CL_max: constant liar max, we take the maximal of all the evaluated Y and apply them to the running X
+            CL_min: constant liar min, we take the minimal of all the evaluated Y and apply them to the running X
+            CL_mean: constant liar mean, we take the mean of all the evaluated Y and apply them to the running X
+            kriging_believer: kriging believer, we apply the predicted means from the surrogate model to running X
+             values
+            sample: estimations for X are sampled from the surrogate models. Since the samples need to be sampled from a
+              joint distribution for all X, we only allow sample strategy with GP as surrogate models.
+            q_ei: no estimation of Y. The running configurations are passed to the acquisition function as pending
+              points, which has to be QExpectedImprovement.
+
+        Returns
+        -------
+        Y_running_estimated : np.ndarray
+            the estimated running y values
+        """
+        n_running_points = len(X_running)
+        if n_running_points == 0:
+            return None
+        if estimation_strategy == "CL_max":
+            # constant liar max, we take the maximal values of all the evaluated Y and apply them to the running X
+            Y_estimated = np.nanmax(Y_evaluated, axis=0, keepdims=True)
+            return np.repeat(Y_estimated, n_running_points, 0)
+        elif estimation_strategy == "CL_min":
+            # constant liar min, we take the minimal values of all the evaluated Y and apply them to the running X
+            Y_estimated = np.nanmin(Y_evaluated, axis=0, keepdims=True)
+            return np.repeat(Y_estimated, n_running_points, 0)
+        elif estimation_strategy == "CL_mean":
+            # constant liar mean, we take the mean values of all the evaluated Y and apply them to the running X
+            Y_estimated = np.nanmean(Y_evaluated, axis=0, keepdims=True)
+            return np.repeat(Y_estimated, n_running_points, 0)
+        elif estimation_strategy == "kriging_believer":
+            # kriging believer, we apply the predicted means of the surrogate model to estimate the running X
+            # Check whether model has been trained already
+            if (
+                isinstance(self._model, GaussianProcess)
+                and not self._model._is_trained
+                or isinstance(self._model, RandomForest)
+                and self._model._rf is None
+            ):
+                logger.debug(
+                    "Model has not been trained yet. Skip estimation and use constant liar mean "
+                    "(mean of all samples)."
+                )
+                Y_estimated = np.nanmean(Y_evaluated, axis=0, keepdims=True)
+                return np.repeat(Y_estimated, n_running_points, 0)
+            return self._model.predict_marginalized(X_running)[0]  # type: ignore[union-attr]
+        elif estimation_strategy == "q_ei":
+            return None
+        elif estimation_strategy == "sample":
+            # https://papers.nips.cc/paper_files/paper/2012/file/05311655a15b75fab86956663e1819cd-Paper.pdf
+            # since this requires a multi-variant gaussian distribution for the candidates, we need to restrict the
+            # model to be a gaussian process
+            assert isinstance(
+                self._model, GaussianProcess
+            ), "Sample based estimate strategy only allows GP as surrogate model!"
+            return self._model.sample_functions(X_test=X_running, n_funcs=1)
+        else:
+            raise ValueError(f"Unknown estimating strategy: {estimation_strategy}")
 
     def _get_x_best(self, X: np.ndarray) -> tuple[np.ndarray, float]:
         """Get value, configuration, and array representation of the *best* configuration.

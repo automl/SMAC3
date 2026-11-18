@@ -21,6 +21,26 @@ Scenario(model.configspace, n_workers=5)
 ``` 
 
 
+## Running Configurations
+
+By default, SMAC ignores configurations that are still running when it suggests a new one. Set
+``batch_sampling_estimation_strategy`` of the config selector to use them instead:
+
+- ``CL_min``, ``CL_mean``, ``CL_max``: assign the min/mean/max of all observed costs to the running configurations.
+- ``kriging_believer``: assign the mean predicted by the surrogate model.
+- ``sample``: sample the costs from the surrogate model (Gaussian processes only).
+- ``q_ei``: pass the running configurations as pending points to
+  [QExpectedImprovement][smac.acquisition.function.expected_improvement.QExpectedImprovement], which has to be
+  used as acquisition function.
+
+```python
+config_selector = BlackBoxFacade.get_config_selector(scenario, batch_sampling_estimation_strategy="CL_min")
+```
+
+See the [fantasize](../examples/1%20Basics/7_0_parallelization_fantasize.md) and
+[q-EI](../examples/1%20Basics/7_1_parallelization_q_ei.md) examples.
+
+
 ## Parallelizing on SLURM
 
 To utilize this split of main and execution jobs on a [SLURM cluster](https://slurm.schedmd.com/), SMAC supports manually specifying a [Dask](https://www.dask.org/) client.
