@@ -1,4 +1,5 @@
 import os
+import re
 
 import setuptools
 
@@ -9,7 +10,6 @@ from smac import (
     package_name,
     project_urls,
     url,
-    version,
 )
 
 HERE = os.path.dirname(os.path.realpath(__file__))
@@ -18,6 +18,14 @@ HERE = os.path.dirname(os.path.realpath(__file__))
 def read_file(filepath: str) -> str:
     with open(filepath, "r", encoding="utf-8") as fh:
         return fh.read()
+
+
+def read_version() -> str:
+    pyproject = read_file(os.path.join(HERE, "pyproject.toml"))
+    match = re.search(r'^version = "(.+)"', pyproject, re.MULTILINE)
+    if match is None:
+        raise RuntimeError("No version found in pyproject.toml")
+    return match.group(1)
 
 
 extras_require = {
@@ -59,6 +67,7 @@ extras_require = {
         "mkdocs-glightbox",
         "mkdocs-glossary-plugin",
         "mkdocstrings[python]",
+        "pymdown-extensions<12.2",
         "markdown-exec[ansi]",
         "mike>=2.2.0",
         "pillow",
@@ -77,7 +86,7 @@ setuptools.setup(
     license="BSD 3-Clause License",
     url=url,
     project_urls=project_urls,
-    version=version,
+    version=read_version(),
     packages=setuptools.find_packages(exclude=["tests"]),
     include_package_data=True,
     python_requires=">=3.10",

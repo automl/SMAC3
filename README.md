@@ -6,7 +6,7 @@
 [![codecov
 Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
-<img src="docs/images/logo.png" style="width: 50%;" />
+<img src="https://raw.githubusercontent.com/automl/SMAC3/main/docs/images/logo.png" width="50%" />
 
 SMAC offers a robust and flexible framework for Bayesian Optimization to support users in determining well-performing 
 hyperparameter configurations for their (Machine Learning) algorithms, datasets and applications at hand. The main core 
