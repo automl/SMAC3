@@ -89,6 +89,12 @@ scenario = Scenario(
     * **For Deterministic Objectives (`deterministic=True`):** Use this when repeated evaluations of the same configuration produce identical results. In this mode, each configuration is evaluated only once, and the surrogate model does not include a noise term.
     * **For Stochastic Objectives (`deterministic=False`):** Use this when the objective is noisy. Intensification parameters like `max_config_calls` and `n_seeds` must be set to enable repeated evaluations per configuration.
 
+!!! info "Resource Limits per Trial"
+    With `trial_walltime_limit` (in seconds) and `trial_memory_limit` you can limit the resources of a single trial.
+    We recommend passing the memory limit as a tuple with a unit, e.g. `trial_memory_limit=(8, "GB")`. A plain
+    integer is interpreted as bytes, i.e. `trial_memory_limit=8000` only allows 8000 bytes. The limits are enforced with [pynisher](https://github.com/automl/pynisher),
+    which runs the target function in a separate process.
+
 !!! note
     If no `name` is given, a hash of the experiment is used. Running the same experiment again at a later time will result in exactly the same hash. This is important, because the optimization will warmstart on the preexisting evaluations, if not otherwise specified in the [Facade][smac.facade.abstract_facade].
 
