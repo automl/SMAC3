@@ -484,5 +484,79 @@ def test_the_neighbourhoods_width_is_checked():
 
 
 def test_meta_names_the_neighbourhoods_width():
-    assert ClimbingComparisonPolicy().meta["neighbourhood_std"] == "range"
-    assert IncumbentComparisonPolicy(neighbourhood_std="prior").meta["neighbourhood_std"] == "prior"
+    assert ClimbingComparisonPolicy().meta["neighbourhood_std"] == "prior"
+    assert IncumbentComparisonPolicy().meta["neighbourhood_std"] == "prior"
+    assert IncumbentComparisonPolicy(neighbourhood_std="range").meta["neighbourhood_std"] == "range"
+
+
+# Symmetry and side effects of judging
+
+
+def test_judging_by_the_incumbent_leaves_the_beliefs_draws_and_the_random_state_alone():
+    """Judging draws from copies: a run that judges a belief and accepts it must not diverge from one that accepts it
+    outright, so neither the belief's own sampler nor the random state handed over may be advanced."""
+    import copy
+
+    smac = _smac()
+    _warm_up(smac)
+    belief = _prior(smac.scenario.configspace, {"x0": OPTIMUM, "x1": OPTIMUM})
+    twin = copy.deepcopy(belief)
+    context = _context(smac)
+    before = context["rng"].get_state()[1].copy()
+
+    IncumbentComparisonPolicy().accept(belief, **context)
+
+    assert [dict(c) for c in belief.prior.sample(5)] == [dict(c) for c in twin.prior.sample(5)]
+    np.testing.assert_array_equal(context["rng"].get_state()[1], before)
+
+
+def _eight_dimensional_context():
+    smac = _wide_smac(n_hyperparameters=8, n_trials=40)
+
+    return smac, _judging_context(smac)
+
+
+def test_a_belief_on_the_incumbent_scores_as_the_incumbents_neighbourhood_does():
+    """Both sides of the climbing comparison are led the same way, by their own distribution at the same strength, so
+    a belief centred on the incumbent, as wide as the neighbourhood, is judged as the neighbourhood is. Were the
+    neighbourhood's climbs free to follow the bare bound, they would end wherever it is most optimistic and such a
+    belief would be refused, more surely the more dimensions there are."""
+    smac, context = _eight_dimensional_context()
+    belief = _prior(smac.scenario.configspace, dict(context["incumbent"]))
+
+    prior_value, incumbent_value = ClimbingComparisonPolicy(n_samples=1000).compare(belief, **context)
+
+    assert prior_value - incumbent_value > -0.15
+
+
+@pytest.mark.parametrize("policy", [ClimbingComparisonPolicy, IncumbentComparisonPolicy])
+def test_in_eight_dimensions_a_correct_belief_is_accepted_and_a_wrong_one_refused(policy):
+    smac, context = _eight_dimensional_context()
+    configspace = smac.scenario.configspace
+    judge = policy(n_samples=1000)
+
+    assert judge.accept(_prior(configspace, {name: OPTIMUM for name in configspace}), **context)
+    assert not judge.accept(_prior(configspace, {name: 0.0 for name in configspace}), **context)
+
+
+@pytest.mark.parametrize("policy", [IncumbentComparisonPolicy, ClimbingComparisonPolicy])
+def test_a_run_that_judges_a_belief_and_accepts_it_goes_on_as_one_that_accepts_it_outright(policy):
+    """Judging trains a copy of the surrogate on the latest trials and draws from copies of every random state, so
+    after an accepted belief the search proposes exactly what it would have proposed without being judged."""
+
+    def proposals(acceptance_policy) -> list[dict]:
+        smac = _smac(n_trials=60)
+        _warm_up(smac, 24)
+        key = smac.add_prior({"x0": 0.6, "x1": 0.6}, acceptance_policy=acceptance_policy)
+        assert key is not None
+        out = []
+        for _ in range(12):
+            info = smac.ask()
+            smac.tell(info, TrialValue(cost=target(info.config), time=0.1))
+            out.append(dict(info.config))
+
+        return out
+
+    judged = proposals(policy(threshold=-1e9, **({"n_samples": 500} if policy is ClimbingComparisonPolicy else {})))
+
+    assert judged == proposals(AcceptAllPriors())

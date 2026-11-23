@@ -148,12 +148,14 @@ class IncumbentComparisonPolicy(AbstractPriorAcceptancePolicy):
         Used to score the samples. `None` is a lower confidence bound, which judges a region by what it might
         deliver rather than only by its mean, so an unexplored region is not rejected for being unexplored.
     std_denominator : float, defaults to 4.0
-        Width of the incumbent's neighbourhood, as a divisor of the range of each hyperparameter.
-    neighbourhood_std : str, defaults to "range"
-        How wide the incumbent's neighbourhood is along each numerical hyperparameter. "range" is the range
-        divided by `std_denominator`. "prior" is the belief's own standard deviation, as [[FWS+25][FWS+25]] draw it,
-        measured from the belief's draws on the hyperparameter's unit axis; a hyperparameter the belief says nothing
-        about gets the width of the uniform distribution.
+        Width of the incumbent's neighbourhood, as a divisor of the range of each hyperparameter, when
+        `neighbourhood_std` is "range".
+    neighbourhood_std : str, defaults to "prior"
+        How wide the incumbent's neighbourhood is along each numerical hyperparameter. "prior" is the belief's own
+        standard deviation, as [[FWS+25][FWS+25]] draw it, measured from the belief's draws on the hyperparameter's
+        unit axis; a hyperparameter the belief says nothing about gets the width of the uniform distribution. Both
+        sides are then the same shape and differ only in where they are centred. "range" is the range divided by
+        `std_denominator`, which is wider than a sharp belief and so compares a sharp region with a blurred one.
     """
 
     def __init__(
@@ -164,7 +166,7 @@ class IncumbentComparisonPolicy(AbstractPriorAcceptancePolicy):
         threshold: float = -0.15,
         acquisition_function: AbstractAcquisitionFunction | None = None,
         std_denominator: float = 4.0,
-        neighbourhood_std: str = "range",
+        neighbourhood_std: str = "prior",
     ) -> None:
         _check_sample_counts(n_samples, n_samples_per_hyperparameter)
         _check_neighbourhood_std(neighbourhood_std)
@@ -218,8 +220,12 @@ class IncumbentComparisonPolicy(AbstractPriorAcceptancePolicy):
         if prior.prior is None:
             return True
 
+        # Every draw comes from copies, seeded from a copy of `rng`: judging a belief must leave the belief, the search
+        # space and the search's own random state as they were, or a run that accepts a belief would diverge from
+        # one that accepts it outright before the belief has had any say.
+        random = copy.deepcopy(rng) if rng is not None else np.random.RandomState()
         n_samples = _sample_count(configspace, self._n_samples, self._n_samples_per_hyperparameter)
-        prior_samples = prior.prior.sample(n_samples, rng)
+        prior_samples = _draw(prior.prior, n_samples, random)
         if prior_samples is None:
             logger.debug("The prior cannot be sampled from, so its region cannot be judged.")
 
@@ -230,9 +236,8 @@ class IncumbentComparisonPolicy(AbstractPriorAcceptancePolicy):
             dict(incumbent),
             std_denominator=self._std_denominator,
         )
+        neighbourhood.seed(_seed(random))
         if self._neighbourhood_std == "prior":
-            random = copy.deepcopy(rng) if rng is not None else np.random.RandomState()
-            neighbourhood.seed(_seed(random))
             incumbent_samples = _around(
                 configspace,
                 incumbent,
@@ -279,12 +284,18 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
     1. Draw `n_samples` configurations from the belief and as many from a normal around the incumbent. In the
        belief's draws, the hyperparameters it says nothing about come from the search space, except for a
        `neighbourhood_share` of the draws, where they come from the incumbent's neighbourhood.
-    2. Rank the belief's draws by a confidence bound weighted by the belief, the neighbourhood's by the confidence
-       bound alone.
+    2. Rank the belief's draws by a confidence bound weighted by the belief, the neighbourhood's by the same bound
+       weighted by the neighbourhood's density - a normal around the incumbent, as wide as the neighbourhood is
+       drawn - at the strength the belief would be added with.
     3. From the best `top_k` of each, climb with local search on the same functions, free to change every
        hyperparameter.
     4. Score where the climbs ended with the confidence bound alone, and accept the belief unless the mean of its
        side falls short of the neighbourhood's by more than `threshold`.
+
+    The two sides are built the same way and differ only in which distribution leads them, which is the question
+    being asked. Were the neighbourhood's climbs to follow the bare bound, they would be free to leave the
+    neighbourhood for wherever the bound is most optimistic, and the belief would be measured against the best the
+    whole space might hold - which a correct belief usually loses to, and more often the more dimensions there are.
 
     Climbing optimizes the hyperparameters the belief says nothing about rather than leaving them to chance, so the
     verdict does not drift with how many of them there are. Starting some of the belief's climbs from the
@@ -315,12 +326,13 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
         objective's units: the scores are read back through the runhistory encoder, as `IncumbentComparisonPolicy`
         reads them. With an encoder that cannot be inverted, in the units the model works in.
     std_denominator : float, defaults to 4.0
-        Width of the incumbent's neighbourhood, as a divisor of the range of each hyperparameter.
-    neighbourhood_std : str, defaults to "range"
-        How wide the incumbent's neighbourhood is along each numerical hyperparameter. "range" is the range
-        divided by `std_denominator`. "prior" is the belief's own standard deviation, as [[FWS+25][FWS+25]] draw it,
-        measured from the belief's draws on the hyperparameter's unit axis; a hyperparameter the belief says nothing
-        about gets the width of the uniform distribution.
+        Width of the incumbent's neighbourhood, as a divisor of the range of each hyperparameter, when
+        `neighbourhood_std` is "range".
+    neighbourhood_std : str, defaults to "prior"
+        How wide the incumbent's neighbourhood is along each numerical hyperparameter. "prior" is the belief's own
+        standard deviation, as [[FWS+25][FWS+25]] draw it, measured from the belief's draws on the hyperparameter's
+        unit axis; a hyperparameter the belief says nothing about gets the width of the uniform distribution. "range"
+        is the range divided by `std_denominator`.
     max_steps : int | None, defaults to None
         Maximum number of steps of each climb. `None` leaves it to the local search.
     n_steps_plateau_walk : int, defaults to 10
@@ -336,7 +348,7 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
         neighbourhood_share: float = 0.5,
         threshold: float = -0.15,
         std_denominator: float = 4.0,
-        neighbourhood_std: str = "range",
+        neighbourhood_std: str = "prior",
         max_steps: int | None = None,
         n_steps_plateau_walk: int = 10,
     ) -> None:
@@ -478,6 +490,13 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
                 return _around(configspace, incumbent, neighbourhood, widths, n, random)
 
         else:
+            # `create_prior_configspace_copy` sets the standard deviation to the range over `std_denominator`,
+            # which on the unit axis the vectorized configurations live on is its reciprocal.
+            widths = {
+                configspace.index_of[hyperparameter.name]: 1.0 / self._std_denominator
+                for hyperparameter in configspace.values()
+                if isinstance(hyperparameter, NumericalHyperparameter)
+            }
 
             def around(n: int) -> list[Configuration]:
                 return _sample(neighbourhood, n)
@@ -503,6 +522,28 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
             eta = float(means[0, 0])
 
         weighted = _BeliefWeightedBound(bound, prior, eta)
+        # The neighbourhood's climbs are held to the neighbourhood the way the belief's are held to the belief: by
+        # the same bound, weighted by the neighbourhood's own density at the strength the belief would be added with.
+        # Climbing the bare bound instead lets them leave the neighbourhood for wherever the bound is most
+        # optimistic - the least explored corner of the space, more so the more dimensions there are - and the
+        # belief would then be compared with the best the whole space might hold rather than with the incumbent's
+        # region.
+        # Only along the hyperparameters the belief speaks about: along the rest the belief is flat, and stays flat at
+        # any strength, so holding the neighbourhood's climbs there - more tightly the stronger the belief - would
+        # leave the belief's side free where the neighbourhood's is not.
+        unstated = {configspace.index_of[name] for name in _unstated(prior.prior, configspace)}
+        local = _BeliefWeightedBound(
+            bound,
+            PriorWeight(
+                _NeighbourhoodPrior(
+                    configspace,
+                    incumbent,
+                    {column: width for column, width in widths.items() if column not in unstated},
+                ),
+                prior.decay,
+            ),
+            eta,
+        )
 
         def climb(draws: list[Configuration], function: AbstractAcquisitionFunction) -> list[Configuration]:
             values = np.asarray(function(draws), dtype=float).reshape(-1)
@@ -518,7 +559,7 @@ class ClimbingComparisonPolicy(AbstractPriorAcceptancePolicy):
             return [config for _, config in search.climb([draws[i] for i in best])]
 
         prior_value = float(np.mean(_in_objective_units(bound(climb(believed, weighted)), runhistory_encoder)))
-        incumbent_value = float(np.mean(_in_objective_units(bound(climb(nearby, bound)), runhistory_encoder)))
+        incumbent_value = float(np.mean(_in_objective_units(bound(climb(nearby, local)), runhistory_encoder)))
 
         return prior_value, incumbent_value
 
@@ -587,6 +628,38 @@ class _BeliefWeightedBound(AbstractAcquisitionFunction):
         ranked = np.arctan(level) / np.pi + 0.5
 
         return np.where(improvement > 0, ranked, np.where(improvement < 0, -ranked, 0.0))
+
+
+class _NeighbourhoodPrior(AbstractInputPrior):
+    """The incumbent's neighbourhood as a density, for `ClimbingComparisonPolicy` to hold its climbs to.
+
+    A normal around the incumbent along each numerical hyperparameter in `widths`, with that standard deviation on
+    the hyperparameter's unit axis - the shape the neighbourhood's draws are made from. Every other hyperparameter,
+    and one a condition leaves inactive, contributes a constant factor. Unnormalized: it is only ever used to rank
+    configurations within one climb, where a constant factor changes nothing.
+    """
+
+    def __init__(self, configspace: ConfigurationSpace, incumbent: Configuration, widths: dict[int, float]) -> None:
+        self._names = list(configspace.keys())
+        self._centre = np.asarray(incumbent.get_array(), dtype=float)
+        self._widths = {column: width for column, width in widths.items() if width > 0.0}
+
+    @property
+    def hyperparameter_names(self) -> list[str]:  # noqa: D102
+        return self._names
+
+    def pdf(self, X: np.ndarray, resolution: int | None = None) -> np.ndarray:  # noqa: D102
+        if len(X.shape) == 1:
+            X = X[:, np.newaxis]
+
+        log_density = np.zeros(len(X))
+        for column, width in self._widths.items():
+            if np.isnan(self._centre[column]):
+                continue
+            z = (X[:, column] - self._centre[column]) / width
+            log_density += np.where(np.isnan(z), 0.0, -0.5 * np.nan_to_num(z) ** 2)
+
+        return np.exp(log_density).reshape((-1, 1))
 
 
 def _check_sample_counts(n_samples: int, n_samples_per_hyperparameter: int | None) -> None:
