@@ -1,11 +1,19 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Mapping
+from typing import Any, Callable, Mapping
 
 import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
-from ConfigSpace.hyperparameters import FloatHyperparameter, Hyperparameter
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    Constant,
+    FloatHyperparameter,
+    Hyperparameter,
+    IntegerHyperparameter,
+    OrdinalHyperparameter,
+)
+from scipy.integrate import quad
 
 from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
 from smac.acquisition.weight.decay import DecaySchedule, PolynomialDecay
@@ -24,8 +32,9 @@ class AbstractInputPrior:
 
     A prior is a density over the search space, evaluated on the vectorized representation of a configuration - the
     same array `convert_configurations_to_array` produces, with one column per hyperparameter in the order the
-    configuration space lists them. It is not required to be normalized: only the relative values matter, because
-    the prior is multiplied into an acquisition function which is itself only ranked.
+    configuration space lists them. It is not required to be normalized. A single prior is multiplied into an
+    acquisition function which is only ranked, so its scale does not matter; several priors are summed, where scale
+    is influence, and `PriorWeight` puts them on an equal footing by dividing each by its mass - see `log_mass`.
 
     Sampling is optional. A prior which can produce configurations lets the acquisition function maximizer draw
     candidates from it, which is what makes a sharply peaked prior usable at all - the maximizer would otherwise
@@ -73,6 +82,26 @@ class AbstractInputPrior:
             Number of configurations to draw.
         rng : np.random.RandomState | None, defaults to None
             Random state to draw with, where the prior supports one.
+        """
+        return None
+
+    def log_mass(self, exponent: float = 1.0) -> float | None:
+        r"""The logarithm of the prior's mass once raised to a power, $\log \int \pi(\mathbf{x})^{\gamma} d\mathbf{x}$.
+
+        The integral is over the vectorized representation: an integral over the unit interval for a continuous
+        hyperparameter, a sum over the values for a discrete one. Dividing by it gives every belief a mass of one at
+        every stage of its decay, which is what makes a sharp belief and a vague one count equally when they are
+        summed: the sharp one spends its mass in a small region and is correspondingly higher there.
+
+        Parameters
+        ----------
+        exponent : float, defaults to 1.0
+            The power $\gamma$ the density is raised to, which is the decay exponent of the belief.
+
+        Returns
+        -------
+        float | None
+            The logarithm of the mass, or `None` for a prior which cannot say. Such a prior is used as given.
         """
         return None
 
@@ -129,11 +158,24 @@ class ConfigSpacePrior(AbstractInputPrior):
     def __init__(self, configspace: ConfigurationSpace) -> None:
         self._configspace = configspace
         self._hyperparameters = _hyperparameters_of(configspace)
+        self._log_masses: dict[float, float] = {}
 
     @property
     def configspace(self) -> ConfigurationSpace:
         """The configuration space carrying the distributions."""
         return self._configspace
+
+    def log_mass(self, exponent: float = 1.0) -> float | None:  # noqa: D102
+        # The density is a product over hyperparameters, so its mass is the product of theirs.
+        if exponent not in self._log_masses:
+            self._log_masses[exponent] = float(
+                sum(
+                    np.log(_mass_of(hyperparameter, lambda x, hp=hyperparameter: density_of(hp, x), exponent))
+                    for hyperparameter in self._hyperparameters.values()
+                )
+            )
+
+        return self._log_masses[exponent]
 
     @property
     def hyperparameter_names(self) -> list[str]:  # noqa: D102
@@ -188,7 +230,7 @@ class TabulatedPrior(AbstractInputPrior):
         The search space the prior is evaluated against. Its hyperparameters, in order, are the columns.
     tables : Mapping[str, Any]
         Knots per hyperparameter, as `(position, density)` pairs. Densities must be non-negative and need not be
-        normalized, since only ratios matter to a function which is itself only ranked.
+        normalized: `PriorWeight` divides the table by its mass, so a table scaled by any constant is the same belief.
     """
 
     def __init__(self, configspace: ConfigurationSpace, tables: Mapping[str, Any]) -> None:
@@ -213,6 +255,31 @@ class TabulatedPrior(AbstractInputPrior):
             if np.any(densities < 0):
                 raise ValueError(f"The table for {name!r} has a negative density, which is not a density.")
             self._tables[name] = (positions, densities)
+
+        self._log_masses: dict[float, float] = {}
+
+    def log_mass(self, exponent: float = 1.0) -> float | None:  # noqa: D102
+        if exponent not in self._log_masses:
+            log_mass = 0.0
+            for name, hyperparameter in self._hyperparameters.items():
+                table = self._tables.get(name)
+                if table is None:
+                    # An untabulated hyperparameter contributes a factor of one at every value.
+                    log_mass += np.log(_mass_of(hyperparameter, lambda x: np.ones((len(x), 1)), exponent))
+                    continue
+
+                positions, densities = table
+                log_mass += np.log(
+                    _mass_of(
+                        hyperparameter,
+                        lambda x, p=positions, d=densities: np.interp(x, p, d).reshape((-1, 1)),
+                        exponent,
+                        breakpoints=positions,
+                    )
+                )
+            self._log_masses[exponent] = float(log_mass)
+
+        return self._log_masses[exponent]
 
     @property
     def tables(self) -> dict[str, tuple[np.ndarray, np.ndarray]]:
@@ -326,6 +393,72 @@ def density_of(hyperparameter: Hyperparameter, X_col: np.ndarray) -> np.ndarray:
     return np.asarray(hyperparameter._pdf(X_col[:, np.newaxis]), dtype=float).reshape((-1, 1))
 
 
+def _discrete_values(hyperparameter: Hyperparameter) -> np.ndarray | None:
+    """The vectorized values a discrete hyperparameter can take, or `None` for a continuous one.
+
+    ConfigSpace gives a discrete hyperparameter a density only at these points - zero in between - so its mass is a
+    sum over them rather than an integral.
+    """
+    if isinstance(hyperparameter, CategoricalHyperparameter):
+        return np.arange(len(hyperparameter.choices), dtype=float)
+
+    if isinstance(hyperparameter, OrdinalHyperparameter):
+        return np.arange(len(hyperparameter.sequence), dtype=float)
+
+    if isinstance(hyperparameter, IntegerHyperparameter):
+        return np.asarray(hyperparameter.to_vector(np.arange(hyperparameter.lower, hyperparameter.upper + 1)))
+
+    if isinstance(hyperparameter, Constant):
+        return np.zeros(1)
+
+    return None
+
+
+def _mass_of(
+    hyperparameter: Hyperparameter,
+    density: Callable[[np.ndarray], np.ndarray],
+    exponent: float,
+    *,
+    breakpoints: np.ndarray | None = None,
+) -> float:
+    """The mass of one hyperparameter's density raised to a power, over its vectorized range.
+
+    Parameters
+    ----------
+    hyperparameter : Hyperparameter
+        The hyperparameter, which decides whether the mass is a sum or an integral.
+    density : Callable[[np.ndarray], np.ndarray]
+        The density on the vectorized representation, returning shape [N, 1].
+    exponent : float
+        The power the density is raised to.
+    breakpoints : np.ndarray | None, defaults to None
+        Positions where the density has a kink, for the integration to split at.
+    """
+    values = _discrete_values(hyperparameter)
+    if values is not None:
+        return float(np.sum(np.power(density(values).ravel(), exponent)))
+
+    # A sharp density is a narrow spike that a fixed rule would step over, so the integration is split at its peak,
+    # located on a coarse grid and then on a fine one around the coarse maximum.
+    coarse = np.linspace(0.0, 1.0, 2049)
+    peak = coarse[int(np.argmax(density(coarse)))]
+    fine = np.linspace(max(0.0, peak - 1 / 2048), min(1.0, peak + 1 / 2048), 2049)
+    peak = fine[int(np.argmax(density(fine)))]
+
+    points = {peak, *(breakpoints if breakpoints is not None else [])}
+    inner = sorted(float(point) for point in points if 0.0 < point < 1.0)
+
+    mass, _ = quad(
+        lambda x: float(density(np.array([x]))[0, 0]) ** exponent,
+        0.0,
+        1.0,
+        points=inner or None,
+        limit=max(200, 4 * len(inner)),
+    )
+
+    return float(mass)
+
+
 def discretize_pdf(hyperparameter: FloatHyperparameter, X_col: np.ndarray, number_of_bins: int) -> np.ndarray:
     """Coarsens the density of a continuous hyperparameter to a fixed number of levels.
 
@@ -366,6 +499,9 @@ class PriorWeight(AbstractAcquisitionWeight):
     r"""A user belief about where the optimum lies, fading as the surrogate learns.
 
     $$w(\mathbf{X}) = \left( \pi(\mathbf{X}) + \text{floor} \right)^{\beta / (t - t_0 + 1)}$$
+
+    That is the form of a belief on its own. Several beliefs are combined in the form `normalized` gives, which
+    divides each by its mass so that they count equally.
 
     See "piBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization" by Carl Hvarfner et
     al. [[HSSL22][HSSL22]] for the mechanism, and "Dynamic Priors in Bayesian Optimization for Hyperparameter
@@ -483,6 +619,40 @@ class PriorWeight(AbstractAcquisitionWeight):
             self._t0 = num_data
 
         return num_data - self._t0
+
+    def normalized(self, X: np.ndarray, *, log: bool = False) -> np.ndarray:
+        r"""The decayed belief divided by its mass, then floored; or its logarithm.
+
+        $$\frac{\pi(\mathbf{X})^{\gamma}}{\int \pi(\mathbf{x})^{\gamma} d\mathbf{x}} + \text{floor}$$
+
+        This is the form `PriorEnsemble` combines several beliefs in. Every belief then has a mass of one at every
+        stage of its decay: a fresh sharp one puts it in a small region, a faded one spreads it evenly. Raising a
+        density to a power below one otherwise shrinks the mass of a sharp belief far faster than that of a vague
+        one, and the sharp belief would lose its say almost at once. The floor is added after the division, so it
+        means the same thing for every belief. A prior whose `log_mass` is `None` is used as given.
+
+        Where the density has underflowed to zero, far out in the tail of a sharp belief, it stays zero under any
+        power, and only the floor keeps such points reachable. That only differs from the exact value once the
+        exponent falls below about 0.003.
+        """
+        assert self._prior is not None, "The prior weight has no belief and should not have been active."
+
+        exponent = self._decay(self._steps)
+        log_mass = self._prior.log_mass(exponent)
+        if log_mass is None or not np.isfinite(log_mass):
+            log_mass = 0.0
+
+        if log:
+            raw = np.asarray(self._compute_log(X), dtype=float).reshape((-1, 1))
+            # A density of exactly zero stays at zero under any positive power.
+            tempered = np.where(np.isneginf(raw), -np.inf, exponent * raw) - log_mass
+            floor = self.log_floor
+
+            return tempered if floor == -np.inf else np.logaddexp(tempered, floor)
+
+        raw = np.asarray(self._compute(X), dtype=float).reshape((-1, 1))
+
+        return np.power(raw, exponent) / np.exp(log_mass) + self._floor
 
     def _compute(self, X: np.ndarray) -> np.ndarray:  # noqa: D102
         assert self._prior is not None, "The prior weight has no belief and should not have been active."

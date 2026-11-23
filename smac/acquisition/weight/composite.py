@@ -7,6 +7,7 @@ from scipy.special import logsumexp
 
 from smac.acquisition.weight.abstract_weight import AbstractAcquisitionWeight
 from smac.acquisition.weight.decay import DecaySchedule
+from smac.acquisition.weight.prior import PriorWeight
 from smac.model.abstract_model import AbstractModel
 from smac.utils.logging import get_logger
 
@@ -218,7 +219,10 @@ class CompositeWeight(AbstractAcquisitionWeight):
 
         # Each member floors and decays itself before the combination: that is what lets members which arrived at
         # different times carry different amounts of influence.
-        values = np.concatenate([weight(X, log=log).reshape((-1, 1)) for weight in active], axis=1)
+        values = np.concatenate(
+            [self._member_value(weight, X, log=log, n_active=len(active)).reshape((-1, 1)) for weight in active],
+            axis=1,
+        )
 
         if self._combination == "sum":
             combined = logsumexp(values, axis=1) if log else np.sum(values, axis=1)
@@ -228,6 +232,12 @@ class CompositeWeight(AbstractAcquisitionWeight):
             combined = np.max(values, axis=1)
 
         return combined.reshape((-1, 1))
+
+    def _member_value(
+        self, weight: AbstractAcquisitionWeight, X: np.ndarray, *, log: bool, n_active: int
+    ) -> np.ndarray:
+        """The value a member enters the combination with, out of `n_active` active members."""
+        return weight(X, log=log)
 
     def is_active(self) -> bool:
         """Whether any member has anything to say."""
@@ -248,7 +258,8 @@ class CompositeWeight(AbstractAcquisitionWeight):
 class PriorEnsemble(CompositeWeight):
     r"""Several user beliefs about where the optimum lies, each fading from when it was supplied.
 
-    $$w(\mathbf{X}) = \sum_m \pi_m(\mathbf{X})^{\beta_m / (t - t_{0,m} + 1)}$$
+    $$w(\mathbf{X}) = \sum_m \left( \frac{\pi_m(\mathbf{X})^{\gamma_m}}{\int \pi_m(\mathbf{x})^{\gamma_m}
+    d\mathbf{x}} + \text{floor}_m \right), \qquad \gamma_m = \frac{\beta_m}{t - t_{0,m} + 1}$$
 
     See "Dynamic Priors in Bayesian Optimization for Hyperparameter Optimization" by Lukas Fehring et al.
     [[FWS+25][FWS+25]] for further details.
@@ -257,10 +268,14 @@ class PriorEnsemble(CompositeWeight):
     look". Multiplying would let two beliefs pointing at different regions cancel each other out, which is the
     wrong answer when a user names a second promising region without retracting the first.
 
-    Be aware of what summing implies as beliefs age: a fully decayed belief contributes about one everywhere,
-    while a freshly supplied sharp belief contributes far less than one almost everywhere, so a pile of stale
-    beliefs can drown out the newest and most informative one. `prune_exponent` drops beliefs whose exponent has
-    fallen below a threshold, and `combination="max"` lets the most enthusiastic belief decide instead.
+    Each belief enters divided by its mass (see `PriorWeight.normalized`), which makes the sum an equal-weight
+    mixture: every belief has the same total say at every stage of its decay, a confident one concentrating it
+    and a faded one spreading it evenly over the space. Scaling a belief by a constant changes nothing. With a
+    single belief the mass only rescales the ranking, so that belief is used in the plain piBO form.
+
+    A faded belief still holds its share of the mixture, spread flat, so many stale beliefs dilute a fresh one.
+    `prune_exponent` drops beliefs whose exponent has fallen below a threshold, and `combination="max"` lets the
+    most enthusiastic belief decide instead.
 
     Parameters
     ----------
@@ -290,6 +305,14 @@ class PriorEnsemble(CompositeWeight):
         meta.update({"prune_exponent": self._prune_exponent})
 
         return meta
+
+    def _member_value(
+        self, weight: AbstractAcquisitionWeight, X: np.ndarray, *, log: bool, n_active: int
+    ) -> np.ndarray:
+        if n_active > 1 and isinstance(weight, PriorWeight):
+            return weight.normalized(X, log=log)
+
+        return weight(X, log=log)
 
     def _update(self, **kwargs: Any) -> None:
         super()._update(**kwargs)
