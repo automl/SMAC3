@@ -127,8 +127,8 @@ def test_an_infeasible_region_is_suppressed(configspace):
 def test_without_a_feasible_observation_only_feasibility_matters(configspace):
     """Before anything feasible turns up the search maximizes the probability of feasibility.
 
-    Builds a runhistory whose single trial violates the bound and checks the value equals the feasibility
-    probability alone, ignoring the objective.
+    Builds a runhistory whose single trial violates the bound and checks the value is the feasibility probability
+    alone, ignoring the objective - as its logarithm, which orders candidates the same way without underflowing.
     """
     objective_model = FixedModel([0.5], [1.0])
     constraint_model = FixedModel([-10.0], [25.0])
@@ -140,7 +140,7 @@ def test_without_a_feasible_observation_only_feasibility_matters(configspace):
     expected = probability_of_feasibility(*constraint_model.predict_marginalized(X))
 
     assert acquisition._has_feasible is False
-    assert acquisition._compute(X) == pytest.approx(expected)
+    assert acquisition._compute(X) == pytest.approx(np.log(expected))
 
 
 def test_the_incumbent_is_the_best_feasible_one(configspace):

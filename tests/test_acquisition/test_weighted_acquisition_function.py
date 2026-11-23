@@ -138,16 +138,46 @@ def test_a_suppressing_weight_replaces_the_acquisition_value(X):
         WeightedAcquisitionFunction(LinearAcquisition(), [ConstantWeight(0.25, suppresses=True)]),
     )
 
-    assert weighted._compute(X) == pytest.approx(np.full((len(X), 1), 0.25 + 1e-12))
+    # Ranked by the logarithm of the weight, whatever the acquisition function's scale.
+    assert weighted._compute(X) == pytest.approx(np.full((len(X), 1), np.log(0.25)))
 
 
 def test_a_suppressing_weight_still_lets_the_others_speak(X):
-    """The acquisition term is replaced by one, so the other weights keep guiding the search."""
+    """The acquisition term is dropped, so the other weights keep guiding the search."""
     weighted = _updated(
         WeightedAcquisitionFunction(LinearAcquisition(), [ConstantWeight(0.25, suppresses=True), ConstantWeight(0.5)]),
     )
 
-    assert weighted._compute(X) == pytest.approx(np.full((len(X), 1), (0.25 + 1e-12) * (0.5 + 1e-12)))
+    assert weighted._compute(X) == pytest.approx(np.full((len(X), 1), np.log(0.25) + np.log(0.5)))
+
+
+class UnderflowingWeight(ConstantWeight):
+    """A weight far below any linear floor, distinct only in log space: like the probability that nine constraints
+    all hold, far from anything feasible."""
+
+    def _compute(self, X):
+        return np.exp(self._compute_log(X))
+
+    def _compute_log(self, X):
+        return -1000.0 - X[:, 0].reshape((-1, 1))
+
+    @property
+    def log_floor(self):
+        return -np.inf
+
+
+def test_a_suppressing_weight_ranks_candidates_its_linear_value_cannot_tell_apart(X):
+    """Before anything feasible is seen, the probability of feasibility can be far below the linear floor everywhere.
+    Multiplied out, every candidate would score the floor alike and the search would have nothing to rank; in log
+    space the candidates keep their order."""
+    weighted = _updated(
+        WeightedAcquisitionFunction(LinearAcquisition(), [UnderflowingWeight(suppresses=True, floor=1e-12)]),
+    )
+
+    values = weighted._compute(X).ravel()
+
+    assert len(np.unique(values)) == len(X)
+    assert list(np.argsort(-values)) == [0, 1, 2, 3]
 
 
 def test_weights_may_correct_the_incumbent_in_order():

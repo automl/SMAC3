@@ -94,6 +94,10 @@ class WeightedAcquisitionFunction(AbstractAcquisitionFunction):
         A signed acquisition function is shifted onto the linear convention before it is weighted, so what
         comes out is linear whatever went in. A logarithmic one stays logarithmic, because its weights were
         added in log space rather than multiplied out of it.
+
+        One exception: while a weight suppresses the acquisition function - a constraint before anything feasible
+        has been seen - the values are the logarithms of the weights alone, whatever this says. They are only ever
+        compared with each other, never with values from before or after.
         """
         return AcquisitionScale.LOG if self._scale is AcquisitionScale.LOG else AcquisitionScale.LINEAR
 
@@ -187,15 +191,23 @@ class WeightedAcquisitionFunction(AbstractAcquisitionFunction):
         suppressed = any(weight.suppresses_acquisition() for weight in active)
 
         if suppressed:
-            # The acquisition function has nothing to say, so let the weights rank the candidates on their own.
-            # The identity differs by space: one multiplies, zero adds.
-            values = np.zeros((X.shape[0], 1)) if log else np.ones((X.shape[0], 1))
-        else:
-            values = self._acquisition_function._compute(X).reshape((-1, 1))
+            # The acquisition function has nothing to say, so let the weights rank the candidates on their own -
+            # in log space whatever the acquisition function's scale. Only their order is used, and the sum of the
+            # logarithms orders the candidates as their product does; but the product underflows. Before anything
+            # feasible has been seen, the probability of feasibility is far below any linear floor over most of a
+            # tightly constrained space, and every candidate would score the floor alike, leaving the search with
+            # nothing to rank and the fallback to the feasibility alone with nothing to climb.
+            values = np.zeros((X.shape[0], 1))
+            for weight in active:
+                values = values + weight(X, log=True)
 
-            if self._scale is AcquisitionScale.SIGNED:
-                assert self._eta is not None
-                values = np.clip(values + self._eta, 0, np.inf)
+            return values
+
+        values = self._acquisition_function._compute(X).reshape((-1, 1))
+
+        if self._scale is AcquisitionScale.SIGNED:
+            assert self._eta is not None
+            values = np.clip(values + self._eta, 0, np.inf)
 
         # The one place the three conventions are resolved. Origin of this design note: the same decision
         # used to live in every wrapper that weighted anything - once for constraints, once for priors - which
