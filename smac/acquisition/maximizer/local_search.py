@@ -486,7 +486,13 @@ class LocalSearch(AbstractAcquisitionMaximizer):
                             n = next(neighborhood_iterator)
 
                             # Find out in what hyperparameter neighbor differs from candidate.
-                            diff = n.get_array() != candidates[i].get_array()
+                            old_array = candidates[i].get_array()
+                            new_array = n.get_array()
+
+                            # Ignore dimensions that are inactive in both configurations.
+                            both_inactive = np.isnan(old_array) & np.isnan(new_array)
+
+                            diff = (old_array != new_array) & ~both_inactive
                             changed_hp_idx = np.flatnonzero(diff)
                             if len(changed_hp_idx) != 1:
                                 continue
