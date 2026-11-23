@@ -107,6 +107,11 @@ class ConfigSelector:
         self._acquisition_needs_update = True
         self._force_retrain = False
 
+        # Whether the initial design has been handed out and the search proper has begun. A user belief stated
+        # before then is anchored where the search begins rather than where it was stated, since the initial design
+        # does not read it and it would otherwise decay through trials it had no say in.
+        self._initial_design_done = False
+
         # Judges a user belief stated during a run. Accepts everything, so that nobody pays for a safeguard they
         # did not ask for.
         self._prior_acceptance_policy: AbstractPriorAcceptancePolicy = AcceptAllPriors()
@@ -225,6 +230,8 @@ class ConfigSelector:
                 self._call_callbacks_on_end(config)
                 yield config
                 self._call_callbacks_on_start()
+
+        self._initial_design_done = True
 
         # We want to generate configurations endlessly
         while True:
@@ -458,7 +465,10 @@ class ConfigSelector:
 
         Safe to call at any time, including from a callback and between ``ask`` and ``tell``. The belief is
         anchored at the current trial count, so one supplied late in a run arrives at full strength rather than
-        inheriting the exponent an older belief has already decayed to.
+        inheriting the exponent an older belief has already decayed to. One supplied before the initial design has
+        been handed out is anchored where the search proper begins, as a prior declared on the configuration space
+        is: the initial design does not read it, so it should not decay through it either. A `PriorWeight` that
+        already carries an anchor keeps it.
 
         Parameters
         ----------
@@ -513,7 +523,9 @@ class ConfigSelector:
         if not policy.accept(weight, **context):
             return None
 
-        weight.anchor(self._current_num_data())
+        if weight.t0 is None and self._initial_design_done:
+            weight.anchor(self._current_num_data())
+        # Otherwise the belief anchors itself at its first update, which is the first iteration of the search proper.
 
         weighted = self._ensure_weighted()
 
@@ -527,7 +539,10 @@ class ConfigSelector:
         self._add_sampling_space(key, weight, sampling_weight)
         self.invalidate_acquisition()
 
-        logger.info(f"Added the user prior {key!r}, anchored at trial {weight.t0}.")
+        if weight.t0 is None:
+            logger.info(f"Added the user prior {key!r}, anchored where the search proper begins.")
+        else:
+            logger.info(f"Added the user prior {key!r}, anchored at trial {weight.t0}.")
 
         return key
 
@@ -555,9 +570,10 @@ class ConfigSelector:
     def _fit_model_for_judging(self) -> tuple[AbstractModel | None, float | None]:
         """The surrogate fitted to everything observed so far, and the incumbent's cost as it sees it.
 
-        For an acceptance policy that asks for a model. Trained here if the data has grown since the last
-        training, the same way an `ask` would train it; `_previous_entries` is left alone, so the next `ask`
-        trains as it would have anyway and the search itself is unaffected.
+        For an acceptance policy that asks for a model. If the data has grown since the last training, a copy of the
+        search's model is trained on it, the same way an `ask` would train the model itself; the search's model, its
+        random state and `_previous_entries` are left alone, so the next `ask` trains as it would have anyway and the
+        search itself is unaffected.
 
         Returns
         -------
@@ -574,12 +590,17 @@ class ConfigSelector:
         if X.shape[0] == 0:
             return None, None
 
+        model = self._model
         if self._previous_entries != Y.shape[0]:
-            self._model.train(X, Y)
+            # A copy, because training draws from the model's random state - a Gaussian process restarts its
+            # hyperparameter optimization from random points - and a run that judges a belief must go on exactly as
+            # one that accepts it outright would.
+            model = copy.deepcopy(self._model)
+            model.train(X, Y)
 
-        _, eta = self._get_x_best(X_configurations)
+        _, eta = self._get_x_best(X_configurations, model=model)
 
-        return self._model, eta
+        return model, eta
 
     def _incumbent(self) -> Configuration | None:
         """The best configuration so far, if there is one."""
@@ -735,7 +756,7 @@ class ConfigSelector:
         assert self._runhistory is not None
         return self._runhistory.get_configs_per_budget(budget_subset=self._considered_budgets)
 
-    def _get_x_best(self, X: np.ndarray) -> tuple[np.ndarray, float]:
+    def _get_x_best(self, X: np.ndarray, model: AbstractModel | None = None) -> tuple[np.ndarray, float]:
         """Get value, configuration, and array representation of the *best* configuration.
 
         The definition of best varies depending on the argument ``predict``. If set to `True`,
@@ -746,6 +767,8 @@ class ConfigSelector:
         ----------
         predict : bool
             Whether to use the predicted or observed best.
+        model : AbstractModel | None, defaults to None
+            The model to predict with; the search's own when not given.
 
         Returns
         -------
@@ -754,7 +777,7 @@ class ConfigSelector:
         Configuration
         """
         if self._predict_x_best:
-            model = self._model
+            model = model if model is not None else self._model
             assert model is not None
 
             means, _ = model.predict_marginalized(X)

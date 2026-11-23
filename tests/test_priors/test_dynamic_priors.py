@@ -63,15 +63,53 @@ def test_a_belief_can_be_stated_while_the_run_is_going_on():
     assert isinstance(smac.optimizer.config_selector.priors_ensemble, PriorEnsemble)
 
 
+def _initial_design_size(smac) -> int:
+    return len(smac.optimizer.config_selector._initial_design_configs)
+
+
 def test_a_belief_is_anchored_where_it_was_stated():
-    """A belief stated at trial 20 arrives at full strength, not at the exponent an older one decayed to."""
+    """A belief stated after the initial design arrives at full strength, not at the exponent an older one decayed
+    to."""
     smac = _smac()
-    _warm_up(smac)
+    _warm_up(smac, _initial_design_size(smac) + 4)
 
     expected = smac.optimizer.config_selector._current_num_data()
     key = smac.add_prior({"x0": OPTIMUM})
 
     assert smac.priors[key].t0 == expected
+
+
+@pytest.mark.parametrize("stated_after", [0, 3])
+def test_a_belief_stated_before_the_search_begins_is_anchored_where_it_does(stated_after: int):
+    """The initial design does not read a belief, so one stated before it is handed out - or while it is - should not
+    decay through it: it is anchored at the first configuration the search proper proposes, at full strength there,
+    as a prior declared on the configuration space is."""
+    smac = _smac()
+    n_initial = _initial_design_size(smac)
+    assert n_initial > stated_after
+
+    _warm_up(smac, stated_after)
+    key = smac.add_prior({"x0": OPTIMUM, "x1": OPTIMUM})
+    assert smac.priors[key].t0 is None
+
+    _warm_up(smac, n_initial - stated_after)
+    smac.ask()
+
+    assert smac.priors[key].t0 == n_initial
+    assert smac.priors[key].steps == 0
+
+
+def test_a_prior_weight_that_carries_an_anchor_keeps_it():
+    smac = _smac()
+    weight = PriorWeight(
+        ConfigSpacePrior(create_prior_configspace_copy(smac.scenario.configspace, {"x0": OPTIMUM})),
+        PolynomialDecay(beta=4.0),
+        t0=2,
+    )
+
+    key = smac.add_prior(weight)
+
+    assert smac.priors[key].t0 == 2
 
 
 def test_two_beliefs_stated_at_different_times_carry_different_influence():
