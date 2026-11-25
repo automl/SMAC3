@@ -51,6 +51,9 @@ jobs:
       matrix:
         python-version: ["3.10", "3.11"]
         os: ["ubuntu-latest"]
+        include:
+          - python-version: "3.12"
+            os: macos-latest
 
     steps:
     - name: Checkout
