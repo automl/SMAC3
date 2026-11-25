@@ -27,6 +27,7 @@
 
 ## Misc
 - Remove outdated, commented-out TuRBO/BOinG code (incl. the GPyTorch GP) and the `gpytorch` extra from the CI install
+- Run the source tests on macOS with Python 3.12 in CI (#1403).
 
 ## Examples
 - Add an example for using SMAC with Weights & Biases
