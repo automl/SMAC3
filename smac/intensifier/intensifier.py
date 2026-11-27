@@ -415,15 +415,14 @@ class Intensifier(AbstractIntensifier):
         Parameters
         ----------
         challenger : Configuration
-            Configuration which challenges incumbent
-
-        inc_sum_cost: float
-            Sum of runtimes of all incumbent runs
+            Configuration which challenges incumbent.
+        on_keys : list[InstanceSeedKey]
+            Instance-seed keys for which the challenger is being evaluated.
 
         Returns
         -------
         cutoff: float
-            Adapted cutoff
+            Adapted cutoff.
         """
         # cost used by challenger for going over all its runs
         # should be subset of runs of incumbent (not checked for efficiency

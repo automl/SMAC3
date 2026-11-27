@@ -32,8 +32,8 @@ regularly subject to intensification.
 ## Setting up Adaptive Capping
 
 To achieve this, the user must take active care in the termination of their target function.
-The capped problem.train will receive a budget keyword argument, detailing the seconds allocated to the configuration.
-Below is an example of a capped problem that will return the used budget if the computation exceeds the budget.
+The capped `problem.train` will receive a `cutoff` keyword argument, detailing the seconds allocated to the configuration.
+Below is an example of a capped problem that will return the used cutoff if the computation exceeds the cutoff.
 
 
 ```python
@@ -63,43 +63,38 @@ Below is an example of a capped problem that will return the used budget if the 
         def configspace(self) -> ConfigurationSpace:
             ...
 
-        def train(self, config: Configuration, instance:str, budget, seed: int = 0) -> float:
+        def train(self, config: Configuration, instance: str, cutoff: float, seed: int = 0) -> float:
 
             try:
-                with timeout(int(math.ceil(budget))):
+                with timeout(int(math.ceil(cutoff))):
                     start_time = time.time()
                     ... # heavy computation
                     runtime = time.time() - start_time
                     return runtime
             except TimeoutException as e:
-                print(f"Timeout for configuration {config} with runtime budget {budget}")
-                return budget # here the runtime is capped and we return the used budget.
+                print(f"Timeout for configuration {config} with runtime cutoff {cutoff}")
+                return cutoff # here the runtime is capped and we return the used cutoff.
 ```
 
-In order to enable adaptive capping in smac, we need to create [problem instances](4_instances.md) to optimize over and specify a
-global runtime cutoff in the intensifier. Then we optimize as usual.
+To enable adaptive capping in smac, we need to create [problem instances](4_instances.md) to optimize over and specify
+`adaptive_capping=True` and a global `runtime_cutoff` in the `Scenario`. Then we optimize as usual.
 
 
 ```python
-from smac.intensifier import Intensifier
-from smac.scenario.scenario import Scenario
+from smac import AlgorithmConfigurationFacade, Scenario
 
 scenario = Scenario(
     capped_problem.configspace,
     ...
     instances=['1', '2', '3'], # add problem instances we want to solve
-    instance_features={'1': [1], '2': [2], '3': [3]} # in the absence of actual features add dummy features for identification
+    instance_features={'1': [1], '2': [2], '3': [3]}, # in the absence of actual features add dummy features for identification
+    adaptive_capping=True,
+    runtime_cutoff=10, # specify an absolute runtime cutoff (sum over instances) never to be exceeded
 )
 
-intensifier = Intensifier(
-scenario,
-runtime_cutoff=10 # specify an absolute runtime cutoff (sum over instances) never to be exceeded
-)
-
-smac = HyperparameterOptimizationFacade(
+smac = AlgorithmConfigurationFacade(
     scenario,
     capped_problem.train,
-    intensifier=intensifier,
     ...
 )
 
