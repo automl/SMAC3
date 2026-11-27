@@ -197,12 +197,19 @@ class EI(AbstractAcquisitionFunction):
 
 
 class EIPS(EI):
-    r"""Expected Improvement per Second acquisition function
+    r"""Expected Improvement per Second acquisition function.
 
     $$
-    EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}
+    EIPS(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\}\right]}{\log(1 + r(X))}
     $$
-    with $f(X^+)$ as the best location and $r(x)$ as runtime.
+    with $f(X^+)$ as the best location and $r(X)$ as runtime.
+
+    Note
+    ----
+    ``EIPS`` expects the surrogate model to predict two outputs (cost and log-transformed runtime, i.e.,
+    shapes ``(N, 2)`` for mean and variance). Combine it with ``RunHistoryEIPSEncoder`` and a two-output
+    surrogate such as ``MultiObjectiveModel`` initialized with two distinct model instances (e.g.,
+    ``MultiObjectiveModel(models=[cost_model, runtime_model], objectives=["cost", "runtime"])``).
 
     Parameters
     ----------
